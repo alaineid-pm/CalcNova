@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ZonePal · Coast FIRE Calculator</title>
+  <title>CalcNova · Coast FIRE Calculator</title>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -108,6 +108,18 @@
       text-decoration: none; transition: all .15s;
     }
     .pill-badge-link:hover { border-color: rgba(16,185,129,.5); }
+
+    .donate-btn {
+      display: flex; align-items: center; gap: 6px;
+      background: linear-gradient(135deg, #fd7e14, #e85d04);
+      border: none;
+      border-radius: 100px; padding: 7px 16px;
+      font-size: 12px; font-weight: 700; color: #fff;
+      text-decoration: none; transition: all .15s; cursor: pointer;
+      font-family: var(--font);
+      box-shadow: 0 2px 8px rgba(232,93,4,.35);
+    }
+    .donate-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 14px rgba(232,93,4,.45); }
 
     /* ── PAGE HERO ── */
     .hero {
@@ -406,6 +418,32 @@
     }
     #toast.show { opacity: 1; pointer-events: auto; transform: translateY(0); }
 
+    /* ── FOOTER ── */
+    .site-footer {
+      border-top: 1px solid var(--border);
+      margin-top: 32px;
+      padding: 28px 0 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .footer-brand { display: flex; align-items: center; gap: 8px; }
+    .footer-brand-name {
+      font-size: 15px; font-weight: 800; letter-spacing: -.3px;
+      background: linear-gradient(135deg, var(--green), var(--purple));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .footer-copy { font-size: 12px; color: var(--text-muted); }
+    .footer-right { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .footer-disclaimer {
+      font-size: 11px; color: var(--text-muted);
+      text-align: center;
+      padding-bottom: 8px;
+      line-height: 1.5;
+    }
+
     /* ── PRINT ── */
     .print-summary { display: none; }
 
@@ -447,9 +485,13 @@
   <!-- HEADER -->
   <header>
     <a href="index.html" class="logo">
-      <div class="logo-mark">⏱</div>
+      <div class="logo-mark">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>
+        </svg>
+      </div>
       <div>
-        <div class="logo-text">ZonePal</div>
+        <div class="logo-text">CalcNova</div>
         <div class="logo-sub">Finance Tools</div>
       </div>
     </a>
@@ -462,6 +504,7 @@
         <span>💰</span>
         <span>Compound Interest</span>
       </a>
+      <a href="https://ko-fi.com/calcnova" target="_blank" rel="noopener" class="donate-btn" title="Support CalcNova">☕ Buy me a coffee</a>
       <button class="icon-btn" id="darkBtn" onclick="toggleDark()" title="Toggle dark mode">🌙</button>
     </div>
   </header>
@@ -729,6 +772,28 @@
     </div>
   </div>
 
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div>
+      <div class="footer-brand">
+        <div class="logo-mark" style="width:28px;height:28px;font-size:14px;border-radius:8px;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>
+          </svg>
+        </div>
+        <span class="footer-brand-name">CalcNova</span>
+      </div>
+      <div class="footer-copy">Free financial tools for everyone · No sign-up, no ads, no nonsense.</div>
+    </div>
+    <div class="footer-right">
+      <a href="https://ko-fi.com/calcnova" target="_blank" rel="noopener" class="donate-btn">☕ Buy me a coffee</a>
+    </div>
+  </footer>
+  <div class="footer-disclaimer">
+    This calculator is for educational purposes only and does not constitute financial advice.<br>
+    Always consult a qualified financial advisor for personalized guidance.
+  </div>
+
 </div><!-- /.app -->
 
 <div id="toast"><span style="color:var(--amber);font-size:15px;">✓</span> <span id="toast-msg">Done!</span></div>
@@ -741,7 +806,7 @@
 
   // ── Init dark mode ─────────────────────────────────────────────────────────
   try {
-    if (localStorage.getItem('zp_fire_dark') === '1') {
+    if (localStorage.getItem('cn_fire_dark') === '1') {
       dark = true;
       document.body.classList.add('dark');
       document.getElementById('darkBtn').textContent = '☀️';
@@ -753,7 +818,7 @@
     dark = !dark;
     document.body.classList.toggle('dark', dark);
     document.getElementById('darkBtn').textContent = dark ? '☀️' : '🌙';
-    try { localStorage.setItem('zp_fire_dark', dark ? '1' : '0'); } catch(e) {}
+    try { localStorage.setItem('cn_fire_dark', dark ? '1' : '0'); } catch(e) {}
     if (lastData) drawChart(lastData);
   }
 
@@ -773,15 +838,27 @@
   function syncSlider(rangeId, numId, min, max) {
     const range = document.getElementById(rangeId);
     const num = document.getElementById(numId);
+
+    // Slider drag → update number box and recalculate
     range.addEventListener('input', () => { num.value = range.value; calculate(); });
+
+    // Typing in the number box → only move the slider if value is valid (don't
+    // overwrite what the user is typing mid-entry, which caused garbled input)
     num.addEventListener('input', () => {
+      const v = parseFloat(num.value);
+      if (!isNaN(v) && v >= min && v <= max) {
+        range.value = v;
+        calculate();
+      }
+    });
+
+    // On blur or Enter, clamp and tidy up the value
+    function commitNum() {
       const v = Math.min(max, Math.max(min, parseFloat(num.value) || min));
       range.value = v; num.value = v; calculate();
-    });
-    num.addEventListener('change', () => {
-      const v = Math.min(max, Math.max(min, parseFloat(num.value) || min));
-      range.value = v; num.value = v; calculate();
-    });
+    }
+    num.addEventListener('change', commitNum);
+    num.addEventListener('blur', commitNum);
   }
 
   syncSlider('cur-age', 'cur-age-num', 18, 70);
