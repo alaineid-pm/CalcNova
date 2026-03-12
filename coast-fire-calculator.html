@@ -1,0 +1,1077 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ZonePal · Coast FIRE Calculator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #f0f2f7;
+      --surface: #ffffff;
+      --border: #e2e6ef;
+      --text-primary: #0f1623;
+      --text-secondary: #5a6478;
+      --text-muted: #9ba3b5;
+      --font: 'Plus Jakarta Sans', sans-serif;
+      --mono: 'JetBrains Mono', monospace;
+      --green: #10b981;
+      --purple: #6366f1;
+      --amber: #f59e0b;
+      --red: #ef4444;
+    }
+
+    body.dark {
+      --bg: #0d1117;
+      --surface: #161b22;
+      --border: #30363d;
+      --text-primary: #e6edf3;
+      --text-secondary: #8b949e;
+      --text-muted: #484f58;
+    }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      min-height: 100vh;
+      color: var(--text-primary);
+      transition: background .3s, color .3s;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background:
+        radial-gradient(ellipse 800px 600px at 10% 0%, rgba(245,158,11,.1) 0%, transparent 60%),
+        radial-gradient(ellipse 600px 500px at 90% 100%, rgba(167,139,250,.12) 0%, transparent 60%);
+      transition: opacity .3s;
+    }
+    body.dark::before { opacity: .4; }
+
+    .app { position: relative; z-index: 1; max-width: 960px; margin: 0 auto; padding: 0 16px 60px; }
+
+    /* ── HEADER ── */
+    header {
+      padding: 24px 0 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .logo-mark {
+      width: 38px; height: 38px;
+      background: linear-gradient(135deg, var(--green), var(--purple));
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px;
+      box-shadow: 0 4px 12px rgba(99,102,241,.3);
+    }
+    .logo-text {
+      font-size: 22px; font-weight: 800; letter-spacing: -.5px;
+      background: linear-gradient(135deg, var(--green), var(--purple));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .logo-sub { font-size: 11px; color: var(--text-muted); letter-spacing: 2px; text-transform: uppercase; font-weight: 500; margin-top: 1px; }
+
+    .header-right { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+
+    .icon-btn {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+      color: var(--text-secondary); font-size: 16px; width: 38px; height: 38px;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      transition: all .15s; text-decoration: none; font-family: var(--font);
+    }
+    .icon-btn:hover { border-color: var(--amber); color: var(--amber); }
+
+    .pill-badge {
+      display: flex; align-items: center; gap: 6px;
+      background: linear-gradient(135deg, rgba(245,158,11,.1), rgba(99,102,241,.1));
+      border: 1px solid rgba(245,158,11,.3);
+      border-radius: 100px; padding: 6px 14px;
+      font-size: 12px; font-weight: 700; color: var(--amber);
+    }
+
+    .pill-badge-link {
+      display: flex; align-items: center; gap: 6px;
+      background: linear-gradient(135deg, rgba(16,185,129,.1), rgba(99,102,241,.1));
+      border: 1px solid rgba(16,185,129,.25);
+      border-radius: 100px; padding: 6px 14px;
+      font-size: 12px; font-weight: 700; color: var(--green);
+      text-decoration: none; transition: all .15s;
+    }
+    .pill-badge-link:hover { border-color: rgba(16,185,129,.5); }
+
+    /* ── PAGE HERO ── */
+    .hero {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 28px 28px 24px;
+      margin-bottom: 20px;
+      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;
+    }
+    .hero-title { font-size: 26px; font-weight: 800; letter-spacing: -.5px; }
+    .hero-title span {
+      background: linear-gradient(135deg, var(--amber), var(--purple));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .hero-desc { font-size: 14px; color: var(--text-secondary); margin-top: 6px; line-height: 1.5; }
+
+    .hero-formula {
+      font-family: var(--mono);
+      font-size: 13px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 18px;
+      color: var(--text-secondary);
+      white-space: nowrap;
+    }
+    .hero-formula .hl { color: var(--amber); font-weight: 700; }
+    .hero-formula .hlp { color: var(--purple); font-weight: 700; }
+
+    /* ── GRID ── */
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+    @media (max-width: 640px) { .two-col { grid-template-columns: 1fr; } }
+
+    /* ── CARD ── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 22px 22px 18px;
+    }
+    .card-title {
+      font-size: 11px; font-weight: 700; letter-spacing: .5px; text-transform: uppercase;
+      color: var(--text-muted); margin-bottom: 18px;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .card-title-dot { width: 6px; height: 6px; border-radius: 50%; }
+
+    /* ── FORM ── */
+    .form-group { margin-bottom: 14px; }
+    .form-label { font-size: 12px; font-weight: 600; color: var(--text-secondary); margin-bottom: 6px; display: block; }
+    .form-label-optional { font-size: 11px; font-weight: 500; color: var(--text-muted); margin-left: 4px; }
+
+    .input-row { position: relative; }
+    .input-prefix, .input-suffix {
+      position: absolute; top: 50%; transform: translateY(-50%);
+      font-family: var(--mono); font-size: 13px; font-weight: 700;
+      color: var(--text-muted); pointer-events: none;
+    }
+    .input-prefix { left: 12px; }
+    .input-suffix { right: 12px; }
+
+    input[type="number"], select {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text-primary);
+      font-family: var(--font);
+      font-size: 14px;
+      font-weight: 600;
+      padding: 9px 12px;
+      outline: none;
+      transition: border-color .2s, box-shadow .2s;
+      appearance: none;
+    }
+    .has-prefix input[type="number"] { padding-left: 28px; }
+    .has-suffix input[type="number"] { padding-right: 36px; }
+
+    input[type="number"]:focus, select:focus {
+      border-color: var(--amber);
+      box-shadow: 0 0 0 3px rgba(245,158,11,.12);
+    }
+
+    /* Slider */
+    .slider-group { margin-bottom: 14px; }
+    .slider-label-row {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 8px;
+    }
+    .slider-label { font-size: 12px; font-weight: 600; color: var(--text-secondary); }
+
+    .slider-val-edit { display: flex; align-items: center; gap: 3px; }
+    .slider-num-input {
+      width: 58px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      color: var(--amber);
+      font-family: var(--mono);
+      font-size: 14px;
+      font-weight: 700;
+      padding: 3px 6px;
+      text-align: right;
+      outline: none;
+      transition: border-color .2s, box-shadow .2s;
+      -moz-appearance: textfield;
+    }
+    .slider-num-input::-webkit-outer-spin-button,
+    .slider-num-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+    .slider-num-input:focus {
+      border-color: var(--amber);
+      box-shadow: 0 0 0 3px rgba(245,158,11,.12);
+    }
+    .slider-unit { font-family: var(--mono); font-size: 14px; font-weight: 700; color: var(--amber); }
+
+    input[type="range"] {
+      width: 100%; height: 4px; appearance: none; background: var(--border);
+      border-radius: 2px; cursor: pointer; outline: none;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      appearance: none; width: 16px; height: 16px; border-radius: 50%;
+      background: var(--amber); box-shadow: 0 1px 4px rgba(245,158,11,.4); cursor: pointer;
+      transition: transform .15s;
+    }
+    input[type="range"]:hover::-webkit-slider-thumb { transform: scale(1.15); }
+    input[type="range"]::-moz-range-thumb {
+      width: 16px; height: 16px; border-radius: 50%; border: none;
+      background: var(--amber); box-shadow: 0 1px 4px rgba(245,158,11,.4); cursor: pointer;
+    }
+
+    /* ── ACTION ROW ── */
+    .action-row {
+      display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap;
+    }
+    .action-btn {
+      display: flex; align-items: center; gap: 7px;
+      padding: 9px 18px; border-radius: 10px; font-size: 13px; font-weight: 600;
+      cursor: pointer; transition: all .15s; font-family: var(--font);
+      background: var(--surface); border: 1px solid var(--border); color: var(--text-secondary);
+    }
+    .action-btn svg { width: 15px; height: 15px; }
+    .action-btn:hover { border-color: var(--amber); color: var(--amber); }
+
+    /* ── STATS ── */
+    .stats-row {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 16px;
+    }
+    @media (max-width: 640px) { .stats-row { grid-template-columns: 1fr 1fr; } }
+
+    .stat-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 16px; padding: 18px 16px;
+    }
+    .stat-card.amber { border-color: rgba(245,158,11,.2); background: linear-gradient(135deg, rgba(245,158,11,.03), transparent); }
+    .stat-card.green { border-color: rgba(16,185,129,.2); background: linear-gradient(135deg, rgba(16,185,129,.03), transparent); }
+    .stat-card.purple { border-color: rgba(99,102,241,.2); background: linear-gradient(135deg, rgba(99,102,241,.03), transparent); }
+    .stat-card.success-card { border-color: rgba(16,185,129,.3); background: linear-gradient(135deg, rgba(16,185,129,.06), transparent); }
+    .stat-card.alert-card { border-color: rgba(245,158,11,.3); background: linear-gradient(135deg, rgba(245,158,11,.06), transparent); }
+
+    .stat-icon { font-size: 20px; margin-bottom: 6px; }
+    .stat-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .4px; color: var(--text-muted); margin-bottom: 4px; }
+    .stat-value { font-family: var(--mono); font-size: 20px; font-weight: 700; color: var(--text-primary); }
+    .stat-value.td-amber { color: var(--amber); }
+    .stat-value.td-green { color: var(--green); }
+    .stat-value.td-purple { color: var(--purple); }
+    .stat-sub { font-size: 11px; color: var(--text-muted); margin-top: 3px; }
+
+    /* ── STATUS BANNER ── */
+    .status-banner {
+      border-radius: 16px; padding: 18px 20px;
+      margin-bottom: 16px;
+      display: flex; align-items: center; gap: 16px;
+    }
+    .status-banner.reached {
+      background: linear-gradient(135deg, rgba(16,185,129,.1), rgba(16,185,129,.05));
+      border: 1px solid rgba(16,185,129,.3);
+    }
+    .status-banner.not-reached {
+      background: linear-gradient(135deg, rgba(245,158,11,.1), rgba(245,158,11,.05));
+      border: 1px solid rgba(245,158,11,.3);
+    }
+    .status-icon { font-size: 32px; flex-shrink: 0; }
+    .status-title { font-size: 17px; font-weight: 800; margin-bottom: 3px; }
+    .status-title.green { color: var(--green); }
+    .status-title.amber { color: var(--amber); }
+    .status-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.5; }
+
+    /* ── PROGRESS BAR ── */
+    .progress-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 18px; padding: 22px 22px 18px; margin-bottom: 16px;
+    }
+    .progress-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+    .progress-title { font-size: 13px; font-weight: 700; color: var(--text-primary); }
+    .progress-pct { font-family: var(--mono); font-size: 16px; font-weight: 700; color: var(--amber); }
+    .progress-track {
+      height: 12px; background: var(--bg); border-radius: 6px; overflow: hidden; margin-bottom: 10px;
+      border: 1px solid var(--border);
+    }
+    .progress-fill {
+      height: 100%; border-radius: 6px;
+      background: linear-gradient(90deg, var(--amber), var(--green));
+      transition: width .6s cubic-bezier(.4,0,.2,1);
+    }
+    .progress-labels { display: flex; justify-content: space-between; font-size: 11px; color: var(--text-muted); font-weight: 600; }
+
+    /* ── CHART ── */
+    .chart-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 18px; padding: 22px 22px 16px; margin-bottom: 16px;
+    }
+    .chart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 8px; }
+    .chart-title { font-size: 14px; font-weight: 700; color: var(--text-primary); }
+    canvas { width: 100%; display: block; border-radius: 8px; }
+
+    /* ── TABLE ── */
+    .table-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 18px; padding: 22px 22px 18px; margin-bottom: 16px;
+    }
+    .table-head-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 8px; }
+    .table-head-title { font-size: 14px; font-weight: 700; color: var(--text-primary); }
+    .table-scroll { overflow-x: auto; border-radius: 10px; border: 1px solid var(--border); }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    thead th {
+      background: var(--bg); padding: 9px 14px; text-align: left;
+      font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px;
+      color: var(--text-muted); white-space: nowrap; border-bottom: 1px solid var(--border);
+    }
+    tbody tr { border-bottom: 1px solid var(--border); transition: background .1s; }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: var(--bg); }
+    tbody td {
+      padding: 9px 14px; font-family: var(--mono); font-size: 12px;
+      font-weight: 500; color: var(--text-secondary); white-space: nowrap;
+    }
+    tbody td:first-child { font-weight: 700; color: var(--text-primary); }
+    .td-amber { color: var(--amber) !important; }
+    .td-green { color: var(--green) !important; }
+    .td-check { color: var(--green) !important; font-size: 14px; }
+
+    /* ── INSTRUCTIONS ── */
+    .instructions-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 18px; padding: 28px; margin-bottom: 16px;
+    }
+    .instructions-title {
+      font-size: 16px; font-weight: 800; color: var(--text-primary);
+      margin-bottom: 20px; display: flex; align-items: center; gap: 8px;
+    }
+    .instr-section { margin-bottom: 22px; }
+    .instr-section:last-child { margin-bottom: 0; }
+    .instr-section-title {
+      font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px;
+      color: var(--amber); margin-bottom: 10px;
+    }
+    .instr-section p { font-size: 14px; color: var(--text-secondary); line-height: 1.65; margin-bottom: 8px; }
+    .instr-section p:last-child { margin-bottom: 0; }
+    .instr-list { list-style: none; }
+    .instr-list li {
+      font-size: 14px; color: var(--text-secondary); line-height: 1.6;
+      padding: 6px 0; display: flex; gap: 10px; border-bottom: 1px solid var(--border);
+    }
+    .instr-list li:last-child { border-bottom: none; }
+    .instr-list .li-num {
+      flex-shrink: 0; width: 22px; height: 22px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--amber), var(--purple));
+      color: white; font-size: 11px; font-weight: 800;
+      display: flex; align-items: center; justify-content: center; margin-top: 1px;
+    }
+    .instr-highlight {
+      display: inline-block; background: rgba(245,158,11,.1);
+      border: 1px solid rgba(245,158,11,.2); border-radius: 6px;
+      padding: 1px 7px; font-family: var(--mono); font-size: 12px;
+      font-weight: 700; color: var(--amber);
+    }
+    .instr-formula-box {
+      background: var(--bg); border: 1px solid var(--border); border-radius: 12px;
+      padding: 14px 18px; font-family: var(--mono); font-size: 13px;
+      color: var(--text-secondary); margin: 10px 0;
+    }
+    .instr-formula-box .hl { color: var(--amber); font-weight: 700; }
+    .instr-formula-box .hlp { color: var(--purple); font-weight: 700; }
+    .instr-formula-box .hlg { color: var(--green); font-weight: 700; }
+
+    /* ── TOAST ── */
+    #toast {
+      position: fixed; bottom: 24px; right: 24px; z-index: 9999;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 12px; padding: 10px 18px;
+      font-size: 13px; font-weight: 600; color: var(--text-primary);
+      box-shadow: 0 8px 24px rgba(0,0,0,.12);
+      opacity: 0; pointer-events: none; transform: translateY(8px);
+      transition: opacity .2s, transform .2s; display: flex; align-items: center; gap: 8px;
+    }
+    #toast.show { opacity: 1; pointer-events: auto; transform: translateY(0); }
+
+    /* ── PRINT ── */
+    .print-summary { display: none; }
+
+    @media print {
+      body::before { display: none; }
+      .header-right .icon-btn,
+      .header-right .pill-badge-link,
+      .action-row { display: none !important; }
+      #toast { display: none !important; }
+      .instructions-card { page-break-before: always; }
+
+      .print-summary {
+        display: block;
+        background: #fff; border: 1px solid #ddd; border-radius: 10px;
+        padding: 16px 20px; margin-bottom: 16px;
+        font-family: 'Plus Jakarta Sans', sans-serif;
+      }
+      .print-summary-title {
+        font-size: 13px; font-weight: 700; text-transform: uppercase;
+        letter-spacing: .5px; color: #888; margin-bottom: 10px;
+      }
+      .print-summary-grid {
+        display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px 16px;
+      }
+      .print-summary-item .ps-label {
+        font-size: 10px; font-weight: 600; text-transform: uppercase;
+        letter-spacing: .4px; color: #999; margin-bottom: 2px;
+      }
+      .print-summary-item .ps-value {
+        font-size: 14px; font-weight: 700; color: #0f1623;
+        font-family: 'JetBrains Mono', monospace;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+
+  <!-- HEADER -->
+  <header>
+    <a href="index.html" class="logo">
+      <div class="logo-mark">⏱</div>
+      <div>
+        <div class="logo-text">ZonePal</div>
+        <div class="logo-sub">Finance Tools</div>
+      </div>
+    </a>
+    <div class="header-right">
+      <div class="pill-badge">
+        <span>🏖️</span>
+        <span>Coast FIRE</span>
+      </div>
+      <a href="compound-interest-calculator.html" class="pill-badge-link">
+        <span>💰</span>
+        <span>Compound Interest</span>
+      </a>
+      <button class="icon-btn" id="darkBtn" onclick="toggleDark()" title="Toggle dark mode">🌙</button>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div>
+      <div class="hero-title">Coast FIRE <span>Calculator</span></div>
+      <div class="hero-desc">Find out how much you need saved <em>today</em> so your portfolio can grow to full financial independence — without any additional contributions.</div>
+    </div>
+    <div class="hero-formula">
+      Coast# = <span class="hl">FI</span> / (1 + <span class="hlp">r</span>)<sup><span class="hlp">t</span></sup>
+    </div>
+  </div>
+
+  <!-- PRINT SUMMARY (hidden on screen, shown when printing) -->
+  <div class="print-summary" id="print-summary">
+    <div class="print-summary-title">Calculator Settings</div>
+    <div class="print-summary-grid" id="print-summary-grid"></div>
+  </div>
+
+  <!-- INPUTS -->
+  <div class="two-col">
+    <div class="card">
+      <div class="card-title">
+        <div class="card-title-dot" style="background:var(--amber)"></div>
+        Your Situation
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Current Age</label>
+        <div class="slider-group" style="margin-bottom:0">
+          <div class="slider-label-row">
+            <span class="slider-label">Age</span>
+            <div class="slider-val-edit">
+              <input type="number" class="slider-num-input" id="cur-age-num" value="30" min="18" max="70" step="1" />
+              <span class="slider-unit">yrs</span>
+            </div>
+          </div>
+          <input type="range" id="cur-age" min="18" max="70" step="1" value="30" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Target Retirement Age</label>
+        <div class="slider-group" style="margin-bottom:0">
+          <div class="slider-label-row">
+            <span class="slider-label">Retirement Age</span>
+            <div class="slider-val-edit">
+              <input type="number" class="slider-num-input" id="ret-age-num" value="65" min="40" max="80" step="1" />
+              <span class="slider-unit">yrs</span>
+            </div>
+          </div>
+          <input type="range" id="ret-age" min="40" max="80" step="1" value="65" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Current Portfolio / Savings</label>
+        <div class="input-row has-prefix">
+          <span class="input-prefix">$</span>
+          <input type="number" id="current-savings" value="50000" min="0" step="1000" />
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">
+        <div class="card-title-dot" style="background:var(--purple)"></div>
+        Retirement Parameters
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Annual Spending in Retirement</label>
+        <div class="input-row has-prefix">
+          <span class="input-prefix">$</span>
+          <input type="number" id="annual-spending" value="50000" min="1000" step="1000" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Safe Withdrawal Rate (SWR)</label>
+        <div class="slider-group" style="margin-bottom:0">
+          <div class="slider-label-row">
+            <span class="slider-label">SWR</span>
+            <div class="slider-val-edit">
+              <input type="number" class="slider-num-input" id="swr-num" value="4.0" min="2" max="8" step="0.1" />
+              <span class="slider-unit">%</span>
+            </div>
+          </div>
+          <input type="range" id="swr" min="2" max="8" step="0.1" value="4" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Expected Annual Return (after inflation)</label>
+        <div class="slider-group" style="margin-bottom:0">
+          <div class="slider-label-row">
+            <span class="slider-label">Return rate</span>
+            <div class="slider-val-edit">
+              <input type="number" class="slider-num-input" id="return-num" value="7.0" min="1" max="15" step="0.1" />
+              <span class="slider-unit">%</span>
+            </div>
+          </div>
+          <input type="range" id="return-rate" min="1" max="15" step="0.1" value="7" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ACTION BUTTONS -->
+  <div class="action-row">
+    <button class="action-btn" onclick="exportCSV()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+      </svg>
+      Export CSV
+    </button>
+    <button class="action-btn" onclick="printPage()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/>
+      </svg>
+      Print / Save PDF
+    </button>
+  </div>
+
+  <!-- STATUS BANNER -->
+  <div class="status-banner" id="status-banner">
+    <div class="status-icon" id="status-icon">🏖️</div>
+    <div>
+      <div class="status-title" id="status-title">Calculating…</div>
+      <div class="status-desc" id="status-desc"></div>
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats-row">
+    <div class="stat-card amber">
+      <div class="stat-icon">🎯</div>
+      <div class="stat-label">FI Number</div>
+      <div class="stat-value td-amber" id="s-fi">—</div>
+      <div class="stat-sub" id="s-fi-sub">Target nest egg at retirement</div>
+    </div>
+    <div class="stat-card green">
+      <div class="stat-icon">🏄</div>
+      <div class="stat-label">Coast FIRE Number</div>
+      <div class="stat-value td-green" id="s-coast">—</div>
+      <div class="stat-sub" id="s-coast-sub">Needed today to coast</div>
+    </div>
+    <div class="stat-card purple">
+      <div class="stat-icon">📅</div>
+      <div class="stat-label">Years to Grow</div>
+      <div class="stat-value td-purple" id="s-years">—</div>
+      <div class="stat-sub" id="s-years-sub">Until retirement age</div>
+    </div>
+  </div>
+
+  <!-- PROGRESS BAR -->
+  <div class="progress-card">
+    <div class="progress-header">
+      <div class="progress-title">Progress to Coast FIRE Number</div>
+      <div class="progress-pct" id="prog-pct">0%</div>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill" id="prog-fill" style="width:0%"></div>
+    </div>
+    <div class="progress-labels">
+      <span>$0</span>
+      <span id="prog-label-mid"></span>
+      <span id="prog-label-max"></span>
+    </div>
+  </div>
+
+  <!-- CHART -->
+  <div class="chart-card">
+    <div class="chart-header">
+      <div class="chart-title">Portfolio Projection to Retirement</div>
+    </div>
+    <canvas id="chart" height="260"></canvas>
+  </div>
+
+  <!-- TABLE -->
+  <div class="table-card">
+    <div class="table-head-row">
+      <div class="table-head-title">Year-by-Year Projection</div>
+    </div>
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>Age</th>
+            <th>Portfolio Value</th>
+            <th>Coast FIRE #</th>
+            <th>FI Progress</th>
+            <th>Gap / Surplus</th>
+            <th>Coast Reached?</th>
+          </tr>
+        </thead>
+        <tbody id="tbl-body"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- INSTRUCTIONS -->
+  <div class="instructions-card">
+    <div class="instructions-title">
+      <span>📖</span> How to Use This Calculator
+    </div>
+
+    <div class="instr-section">
+      <div class="instr-section-title">What is Coast FIRE?</div>
+      <p>
+        <strong>Coast FIRE</strong> (Coast Financial Independence, Retire Early) is a milestone on the path to full financial independence. Once you reach your Coast FIRE number, you have enough invested that — even without adding a single additional dollar — your portfolio will grow to support your retirement lifestyle at your target retirement age.
+      </p>
+      <p>
+        In other words, you can <em>"coast"</em> the rest of the way. You still need income to cover living expenses, but you're no longer required to save aggressively for retirement.
+      </p>
+    </div>
+
+    <div class="instr-section">
+      <div class="instr-section-title">How the Calculation Works</div>
+      <div class="instr-formula-box">
+        Step 1 — <span class="hlg">FI Number</span> = <span class="hl">Annual Spending</span> ÷ <span class="hlp">SWR</span><br/>
+        Step 2 — <span class="hlg">Coast FIRE#</span> = <span class="hlg">FI Number</span> ÷ (1 + <span class="hlp">r</span>)<sup><span class="hlp">t</span></sup>
+      </div>
+      <p>Where <span class="instr-highlight">r</span> is your expected annual return rate and <span class="instr-highlight">t</span> is the number of years until retirement. The idea: today's Coast FIRE number compounded at rate <span class="instr-highlight">r</span> for <span class="instr-highlight">t</span> years equals your FI Number.</p>
+    </div>
+
+    <div class="instr-section">
+      <div class="instr-section-title">Step-by-Step Guide</div>
+      <ul class="instr-list">
+        <li>
+          <div class="li-num">1</div>
+          <div><strong>Enter your current age</strong> and <strong>target retirement age.</strong> The gap between these is how many years your investments have to grow.</div>
+        </li>
+        <li>
+          <div class="li-num">2</div>
+          <div><strong>Enter your current portfolio value</strong> — the total of all investment accounts (401k, IRA, taxable brokerage, etc.).</div>
+        </li>
+        <li>
+          <div class="li-num">3</div>
+          <div><strong>Enter your expected annual spending in retirement.</strong> This should be today's dollars — your lifestyle cost once you stop working.</div>
+        </li>
+        <li>
+          <div class="li-num">4</div>
+          <div><strong>Set your Safe Withdrawal Rate (SWR).</strong> The classic <span class="instr-highlight">4%</span> rule (from the Trinity Study) says you can withdraw 4% of your portfolio per year with high probability it lasts 30+ years. Conservative planners may use 3–3.5%.</div>
+        </li>
+        <li>
+          <div class="li-num">5</div>
+          <div><strong>Set your expected annual return.</strong> A commonly cited long-term real return (after inflation) for a diversified stock portfolio is <span class="instr-highlight">7%</span>. Adjust lower for more conservative or bond-heavy portfolios.</div>
+        </li>
+        <li>
+          <div class="li-num">6</div>
+          <div><strong>Read your results.</strong> If your current savings ≥ Coast FIRE#, you've reached Coast FIRE — you just need to maintain your lifestyle without dipping into investments. If not, the chart shows how close you are each year.</div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="instr-section">
+      <div class="instr-section-title">Tips & Caveats</div>
+      <p><strong>Inflation:</strong> Use a real (inflation-adjusted) return rate so your spending figure stays in today's dollars. If your expected nominal return is 10% and inflation is 3%, use <span class="instr-highlight">7%</span>.</p>
+      <p><strong>Taxes:</strong> This calculator does not account for taxes. In tax-advantaged accounts (Roth IRA, etc.) growth may be tax-free; in taxable accounts, capital gains taxes apply. Adjust your target accordingly.</p>
+      <p><strong>Sequence of returns risk:</strong> Real markets are volatile. A higher Coast FIRE number (lower SWR) provides a larger safety margin against bad market timing early in retirement.</p>
+      <p><strong>This is not financial advice.</strong> Use this as an educational tool and consult a qualified financial planner for personalized guidance.</p>
+    </div>
+  </div>
+
+</div><!-- /.app -->
+
+<div id="toast"><span style="color:var(--amber);font-size:15px;">✓</span> <span id="toast-msg">Done!</span></div>
+
+<script>
+  // ── State ──────────────────────────────────────────────────────────────────
+  let dark = false;
+  let lastData = null;
+  const sym = '$';
+
+  // ── Init dark mode ─────────────────────────────────────────────────────────
+  try {
+    if (localStorage.getItem('zp_fire_dark') === '1') {
+      dark = true;
+      document.body.classList.add('dark');
+      document.getElementById('darkBtn').textContent = '☀️';
+    }
+  } catch(e) {}
+
+  // ── Toggle dark ────────────────────────────────────────────────────────────
+  function toggleDark() {
+    dark = !dark;
+    document.body.classList.toggle('dark', dark);
+    document.getElementById('darkBtn').textContent = dark ? '☀️' : '🌙';
+    try { localStorage.setItem('zp_fire_dark', dark ? '1' : '0'); } catch(e) {}
+    if (lastData) drawChart(lastData);
+  }
+
+  // ── Format helpers ─────────────────────────────────────────────────────────
+  function fmtFull(n) {
+    return sym + Math.abs(n).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+  }
+  function fmtShort(n) {
+    if (n >= 1e9) return sym + (n / 1e9).toFixed(2) + 'B';
+    if (n >= 1e6) return sym + (n / 1e6).toFixed(2) + 'M';
+    if (n >= 1e3) return sym + (n / 1e3).toFixed(1) + 'K';
+    return sym + n.toFixed(0);
+  }
+  function fmtPct(n) { return n.toFixed(1) + '%'; }
+
+  // ── Sync sliders ───────────────────────────────────────────────────────────
+  function syncSlider(rangeId, numId, min, max) {
+    const range = document.getElementById(rangeId);
+    const num = document.getElementById(numId);
+    range.addEventListener('input', () => { num.value = range.value; calculate(); });
+    num.addEventListener('input', () => {
+      const v = Math.min(max, Math.max(min, parseFloat(num.value) || min));
+      range.value = v; num.value = v; calculate();
+    });
+    num.addEventListener('change', () => {
+      const v = Math.min(max, Math.max(min, parseFloat(num.value) || min));
+      range.value = v; num.value = v; calculate();
+    });
+  }
+
+  syncSlider('cur-age', 'cur-age-num', 18, 70);
+  syncSlider('ret-age', 'ret-age-num', 40, 80);
+  syncSlider('swr', 'swr-num', 2, 8);
+  syncSlider('return-rate', 'return-num', 1, 15);
+
+  // Also listen to number inputs for auto-calc
+  ['current-savings', 'annual-spending'].forEach(id => {
+    document.getElementById(id).addEventListener('input', calculate);
+  });
+
+  // ── Main Calculation ───────────────────────────────────────────────────────
+  function calculate() {
+    const curAge       = parseInt(document.getElementById('cur-age').value) || 30;
+    const retAge       = parseInt(document.getElementById('ret-age').value) || 65;
+    const curSavings   = parseFloat(document.getElementById('current-savings').value) || 0;
+    const annualSpend  = parseFloat(document.getElementById('annual-spending').value) || 50000;
+    const swr          = parseFloat(document.getElementById('swr').value) / 100 || 0.04;
+    const returnRate   = parseFloat(document.getElementById('return-rate').value) / 100 || 0.07;
+
+    const yearsToRetire = Math.max(retAge - curAge, 0);
+
+    // FI Number = Annual Spending / SWR
+    const fiNumber = annualSpend / swr;
+
+    // Coast FIRE Number = FI Number / (1 + r)^t
+    const coastFireNumber = fiNumber / Math.pow(1 + returnRate, yearsToRetire);
+
+    const coastReached = curSavings >= coastFireNumber;
+
+    // Stats
+    document.getElementById('s-fi').textContent     = fmtFull(fiNumber);
+    document.getElementById('s-coast').textContent  = fmtFull(coastFireNumber);
+    document.getElementById('s-years').textContent  = yearsToRetire + ' yrs';
+    document.getElementById('s-years-sub').textContent = `Age ${curAge} → Age ${retAge}`;
+
+    // Progress bar
+    const pct = coastFireNumber > 0 ? Math.min((curSavings / coastFireNumber) * 100, 100) : 0;
+    document.getElementById('prog-pct').textContent = fmtPct(pct);
+    document.getElementById('prog-fill').style.width = pct + '%';
+    document.getElementById('prog-label-mid').textContent = fmtShort(coastFireNumber / 2);
+    document.getElementById('prog-label-max').textContent = fmtShort(coastFireNumber);
+
+    // Status banner
+    const banner = document.getElementById('status-banner');
+    const statusIcon = document.getElementById('status-icon');
+    const statusTitle = document.getElementById('status-title');
+    const statusDesc = document.getElementById('status-desc');
+
+    if (coastReached) {
+      banner.className = 'status-banner reached';
+      statusIcon.textContent = '🎉';
+      statusTitle.textContent = 'You\'ve Reached Coast FIRE!';
+      statusTitle.className = 'status-title green';
+      const surplus = curSavings - coastFireNumber;
+      statusDesc.textContent = `Congratulations! Your ${fmtFull(curSavings)} portfolio will grow to ${fmtFull(fiNumber)} by age ${retAge} — even without adding another dollar. You have a surplus of ${fmtFull(surplus)} beyond your Coast FIRE number.`;
+    } else {
+      banner.className = 'status-banner not-reached';
+      statusIcon.textContent = '🏄';
+      statusTitle.textContent = 'Keep Building — Coast FIRE Ahead!';
+      statusTitle.className = 'status-title amber';
+      const gap = coastFireNumber - curSavings;
+      statusDesc.textContent = `You need ${fmtFull(gap)} more to reach your Coast FIRE number of ${fmtFull(coastFireNumber)}. Once there, your portfolio will grow to ${fmtFull(fiNumber)} at age ${retAge} with no further contributions needed.`;
+    }
+
+    // Build year-by-year projection rows
+    const rows = [];
+    for (let age = curAge; age <= retAge; age++) {
+      const t = age - curAge;
+      const portfolioValue = curSavings * Math.pow(1 + returnRate, t);
+      const coastNumAtAge = fiNumber / Math.pow(1 + returnRate, retAge - age);
+      const fiProgress = fiNumber > 0 ? (portfolioValue / fiNumber) * 100 : 0;
+      const gap = portfolioValue - coastNumAtAge;
+      const coastReachedAtAge = portfolioValue >= coastNumAtAge;
+      rows.push({ age, t, portfolioValue, coastNumAtAge, fiProgress, gap, coastReachedAtAge });
+    }
+
+    lastData = { rows, fiNumber, coastFireNumber, curSavings, curAge, retAge };
+    drawChart(lastData);
+    renderTable(rows);
+    updatePrintSummary({ curAge, retAge, curSavings, annualSpend, swr, returnRate, fiNumber, coastFireNumber, yearsToRetire, coastReached });
+  }
+
+  // ── Draw Chart ─────────────────────────────────────────────────────────────
+  function drawChart(data) {
+    const canvas = document.getElementById('chart');
+    const ctx = canvas.getContext('2d');
+    const dpr = window.devicePixelRatio || 1;
+    const W = canvas.parentElement.clientWidth - 44;
+    const H = 260;
+    canvas.width = W * dpr;
+    canvas.height = H * dpr;
+    canvas.style.width = W + 'px';
+    canvas.style.height = H + 'px';
+    ctx.scale(dpr, dpr);
+
+    const isDark = document.body.classList.contains('dark');
+    const textColor = isDark ? '#8b949e' : '#5a6478';
+    const gridColor = isDark ? 'rgba(48,54,61,0.8)' : 'rgba(226,230,239,0.8)';
+    const bgColor = isDark ? '#161b22' : '#fff';
+
+    ctx.clearRect(0, 0, W, H);
+
+    const { rows, fiNumber, coastFireNumber } = data;
+    const pad = { t: 20, r: 20, b: 38, l: 70 };
+    const cw = W - pad.l - pad.r;
+    const ch = H - pad.t - pad.b;
+
+    // Max value for Y axis
+    const allValues = rows.map(r => r.portfolioValue).concat([fiNumber]);
+    const maxVal = Math.max(...allValues) * 1.05;
+
+    function xPos(i) { return pad.l + (i / (rows.length - 1)) * cw; }
+    function yPos(v) { return pad.t + ch - (v / maxVal) * ch; }
+
+    // Grid lines
+    ctx.strokeStyle = gridColor;
+    ctx.lineWidth = 1;
+    for (let i = 0; i <= 4; i++) {
+      const y = pad.t + (i / 4) * ch;
+      ctx.beginPath(); ctx.moveTo(pad.l, y); ctx.lineTo(pad.l + cw, y); ctx.stroke();
+      const val = maxVal * (1 - i / 4);
+      ctx.fillStyle = textColor;
+      ctx.font = '10px JetBrains Mono, monospace';
+      ctx.textAlign = 'right';
+      ctx.fillText(fmtShort(val), pad.l - 8, y + 3.5);
+    }
+
+    // FI Number horizontal line
+    if (fiNumber <= maxVal) {
+      const yFI = yPos(fiNumber);
+      ctx.save();
+      ctx.setLineDash([5, 4]);
+      ctx.strokeStyle = isDark ? 'rgba(245,158,11,.5)' : 'rgba(245,158,11,.7)';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath(); ctx.moveTo(pad.l, yFI); ctx.lineTo(pad.l + cw, yFI); ctx.stroke();
+      ctx.restore();
+      ctx.fillStyle = isDark ? 'rgba(245,158,11,.8)' : 'rgba(180,90,0,.9)';
+      ctx.font = '10px Plus Jakarta Sans, sans-serif';
+      ctx.textAlign = 'left';
+      ctx.fillText('FI #', pad.l + 4, yFI - 4);
+    }
+
+    // X axis labels
+    ctx.fillStyle = textColor;
+    ctx.font = '10px JetBrains Mono, monospace';
+    ctx.textAlign = 'center';
+    const step = Math.max(1, Math.floor(rows.length / 8));
+    rows.forEach((r, i) => {
+      if (i % step === 0 || i === rows.length - 1) {
+        ctx.fillText('Age ' + r.age, xPos(i), H - pad.b + 16);
+      }
+    });
+
+    // Area under portfolio curve
+    const grad = ctx.createLinearGradient(0, pad.t, 0, pad.t + ch);
+    grad.addColorStop(0, isDark ? 'rgba(245,158,11,.25)' : 'rgba(245,158,11,.15)');
+    grad.addColorStop(1, 'rgba(245,158,11,0)');
+    ctx.beginPath();
+    ctx.moveTo(xPos(0), yPos(rows[0].portfolioValue));
+    rows.forEach((r, i) => { ctx.lineTo(xPos(i), yPos(r.portfolioValue)); });
+    ctx.lineTo(xPos(rows.length - 1), pad.t + ch);
+    ctx.lineTo(xPos(0), pad.t + ch);
+    ctx.closePath();
+    ctx.fillStyle = grad;
+    ctx.fill();
+
+    // Portfolio value line
+    ctx.beginPath();
+    ctx.moveTo(xPos(0), yPos(rows[0].portfolioValue));
+    rows.forEach((r, i) => { ctx.lineTo(xPos(i), yPos(r.portfolioValue)); });
+    ctx.strokeStyle = '#f59e0b';
+    ctx.lineWidth = 2.5;
+    ctx.lineJoin = 'round';
+    ctx.stroke();
+
+    // Coast FIRE number line (decreases as we approach retirement)
+    ctx.save();
+    ctx.setLineDash([4, 3]);
+    ctx.beginPath();
+    ctx.moveTo(xPos(0), yPos(rows[0].coastNumAtAge));
+    rows.forEach((r, i) => { ctx.lineTo(xPos(i), yPos(r.coastNumAtAge)); });
+    ctx.strokeStyle = isDark ? 'rgba(16,185,129,.8)' : 'rgba(16,185,129,.9)';
+    ctx.lineWidth = 2;
+    ctx.lineJoin = 'round';
+    ctx.stroke();
+    ctx.restore();
+
+    // Legend
+    const legendY = H - pad.b + 28;
+    ctx.font = '11px Plus Jakarta Sans, sans-serif';
+
+    ctx.fillStyle = '#f59e0b'; ctx.beginPath(); ctx.arc(pad.l + 8, legendY, 4, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = textColor; ctx.textAlign = 'left'; ctx.fillText('Portfolio (no new contributions)', pad.l + 16, legendY + 3.5);
+
+    const l2x = pad.l + 210;
+    ctx.save(); ctx.setLineDash([4,3]); ctx.strokeStyle = isDark ? 'rgba(16,185,129,.8)' : 'rgba(16,185,129,.9)'; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(l2x, legendY); ctx.lineTo(l2x + 16, legendY); ctx.stroke(); ctx.restore();
+    ctx.fillStyle = textColor; ctx.fillText('Coast FIRE # (target)', l2x + 20, legendY + 3.5);
+  }
+
+  // ── Render Table ───────────────────────────────────────────────────────────
+  function renderTable(rows) {
+    const tbody = document.getElementById('tbl-body');
+    tbody.innerHTML = '';
+    rows.forEach(r => {
+      const tr = document.createElement('tr');
+      const gap = r.gap;
+      const gapStr = gap >= 0
+        ? `<span class="td-green">+${fmtFull(gap)}</span>`
+        : `<span class="td-amber">-${fmtFull(Math.abs(gap))}</span>`;
+      tr.innerHTML = `
+        <td>${r.age}</td>
+        <td>${fmtFull(r.portfolioValue)}</td>
+        <td>${fmtFull(r.coastNumAtAge)}</td>
+        <td>${fmtPct(r.fiProgress)}</td>
+        <td>${gapStr}</td>
+        <td>${r.coastReachedAtAge ? '<span class="td-check">✓ Yes</span>' : '—'}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  // ── Print Summary ──────────────────────────────────────────────────────────
+  function updatePrintSummary(p) {
+    const grid = document.getElementById('print-summary-grid');
+    grid.innerHTML = [
+      { label: 'Current Age', value: p.curAge + ' yrs' },
+      { label: 'Retirement Age', value: p.retAge + ' yrs' },
+      { label: 'Current Savings', value: fmtFull(p.curSavings) },
+      { label: 'Annual Spending', value: fmtFull(p.annualSpend) },
+      { label: 'SWR', value: fmtPct(p.swr * 100) },
+      { label: 'Expected Return', value: fmtPct(p.returnRate * 100) },
+      { label: 'FI Number', value: fmtFull(p.fiNumber) },
+      { label: 'Coast FIRE #', value: fmtFull(p.coastFireNumber) },
+    ].map(item => `
+      <div class="print-summary-item">
+        <div class="ps-label">${item.label}</div>
+        <div class="ps-value">${item.value}</div>
+      </div>
+    `).join('');
+  }
+
+  // ── Print ──────────────────────────────────────────────────────────────────
+  function printPage() {
+    window.print();
+  }
+
+  // ── Export CSV ─────────────────────────────────────────────────────────────
+  function exportCSV() {
+    if (!lastData) return;
+    const { rows, fiNumber, coastFireNumber, curSavings } = lastData;
+    const lines = [
+      'Age,Portfolio Value,Coast FIRE Number,FI Progress (%),Gap/Surplus,Coast Reached',
+      ...rows.map(r => [
+        r.age,
+        r.portfolioValue.toFixed(2),
+        r.coastNumAtAge.toFixed(2),
+        r.fiProgress.toFixed(2),
+        r.gap.toFixed(2),
+        r.coastReachedAtAge ? 'Yes' : 'No'
+      ].join(','))
+    ];
+    const blob = new Blob([lines.join('\n')], { type: 'text/csv' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'coast-fire-projection.csv';
+    a.click();
+    URL.revokeObjectURL(a.href);
+    showToast('CSV exported!');
+  }
+
+  // ── Toast ──────────────────────────────────────────────────────────────────
+  function showToast(msg) {
+    const el = document.getElementById('toast');
+    document.getElementById('toast-msg').textContent = msg;
+    el.classList.add('show');
+    setTimeout(() => el.classList.remove('show'), 2500);
+  }
+
+  // ── Resize ─────────────────────────────────────────────────────────────────
+  let resizeTimer;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => { if (lastData) drawChart(lastData); }, 80);
+  });
+
+  // ── Run on load ────────────────────────────────────────────────────────────
+  calculate();
+</script>
+</body>
+</html>
