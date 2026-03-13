@@ -50,10 +50,10 @@
     {
       id: 'utility', icon: '🔧', label: 'Utility', cssClass: 'utility',
       items: [
-        { id: 'unit-converter',   icon: '📏', label: 'Unit Converter',   live: false },
-        { id: 'percentage-calc',  icon: '🔢', label: 'Percentage Calc',  live: false },
+        { id: 'unit-converter',   icon: '📏', label: 'Unit Converter',   href: 'unit-converter.html', live: true },
+        { id: 'percentage-calculator',  icon: '🔢', label: 'Percentage Calc',  href: 'percentage-calculator.html', live: true },
         { id: 'random-number',    icon: '🎲', label: 'Random Number',    live: false },
-        { id: 'word-counter',     icon: '✍️', label: 'Word Counter',     live: false },
+        { id: 'word-counter',     icon: '✍️', label: 'Word Counter',     href: 'word-counter.html', live: true },
       ]
     }
   ];

@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Word Counter — Text Analysis Tool | CalcNova</title>
+  <meta name="description" content="Count words, characters, sentences, paragraphs, and estimate reading & speaking time. Free, private, runs entirely in your browser.">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="shared/nav.css">
+  <style>
+    .app { position: relative; z-index: 1; max-width: 960px; margin: 0 auto; padding: 0 16px 60px; }
+
+    .pill-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: linear-gradient(135deg, rgba(16,185,129,.1), rgba(99,102,241,.1));
+      border: 1px solid rgba(16,185,129,.25);
+      border-radius: 100px; padding: 6px 14px;
+      font-size: 12px; font-weight: 700; color: var(--green);
+    }
+
+    .hero {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 38px 32px;
+      margin-bottom: 28px;
+    }
+    .hero-title { font-size: 26px; font-weight: 800; letter-spacing: -.5px; margin-top: 10px; }
+    .hero-title span {
+      background: linear-gradient(135deg, var(--green), var(--purple));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .hero-desc { font-size: 14px; color: var(--text-secondary); margin-top: 6px; line-height: 1.5; }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 22px;
+      margin-bottom: 28px;
+    }
+    .card-title {
+      font-family: var(--mono);
+      font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
+      color: var(--text-muted); margin-bottom: 18px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .card-title-dot { width: 6px; height: 6px; border-radius: 50%; }
+
+    /* Textarea */
+    .text-input {
+      width: 100%;
+      min-height: 200px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      color: var(--text-primary);
+      font-family: var(--font);
+      font-size: 15px;
+      font-weight: 500;
+      padding: 14px 16px;
+      outline: none;
+      resize: vertical;
+      line-height: 1.7;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .text-input::placeholder { color: var(--text-muted); }
+    .text-input:focus {
+      border-color: var(--green);
+      box-shadow: 0 0 0 3px rgba(16,185,129,.12);
+    }
+
+    /* Textarea toolbar */
+    .textarea-toolbar {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-top: 10px; flex-wrap: wrap; gap: 8px;
+    }
+    .clear-btn {
+      display: inline-flex; align-items: center; gap: 5px;
+      background: none; border: 1px solid var(--border); border-radius: 8px;
+      color: var(--text-muted); font-family: var(--font); font-size: 12px; font-weight: 600;
+      padding: 6px 12px; cursor: pointer; transition: all .15s;
+    }
+    .clear-btn:hover { border-color: var(--red); color: var(--red); }
+
+    /* Character limit */
+    .char-limit-wrap {
+      display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+    }
+    .char-limit-label { font-size: 12px; font-weight: 600; color: var(--text-secondary); white-space: nowrap; }
+    .char-limit-input {
+      width: 80px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text-primary);
+      font-family: var(--mono);
+      font-size: 13px;
+      font-weight: 600;
+      padding: 5px 10px;
+      outline: none;
+      transition: border-color .2s;
+    }
+    .char-limit-input:focus { border-color: var(--green); }
+    .char-limit-input::placeholder { color: var(--text-muted); }
+
+    .progress-bar-wrap {
+      flex: 1; min-width: 120px; max-width: 240px;
+      height: 8px; background: var(--bg); border-radius: 100px;
+      overflow: hidden; border: 1px solid var(--border);
+    }
+    .progress-bar-fill {
+      height: 100%; border-radius: 100px;
+      background: linear-gradient(135deg, var(--green), var(--purple));
+      transition: width .2s, background .2s;
+      width: 0%;
+    }
+    .progress-bar-fill.exceeded { background: var(--red); }
+    .char-limit-count {
+      font-family: var(--mono); font-size: 12px; font-weight: 600;
+      color: var(--text-secondary); white-space: nowrap;
+    }
+    .char-limit-count.exceeded { color: var(--red); font-weight: 700; }
+
+    /* Stats grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin-bottom: 28px;
+    }
+    @media (max-width: 700px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 360px) { .stats-grid { grid-template-columns: 1fr; } }
+
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px;
+      position: relative;
+      overflow: hidden;
+    }
+    .stat-card::before {
+      content: '';
+      position: absolute; top: 0; right: 0;
+      width: 60px; height: 60px;
+      border-radius: 0 16px 0 60px;
+      opacity: .06;
+    }
+    .stat-card.green::before { background: var(--green); }
+    .stat-card.purple::before { background: var(--purple); }
+    .stat-card.amber::before { background: var(--amber); }
+
+    .stat-card.primary {
+      background: linear-gradient(135deg, rgba(16,185,129,.08), rgba(99,102,241,.08));
+      border-color: rgba(16,185,129,.3);
+    }
+
+    .stat-icon { font-size: 18px; margin-bottom: 10px; }
+    .stat-label {
+      font-family: var(--mono);
+      font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+      color: var(--text-muted); margin-bottom: 4px;
+    }
+    .stat-value {
+      font-family: var(--mono); font-size: 22px; font-weight: 800;
+      color: var(--text-primary); line-height: 1;
+    }
+    .stat-card.primary .stat-value {
+      background: linear-gradient(135deg, var(--green), var(--purple));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .stat-sub { font-size: 11px; color: var(--text-muted); margin-top: 6px; font-family: var(--mono); line-height: 1.45; }
+
+    /* Time row */
+    .time-row {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
+      margin-bottom: 28px;
+    }
+    @media (max-width: 480px) { .time-row { grid-template-columns: 1fr; } }
+
+    /* Frequent words */
+    .freq-toggle-wrap {
+      display: flex; align-items: center; gap: 10px;
+      margin-bottom: 14px;
+    }
+    .toggle {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 13px; font-weight: 600; color: var(--text-secondary);
+      user-select: none; cursor: pointer;
+    }
+    .toggle input { width: 18px; height: 18px; accent-color: var(--green); cursor: pointer; }
+
+    .freq-list {
+      list-style: none; padding: 0; margin: 0;
+    }
+    .freq-item {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border);
+      font-size: 13px;
+    }
+    .freq-item:last-child { border-bottom: none; }
+    .freq-rank {
+      font-family: var(--mono); font-size: 11px; font-weight: 700;
+      color: var(--text-muted); width: 24px; flex-shrink: 0;
+    }
+    .freq-word {
+      flex: 1; font-weight: 700; color: var(--text-primary);
+      font-family: var(--mono); font-size: 13px;
+    }
+    .freq-count {
+      font-family: var(--mono); font-size: 12px; font-weight: 700;
+      color: var(--green); background: rgba(16,185,129,.1);
+      padding: 2px 10px; border-radius: 100px;
+    }
+    .freq-empty {
+      padding: 20px; text-align: center;
+      font-size: 13px; color: var(--text-muted);
+    }
+
+    /* Actions */
+    .action-row {
+      display: flex; gap: 8px; justify-content: flex-end;
+      margin-bottom: 28px; flex-wrap: wrap;
+    }
+    .action-btn {
+      display: flex; align-items: center; gap: 7px;
+      background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+      color: var(--text-secondary); font-family: var(--font); font-size: 13px; font-weight: 600;
+      padding: 8px 16px; cursor: pointer; transition: all .15s; text-decoration: none;
+    }
+    .action-btn:hover { border-color: var(--green); color: var(--green); background: linear-gradient(135deg, rgba(16,185,129,.04), rgba(99,102,241,.04)); }
+    .action-btn svg { width: 15px; height: 15px; flex-shrink: 0; }
+
+    /* Toast */
+    #toast {
+      position: fixed; bottom: 24px; right: 24px; z-index: 200;
+      background: #0f1623; color: white;
+      padding: 10px 18px; border-radius: 100px;
+      font-size: 12px; font-weight: 700; font-family: var(--mono);
+      display: flex; align-items: center; gap: 7px;
+      box-shadow: 0 8px 24px rgba(0,0,0,.25);
+      opacity: 0; transform: translateY(8px);
+      transition: opacity .25s, transform .25s; pointer-events: none;
+    }
+
+    /* Print */
+    @media print {
+      body { background: white !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      body::before { display: none; }
+      header, .action-row, #toast, .icon-btn, .pill-badge, .nav-tools-wrap, .donate-btn,
+      .mega-menu, .menu-overlay, .site-footer, .footer-disclaimer,
+      .textarea-toolbar, .clear-btn, .char-limit-wrap, .text-input { display: none !important; }
+      .app { padding: 0; max-width: 100%; }
+      .hero { border: none; padding: 12px 0 8px; margin-bottom: 10px; }
+      .stat-card, .card { page-break-inside: avoid; }
+      .freq-card-body { display: block !important; max-height: none !important; }
+    }
+
+    @media (max-width: 640px) {
+      .hero { padding: 24px 20px; }
+      .hero-title { font-size: 20px; }
+    }
+    @media (max-width: 320px) {
+      .card { padding: 16px; }
+      .stat-card { padding: 14px; }
+      .stat-value { font-size: 18px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <!-- nav.js injects header here -->
+
+    <div class="hero">
+      <div class="pill-badge">Live Analysis &middot; Private &middot; Free</div>
+      <div class="hero-title">Word <span>Counter</span></div>
+      <div class="hero-desc">Analyze your text instantly — word count, characters, sentences, paragraphs, reading time, and more. Everything runs in your browser.</div>
+    </div>
+
+    <!-- Input card -->
+    <div class="card">
+      <div class="card-title"><div class="card-title-dot" style="background:var(--green)"></div>Text Input</div>
+      <textarea id="textInput" class="text-input" rows="8" placeholder="Type or paste your text here..."></textarea>
+      <div class="textarea-toolbar">
+        <button class="clear-btn" id="clearBtn" type="button">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          Clear
+        </button>
+        <div class="char-limit-wrap">
+          <label class="char-limit-label" for="charLimit">Char limit:</label>
+          <input type="number" id="charLimit" class="char-limit-input" placeholder="e.g. 280" min="1">
+          <div class="progress-bar-wrap" id="progressWrap" style="display:none;">
+            <div class="progress-bar-fill" id="progressFill"></div>
+          </div>
+          <span class="char-limit-count" id="charLimitCount" style="display:none;"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="action-row">
+      <button class="action-btn" id="copyBtn" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        Copy summary
+      </button>
+      <button class="action-btn" id="printBtn" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+        Print results
+      </button>
+    </div>
+
+    <!-- Stats grid -->
+    <div class="stats-grid" id="statsGrid">
+      <div class="stat-card primary green">
+        <div class="stat-icon">W</div>
+        <div class="stat-label">Words</div>
+        <div class="stat-value" id="statWords">0</div>
+      </div>
+      <div class="stat-card green">
+        <div class="stat-icon">Aa</div>
+        <div class="stat-label">Characters</div>
+        <div class="stat-value" id="statChars">0</div>
+        <div class="stat-sub">with spaces</div>
+      </div>
+      <div class="stat-card purple">
+        <div class="stat-icon">A</div>
+        <div class="stat-label">Chars (no spaces)</div>
+        <div class="stat-value" id="statCharsNoSpace">0</div>
+      </div>
+      <div class="stat-card green">
+        <div class="stat-icon">.</div>
+        <div class="stat-label">Sentences</div>
+        <div class="stat-value" id="statSentences">0</div>
+      </div>
+    </div>
+
+    <div class="time-row">
+      <div class="stat-card purple">
+        <div class="stat-icon">P</div>
+        <div class="stat-label">Paragraphs</div>
+        <div class="stat-value" id="statParagraphs">0</div>
+      </div>
+      <div class="stat-card amber">
+        <div class="stat-icon">~</div>
+        <div class="stat-label">Reading Time</div>
+        <div class="stat-value" id="statReadTime">0 min</div>
+        <div class="stat-sub">@ 200 wpm</div>
+      </div>
+    </div>
+
+    <div class="time-row" style="margin-bottom:28px;">
+      <div class="stat-card amber">
+        <div class="stat-icon">~</div>
+        <div class="stat-label">Speaking Time</div>
+        <div class="stat-value" id="statSpeakTime">0 min</div>
+        <div class="stat-sub">@ 130 wpm</div>
+      </div>
+    </div>
+
+    <!-- Frequent words -->
+    <div class="card" id="freqCard">
+      <div class="card-title"><div class="card-title-dot" style="background:var(--purple)"></div>Top Words</div>
+      <div class="freq-toggle-wrap">
+        <label class="toggle">
+          <input type="checkbox" id="freqToggle"> Show top 10 most frequent words
+        </label>
+      </div>
+      <div id="freqBody" style="display:none;">
+        <ul class="freq-list" id="freqList">
+          <li class="freq-empty">Type some text to see frequent words.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- nav.js injects footer here -->
+  </div>
+
+  <div id="toast"><span style="color:var(--green);font-size:15px;">&#10003;</span> <span id="toast-msg">Copied!</span></div>
+
+  <script>
+    window.CALCNOVA_PAGE = { id:'word-counter', disclaimer:'For informational purposes only.' };
+  </script>
+  <script src="shared/nav.js"></script>
+
+  <script>
+  (function() {
+    'use strict';
+
+    // Stop words set
+    var STOP_WORDS = new Set([
+      'the','is','a','an','and','or','but','in','on','at','to','for','of','it',
+      'with','that','this','was','are','be','has','have','had','not','you','we',
+      'they','he','she','its','my','your','our','do','did','will','would','could',
+      'should','can','may','from','by','about','so','if','no','up','out','then',
+      'than','just','also','very','too','only','more','most','some','any','all',
+      'each','which','what','when','where','how','who','why'
+    ]);
+
+    // DOM refs
+    var textInput     = document.getElementById('textInput');
+    var clearBtn      = document.getElementById('clearBtn');
+    var charLimitIn   = document.getElementById('charLimit');
+    var progressWrap  = document.getElementById('progressWrap');
+    var progressFill  = document.getElementById('progressFill');
+    var charLimitCount= document.getElementById('charLimitCount');
+    var freqToggle    = document.getElementById('freqToggle');
+    var freqBody      = document.getElementById('freqBody');
+    var freqList      = document.getElementById('freqList');
+    var copyBtn       = document.getElementById('copyBtn');
+    var printBtn      = document.getElementById('printBtn');
+
+    // Stat elements
+    var elWords        = document.getElementById('statWords');
+    var elChars        = document.getElementById('statChars');
+    var elCharsNoSpace = document.getElementById('statCharsNoSpace');
+    var elSentences    = document.getElementById('statSentences');
+    var elParagraphs   = document.getElementById('statParagraphs');
+    var elReadTime     = document.getElementById('statReadTime');
+    var elSpeakTime    = document.getElementById('statSpeakTime');
+
+    function countWords(text) {
+      var trimmed = text.trim();
+      if (!trimmed) return 0;
+      return trimmed.split(/\s+/).filter(function(w) { return w.length > 0; }).length;
+    }
+
+    function countSentences(text) {
+      // Count . ! ? followed by whitespace or end of string
+      var matches = text.match(/[.!?](?:\s|$)/g);
+      return matches ? matches.length : 0;
+    }
+
+    function countParagraphs(text) {
+      var trimmed = text.trim();
+      if (!trimmed) return 0;
+      // Paragraphs = blocks separated by one or more blank lines
+      var blocks = trimmed.split(/\n\s*\n/).filter(function(b) { return b.trim().length > 0; });
+      // If no blank lines, but there's text, it's 1 paragraph
+      return blocks.length || (trimmed.length > 0 ? 1 : 0);
+    }
+
+    function formatTime(words, wpm) {
+      var totalSeconds = Math.round((words / wpm) * 60);
+      if (totalSeconds < 60) return totalSeconds + ' sec';
+      var mins = Math.floor(totalSeconds / 60);
+      var secs = totalSeconds % 60;
+      if (secs === 0) return mins + ' min';
+      return mins + ' min ' + secs + ' sec';
+    }
+
+    function getFrequentWords(text) {
+      var trimmed = text.trim();
+      if (!trimmed) return [];
+      var words = trimmed.toLowerCase().replace(/[^a-z0-9'\s-]/g, '').split(/\s+/).filter(function(w) {
+        return w.length > 0 && !STOP_WORDS.has(w);
+      });
+      var counts = {};
+      words.forEach(function(w) {
+        // strip leading/trailing punctuation-like chars
+        w = w.replace(/^['-]+|['-]+$/g, '');
+        if (w.length === 0 || STOP_WORDS.has(w)) return;
+        counts[w] = (counts[w] || 0) + 1;
+      });
+      var entries = Object.keys(counts).map(function(k) { return { word: k, count: counts[k] }; });
+      entries.sort(function(a, b) { return b.count - a.count || a.word.localeCompare(b.word); });
+      return entries.slice(0, 10);
+    }
+
+    function fmtInt(n) { return n.toLocaleString('en-US'); }
+
+    function analyze() {
+      var text = textInput.value;
+
+      var words          = countWords(text);
+      var chars          = text.length;
+      var charsNoSpace   = text.replace(/\s/g, '').length;
+      var sentences      = countSentences(text);
+      var paragraphs     = countParagraphs(text);
+
+      elWords.textContent        = fmtInt(words);
+      elChars.textContent        = fmtInt(chars);
+      elCharsNoSpace.textContent = fmtInt(charsNoSpace);
+      elSentences.textContent    = fmtInt(sentences);
+      elParagraphs.textContent   = fmtInt(paragraphs);
+      elReadTime.textContent     = words === 0 ? '0 min' : formatTime(words, 200);
+      elSpeakTime.textContent    = words === 0 ? '0 min' : formatTime(words, 130);
+
+      // Character limit
+      updateCharLimit(chars);
+
+      // Frequent words
+      if (freqToggle.checked) {
+        renderFreqWords(text);
+      }
+    }
+
+    function updateCharLimit(chars) {
+      var limit = parseInt(charLimitIn.value, 10);
+      if (!limit || limit <= 0) {
+        progressWrap.style.display = 'none';
+        charLimitCount.style.display = 'none';
+        return;
+      }
+      progressWrap.style.display = '';
+      charLimitCount.style.display = '';
+
+      var pct = Math.min((chars / limit) * 100, 100);
+      var exceeded = chars > limit;
+
+      progressFill.style.width = pct + '%';
+      if (exceeded) {
+        progressFill.classList.add('exceeded');
+        charLimitCount.classList.add('exceeded');
+      } else {
+        progressFill.classList.remove('exceeded');
+        charLimitCount.classList.remove('exceeded');
+      }
+      charLimitCount.textContent = fmtInt(chars) + ' / ' + fmtInt(limit);
+    }
+
+    function renderFreqWords(text) {
+      var top = getFrequentWords(text);
+      if (top.length === 0) {
+        freqList.innerHTML = '<li class="freq-empty">No significant words found. Type some text to see frequent words.</li>';
+        return;
+      }
+      freqList.innerHTML = top.map(function(item, i) {
+        return '<li class="freq-item">'
+          + '<span class="freq-rank">' + (i + 1) + '.</span>'
+          + '<span class="freq-word">' + escapeHtml(item.word) + '</span>'
+          + '<span class="freq-count">' + item.count + '</span>'
+          + '</li>';
+      }).join('');
+    }
+
+    function escapeHtml(str) {
+      var div = document.createElement('div');
+      div.appendChild(document.createTextNode(str));
+      return div.innerHTML;
+    }
+
+    function showToast(msg) {
+      var toast = document.getElementById('toast');
+      document.getElementById('toast-msg').textContent = msg;
+      toast.style.opacity = '1';
+      toast.style.transform = 'translateY(0)';
+      setTimeout(function() {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(8px)';
+      }, 2200);
+    }
+
+    function buildSummary() {
+      var text = textInput.value;
+      var words = countWords(text);
+      var chars = text.length;
+      var charsNoSpace = text.replace(/\s/g, '').length;
+      var sentences = countSentences(text);
+      var paragraphs = countParagraphs(text);
+      var lines = [
+        'CalcNova - Word Counter',
+        '========================',
+        'Words: ' + fmtInt(words),
+        'Characters (with spaces): ' + fmtInt(chars),
+        'Characters (no spaces): ' + fmtInt(charsNoSpace),
+        'Sentences: ' + fmtInt(sentences),
+        'Paragraphs: ' + fmtInt(paragraphs),
+        'Reading time: ' + (words === 0 ? '0 min' : formatTime(words, 200)) + ' (@ 200 wpm)',
+        'Speaking time: ' + (words === 0 ? '0 min' : formatTime(words, 130)) + ' (@ 130 wpm)'
+      ];
+      return lines.join('\n');
+    }
+
+    // Event listeners
+    textInput.addEventListener('input', analyze);
+
+    clearBtn.addEventListener('click', function() {
+      textInput.value = '';
+      analyze();
+      textInput.focus();
+    });
+
+    charLimitIn.addEventListener('input', function() {
+      var chars = textInput.value.length;
+      updateCharLimit(chars);
+    });
+
+    freqToggle.addEventListener('change', function() {
+      if (freqToggle.checked) {
+        freqBody.style.display = 'block';
+        renderFreqWords(textInput.value);
+      } else {
+        freqBody.style.display = 'none';
+      }
+    });
+
+    copyBtn.addEventListener('click', function() {
+      var summary = buildSummary();
+      navigator.clipboard.writeText(summary).then(function() {
+        showToast('Copied summary!');
+      }).catch(function() {
+        showToast('Copy failed');
+      });
+    });
+
+    printBtn.addEventListener('click', function() {
+      window.print();
+    });
+
+    // Initialize
+    analyze();
+
+  })();
+  </script>
+</body>
+</html>
