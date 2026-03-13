@@ -1744,11 +1744,13 @@ function initDelegatedListeners() {
     hl.style.left = (homeHour / 24) * 100 + '%';
     hl.style.width = (1 / 24) * 100 + '%';
     hl.style.display = 'block';
-    // Show exact local time including minutes for half-hour offsets
+    // Show the time for the hovered hour block, not the current time
     var tz = block.getAttribute('data-tz');
-    var now = getNow();
-    var exactTime = formatTime(now, tz, state.clockFormat);
-    showTooltip(cityLabel + ': ' + exactTime, e);
+    var offDiff = getTimezoneOffsetMinutes(tz) - getTimezoneOffsetMinutes(state.homeCity);
+    var offMinRemainder = Math.abs(offDiff) % 60;
+    var tooltipTime = formatHourLabel(localHour, state.clockFormat);
+    if (offMinRemainder > 0) tooltipTime = tooltipTime.replace(':00', ':' + (offMinRemainder < 10 ? '0' : '') + offMinRemainder);
+    showTooltip(cityLabel + ': ' + tooltipTime, e);
   });
   hzTimelineArea.addEventListener('mouseleave', function() {
     var hl = document.getElementById('hzColHighlight');
