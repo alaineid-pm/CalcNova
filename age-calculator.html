@@ -24,7 +24,7 @@
       border: 1px solid var(--border);
       border-radius: 18px;
       padding: 28px 28px 24px;
-      margin-bottom: 20px;
+      margin-bottom: 28px;
       display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;
     }
     .hero-title { font-size: 26px; font-weight: 800; letter-spacing: -.5px; }
@@ -33,21 +33,15 @@
       -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
     }
     .hero-desc { font-size: 14px; color: var(--text-secondary); margin-top: 6px; line-height: 1.5; }
-    .hero-formula {
+    .hero-formula-tip {
+      font-size: 12px; color: var(--text-muted); margin-top: 8px;
       font-family: var(--mono);
-      font-size: 13px;
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 12px 18px;
-      color: var(--text-secondary);
-      white-space: nowrap;
     }
-    .hero-formula .hl { color: var(--green); font-weight: 700; }
-    .hero-formula .hlp { color: var(--purple); font-weight: 700; }
+    .hero-formula-tip .hl { color: var(--green); font-weight: 700; }
+    .hero-formula-tip .hlp { color: var(--purple); font-weight: 700; }
 
-    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
-    @media (max-width: 640px) { .two-col { grid-template-columns: 1fr; } .hero-formula { display:none; } .hero-title { font-size: 20px; } }
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 28px; }
+    @media (max-width: 640px) { .two-col { grid-template-columns: 1fr; } .hero-title { font-size: 20px; } }
 
     .card {
       background: var(--surface);
@@ -56,9 +50,11 @@
       padding: 22px 22px 18px;
     }
     .card-title {
-      font-size: 11px; font-weight: 700; letter-spacing: .5px; text-transform: uppercase;
+      font-family: var(--mono);
+      font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
       color: var(--text-muted); margin-bottom: 18px;
-      display: flex; align-items: center; gap: 6px;
+      display: flex; align-items: center; gap: 8px;
+      font-variant: small-caps;
     }
     .card-title-dot { width: 6px; height: 6px; border-radius: 50%; }
 
@@ -94,21 +90,95 @@
     }
     .toggle input { width: 18px; height: 18px; accent-color: var(--green); }
 
+    /* Advanced options toggle */
+    .advanced-toggle {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 12px; font-weight: 600; color: var(--text-muted);
+      cursor: pointer; user-select: none;
+      padding: 6px 0; margin-top: 4px;
+      border: none; background: none; font-family: var(--font);
+      transition: color .2s;
+    }
+    .advanced-toggle:hover { color: var(--text-secondary); }
+    .advanced-toggle svg { width: 14px; height: 14px; transition: transform .2s; }
+    .advanced-toggle.open svg { transform: rotate(90deg); }
+    .advanced-content {
+      overflow: hidden; max-height: 0;
+      transition: max-height .3s ease, opacity .3s ease;
+      opacity: 0;
+    }
+    .advanced-content.open { max-height: 300px; opacity: 1; }
+
     .action-row {
       display: flex; gap: 8px; justify-content: flex-end;
-      margin-bottom: 16px; flex-wrap: wrap;
+      margin-bottom: 28px; flex-wrap: wrap;
     }
     .action-btn {
-      display: flex; align-items: center; gap: 6px;
+      display: flex; align-items: center; gap: 7px;
       background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
       color: var(--text-secondary); font-family: var(--font); font-size: 13px; font-weight: 600;
-      padding: 8px 16px; cursor: pointer; transition: all .15s; text-decoration: none;
+      padding: 8px 18px; cursor: pointer; transition: all .15s; text-decoration: none;
     }
-    .action-btn:hover { border-color: var(--green); color: var(--green); }
+    .action-btn:hover { border-color: var(--green); color: var(--green); background: linear-gradient(135deg, rgba(16,185,129,.04), rgba(99,102,241,.04)); }
     .action-btn svg { width: 15px; height: 15px; flex-shrink: 0; }
+    .action-btn-label { font-size: 12px; }
 
-    .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 16px; }
-    @media (max-width: 580px) { .stats-row { grid-template-columns: 1fr; } }
+    /* Hero stat — focal point */
+    .hero-stat-card {
+      background: linear-gradient(135deg, rgba(16,185,129,.08), rgba(99,102,241,.08));
+      border: 1.5px solid rgba(16,185,129,.3);
+      border-radius: 20px;
+      padding: 32px 28px 28px;
+      margin-bottom: 28px;
+      text-align: center;
+      position: relative; overflow: hidden;
+    }
+    .hero-stat-card::before {
+      content: '';
+      position: absolute; top: -40px; right: -40px;
+      width: 120px; height: 120px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--green), var(--purple));
+      opacity: .07;
+    }
+    .hero-stat-card::after {
+      content: '';
+      position: absolute; bottom: -30px; left: -30px;
+      width: 80px; height: 80px;
+      border-radius: 50%;
+      background: var(--purple);
+      opacity: .05;
+    }
+    .hero-stat-icon { font-size: 28px; margin-bottom: 8px; }
+    .hero-stat-label {
+      font-family: var(--mono);
+      font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
+      color: var(--text-muted); margin-bottom: 8px;
+      font-variant: small-caps;
+    }
+    .hero-stat-value {
+      font-family: var(--mono); font-size: 38px; font-weight: 800;
+      background: linear-gradient(135deg, var(--green), var(--purple));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+      line-height: 1.1; margin-bottom: 8px;
+    }
+    .hero-stat-sub {
+      font-size: 13px; color: var(--text-secondary); font-family: var(--mono);
+    }
+    .hero-stat-zodiac {
+      display: inline-flex; align-items: center; gap: 5px;
+      margin-top: 12px; padding: 5px 14px;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 100px;
+      font-size: 12px; font-weight: 600; color: var(--text-secondary);
+      font-family: var(--mono);
+    }
+
+    /* Stats grid — totals & details cards */
+    .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 28px; }
+    @media (max-width: 580px) { .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; } }
+    @media (max-width: 360px) { .stats-grid { grid-template-columns: 1fr; } }
+
     .stat-card {
       background: var(--surface);
       border: 1px solid var(--border);
@@ -116,11 +186,6 @@
       padding: 18px 18px 16px;
       position: relative;
       overflow: hidden;
-      min-height: 108px;
-    }
-    .stat-card.primary {
-      background: linear-gradient(135deg, rgba(16,185,129,.07), rgba(99,102,241,.07));
-      border-color: rgba(16,185,129,.3);
     }
     .stat-card::before {
       content: '';
@@ -130,34 +195,57 @@
       border-radius: 0 16px 0 60px;
       opacity: .06;
     }
-    .stat-card.primary::before { background: var(--green); opacity: .3; }
     .stat-card.green::before { background: var(--green); }
     .stat-card.purple::before { background: var(--purple); }
 
     .stat-icon { font-size: 18px; margin-bottom: 10px; }
-    .stat-label { font-size: 10px; font-weight: 700; letter-spacing: .5px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 4px; }
+    .stat-label {
+      font-family: var(--mono);
+      font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+      color: var(--text-muted); margin-bottom: 4px;
+      font-variant: small-caps;
+    }
     .stat-value {
       font-family: var(--mono); font-size: 22px; font-weight: 800;
       color: var(--text-primary); line-height: 1;
     }
-    .stat-card.primary .stat-value {
-      background: linear-gradient(135deg, var(--green), var(--purple));
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-    }
     .stat-sub { font-size: 11px; color: var(--text-muted); margin-top: 6px; font-family: var(--mono); line-height: 1.45; }
+
+    /* Next birthday pill */
+    .birthday-pill {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: linear-gradient(135deg, rgba(245,158,11,.1), rgba(239,68,68,.08));
+      border: 1px solid rgba(245,158,11,.3);
+      border-radius: 100px; padding: 6px 14px;
+      font-family: var(--mono); font-size: 13px; font-weight: 700;
+      color: var(--amber);
+    }
+
+    .section-label {
+      font-family: var(--mono);
+      font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 14px;
+      font-variant: small-caps;
+    }
 
     .table-card {
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: 18px;
       overflow: hidden;
-      margin-bottom: 16px;
+      margin-bottom: 28px;
     }
     .table-head-row {
       display: flex; align-items: center; justify-content: space-between;
       padding: 16px 20px; border-bottom: 1px solid var(--border);
     }
-    .table-head-title { font-size: 11px; font-weight: 700; letter-spacing: .5px; text-transform: uppercase; color: var(--text-muted); }
+    .table-head-title {
+      font-family: var(--mono);
+      font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
+      color: var(--text-muted);
+      font-variant: small-caps;
+    }
     .table-scroll { overflow-x: auto; }
     table { width: 100%; border-collapse: collapse; font-size: 13px; }
     tbody tr { border-bottom: 1px solid rgba(226,230,239,.5); }
@@ -167,6 +255,15 @@
     td:first-child { color: var(--text-secondary); font-weight: 700; width: 42%; }
     td:last-child { font-family: var(--mono); font-weight: 700; }
     .td-green { color: var(--green) !important; }
+
+    /* Staggered fade-in animation */
+    .fade-in-result {
+      opacity: 0; transform: translateY(12px);
+      transition: opacity .4s ease, transform .4s ease;
+    }
+    .fade-in-result.visible {
+      opacity: 1; transform: translateY(0);
+    }
 
     #toast {
       position: fixed; bottom: 24px; right: 24px; z-index: 200;
@@ -183,10 +280,12 @@
       body { background: white !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
       body::before { display: none; }
       header, .action-row, #toast, .icon-btn, .pill-badge, .nav-tools-wrap, .donate-btn,
-      .mega-menu, .menu-overlay, .site-footer, .footer-disclaimer { display: none !important; }
+      .mega-menu, .menu-overlay, .site-footer, .footer-disclaimer, .advanced-toggle { display: none !important; }
+      .advanced-content { max-height: none !important; opacity: 1 !important; }
       .app { padding: 0; max-width: 100%; }
       .hero { border: none; padding: 12px 0 8px; margin-bottom: 10px; }
-      .stat-card, .table-card, .card { page-break-inside: avoid; }
+      .stat-card, .table-card, .card, .hero-stat-card { page-break-inside: avoid; }
+      .fade-in-result { opacity: 1 !important; transform: none !important; }
     }
   </style>
 </head>
@@ -197,12 +296,10 @@
 
     <div class="hero">
       <div>
-        <div class="pill-badge">🎂 Exact · Instant · Private</div>
+        <div class="pill-badge">Exact · Instant · Private</div>
         <div class="hero-title">Age <span>Calculator</span></div>
-        <div class="hero-desc">Calculate an exact age breakdown (years, months, days) — plus totals and next birthday.</div>
-      </div>
-      <div class="hero-formula">
-        Age = <span class="hl">AsOf</span> − <span class="hlp">DOB</span>
+        <div class="hero-desc">Calculate an exact age breakdown (years, months, days) — plus totals, zodiac sign, and next birthday.</div>
+        <div class="hero-formula-tip">Formula: Age = <span class="hl">AsOf</span> − <span class="hlp">DOB</span></div>
       </div>
     </div>
 
@@ -213,24 +310,30 @@
         <div class="form-group">
           <label class="form-label">Date of birth</label>
           <input type="date" id="dob" />
-          <div class="form-help">Tip: we build dates in <b>local time</b> and normalize to midday to reduce timezone/DST edge cases.</div>
         </div>
 
-        <div class="form-group">
-          <label class="form-label">As of date <span style="color:var(--text-muted); font-weight:600;">(optional)</span></label>
-          <input type="date" id="asof" />
-          <div class="form-help">Leave empty to use <b>today</b>.</div>
-        </div>
+        <button class="advanced-toggle" id="advancedToggle" type="button" aria-expanded="false">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          Advanced options
+        </button>
 
-        <div class="inline-row" style="margin-top:6px;">
-          <label class="toggle"><input type="checkbox" id="treatLeap" checked /> Feb 29 birthdays: treat non‑leap years as Feb 28</label>
+        <div class="advanced-content" id="advancedContent">
+          <div class="form-group" style="margin-top:12px;">
+            <label class="form-label">As of date <span style="color:var(--text-muted); font-weight:600;">(optional)</span></label>
+            <input type="date" id="asof" />
+            <div class="form-help">Leave empty to use <b>today</b>.</div>
+          </div>
+
+          <div class="inline-row" style="margin-top:6px;">
+            <label class="toggle"><input type="checkbox" id="treatLeap" checked /> Feb 29 birthdays: treat non-leap years as Feb 28</label>
+          </div>
         </div>
 
         <div class="form-help" id="inputNote" style="margin-top:10px;"></div>
       </div>
 
       <div class="card">
-        <div class="card-title"><div class="card-title-dot" style="background:var(--purple)"></div>Quick facts</div>
+        <div class="card-title"><div class="card-title-dot" style="background:var(--purple)"></div>Quick Facts</div>
 
         <div class="table-card" style="margin-bottom:0;">
           <div class="table-head-row"><div class="table-head-title">Details</div></div>
@@ -239,8 +342,8 @@
               <tbody id="factsBody">
                 <tr><td>Born on</td><td>—</td></tr>
                 <tr><td>Day of week</td><td>—</td></tr>
+                <tr><td>Zodiac sign</td><td>—</td></tr>
                 <tr><td>Next birthday</td><td>—</td></tr>
-                <tr><td>Countdown</td><td>—</td></tr>
               </tbody>
             </table>
           </div>
@@ -251,36 +354,49 @@
     <div class="action-row">
       <button class="action-btn" onclick="copySummary()">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-        Copy
+        <span class="action-btn-label">Copy summary</span>
       </button>
       <button class="action-btn" onclick="printPage()">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
-        Print
+        <span class="action-btn-label">Print results</span>
       </button>
     </div>
 
-    <div class="stats-row">
-      <div class="stat-card primary">
-        <div class="stat-icon">🧠</div>
-        <div class="stat-label">Exact age</div>
-        <div class="stat-value" id="ageYMD">—</div>
-        <div class="stat-sub" id="ageHint">—</div>
+    <!-- Hero stat: exact age — focal point -->
+    <div class="hero-stat-card fade-in-result" id="heroStatCard">
+      <div class="hero-stat-icon">🧠</div>
+      <div class="hero-stat-label">Exact Age</div>
+      <div class="hero-stat-value" id="ageYMD">—</div>
+      <div class="hero-stat-sub" id="ageHint">—</div>
+      <div class="hero-stat-zodiac" id="zodiacBadge" style="display:none;"></div>
+    </div>
+
+    <!-- Next birthday countdown — prominent badge -->
+    <div class="fade-in-result" id="birthdaySection" style="text-align:center; margin-bottom:28px;">
+      <div class="birthday-pill" id="birthdayPill" style="display:none;">
+        🎂 <span id="birthdayText">—</span>
       </div>
+    </div>
+
+    <!-- Totals cards -->
+    <div class="section-label fade-in-result">Totals</div>
+    <div class="stats-grid fade-in-result">
       <div class="stat-card green">
         <div class="stat-icon">📆</div>
-        <div class="stat-label">Total days</div>
+        <div class="stat-label">Total Days</div>
         <div class="stat-value" id="totalDays">—</div>
         <div class="stat-sub" id="weeksDays">—</div>
       </div>
       <div class="stat-card purple">
         <div class="stat-icon">⏱️</div>
-        <div class="stat-label">Total time</div>
+        <div class="stat-label">Total Hours</div>
         <div class="stat-value" id="totalHours">—</div>
         <div class="stat-sub" id="totalMinutes">—</div>
       </div>
     </div>
 
-    <div class="table-card">
+    <!-- Detailed breakdown table -->
+    <div class="table-card fade-in-result">
       <div class="table-head-row">
         <div class="table-head-title">Breakdown</div>
       </div>
@@ -380,6 +496,32 @@
     return new Intl.DateTimeFormat('en-US', { weekday:'long' }).format(d);
   }
 
+  // Zodiac sign lookup
+  function getZodiac(month, day) {
+    // month is 0-indexed
+    const signs = [
+      { name: 'Capricorn',   symbol: '♑', end: [0, 19] },
+      { name: 'Aquarius',    symbol: '♒', end: [1, 18] },
+      { name: 'Pisces',      symbol: '♓', end: [2, 20] },
+      { name: 'Aries',       symbol: '♈', end: [3, 19] },
+      { name: 'Taurus',      symbol: '♉', end: [4, 20] },
+      { name: 'Gemini',      symbol: '♊', end: [5, 20] },
+      { name: 'Cancer',      symbol: '♋', end: [6, 22] },
+      { name: 'Leo',         symbol: '♌', end: [7, 22] },
+      { name: 'Virgo',       symbol: '♍', end: [8, 22] },
+      { name: 'Libra',       symbol: '♎', end: [9, 22] },
+      { name: 'Scorpio',     symbol: '♏', end: [10, 21] },
+      { name: 'Sagittarius', symbol: '♐', end: [11, 21] },
+      { name: 'Capricorn',   symbol: '♑', end: [11, 31] }
+    ];
+    for (const s of signs) {
+      if (month < s.end[0] || (month === s.end[0] && day <= s.end[1])) {
+        return s;
+      }
+    }
+    return signs[0]; // fallback
+  }
+
   function nextBirthday(dob, asof, treatLeapAsFeb28) {
     const y = asof.getFullYear();
     let m = dob.getMonth();
@@ -404,6 +546,18 @@
     return nb;
   }
 
+  // Staggered fade-in
+  function revealResults() {
+    const els = document.querySelectorAll('.fade-in-result');
+    els.forEach((el, i) => {
+      setTimeout(() => el.classList.add('visible'), i * 100);
+    });
+  }
+
+  function hideResults() {
+    document.querySelectorAll('.fade-in-result').forEach(el => el.classList.remove('visible'));
+  }
+
   function calculate() {
     const dob = parseLocalDate(document.getElementById('dob').value);
     const asofRaw = parseLocalDate(document.getElementById('asof').value);
@@ -414,6 +568,7 @@
     if (!dob) {
       note.innerHTML = 'Enter a <b>date of birth</b> to calculate.';
       renderEmpty();
+      hideResults();
       return;
     }
 
@@ -439,24 +594,39 @@
     const totalMonths = (end.getFullYear() - start.getFullYear()) * 12 + (end.getMonth() - start.getMonth());
     const adjMonths = (end.getDate() < start.getDate()) ? totalMonths - 1 : totalMonths;
 
+    // Zodiac
+    const zodiac = getZodiac(dob.getMonth(), dob.getDate());
+
     // Facts
     const nb = nextBirthday(dob, asof, treatLeap);
     const nbDays = Math.max(0, daysBetween(asof, nb));
+    const countdownText = nbDays === 0 ? 'Today 🎉' : fmtInt(nbDays) + ' day' + (nbDays===1?'':'s') + ' away';
 
     const facts = [
       ['Born on', fmtDateLong(dob)],
       ['Day of week', weekdayName(dob)],
-      ['Next birthday', fmtDateLong(nb)],
-      ['Countdown', nbDays === 0 ? 'Today 🎉' : fmtInt(nbDays) + ' day' + (nbDays===1?'':'s')]
+      ['Zodiac sign', zodiac.symbol + ' ' + zodiac.name],
+      ['Next birthday', fmtDateLong(nb)]
     ];
 
     const factsBody = document.getElementById('factsBody');
     factsBody.innerHTML = facts.map(r => `<tr><td>${r[0]}</td><td class="td-green">${r[1]}</td></tr>`).join('');
 
-    // Stats
+    // Hero stat
     document.getElementById('ageYMD').textContent = `${ymd.years}y ${ymd.months}m ${ymd.days}d`;
     document.getElementById('ageHint').textContent = swapped ? 'Note: As-of date is before DOB (showing absolute difference)' : `As of ${new Intl.DateTimeFormat('en-US', { dateStyle:'medium' }).format(asof)}`;
 
+    // Zodiac badge
+    const zodiacBadge = document.getElementById('zodiacBadge');
+    zodiacBadge.textContent = zodiac.symbol + ' ' + zodiac.name;
+    zodiacBadge.style.display = 'inline-flex';
+
+    // Birthday countdown pill
+    const birthdayPill = document.getElementById('birthdayPill');
+    document.getElementById('birthdayText').textContent = nbDays === 0 ? 'Happy Birthday! 🎉' : `Next birthday in ${fmtInt(nbDays)} day${nbDays===1?'':'s'}`;
+    birthdayPill.style.display = 'inline-flex';
+
+    // Totals
     document.getElementById('totalDays').textContent = fmtInt(dTotal);
     document.getElementById('weeksDays').textContent = `${fmtInt(Math.floor(dTotal/7))} weeks + ${fmtInt(dTotal%7)} days`;
 
@@ -483,19 +653,25 @@
       totalMonths: Math.max(0, adjMonths),
       nextBirthday: nb,
       countdownDays: nbDays,
+      zodiac: zodiac,
       swapped: swapped
     };
+
+    // Staggered reveal
+    revealResults();
   }
 
   function renderEmpty(){
     document.getElementById('factsBody').innerHTML = `
       <tr><td>Born on</td><td>—</td></tr>
       <tr><td>Day of week</td><td>—</td></tr>
+      <tr><td>Zodiac sign</td><td>—</td></tr>
       <tr><td>Next birthday</td><td>—</td></tr>
-      <tr><td>Countdown</td><td>—</td></tr>
     `;
     document.getElementById('ageYMD').textContent = '—';
     document.getElementById('ageHint').textContent = '—';
+    document.getElementById('zodiacBadge').style.display = 'none';
+    document.getElementById('birthdayPill').style.display = 'none';
     document.getElementById('totalDays').textContent = '—';
     document.getElementById('weeksDays').textContent = '—';
     document.getElementById('totalHours').textContent = '—';
@@ -524,19 +700,36 @@
       `DOB: ${s.dob.toISOString().slice(0,10)}`,
       `As of: ${s.asof.toISOString().slice(0,10)}`,
       `Exact age: ${s.exact.years}y ${s.exact.months}m ${s.exact.days}d`,
-      `Total days: ${s.totalDays}`,
-      `Total months: ${s.totalMonths}`,
-      `Next birthday: ${s.nextBirthday.toISOString().slice(0,10)} (${s.countdownDays} days)`
+      `Total days: ${fmtInt(s.totalDays)}`,
+      `Total months: ${fmtInt(s.totalMonths)}`,
+      `Zodiac: ${s.zodiac.symbol} ${s.zodiac.name}`,
+      `Next birthday: ${s.nextBirthday.toISOString().slice(0,10)} (${fmtInt(s.countdownDays)} days)`
     ];
     navigator.clipboard.writeText(lines.join('\n')).then(() => showToast('Copied summary!')).catch(() => showToast('Copy failed'));
   }
 
   function printPage(){ window.print(); }
 
+  // Advanced options toggle
+  document.getElementById('advancedToggle').addEventListener('click', function() {
+    const content = document.getElementById('advancedContent');
+    const isOpen = content.classList.toggle('open');
+    this.classList.toggle('open', isOpen);
+    this.setAttribute('aria-expanded', isOpen);
+  });
+
   // Inputs
   ['dob','asof','treatLeap'].forEach(id => {
     document.getElementById(id).addEventListener('input', calculate);
     document.getElementById(id).addEventListener('change', calculate);
+  });
+
+  // Keyboard: Enter triggers calculation
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' && (e.target.id === 'dob' || e.target.id === 'asof')) {
+      e.preventDefault();
+      calculate();
+    }
   });
 
   // Default: set as-of to today (but user can clear)
