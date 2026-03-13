@@ -4,6 +4,28 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>CalcNova · Coast FIRE Calculator</title>
+  <meta name="description" content="Free Coast FIRE calculator — find out how much you need saved today so your portfolio grows to full financial independence without additional contributions." />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Coast FIRE Calculator · CalcNova" />
+  <meta property="og:description" content="Free Coast FIRE calculator — find out how much you need saved today so your portfolio grows to full financial independence without additional contributions." />
+  <meta property="og:type" content="website" />
+
+  <!-- JSON-LD Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FinancialProduct",
+    "name": "Coast FIRE Calculator",
+    "description": "Free Coast FIRE calculator to find your Coast FIRE number and track progress to financial independence.",
+    "provider": {
+      "@type": "Organization",
+      "name": "CalcNova"
+    },
+    "feesAndCommissionsSpecification": "Free to use, no login required."
+  }
+  </script>
+
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="shared/nav.css" />
   <style>
@@ -101,7 +123,10 @@
       outline: none;
       transition: border-color .2s, box-shadow .2s;
       appearance: none;
+      -moz-appearance: textfield;
     }
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
     .has-prefix input[type="number"] { padding-left: 28px; }
     .has-suffix input[type="number"] { padding-right: 36px; }
 
@@ -314,15 +339,15 @@
 
     /* ── TOAST ── */
     #toast {
-      position: fixed; bottom: 24px; right: 24px; z-index: 9999;
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: 12px; padding: 10px 18px;
-      font-size: 13px; font-weight: 600; color: var(--text-primary);
-      box-shadow: 0 8px 24px rgba(0,0,0,.12);
-      opacity: 0; pointer-events: none; transform: translateY(8px);
-      transition: opacity .2s, transform .2s; display: flex; align-items: center; gap: 8px;
+      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(8px); z-index: 200;
+      background: var(--text-primary); color: var(--bg);
+      padding: 10px 18px; border-radius: 100px;
+      font-size: 12px; font-weight: 700; font-family: var(--mono);
+      display: flex; align-items: center; gap: 7px;
+      box-shadow: 0 8px 24px rgba(0,0,0,.25);
+      opacity: 0;
+      transition: opacity .25s, transform .25s; pointer-events: none;
     }
-    #toast.show { opacity: 1; pointer-events: auto; transform: translateY(0); }
 
     /* ── PRINT ── */
     .print-summary { display: none; }
@@ -667,6 +692,7 @@
       const v = parseFloat(num.value);
       if (!isNaN(v) && v >= min && v <= max) {
         range.value = v;
+        updateSliderFill(range);
         calculate();
       }
     });
@@ -674,11 +700,24 @@
     // On blur or Enter, clamp and tidy up the value
     function commitNum() {
       const v = Math.min(max, Math.max(min, parseFloat(num.value) || min));
-      range.value = v; num.value = v; calculate();
+      range.value = v; num.value = v; updateSliderFill(range); calculate();
     }
     num.addEventListener('change', commitNum);
     num.addEventListener('blur', commitNum);
   }
+
+  // ── Slider fill styling ────────────────────────────────────────────────────
+  function updateSliderFill(slider) {
+    const min = parseFloat(slider.min) || 0;
+    const max = parseFloat(slider.max) || 100;
+    const val = parseFloat(slider.value) || 0;
+    const pct = ((val - min) / (max - min)) * 100;
+    slider.style.background = `linear-gradient(to right, var(--amber) 0%, var(--amber) ${pct}%, var(--border) ${pct}%, var(--border) 100%)`;
+  }
+  document.querySelectorAll('input[type="range"]').forEach(s => {
+    s.addEventListener('input', () => updateSliderFill(s));
+    updateSliderFill(s);
+  });
 
   syncSlider('cur-age', 'cur-age-num', 18, 70);
   syncSlider('ret-age', 'ret-age-num', 40, 80);
@@ -700,6 +739,12 @@
     const returnRate   = parseFloat(document.getElementById('return-rate').value) / 100 || 0.07;
 
     const yearsToRetire = Math.max(retAge - curAge, 0);
+
+    // Validate retirement age > current age
+    if (retAge <= curAge) {
+      showToast('Retirement age must be greater than current age');
+      return;
+    }
 
     // FI Number = Annual Spending / SWR
     const fiNumber = annualSpend / swr;
@@ -767,8 +812,11 @@
     const canvas = document.getElementById('chart');
     const ctx = canvas.getContext('2d');
     const dpr = window.devicePixelRatio || 1;
-    const W = canvas.parentElement.clientWidth - 44;
-    const H = 260;
+    const container = canvas.parentElement;
+    const cStyle = getComputedStyle(container);
+    const padH = parseFloat(cStyle.paddingLeft) + parseFloat(cStyle.paddingRight);
+    const W = Math.max(100, container.clientWidth - padH);
+    const H = Math.max(100, Math.min(260, W * 0.4));
     canvas.width = W * dpr;
     canvas.height = H * dpr;
     canvas.style.width = W + 'px';
@@ -867,17 +915,21 @@
     ctx.stroke();
     ctx.restore();
 
-    // Legend
+    // Legend - use shorter labels on narrow canvases
     const legendY = H - pad.b + 28;
-    ctx.font = '11px Plus Jakarta Sans, sans-serif';
+    const isNarrow = W < 400;
+    const fontSize = isNarrow ? 9 : 11;
+    ctx.font = fontSize + 'px Plus Jakarta Sans, sans-serif';
 
     ctx.fillStyle = '#f59e0b'; ctx.beginPath(); ctx.arc(pad.l + 8, legendY, 4, 0, Math.PI * 2); ctx.fill();
-    ctx.fillStyle = textColor; ctx.textAlign = 'left'; ctx.fillText('Portfolio (no new contributions)', pad.l + 16, legendY + 3.5);
+    const label1 = isNarrow ? 'Portfolio' : 'Portfolio (no new contributions)';
+    ctx.fillStyle = textColor; ctx.textAlign = 'left'; ctx.fillText(label1, pad.l + 16, legendY + 3.5);
 
-    const l2x = pad.l + 210;
+    const l2x = isNarrow ? pad.l + 80 : pad.l + 210;
     ctx.save(); ctx.setLineDash([4,3]); ctx.strokeStyle = isDark ? 'rgba(16,185,129,.8)' : 'rgba(16,185,129,.9)'; ctx.lineWidth = 2;
     ctx.beginPath(); ctx.moveTo(l2x, legendY); ctx.lineTo(l2x + 16, legendY); ctx.stroke(); ctx.restore();
-    ctx.fillStyle = textColor; ctx.fillText('Coast FIRE # (target)', l2x + 20, legendY + 3.5);
+    const label2 = isNarrow ? 'Coast FIRE #' : 'Coast FIRE # (target)';
+    ctx.fillStyle = textColor; ctx.fillText(label2, l2x + 20, legendY + 3.5);
   }
 
   // ── Render Table ───────────────────────────────────────────────────────────
@@ -955,8 +1007,8 @@
   function showToast(msg) {
     const el = document.getElementById('toast');
     document.getElementById('toast-msg').textContent = msg;
-    el.classList.add('show');
-    setTimeout(() => el.classList.remove('show'), 2500);
+    el.style.opacity = '1'; el.style.transform = 'translateX(-50%) translateY(0)';
+    setTimeout(() => { el.style.opacity = '0'; el.style.transform = 'translateX(-50%) translateY(8px)'; }, 2200);
   }
 
   // ── Resize ─────────────────────────────────────────────────────────────────

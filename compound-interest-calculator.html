@@ -4,6 +4,28 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>CalcNova · Compound Interest Calculator</title>
+  <meta name="description" content="Free compound interest calculator with contributions, withdrawals, and compounding frequency options. See how your money grows over time — no login required." />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Compound Interest Calculator · CalcNova" />
+  <meta property="og:description" content="Free compound interest calculator with contributions, withdrawals, and compounding frequency options. See how your money grows over time — no login required." />
+  <meta property="og:type" content="website" />
+
+  <!-- JSON-LD Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FinancialProduct",
+    "name": "Compound Interest Calculator",
+    "description": "Free compound interest calculator with contributions, withdrawals, and compounding frequency options.",
+    "provider": {
+      "@type": "Organization",
+      "name": "CalcNova"
+    },
+    "feesAndCommissionsSpecification": "Free to use, no login required."
+  }
+  </script>
+
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="shared/nav.css" />
   <style>
@@ -91,7 +113,10 @@
       outline: none;
       transition: border-color .2s, box-shadow .2s;
       appearance: none;
+      -moz-appearance: textfield;
     }
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
     .has-prefix input[type="number"] { padding-left: 28px; }
     .has-suffix input[type="number"] { padding-right: 36px; }
 
@@ -321,13 +346,13 @@
 
     /* ── TOAST ── */
     #toast {
-      position: fixed; bottom: 24px; right: 24px; z-index: 200;
-      background: #0f1623; color: white;
+      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(8px); z-index: 200;
+      background: var(--text-primary); color: var(--bg);
       padding: 10px 18px; border-radius: 100px;
       font-size: 12px; font-weight: 700; font-family: var(--mono);
       display: flex; align-items: center; gap: 7px;
       box-shadow: 0 8px 24px rgba(0,0,0,.25);
-      opacity: 0; transform: translateY(8px);
+      opacity: 0;
       transition: opacity .25s, transform .25s; pointer-events: none;
     }
 
@@ -657,9 +682,12 @@
 
   // ── Calculate ──────────────────────────────────────────────────────────────
   function calculate() {
-    const P           = parseFloat(document.getElementById('principal').value) || 0;
+    let P           = parseFloat(document.getElementById('principal').value) || 0;
     const r           = parseFloat(document.getElementById('rate').value) / 100;
     const yrs         = parseInt(document.getElementById('years').value);
+
+    // Clamp negative values
+    if (P < 0) { P = 0; document.getElementById('principal').value = 0; }
     const n           = parseInt(document.getElementById('freq').value);
 
     const depAmt      = parseFloat(document.getElementById('deposit-amount').value) || 0;
@@ -711,7 +739,7 @@
       const annualGrowth = balance - prevBalance;
       const pctReturn = prevBalance > 0 ? ((annualGrowth / prevBalance) * 100) : 0;
       const netContrib = totalDeposited - totalWithdrawn;
-      const interestEarned = balance - P - netContrib;
+      const interestEarned = Math.max(0, balance - P - netContrib);
 
       rows.push({
         year: y,
@@ -742,6 +770,13 @@
     document.getElementById('s-interest').textContent    = fmtFull(last.interest);
     const interestPct = last.balance > 0 ? ((last.interest / last.balance) * 100).toFixed(1) : '0.0';
     document.getElementById('s-interest-sub').textContent = interestPct + '% of final balance';
+
+    // Show depletion warning if balance hit zero
+    const depleted = rows.some(r => r.balance <= 0);
+    const depletionYear = rows.find(r => r.balance <= 0);
+    if (depleted && depletionYear) {
+      document.getElementById('s-final-sub').textContent = '⚠ Depleted at year ' + depletionYear.year;
+    }
 
     // Composition bar
     const total = last.balance > 0 ? last.balance : 1;
@@ -787,8 +822,11 @@
     if (!rows.length) return;
     const canvas = document.getElementById('chart');
     const dpr = window.devicePixelRatio || 1;
-    const W0 = canvas.parentElement.clientWidth - 44;
-    const H0 = 260;
+    const container = canvas.parentElement;
+    const style = getComputedStyle(container);
+    const padH = parseFloat(style.paddingLeft) + parseFloat(style.paddingRight);
+    const W0 = Math.max(100, container.clientWidth - padH);
+    const H0 = Math.max(100, Math.min(260, W0 * 0.4));
     canvas.width  = W0 * dpr;
     canvas.height = H0 * dpr;
     const ctx = canvas.getContext('2d');
@@ -961,11 +999,24 @@
   function showToast(msg) {
     const toast = document.getElementById('toast');
     document.getElementById('toast-msg').textContent = msg;
-    toast.style.opacity = '1'; toast.style.transform = 'translateY(0)';
-    setTimeout(() => { toast.style.opacity = '0'; toast.style.transform = 'translateY(8px)'; }, 2200);
+    toast.style.opacity = '1'; toast.style.transform = 'translateX(-50%) translateY(0)';
+    setTimeout(() => { toast.style.opacity = '0'; toast.style.transform = 'translateX(-50%) translateY(8px)'; }, 2200);
   }
 
   // ── Sliders ────────────────────────────────────────────────────────────────
+  // ── Slider fill styling ────────────────────────────────────────────────────
+  function updateSliderFill(slider) {
+    const min = parseFloat(slider.min) || 0;
+    const max = parseFloat(slider.max) || 100;
+    const val = parseFloat(slider.value) || 0;
+    const pct = ((val - min) / (max - min)) * 100;
+    slider.style.background = `linear-gradient(to right, var(--green) 0%, var(--green) ${pct}%, var(--border) ${pct}%, var(--border) 100%)`;
+  }
+  document.querySelectorAll('input[type="range"]').forEach(s => {
+    s.addEventListener('input', () => updateSliderFill(s));
+    updateSliderFill(s);
+  });
+
   document.getElementById('rate').addEventListener('input', function () {
     document.getElementById('rate-num').value = parseFloat(this.value).toFixed(1);
     calculate();
@@ -974,7 +1025,9 @@
     let v = parseFloat(this.value);
     if (isNaN(v)) return;
     v = Math.min(30, Math.max(0.1, v));
-    document.getElementById('rate').value = v;
+    const slider = document.getElementById('rate');
+    slider.value = v;
+    updateSliderFill(slider);
     calculate();
   });
 
@@ -986,7 +1039,9 @@
     let v = parseInt(this.value);
     if (isNaN(v)) return;
     v = Math.min(50, Math.max(1, v));
-    document.getElementById('years').value = v;
+    const slider = document.getElementById('years');
+    slider.value = v;
+    updateSliderFill(slider);
     calculate();
   });
 
