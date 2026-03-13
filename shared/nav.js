@@ -41,10 +41,10 @@
       id: 'productivity', icon: '⏱️', label: 'Productivity', cssClass: 'productivity',
       items: [
         { id: 'time-converter',  icon: '🌍', label: 'Time Converter',  href: 'TimeConvertor.html', live: true },
-        { id: 'pomodoro',        icon: '🍅', label: 'Pomodoro Timer',                              live: false },
-        { id: 'world-clock',     icon: '🕐', label: 'World Clock', href: 'world-clock.html',                                 live: true },
-        { id: 'date-duration',   icon: '📅', label: 'Date Duration', href: 'date-duration.html',                               live: true },
-        { id: 'age-calculator',  icon: '🎂', label: 'Age Calculator', href: 'age-calculator.html',                              live: true },
+        { id: 'pomodoro',        icon: '🍅', label: 'Pomodoro Timer',  href: 'pomodoro.html',       live: true },
+        { id: 'world-clock',     icon: '🕐', label: 'World Clock',    href: 'world-clock.html',    live: true },
+        { id: 'date-duration',   icon: '📅', label: 'Date Duration',  href: 'date-duration.html',  live: true },
+        { id: 'age-calculator',  icon: '🎂', label: 'Age Calculator', href: 'age-calculator.html', live: true },
       ]
     },
     {
@@ -195,6 +195,7 @@
       +   '<div class="footer-links">'
       +     '<a href="index.html">All Tools</a>'
       +     '<a href="privacy.html">Privacy</a>'
+      +     '<a href="terms.html">Terms of Use</a>'
       +   '</div>'
       +   '<a href="https://ko-fi.com/calcnova" target="_blank" rel="noopener" class="donate-btn">☕ Buy me a coffee</a>'
       + '</div>'

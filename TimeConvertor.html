@@ -653,7 +653,9 @@ function buildDateStrip() {
   if (a) a.scrollIntoView({inline:'center',behavior:'smooth',block:'nearest'});
 }
 function updateDateDisplay() {
-  document.getElementById('dateDisplay').textContent = activeDate.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric',year:'numeric'});
+  var el = document.getElementById('dateDisplay');
+  if (!el) return;
+  el.textContent = activeDate.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric',year:'numeric'});
 }
 function shiftDay(n) {
   if (n===0) { activeDate=new Date(); activeDate.setHours(0,0,0,0); }
@@ -683,9 +685,6 @@ function tickClocks() { activeCities.forEach((c,i)=>{ const el=document.getEleme
 
 function renderAll() { buildDateStrip(); updateDateDisplay(); buildGrid(); }
 document.addEventListener('keydown', e => { if(e.key==='Escape') closeModal(); });
-renderAll();
-setInterval(tickClocks, 1000);
-setInterval(buildGrid, 60000);
 </script>
 
 <script>
@@ -697,16 +696,29 @@ setInterval(buildGrid, 60000);
 </script>
 <script src="shared/nav.js"></script>
 <script>
-  // Append the "Add City" button to the right side of the shared header
+  // Post-injection: add buttons and trigger initial render
   (function() {
     var hr = document.getElementById('cn-header-right');
     if (hr) {
+      var donate = hr.querySelector('.donate-btn');
+      // View toggle button
+      var vBtn = document.createElement('a');
+      vBtn.href = 'TimeConvertor - Horizontal.html';
+      vBtn.className = 'icon-btn';
+      vBtn.title = 'Switch to horizontal timeline view';
+      vBtn.textContent = '\u229F';
+      hr.insertBefore(vBtn, donate);
+      // Add City button
       var btn = document.createElement('button');
       btn.className = 'add-btn';
       btn.innerHTML = '&#xff0b; Add City';
       btn.onclick = function() { openModal(); };
-      hr.appendChild(btn);
+      hr.insertBefore(btn, donate);
     }
+    // Initial render now that #dateDisplay exists in the DOM
+    renderAll();
+    setInterval(tickClocks, 1000);
+    setInterval(buildGrid, 60000);
   })();
 </script>
 </body>

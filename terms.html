@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Terms of Use · CalcNova</title>
+  <meta name="description" content="CalcNova terms of use and disclaimer. Tools are for informational purposes only. Not financial, legal, or professional advice.">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="shared/nav.css">
+  <style>
+    .app { position:relative; z-index:1; max-width:800px; margin:0 auto; padding:0 16px 80px; }
+
+    /* ── Page header ── */
+    .page-header {
+      padding: 48px 0 36px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 40px;
+    }
+    .page-header-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: linear-gradient(135deg,rgba(245,158,11,.1),rgba(239,68,68,.08));
+      border: 1px solid rgba(245,158,11,.3);
+      border-radius: 100px; padding: 5px 14px;
+      font-size: 11px; font-weight: 700; color: var(--amber);
+      letter-spacing: .5px; text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+    .page-header h1 {
+      font-size: 36px; font-weight: 800; letter-spacing: -.5px;
+      line-height: 1.2; margin-bottom: 10px;
+    }
+    .page-header h1 span {
+      background: linear-gradient(135deg,var(--green),var(--purple));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .page-header-meta {
+      font-size: 13px; color: var(--text-muted); font-weight: 500;
+    }
+
+    /* ── Alert banner ── */
+    .disclaimer-banner {
+      background: linear-gradient(135deg,rgba(245,158,11,.1),rgba(239,68,68,.06));
+      border: 1px solid rgba(245,158,11,.35);
+      border-radius: 16px; padding: 20px 22px;
+      margin-bottom: 32px;
+      display: flex; gap: 14px; align-items: flex-start;
+    }
+    .disclaimer-banner-icon { font-size: 24px; flex-shrink: 0; margin-top: 1px; }
+    .disclaimer-banner-body { flex: 1; }
+    .disclaimer-banner-title { font-size: 15px; font-weight: 800; margin-bottom: 5px; }
+    .disclaimer-banner-text { font-size: 13px; color: var(--text-secondary); line-height: 1.65; }
+
+    /* ── Prose content ── */
+    .prose { display: flex; flex-direction: column; gap: 24px; }
+
+    .prose-section {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 18px; padding: 28px 28px 24px;
+    }
+    .prose-section h2 {
+      font-size: 18px; font-weight: 800; margin-bottom: 12px; letter-spacing: -.2px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .prose-section h2 .s-icon {
+      width: 32px; height: 32px; border-radius: 9px;
+      display: flex; align-items: center; justify-content: center; font-size: 16px;
+      background: linear-gradient(135deg,rgba(16,185,129,.1),rgba(99,102,241,.06));
+      flex-shrink: 0;
+    }
+    .prose-section p {
+      font-size: 14px; color: var(--text-secondary); line-height: 1.75;
+      margin-bottom: 10px;
+    }
+    .prose-section p:last-child { margin-bottom: 0; }
+    .prose-section ul {
+      list-style: none; padding: 0; display: flex; flex-direction: column; gap: 7px;
+    }
+    .prose-section ul li {
+      font-size: 14px; color: var(--text-secondary); line-height: 1.65;
+      padding-left: 18px; position: relative;
+    }
+    .prose-section ul li::before {
+      content: '›'; position: absolute; left: 0;
+      color: var(--green); font-weight: 700; font-size: 16px; line-height: 1.4;
+    }
+    .prose-section a { color: var(--green); text-decoration: none; font-weight: 600; }
+    .prose-section a:hover { text-decoration: underline; }
+
+    .warn-box {
+      background: linear-gradient(135deg,rgba(245,158,11,.08),rgba(239,68,68,.04));
+      border: 1px solid rgba(245,158,11,.25);
+      border-radius: 12px; padding: 14px 18px;
+      margin-top: 14px;
+      font-size: 13px; color: var(--text-secondary); line-height: 1.65;
+    }
+    .warn-box strong { color: var(--text-primary); font-weight: 700; }
+
+    .highlight-box {
+      background: linear-gradient(135deg,rgba(16,185,129,.06),rgba(99,102,241,.04));
+      border: 1px solid rgba(16,185,129,.18);
+      border-radius: 12px; padding: 14px 18px;
+      margin-top: 14px;
+      font-size: 13px; color: var(--text-secondary); line-height: 1.65;
+    }
+    .highlight-box strong { color: var(--text-primary); font-weight: 700; }
+
+    /* ── Contact section ── */
+    .contact-card {
+      background: linear-gradient(135deg,rgba(16,185,129,.07),rgba(99,102,241,.05));
+      border: 1px solid rgba(16,185,129,.2);
+      border-radius: 18px; padding: 28px;
+      text-align: center;
+    }
+    .contact-card h2 { font-size: 20px; font-weight: 800; margin-bottom: 8px; }
+    .contact-card p { font-size: 14px; color: var(--text-secondary); line-height: 1.6; max-width: 440px; margin: 0 auto 18px; }
+    .contact-card a.contact-link {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: linear-gradient(135deg,var(--green),#059669);
+      color: white; border-radius: 100px; padding: 9px 22px;
+      font-size: 13px; font-weight: 700; text-decoration: none;
+      transition: all .15s;
+      box-shadow: 0 3px 10px rgba(16,185,129,.3);
+    }
+    .contact-card a.contact-link:hover { transform: translateY(-1px); box-shadow: 0 5px 15px rgba(16,185,129,.4); }
+
+    @media (max-width: 640px) {
+      .page-header h1 { font-size: 28px; }
+      .prose-section { padding: 20px 16px 18px; }
+      .disclaimer-banner { flex-direction: column; gap: 8px; }
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+
+  <!-- nav.js injects header here -->
+
+  <!-- Page header -->
+  <div class="page-header">
+    <div class="page-header-badge">⚠ Legal</div>
+    <h1>Terms of <span>Use</span></h1>
+    <div class="page-header-meta">Last updated: March 2025 &nbsp;·&nbsp; Please read carefully before using CalcNova</div>
+  </div>
+
+  <!-- Disclaimer banner -->
+  <div class="disclaimer-banner">
+    <div class="disclaimer-banner-icon">⚠️</div>
+    <div class="disclaimer-banner-body">
+      <div class="disclaimer-banner-title">Informational purposes only — not professional advice</div>
+      <div class="disclaimer-banner-text">
+        CalcNova tools are provided for general educational and informational purposes. They are not a substitute for professional financial, legal, tax, medical, or any other licensed professional advice. Always consult a qualified professional before making important financial or legal decisions.
+      </div>
+    </div>
+  </div>
+
+  <div class="prose">
+
+    <div class="prose-section">
+      <h2><span class="s-icon">📋</span> Acceptance of Terms</h2>
+      <p>By accessing or using CalcNova ("the Site," "the Service"), you agree to be bound by these Terms of Use. If you do not agree with any part of these terms, please discontinue use of the Site.</p>
+      <p>These terms apply to all visitors and users of CalcNova, including tools, content, and any other services offered through <strong>https://alaineid-pm.github.io/CalcNova/</strong>.</p>
+    </div>
+
+    <div class="prose-section">
+      <h2><span class="s-icon">🔢</span> Accuracy of Calculations</h2>
+      <p>CalcNova makes reasonable efforts to ensure that its calculators and tools provide accurate results. However, <strong>we make no warranties or representations, express or implied, about the completeness, accuracy, reliability, suitability, or availability of any tool or result</strong>.</p>
+      <p>Calculation results may be affected by:</p>
+      <ul>
+        <li>Rounding, approximation, and mathematical limitations</li>
+        <li>Incorrect assumptions built into models (e.g., constant interest rates, tax-free compounding)</li>
+        <li>Data entry errors by the user</li>
+        <li>Changes in laws, rates, or regulations not reflected in the tool</li>
+        <li>Browser or software bugs</li>
+      </ul>
+      <div class="warn-box">
+        <strong>Use at your own risk.</strong> CalcNova and its operators shall not be liable for any errors, inaccuracies, or omissions in the results provided by any tool on this site, or for any actions taken in reliance on those results.
+      </div>
+    </div>
+
+    <div class="prose-section">
+      <h2><span class="s-icon">💰</span> No Financial, Legal, or Professional Advice</h2>
+      <p>Nothing on CalcNova constitutes or should be interpreted as:</p>
+      <ul>
+        <li>Financial or investment advice</li>
+        <li>Legal advice or legal services</li>
+        <li>Tax advice or tax preparation guidance</li>
+        <li>Medical or health advice</li>
+        <li>Any other form of licensed professional advice</li>
+      </ul>
+      <p>Tools like the Compound Interest Calculator, Coast FIRE Calculator, and others are educational models. They use simplified assumptions and cannot account for your specific financial situation, risk tolerance, or local laws and taxes.</p>
+      <p><strong>Always consult a licensed financial advisor, attorney, tax professional, or other qualified expert</strong> before making decisions based on the outputs of these tools.</p>
+    </div>
+
+    <div class="prose-section">
+      <h2><span class="s-icon">⚖️</span> Limitation of Liability</h2>
+      <p>To the fullest extent permitted by applicable law, CalcNova, its operators, contributors, and affiliates shall not be liable for any direct, indirect, incidental, consequential, special, or punitive damages arising from:</p>
+      <ul>
+        <li>Use of, or inability to use, any tool or content on this site</li>
+        <li>Reliance on any calculation result, estimate, or projection displayed</li>
+        <li>Errors or inaccuracies in calculations or results</li>
+        <li>Any investment, financial, or other decision made based on results from this site</li>
+        <li>Interruptions, bugs, or technical issues affecting availability</li>
+      </ul>
+      <div class="warn-box">
+        <strong>Your use of this site and its tools is entirely at your own risk.</strong> The total liability of CalcNova for any claim arising out of these Terms shall not exceed zero dollars, as the service is provided free of charge.
+      </div>
+    </div>
+
+    <div class="prose-section">
+      <h2><span class="s-icon">📖</span> Intellectual Property</h2>
+      <p>The design, code, and content of CalcNova are the intellectual property of its creators. You may use the tools for personal, non-commercial purposes. You may not:</p>
+      <ul>
+        <li>Copy, scrape, or reproduce substantial portions of the site without permission</li>
+        <li>Use the tools to create a competing commercial product</li>
+        <li>Remove or obscure copyright or attribution notices</li>
+      </ul>
+      <p>CalcNova is an open-source project. Contributions and forks for personal or non-commercial use are welcome in accordance with the repository's license.</p>
+    </div>
+
+    <div class="prose-section">
+      <h2><span class="s-icon">🔗</span> Third-Party Links</h2>
+      <p>The Site may contain links to third-party websites (e.g., Ko-fi, GitHub). These links are provided for convenience only. CalcNova does not endorse or assume responsibility for the content, accuracy, privacy practices, or availability of any third-party site.</p>
+    </div>
+
+    <div class="prose-section">
+      <h2><span class="s-icon">🌍</span> Governing Law</h2>
+      <p>These Terms of Use shall be governed by and construed in accordance with the laws of the jurisdiction in which CalcNova's operators are located, without regard to conflict-of-law principles. Any disputes arising from these terms shall be resolved in the appropriate courts of that jurisdiction.</p>
+      <p>If any provision of these terms is found to be unenforceable, the remaining provisions will remain in full force and effect.</p>
+    </div>
+
+    <div class="prose-section">
+      <h2><span class="s-icon">🔄</span> Changes to These Terms</h2>
+      <p>We reserve the right to update these Terms of Use at any time. Changes will be effective upon posting to this page with an updated "Last updated" date. Continued use of the Site after changes are posted constitutes your acceptance of the new terms.</p>
+      <div class="highlight-box">
+        <strong>Check back periodically.</strong> While we don't expect significant changes, it's good practice to review these terms occasionally, especially before using new tools added to the site.
+      </div>
+    </div>
+
+    <div class="contact-card">
+      <h2>Questions about these Terms?</h2>
+      <p>If you have questions or concerns about these Terms of Use, please reach out through our GitHub repository.</p>
+      <a href="https://github.com/alaineid-pm/CalcNova/issues" target="_blank" rel="noopener" class="contact-link">
+        Open an issue on GitHub →
+      </a>
+    </div>
+
+  </div>
+
+  <!-- nav.js injects footer here -->
+
+</div>
+
+<script>
+  window.CALCNOVA_PAGE = { id: 'terms' };
+</script>
+<script src="shared/nav.js"></script>
+</body>
+</html>

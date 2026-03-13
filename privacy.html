@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Privacy Policy · CalcNova</title>
+  <meta name="description" content="CalcNova's privacy policy. We don't collect personal data. All calculations run locally in your browser.">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="shared/nav.css">
+  <style>
+    .app { position:relative; z-index:1; max-width:800px; margin:0 auto; padding:0 16px 80px; }
+
+    /* ── Page header ── */
+    .page-header {
+      padding: 48px 0 36px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 40px;
+    }
+    .page-header-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: linear-gradient(135deg,rgba(16,185,129,.1),rgba(99,102,241,.1));
+      border: 1px solid rgba(16,185,129,.25);
+      border-radius: 100px; padding: 5px 14px;
+      font-size: 11px; font-weight: 700; color: var(--green);
+      letter-spacing: .5px; text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+    .page-header h1 {
+      font-size: 36px; font-weight: 800; letter-spacing: -.5px;
+      line-height: 1.2; margin-bottom: 10px;
+    }
+    .page-header h1 span {
+      background: linear-gradient(135deg,var(--green),var(--purple));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .page-header-meta {
+      font-size: 13px; color: var(--text-muted); font-weight: 500;
+    }
+
+    /* ── Summary cards ── */
+    .summary-grid {
+      display: grid; grid-template-columns: repeat(3,1fr); gap: 14px;
+      margin-bottom: 40px;
+    }
+    .summary-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 16px; padding: 20px 18px;
+      display: flex; flex-direction: column; align-items: flex-start; gap: 8px;
+    }
+    .summary-card-icon {
+      width: 40px; height: 40px; border-radius: 12px;
+      display: flex; align-items: center; justify-content: center; font-size: 20px;
+      background: linear-gradient(135deg,rgba(16,185,129,.12),rgba(99,102,241,.06));
+      margin-bottom: 2px;
+    }
+    .summary-card-title { font-size: 14px; font-weight: 800; }
+    .summary-card-desc { font-size: 12px; color: var(--text-secondary); line-height: 1.5; }
+
+    /* ── Prose content ── */
+    .prose { display: flex; flex-direction: column; gap: 32px; }
+
+    .prose-section {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 18px; padding: 28px 28px 24px;
+    }
+    .prose-section h2 {
+      font-size: 18px; font-weight: 800; margin-bottom: 12px; letter-spacing: -.2px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .prose-section h2 .s-icon {
+      width: 32px; height: 32px; border-radius: 9px;
+      display: flex; align-items: center; justify-content: center; font-size: 16px;
+      background: linear-gradient(135deg,rgba(16,185,129,.1),rgba(99,102,241,.06));
+      flex-shrink: 0;
+    }
+    .prose-section p {
+      font-size: 14px; color: var(--text-secondary); line-height: 1.75;
+      margin-bottom: 10px;
+    }
+    .prose-section p:last-child { margin-bottom: 0; }
+    .prose-section ul {
+      list-style: none; padding: 0; display: flex; flex-direction: column; gap: 6px;
+    }
+    .prose-section ul li {
+      font-size: 14px; color: var(--text-secondary); line-height: 1.6;
+      padding-left: 18px; position: relative;
+    }
+    .prose-section ul li::before {
+      content: '›'; position: absolute; left: 0;
+      color: var(--green); font-weight: 700; font-size: 16px; line-height: 1.4;
+    }
+    .prose-section a { color: var(--green); text-decoration: none; font-weight: 600; }
+    .prose-section a:hover { text-decoration: underline; }
+
+    .highlight-box {
+      background: linear-gradient(135deg,rgba(16,185,129,.06),rgba(99,102,241,.04));
+      border: 1px solid rgba(16,185,129,.18);
+      border-radius: 12px; padding: 14px 18px;
+      margin-top: 14px;
+      font-size: 13px; color: var(--text-secondary); line-height: 1.6;
+    }
+    .highlight-box strong { color: var(--text-primary); font-weight: 700; }
+
+    /* ── Contact section ── */
+    .contact-card {
+      background: linear-gradient(135deg,rgba(16,185,129,.07),rgba(99,102,241,.05));
+      border: 1px solid rgba(16,185,129,.2);
+      border-radius: 18px; padding: 28px;
+      text-align: center; margin-top: 8px;
+    }
+    .contact-card h2 { font-size: 20px; font-weight: 800; margin-bottom: 8px; }
+    .contact-card p { font-size: 14px; color: var(--text-secondary); line-height: 1.6; max-width: 440px; margin: 0 auto 18px; }
+    .contact-card a.contact-link {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: linear-gradient(135deg,var(--green),#059669);
+      color: white; border-radius: 100px; padding: 9px 22px;
+      font-size: 13px; font-weight: 700; text-decoration: none;
+      transition: all .15s;
+      box-shadow: 0 3px 10px rgba(16,185,129,.3);
+    }
+    .contact-card a.contact-link:hover { transform: translateY(-1px); box-shadow: 0 5px 15px rgba(16,185,129,.4); }
+
+    @media (max-width: 640px) {
+      .summary-grid { grid-template-columns: 1fr; }
+      .page-header h1 { font-size: 28px; }
+      .prose-section { padding: 20px 16px 18px; }
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+
+  <!-- nav.js injects header here -->
+
+  <!-- Page header -->
+  <div class="page-header">
+    <div class="page-header-badge">Legal</div>
+    <h1>Privacy <span>Policy</span></h1>
+    <div class="page-header-meta">Last updated: March 2025 &nbsp;·&nbsp; Effective immediately</div>
+  </div>
+
+  <!-- Summary cards -->
+  <div class="summary-grid">
+    <div class="summary-card">
+      <div class="summary-card-icon">🔒</div>
+      <div class="summary-card-title">No personal data collected</div>
+      <div class="summary-card-desc">We never ask for your name, email, or any identifying information.</div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-card-icon">🖥️</div>
+      <div class="summary-card-title">Everything stays in your browser</div>
+      <div class="summary-card-desc">All calculations and preferences are processed locally on your device.</div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-card-icon">🚫</div>
+      <div class="summary-card-title">No tracking or profiling</div>
+      <div class="summary-card-desc">We don't build user profiles, sell data, or use advertising trackers.</div>
+    </div>
+  </div>
+
+  <!-- Prose -->
+  <div class="prose">
+
+    <div class="prose-section">
+      <h2><span class="s-icon">📋</span> Overview</h2>
+      <p>CalcNova ("we," "our," or "us") operates the website <strong>https://alaineid-pm.github.io/CalcNova/</strong>. This page explains our practices regarding data — or more accurately, our deliberate choice to collect as little as possible.</p>
+      <p>We built CalcNova on a simple principle: <strong>your data is yours</strong>. Every tool on this site runs entirely in your browser. Nothing you enter into a calculator is transmitted to our servers, because we don't have any servers processing your inputs.</p>
+      <div class="highlight-box">
+        <strong>Short version:</strong> We don't collect your data. We don't store your calculations. We don't know who you are, and we're fine with that.
+      </div>
+    </div>
+
+    <div class="prose-section">
+      <h2><span class="s-icon">💾</span> Information We Do Not Collect</h2>
+      <p>We do not collect, transmit, or store:</p>
+      <ul>
+        <li>Names, email addresses, or any contact information</li>
+        <li>Financial data, numbers, or calculation inputs you enter</li>
+        <li>Account credentials (there are no accounts)</li>
+        <li>Location data beyond what you voluntarily provide (e.g., selecting a city in the Time Converter)</li>
+        <li>Browsing history or cross-site tracking data</li>
+        <li>Device identifiers or fingerprinting data</li>
+      </ul>
+    </div>
+
+    <div class="prose-section">
+      <h2><span class="s-icon">🗂️</span> Local Storage (Your Device Only)</h2>
+      <p>Some tools save preferences locally in your browser's <code style="font-family:var(--mono);font-size:12px;background:var(--bg);padding:2px 6px;border-radius:4px;">localStorage</code> to improve your experience. Examples include:</p>
+      <ul>
+        <li>Dark or light mode preference</li>
+        <li>Selected cities in the Time Converter</li>
+        <li>Pomodoro timer settings</li>
+      </ul>
+      <p>This data lives only in your browser and is never sent anywhere. You can clear it at any time via your browser settings (Settings → Privacy → Clear site data).</p>
+    </div>
+
+    <div class="prose-section">
+      <h2><span class="s-icon">📊</span> Analytics</h2>
+      <p>We may use privacy-respecting, cookieless analytics (such as aggregated page view counts via GitHub's built-in statistics) to understand which tools are most useful. This does not involve tracking individuals and does not use cookies.</p>
+      <p>If third-party analytics are added in the future, this policy will be updated and tools will be selected based on their minimal-data commitment.</p>
+    </div>
+
+    <div class="prose-section">
+      <h2><span class="s-icon">🍪</span> Cookies</h2>
+      <p>CalcNova does not use cookies for tracking, advertising, or session management. We do not set any first-party or third-party tracking cookies.</p>
+      <p>Google Fonts (used for typography) may set a cookie on their servers when loading font files. This is governed by <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google's Privacy Policy</a>. You can self-host the fonts or use a browser extension to block them if desired.</p>
+    </div>
+
+    <div class="prose-section">
+      <h2><span class="s-icon">🔗</span> Third-Party Links</h2>
+      <p>CalcNova may contain links to external websites (such as Ko-fi for voluntary donations). We are not responsible for the privacy practices of those sites. We encourage you to review their privacy policies before interacting with them.</p>
+    </div>
+
+    <div class="prose-section">
+      <h2><span class="s-icon">👶</span> Children's Privacy</h2>
+      <p>CalcNova does not knowingly collect any information from children under the age of 13 (or the applicable minimum age in your jurisdiction). Since we collect no personal information at all, there is no data about any user — including children — on our systems.</p>
+    </div>
+
+    <div class="prose-section">
+      <h2><span class="s-icon">🌍</span> International Users</h2>
+      <p>CalcNova is accessible worldwide. Since all tool data is processed in your browser and nothing is transmitted to external servers by our tools, there is no cross-border data transfer associated with using the calculators. If you use third-party services linked from our site (e.g., Ko-fi), their respective data transfer practices apply.</p>
+    </div>
+
+    <div class="prose-section">
+      <h2><span class="s-icon">🔄</span> Changes to This Policy</h2>
+      <p>If we ever change how we handle data, we will update this page with a new "Last updated" date. We will not retroactively change practices in a way that collects more data without prominent notice.</p>
+      <p>We encourage you to review this page periodically, though we don't expect it to change often — our commitment to minimal data collection is a core value, not an afterthought.</p>
+    </div>
+
+    <div class="contact-card">
+      <h2>Questions?</h2>
+      <p>If you have questions or concerns about this privacy policy, please reach out. We're happy to explain anything further.</p>
+      <a href="https://github.com/alaineid-pm/CalcNova/issues" target="_blank" rel="noopener" class="contact-link">
+        Open an issue on GitHub →
+      </a>
+    </div>
+
+  </div>
+
+  <!-- nav.js injects footer here -->
+
+</div>
+
+<script>
+  window.CALCNOVA_PAGE = { id: 'privacy' };
+</script>
+<script src="shared/nav.js"></script>
+</body>
+</html>
