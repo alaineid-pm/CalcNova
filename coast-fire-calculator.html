@@ -125,6 +125,17 @@
       appearance: none;
       -moz-appearance: textfield;
     }
+    select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239ba3b5' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      background-size: 12px;
+      padding-right: 34px;
+      cursor: pointer;
+    }
+    body.dark select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23484f58' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    }
     input[type="number"]::-webkit-outer-spin-button,
     input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
     .has-prefix input[type="number"] { padding-left: 28px; }
@@ -266,6 +277,9 @@
     .chart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 8px; }
     .chart-title { font-size: 14px; font-weight: 700; color: var(--text-primary); }
     canvas { width: 100%; display: block; border-radius: 8px; }
+    .legend-row { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 10px; }
+    .legend-item { display: flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 600; color: var(--text-secondary); }
+    .legend-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
 
     /* ── TABLE ── */
     .table-card {
@@ -292,6 +306,13 @@
     .td-amber { color: var(--amber) !important; }
     .td-green { color: var(--green) !important; }
     .td-check { color: var(--green) !important; font-size: 14px; }
+    .show-all-btn {
+      display: block; width: 100%; padding: 10px; margin-top: 10px;
+      background: var(--bg); border: 1px solid var(--border); border-radius: 10px;
+      color: var(--text-muted); font-family: var(--font); font-size: 12px; font-weight: 600;
+      cursor: pointer; transition: border-color .2s, color .2s;
+    }
+    .show-all-btn:hover { border-color: var(--amber); color: var(--amber); }
 
     /* ── INSTRUCTIONS ── */
     .instructions-card {
@@ -357,7 +378,7 @@
       .header-right .icon-btn,
       .header-right .nav-tools-wrap,
       .header-right .donate-btn,
-      .action-row { display: none !important; }
+      .action-row, .show-all-btn { display: none !important; }
       .mega-menu, .menu-overlay { display: none !important; }
       #toast { display: none !important; }
       .instructions-card { page-break-before: always; }
@@ -511,6 +532,13 @@
       </svg>
       Print / Save PDF
     </button>
+    <button class="action-btn" onclick="shareLink()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+        <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+      </svg>
+      Share Link
+    </button>
   </div>
 
   <!-- STATUS BANNER -->
@@ -565,7 +593,11 @@
     <div class="chart-header">
       <div class="chart-title">Portfolio Projection to Retirement</div>
     </div>
-    <canvas id="chart" height="260"></canvas>
+    <canvas id="chart" height="260" role="img" aria-label="Line chart showing projected portfolio value versus Coast FIRE target number over time"></canvas>
+    <div class="legend-row">
+      <div class="legend-item"><div class="legend-dot" style="background:#f59e0b"></div>Portfolio (no new contributions)</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#10b981; border-radius:2px; width:14px; height:3px;"></div>Coast FIRE # (target)</div>
+    </div>
   </div>
 
   <!-- TABLE -->
@@ -588,6 +620,7 @@
         <tbody id="tbl-body"></tbody>
       </table>
     </div>
+    <button class="show-all-btn" id="toggle-rows" onclick="toggleTableRows()" style="display:none">Show All</button>
   </div>
 
   <!-- INSTRUCTIONS -->
@@ -915,25 +948,27 @@
     ctx.stroke();
     ctx.restore();
 
-    // Legend - use shorter labels on narrow canvases
-    const legendY = H - pad.b + 28;
-    const isNarrow = W < 400;
-    const fontSize = isNarrow ? 9 : 11;
-    ctx.font = fontSize + 'px Plus Jakarta Sans, sans-serif';
-
-    ctx.fillStyle = '#f59e0b'; ctx.beginPath(); ctx.arc(pad.l + 8, legendY, 4, 0, Math.PI * 2); ctx.fill();
-    const label1 = isNarrow ? 'Portfolio' : 'Portfolio (no new contributions)';
-    ctx.fillStyle = textColor; ctx.textAlign = 'left'; ctx.fillText(label1, pad.l + 16, legendY + 3.5);
-
-    const l2x = isNarrow ? pad.l + 80 : pad.l + 210;
-    ctx.save(); ctx.setLineDash([4,3]); ctx.strokeStyle = isDark ? 'rgba(16,185,129,.8)' : 'rgba(16,185,129,.9)'; ctx.lineWidth = 2;
-    ctx.beginPath(); ctx.moveTo(l2x, legendY); ctx.lineTo(l2x + 16, legendY); ctx.stroke(); ctx.restore();
-    const label2 = isNarrow ? 'Coast FIRE #' : 'Coast FIRE # (target)';
-    ctx.fillStyle = textColor; ctx.fillText(label2, l2x + 20, legendY + 3.5);
   }
 
   // ── Render Table ───────────────────────────────────────────────────────────
+  let allTableRows = [];
+  let tableExpanded = false;
+  const TABLE_PREVIEW = 10;
+
   function renderTable(rows) {
+    allTableRows = rows;
+    tableExpanded = false;
+    renderTableRows(rows.slice(0, TABLE_PREVIEW));
+    const btn = document.getElementById('toggle-rows');
+    if (rows.length > TABLE_PREVIEW) {
+      btn.style.display = '';
+      btn.textContent = 'Show All (' + rows.length + ' rows)';
+    } else {
+      btn.style.display = 'none';
+    }
+  }
+
+  function renderTableRows(rows) {
     const tbody = document.getElementById('tbl-body');
     tbody.innerHTML = '';
     rows.forEach(r => {
@@ -952,6 +987,18 @@
       `;
       tbody.appendChild(tr);
     });
+  }
+
+  function toggleTableRows() {
+    const btn = document.getElementById('toggle-rows');
+    tableExpanded = !tableExpanded;
+    if (tableExpanded) {
+      renderTableRows(allTableRows);
+      btn.textContent = 'Show Less';
+    } else {
+      renderTableRows(allTableRows.slice(0, TABLE_PREVIEW));
+      btn.textContent = 'Show All (' + allTableRows.length + ' rows)';
+    }
   }
 
   // ── Print Summary ──────────────────────────────────────────────────────────
@@ -1003,6 +1050,47 @@
     showToast('CSV exported!');
   }
 
+  // ── Share Link ────────────────────────────────────────────────────────────
+  function buildShareUrl() {
+    const params = new URLSearchParams({
+      age: document.getElementById('cur-age').value,
+      retAge: document.getElementById('ret-age').value,
+      savings: document.getElementById('current-savings').value,
+      spending: document.getElementById('annual-spending').value,
+      swr: document.getElementById('swr').value,
+      returnRate: document.getElementById('return-rate').value,
+    });
+    return window.location.origin + window.location.pathname + '?' + params.toString();
+  }
+
+  function loadFromURL() {
+    const p = new URLSearchParams(window.location.search);
+    if (!p.get('age')) return;
+    if (p.get('age')) document.getElementById('cur-age').value = p.get('age');
+    if (p.get('retAge')) document.getElementById('ret-age').value = p.get('retAge');
+    if (p.get('savings')) document.getElementById('current-savings').value = p.get('savings');
+    if (p.get('spending')) document.getElementById('annual-spending').value = p.get('spending');
+    if (p.get('swr')) document.getElementById('swr').value = p.get('swr');
+    if (p.get('returnRate')) document.getElementById('return-rate').value = p.get('returnRate');
+    // Sync slider positions
+    document.getElementById('cur-age-num').value = p.get('age');
+    document.getElementById('ret-age-num').value = p.get('retAge');
+    document.getElementById('swr-num').value = p.get('swr');
+    document.getElementById('return-num').value = p.get('returnRate');
+  }
+
+  function shareLink() {
+    const url = buildShareUrl();
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(url).then(() => showToast('Link copied!'));
+    } else {
+      const ta = document.createElement('textarea');
+      ta.value = url; document.body.appendChild(ta); ta.select();
+      document.execCommand('copy'); document.body.removeChild(ta);
+      showToast('Link copied!');
+    }
+  }
+
   // ── Toast ──────────────────────────────────────────────────────────────────
   function showToast(msg) {
     const el = document.getElementById('toast');
@@ -1019,6 +1107,7 @@
   });
 
   // ── Run on load ────────────────────────────────────────────────────────────
+  loadFromURL();
   calculate();
 </script>
 <script>

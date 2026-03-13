@@ -115,6 +115,17 @@
       appearance: none;
       -moz-appearance: textfield;
     }
+    select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239ba3b5' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      background-size: 12px;
+      padding-right: 34px;
+      cursor: pointer;
+    }
+    body.dark select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23484f58' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    }
     input[type="number"]::-webkit-outer-spin-button,
     input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
     .has-prefix input[type="number"] { padding-left: 28px; }
@@ -607,7 +618,7 @@
         <button class="chart-toggle on" id="tog-invested" onclick="toggleLine('invested')"><div class="dot"></div>Invested</button>
       </div>
     </div>
-    <canvas id="chart" height="260"></canvas>
+    <canvas id="chart" height="260" role="img" aria-label="Line chart showing investment balance and total invested amount over time"></canvas>
   </div>
 
   <!-- TABLE -->
@@ -756,7 +767,6 @@
 
     lastRows = rows;
     const last = rows[rows.length - 1] || { balance: P, invested: P, interest: 0, netContrib: 0, totalWithdrawn: 0 };
-    const totalPutIn = P + last.invested - P; // = totalDeposited
     const growthBase = P + Math.max(last.netContrib, 0);
     const totalGrowthPct = growthBase > 0
       ? ((last.balance / growthBase - 1) * 100).toFixed(1)
@@ -791,12 +801,16 @@
 
     // Update legend label
     const lc = document.getElementById('legend-contrib');
-    if (contribMode === 'withdrawals') {
+    if (contribMode === 'none') {
+      lc.style.display = 'none';
+    } else if (contribMode === 'withdrawals') {
+      lc.style.display = '';
       lc.querySelector('.legend-dot').style.background = '#a78bfa';
-      lc.childNodes[1].textContent = 'Net Contributions';
+      lc.childNodes[1].textContent = ' Net Withdrawals';
     } else {
+      lc.style.display = '';
       lc.querySelector('.legend-dot').style.background = '#a78bfa';
-      lc.childNodes[1].textContent = 'Net Contributions';
+      lc.childNodes[1].textContent = ' Net Contributions';
     }
 
     // Table
