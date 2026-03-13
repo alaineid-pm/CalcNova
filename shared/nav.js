@@ -42,9 +42,9 @@
       items: [
         { id: 'time-converter',  icon: '🌍', label: 'Time Converter',  href: 'TimeConvertor.html', live: true },
         { id: 'pomodoro',        icon: '🍅', label: 'Pomodoro Timer',                              live: false },
-        { id: 'world-clock',     icon: '🕐', label: 'World Clock',                                 live: false },
-        { id: 'date-duration',   icon: '📅', label: 'Date Duration',                               live: false },
-        { id: 'age-calculator',  icon: '🎂', label: 'Age Calculator',                              live: false },
+        { id: 'world-clock',     icon: '🕐', label: 'World Clock', href: 'world-clock.html',                                 live: true },
+        { id: 'date-duration',   icon: '📅', label: 'Date Duration', href: 'date-duration.html',                               live: true },
+        { id: 'age-calculator',  icon: '🎂', label: 'Age Calculator', href: 'age-calculator.html',                              live: true },
       ]
     },
     {
