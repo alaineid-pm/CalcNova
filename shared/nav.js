@@ -29,7 +29,7 @@
       items: [
         { id: 'compound-interest', icon: '📈', label: 'Compound Interest', href: 'compound-interest-calculator.html', live: true },
         { id: 'coast-fire',        icon: '🏖️', label: 'Coast FIRE',        href: 'coast-fire-calculator.html',        live: true },
-        { id: 'mortgage',          icon: '🏠', label: 'Mortgage',                                                      live: false },
+        { id: 'mortgage',          icon: '🏠', label: 'Mortgage Calculator', href: 'mortgage-calculator.html',          live: true },
         { id: 'savings-goal',      icon: '🎯', label: 'Savings Goal',                                                  live: false },
         { id: 'debt-payoff',       icon: '💳', label: 'Debt Payoff',                                                   live: false },
         { id: 'emergency-fund',    icon: '🛟', label: 'Emergency Fund',                                                live: false },
