@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Percentage Calculator — Quick % Math | CalcNova</title>
+  <meta name="description" content="Instantly calculate percentages: find X% of Y, what percent X is of Y, or the percentage change between two numbers. Free, private, no sign-up.">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="shared/nav.css">
+  <style>
+    .app { position: relative; z-index: 1; max-width: 960px; margin: 0 auto; padding: 0 16px 60px; }
+
+    .hero {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 38px 32px 32px;
+      margin-bottom: 28px;
+    }
+    .hero-title { font-size: 26px; font-weight: 800; letter-spacing: -.5px; }
+    .hero-title span {
+      background: linear-gradient(135deg, var(--green), var(--purple));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .hero-desc { font-size: 14px; color: var(--text-secondary); margin-top: 6px; line-height: 1.5; }
+
+    /* Segmented control */
+    .seg-control {
+      display: flex;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 4px;
+      margin-bottom: 28px;
+      gap: 4px;
+    }
+    .seg-btn {
+      flex: 1;
+      background: none;
+      border: none;
+      border-radius: 9px;
+      padding: 10px 8px;
+      font-family: var(--font);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all .2s;
+      text-align: center;
+      line-height: 1.3;
+    }
+    .seg-btn:hover { color: var(--text-primary); }
+    .seg-btn.active {
+      background: var(--surface);
+      color: var(--text-primary);
+      box-shadow: 0 1px 4px rgba(0,0,0,.08);
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 22px;
+      margin-bottom: 28px;
+    }
+    .card-title {
+      font-family: var(--mono);
+      font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
+      color: var(--text-muted); margin-bottom: 18px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .card-title-dot { width: 6px; height: 6px; border-radius: 50%; }
+
+    .form-group { margin-bottom: 14px; }
+    .form-group:last-child { margin-bottom: 0; }
+    .form-label { font-size: 12px; font-weight: 600; color: var(--text-secondary); margin-bottom: 6px; display: block; }
+
+    input[type="number"] {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text-primary);
+      font-family: var(--font);
+      font-size: 14px;
+      font-weight: 600;
+      padding: 9px 12px;
+      outline: none;
+      transition: border-color .2s, box-shadow .2s;
+      -moz-appearance: textfield;
+    }
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+    input[type="number"]:focus {
+      border-color: var(--green);
+      box-shadow: 0 0 0 3px rgba(16,185,129,.12);
+    }
+
+    .input-row { display: flex; gap: 12px; align-items: flex-end; }
+    .input-row .form-group { flex: 1; }
+
+    .swap-btn {
+      display: flex; align-items: center; justify-content: center;
+      width: 38px; height: 38px; min-width: 38px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all .15s;
+      margin-bottom: 14px;
+      flex-shrink: 0;
+    }
+    .swap-btn:hover { border-color: var(--green); color: var(--green); }
+    .swap-btn svg { width: 16px; height: 16px; }
+
+    .error-msg {
+      background: rgba(239,68,68,.08);
+      border: 1px solid rgba(239,68,68,.25);
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--red);
+      margin-top: 14px;
+      display: none;
+    }
+    .error-msg.visible { display: flex; align-items: center; gap: 8px; }
+
+    /* Result display */
+    .result-card {
+      background: linear-gradient(135deg, rgba(16,185,129,.08), rgba(99,102,241,.08));
+      border: 1.5px solid rgba(16,185,129,.3);
+      border-radius: 20px;
+      padding: 32px 28px 28px;
+      margin-bottom: 28px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .result-card::before {
+      content: '';
+      position: absolute; top: -40px; right: -40px;
+      width: 120px; height: 120px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--green), var(--purple));
+      opacity: .07;
+    }
+    .result-card::after {
+      content: '';
+      position: absolute; bottom: -30px; left: -30px;
+      width: 80px; height: 80px;
+      border-radius: 50%;
+      background: var(--purple);
+      opacity: .05;
+    }
+    .result-card.hidden { display: none; }
+
+    .result-label {
+      font-family: var(--mono);
+      font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
+      color: var(--text-muted); margin-bottom: 8px;
+    }
+    .result-value {
+      font-family: var(--mono); font-size: 42px; font-weight: 800;
+      background: linear-gradient(135deg, var(--green), var(--purple));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+      line-height: 1.1; margin-bottom: 10px;
+      word-break: break-all;
+    }
+    .result-formula {
+      font-size: 13px; color: var(--text-secondary); font-family: var(--mono);
+      line-height: 1.5;
+    }
+    .result-formula .hl { color: var(--green); font-weight: 700; }
+    .result-formula .hlp { color: var(--purple); font-weight: 700; }
+
+    .result-direction {
+      display: inline-flex; align-items: center; gap: 6px;
+      margin-top: 12px; padding: 5px 14px;
+      border-radius: 100px;
+      font-size: 13px; font-weight: 700;
+      font-family: var(--mono);
+    }
+    .result-direction.increase {
+      background: rgba(16,185,129,.1);
+      border: 1px solid rgba(16,185,129,.3);
+      color: var(--green);
+    }
+    .result-direction.decrease {
+      background: rgba(239,68,68,.1);
+      border: 1px solid rgba(239,68,68,.3);
+      color: var(--red);
+    }
+    .result-direction.no-change {
+      background: rgba(155,163,181,.08);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+    }
+
+    .action-row {
+      display: flex; gap: 8px; justify-content: flex-end;
+      margin-bottom: 28px; flex-wrap: wrap;
+    }
+    .action-btn {
+      display: flex; align-items: center; gap: 7px;
+      background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+      color: var(--text-secondary); font-family: var(--font); font-size: 13px; font-weight: 600;
+      padding: 8px 16px; cursor: pointer; transition: all .15s; text-decoration: none;
+    }
+    .action-btn:hover {
+      border-color: var(--green); color: var(--green);
+      background: linear-gradient(135deg, rgba(16,185,129,.04), rgba(99,102,241,.04));
+    }
+    .action-btn svg { width: 15px; height: 15px; flex-shrink: 0; }
+
+    #toast {
+      position: fixed; bottom: 24px; right: 24px; z-index: 200;
+      background: #0f1623; color: white;
+      padding: 10px 18px; border-radius: 100px;
+      font-size: 12px; font-weight: 700; font-family: var(--mono);
+      display: flex; align-items: center; gap: 7px;
+      box-shadow: 0 8px 24px rgba(0,0,0,.25);
+      opacity: 0; transform: translateY(8px);
+      transition: opacity .25s, transform .25s; pointer-events: none;
+    }
+
+    @media (max-width: 640px) {
+      .hero { padding: 24px 20px 20px; }
+      .hero-title { font-size: 20px; }
+      .seg-btn { font-size: 11px; padding: 8px 6px; }
+      .result-value { font-size: 32px; }
+      .input-row { flex-direction: column; gap: 0; }
+      .input-row .form-group { width: 100%; }
+      .swap-btn { margin: 0 auto 14px; }
+    }
+
+    @media (max-width: 380px) {
+      .seg-control { flex-direction: column; }
+      .result-value { font-size: 26px; }
+    }
+
+    @media print {
+      body { background: white !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      body::before { display: none; }
+      header, .action-row, #toast, .icon-btn, .nav-tools-wrap, .donate-btn,
+      .mega-menu, .menu-overlay, .site-footer, .footer-disclaimer,
+      .seg-control { display: none !important; }
+      .app { padding: 0; max-width: 100%; }
+      .hero { border: none; padding: 12px 0 8px; margin-bottom: 10px; }
+      .card, .result-card { page-break-inside: avoid; }
+      .result-card.hidden { display: block !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <!-- nav.js injects header here -->
+
+    <div class="hero">
+      <div class="hero-title">Percentage <span>Calculator</span></div>
+      <div class="hero-desc">Instantly calculate percentages — find X% of a number, what percent one number is of another, or the percentage change between two values.</div>
+    </div>
+
+    <!-- Segmented control -->
+    <div class="seg-control" id="segControl">
+      <button class="seg-btn active" data-mode="of" type="button">What is X% of Y?</button>
+      <button class="seg-btn" data-mode="is" type="button">X is what % of Y?</button>
+      <button class="seg-btn" data-mode="change" type="button">% change from X to Y</button>
+    </div>
+
+    <!-- Input card -->
+    <div class="card">
+      <div class="card-title"><div class="card-title-dot" style="background:var(--green)"></div>Inputs</div>
+
+      <!-- Mode 1: What is X% of Y? -->
+      <div class="mode-panel" id="panel-of">
+        <div class="input-row">
+          <div class="form-group">
+            <label class="form-label" for="of-x">Percentage (%)</label>
+            <input type="number" id="of-x" placeholder="e.g. 15" step="any">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="of-y">Number</label>
+            <input type="number" id="of-y" placeholder="e.g. 200" step="any">
+          </div>
+        </div>
+      </div>
+
+      <!-- Mode 2: X is what % of Y? -->
+      <div class="mode-panel" id="panel-is" style="display:none;">
+        <div class="input-row">
+          <div class="form-group">
+            <label class="form-label" for="is-x">Value (X)</label>
+            <input type="number" id="is-x" placeholder="e.g. 30" step="any">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="is-y">Total (Y)</label>
+            <input type="number" id="is-y" placeholder="e.g. 200" step="any">
+          </div>
+        </div>
+      </div>
+
+      <!-- Mode 3: % change from X to Y -->
+      <div class="mode-panel" id="panel-change" style="display:none;">
+        <div class="input-row">
+          <div class="form-group">
+            <label class="form-label" for="ch-x">Original value (X)</label>
+            <input type="number" id="ch-x" placeholder="e.g. 80" step="any">
+          </div>
+          <button class="swap-btn" id="swapBtn" type="button" title="Swap values">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+          </button>
+          <div class="form-group">
+            <label class="form-label" for="ch-y">New value (Y)</label>
+            <input type="number" id="ch-y" placeholder="e.g. 100" step="any">
+          </div>
+        </div>
+      </div>
+
+      <div class="error-msg" id="errorMsg">
+        <span>&#9888;</span>
+        <span id="errorText"></span>
+      </div>
+    </div>
+
+    <!-- Result -->
+    <div class="result-card hidden" id="resultCard">
+      <div class="result-label" id="resultLabel">Result</div>
+      <div class="result-value" id="resultValue">—</div>
+      <div class="result-formula" id="resultFormula"></div>
+      <div class="result-direction hidden" id="resultDirection"></div>
+    </div>
+
+    <!-- Actions -->
+    <div class="action-row">
+      <button class="action-btn" id="copyBtn" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        <span>Copy summary</span>
+      </button>
+      <button class="action-btn" id="printBtn" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+        <span>Print results</span>
+      </button>
+    </div>
+
+    <!-- nav.js injects footer here -->
+  </div>
+
+  <div id="toast"><span style="color:var(--green);font-size:15px;">&#10003;</span> <span id="toast-msg">Copied!</span></div>
+
+  <script>
+    window.CALCNOVA_PAGE = { id:'percentage-calculator', disclaimer:'For informational purposes only.' };
+  </script>
+  <script src="shared/nav.js"></script>
+
+  <script>
+  (function() {
+    'use strict';
+
+    // --- State ---
+    let currentMode = 'of';
+    let lastResult = null;
+
+    // --- DOM refs ---
+    const segBtns     = document.querySelectorAll('.seg-btn');
+    const panels      = document.querySelectorAll('.mode-panel');
+    const resultCard  = document.getElementById('resultCard');
+    const resultLabel = document.getElementById('resultLabel');
+    const resultValue = document.getElementById('resultValue');
+    const resultFormula = document.getElementById('resultFormula');
+    const resultDir   = document.getElementById('resultDirection');
+    const errorMsg    = document.getElementById('errorMsg');
+    const errorText   = document.getElementById('errorText');
+
+    // --- Formatting ---
+    function fmtNum(n) {
+      if (!isFinite(n)) return String(n);
+      // Up to 10 decimal places, then trim trailing zeros
+      const fixed = parseFloat(n.toFixed(10));
+      const parts = fixed.toString().split('.');
+      // Add commas to integer part
+      parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+      return parts.join('.');
+    }
+
+    function fmtInput(n) {
+      // Format input number for display in formulas
+      if (!isFinite(n)) return String(n);
+      const fixed = parseFloat(n.toFixed(10));
+      const parts = fixed.toString().split('.');
+      parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+      return parts.join('.');
+    }
+
+    // --- Mode switching ---
+    function switchMode(mode) {
+      currentMode = mode;
+      segBtns.forEach(b => b.classList.toggle('active', b.dataset.mode === mode));
+      panels.forEach(p => p.style.display = p.id === 'panel-' + mode ? '' : 'none');
+      clearError();
+      calculate();
+    }
+
+    segBtns.forEach(btn => {
+      btn.addEventListener('click', () => switchMode(btn.dataset.mode));
+    });
+
+    // --- Swap button ---
+    document.getElementById('swapBtn').addEventListener('click', function() {
+      const xEl = document.getElementById('ch-x');
+      const yEl = document.getElementById('ch-y');
+      const tmp = xEl.value;
+      xEl.value = yEl.value;
+      yEl.value = tmp;
+      calculate();
+    });
+
+    // --- Error handling ---
+    function showError(msg) {
+      errorText.textContent = msg;
+      errorMsg.classList.add('visible');
+      resultCard.classList.add('hidden');
+      resultDir.classList.add('hidden');
+      lastResult = null;
+    }
+
+    function clearError() {
+      errorMsg.classList.remove('visible');
+    }
+
+    // --- Calculation ---
+    function getInputs(mode) {
+      if (mode === 'of') {
+        return {
+          x: document.getElementById('of-x').value,
+          y: document.getElementById('of-y').value
+        };
+      } else if (mode === 'is') {
+        return {
+          x: document.getElementById('is-x').value,
+          y: document.getElementById('is-y').value
+        };
+      } else {
+        return {
+          x: document.getElementById('ch-x').value,
+          y: document.getElementById('ch-y').value
+        };
+      }
+    }
+
+    function calculate() {
+      clearError();
+      const raw = getInputs(currentMode);
+
+      // Both fields must have values
+      if (raw.x === '' || raw.y === '') {
+        resultCard.classList.add('hidden');
+        resultDir.classList.add('hidden');
+        lastResult = null;
+        return;
+      }
+
+      const x = parseFloat(raw.x);
+      const y = parseFloat(raw.y);
+
+      if (isNaN(x) || isNaN(y)) {
+        resultCard.classList.add('hidden');
+        resultDir.classList.add('hidden');
+        lastResult = null;
+        return;
+      }
+
+      let result, label, formula, direction = null;
+
+      if (currentMode === 'of') {
+        // What is X% of Y?
+        result = (x / 100) * y;
+        label = 'Result';
+        formula = `<span class="hl">${fmtInput(x)}%</span> of <span class="hlp">${fmtInput(y)}</span> = ${fmtInput(x)} / 100 &times; ${fmtInput(y)}`;
+
+      } else if (currentMode === 'is') {
+        // X is what % of Y?
+        if (y === 0) {
+          showError('Cannot divide by zero. The total (Y) must not be zero.');
+          return;
+        }
+        result = (x / y) * 100;
+        label = 'Percentage';
+        formula = `<span class="hl">${fmtInput(x)}</span> / <span class="hlp">${fmtInput(y)}</span> &times; 100`;
+
+      } else {
+        // % change from X to Y
+        if (x === 0) {
+          showError('Cannot calculate percentage change from zero. The original value (X) must not be zero.');
+          return;
+        }
+        result = ((y - x) / Math.abs(x)) * 100;
+        label = 'Percentage Change';
+        formula = `(<span class="hlp">${fmtInput(y)}</span> &minus; <span class="hl">${fmtInput(x)}</span>) / |<span class="hl">${fmtInput(x)}</span>| &times; 100`;
+
+        if (result > 0) direction = 'increase';
+        else if (result < 0) direction = 'decrease';
+        else direction = 'no-change';
+      }
+
+      // Display
+      resultCard.classList.remove('hidden');
+      resultLabel.textContent = label;
+
+      // Format result display
+      let displayVal;
+      if (currentMode === 'is' || currentMode === 'change') {
+        displayVal = fmtNum(result) + '%';
+      } else {
+        displayVal = fmtNum(result);
+      }
+      resultValue.textContent = displayVal;
+      resultFormula.innerHTML = formula;
+
+      // Direction badge (only for % change)
+      if (direction) {
+        resultDir.className = 'result-direction ' + direction;
+        if (direction === 'increase') {
+          resultDir.innerHTML = '&#9650; Increase';
+        } else if (direction === 'decrease') {
+          resultDir.innerHTML = '&#9660; Decrease';
+        } else {
+          resultDir.innerHTML = '&#8212; No change';
+        }
+        resultDir.classList.remove('hidden');
+      } else {
+        resultDir.classList.add('hidden');
+      }
+
+      // Store for copy
+      lastResult = {
+        mode: currentMode,
+        x: x,
+        y: y,
+        result: result,
+        displayVal: displayVal,
+        direction: direction
+      };
+    }
+
+    // --- Live calculation on all inputs ---
+    document.querySelectorAll('input[type="number"]').forEach(input => {
+      input.addEventListener('input', calculate);
+    });
+
+    // --- Copy ---
+    document.getElementById('copyBtn').addEventListener('click', function() {
+      if (!lastResult) {
+        showToast('Nothing to copy');
+        return;
+      }
+      const r = lastResult;
+      let lines = ['CalcNova - Percentage Calculator'];
+      if (r.mode === 'of') {
+        lines.push(`What is ${r.x}% of ${r.y}?`);
+        lines.push(`Result: ${r.displayVal}`);
+        lines.push(`Formula: ${r.x} / 100 x ${r.y} = ${r.displayVal}`);
+      } else if (r.mode === 'is') {
+        lines.push(`${r.x} is what % of ${r.y}?`);
+        lines.push(`Result: ${r.displayVal}`);
+        lines.push(`Formula: (${r.x} / ${r.y}) x 100 = ${r.displayVal}`);
+      } else {
+        lines.push(`% change from ${r.x} to ${r.y}`);
+        lines.push(`Result: ${r.displayVal}`);
+        if (r.direction === 'increase') lines.push('Direction: Increase');
+        else if (r.direction === 'decrease') lines.push('Direction: Decrease');
+        else lines.push('Direction: No change');
+        lines.push(`Formula: (${r.y} - ${r.x}) / |${r.x}| x 100 = ${r.displayVal}`);
+      }
+      navigator.clipboard.writeText(lines.join('\n'))
+        .then(() => showToast('Copied summary!'))
+        .catch(() => showToast('Copy failed'));
+    });
+
+    // --- Print ---
+    document.getElementById('printBtn').addEventListener('click', function() {
+      window.print();
+    });
+
+    // --- Toast ---
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      document.getElementById('toast-msg').textContent = msg;
+      toast.style.opacity = '1';
+      toast.style.transform = 'translateY(0)';
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(8px)';
+      }, 2200);
+    }
+
+  })();
+  </script>
+</body>
+</html>

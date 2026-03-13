@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>How Much Emergency Fund Do I Need? | CalcNova</title>
+  <meta name="description" content="Learn how much you should save in an emergency fund, what factors affect the amount, where to keep it, and a step-by-step plan to build one from scratch.">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="shared/nav.css">
+  <style>
+    .app { position: relative; z-index: 1; max-width: 960px; margin: 0 auto; padding: 0 16px 60px; }
+
+    /* ── Article Hero ── */
+    .article-hero {
+      padding: 48px 0 36px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 40px;
+      max-width: 720px;
+    }
+    .article-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: linear-gradient(135deg, rgba(16,185,129,.1), rgba(99,102,241,.1));
+      border: 1px solid rgba(16,185,129,.25);
+      border-radius: 100px; padding: 5px 14px;
+      font-size: 11px; font-weight: 700; color: var(--green);
+      letter-spacing: .5px; text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+    .article-hero h1 {
+      font-size: 38px; font-weight: 800; letter-spacing: -.5px;
+      line-height: 1.15; margin-bottom: 14px;
+    }
+    .article-hero h1 span {
+      background: linear-gradient(135deg, var(--green), var(--purple));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .article-hero .subtitle {
+      font-size: 16px; color: var(--text-secondary); line-height: 1.6; max-width: 600px;
+    }
+    .article-meta {
+      margin-top: 16px; font-size: 12px; color: var(--text-muted); font-weight: 500;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .article-meta .dot { width: 3px; height: 3px; border-radius: 50%; background: var(--text-muted); }
+
+    /* ── Article Body ── */
+    .article-body {
+      max-width: 720px;
+      display: flex; flex-direction: column; gap: 28px;
+    }
+    .article-body h2 {
+      font-size: 24px; font-weight: 800; letter-spacing: -.3px;
+      margin-bottom: 12px; color: var(--text-primary);
+    }
+    .article-body h3 {
+      font-size: 18px; font-weight: 700; letter-spacing: -.2px;
+      margin-bottom: 8px; color: var(--text-primary);
+    }
+    .article-body p {
+      font-size: 16px; color: var(--text-secondary); line-height: 1.75;
+      margin-bottom: 14px;
+    }
+    .article-body p:last-child { margin-bottom: 0; }
+    .article-body ul, .article-body ol {
+      padding-left: 0; list-style: none;
+      display: flex; flex-direction: column; gap: 8px;
+      margin-bottom: 14px;
+    }
+    .article-body ul li, .article-body ol li {
+      font-size: 16px; color: var(--text-secondary); line-height: 1.7;
+      padding-left: 22px; position: relative;
+    }
+    .article-body ul li::before {
+      content: ''; position: absolute; left: 0; top: 10px;
+      width: 6px; height: 6px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--green), var(--purple));
+    }
+    .article-body ol { counter-reset: ol-counter; }
+    .article-body ol li { counter-increment: ol-counter; }
+    .article-body ol li::before {
+      content: counter(ol-counter); position: absolute; left: 0; top: 0;
+      font-size: 13px; font-weight: 800; color: var(--green);
+      font-family: var(--mono);
+    }
+    .article-body a { color: var(--green); text-decoration: none; font-weight: 600; }
+    .article-body a:hover { text-decoration: underline; }
+    .article-body strong { color: var(--text-primary); font-weight: 700; }
+
+    /* ── Card ── */
+    .card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 18px; padding: 24px 26px;
+    }
+    .card-label {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 11px; font-weight: 800; text-transform: uppercase;
+      letter-spacing: .5px; color: var(--green); margin-bottom: 12px;
+    }
+    .card h3 { margin-top: 0; }
+    .card p:last-child { margin-bottom: 0; }
+
+    /* ── Highlight Box ── */
+    .highlight-box {
+      background: linear-gradient(135deg, rgba(16,185,129,.06), rgba(99,102,241,.04));
+      border: 1px solid rgba(16,185,129,.18);
+      border-radius: 14px; padding: 20px 24px;
+    }
+    .highlight-box strong { color: var(--text-primary); }
+    .highlight-box p { margin-bottom: 10px; }
+    .highlight-box p:last-child { margin-bottom: 0; }
+
+    /* ── Factor Cards ── */
+    .factor-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
+    }
+    .factor-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 16px; padding: 20px 20px 18px;
+    }
+    .factor-card .factor-icon {
+      width: 40px; height: 40px; border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; margin-bottom: 12px;
+      background: linear-gradient(135deg, rgba(16,185,129,.1), rgba(99,102,241,.06));
+    }
+    .factor-card h3 { font-size: 15px; font-weight: 800; margin-bottom: 6px; }
+    .factor-card p {
+      font-size: 14px; color: var(--text-secondary); line-height: 1.65;
+      margin-bottom: 0;
+    }
+
+    /* ── Where to Keep Table ── */
+    .comparison-table {
+      width: 100%; border-collapse: collapse;
+      font-size: 14px; margin: 12px 0;
+    }
+    .comparison-table th {
+      text-align: left; font-weight: 700; font-size: 12px;
+      text-transform: uppercase; letter-spacing: .5px;
+      color: var(--text-muted); padding: 10px 14px;
+      border-bottom: 2px solid var(--border);
+    }
+    .comparison-table td {
+      padding: 10px 14px; color: var(--text-secondary);
+      border-bottom: 1px solid var(--border);
+    }
+    .comparison-table tr:last-child td { border-bottom: none; }
+    .comparison-table .num { font-family: var(--mono); font-weight: 600; }
+    .comparison-table .hl { color: var(--green); font-weight: 700; }
+    .comparison-table .tag-yes {
+      display: inline-block; font-size: 11px; font-weight: 700;
+      padding: 2px 8px; border-radius: 100px;
+      background: rgba(16,185,129,.1); color: var(--green);
+      border: 1px solid rgba(16,185,129,.2);
+    }
+    .comparison-table .tag-no {
+      display: inline-block; font-size: 11px; font-weight: 700;
+      padding: 2px 8px; border-radius: 100px;
+      background: rgba(239,68,68,.08); color: var(--red);
+      border: 1px solid rgba(239,68,68,.15);
+    }
+    .comparison-table .tag-mid {
+      display: inline-block; font-size: 11px; font-weight: 700;
+      padding: 2px 8px; border-radius: 100px;
+      background: rgba(245,158,11,.1); color: var(--amber);
+      border: 1px solid rgba(245,158,11,.2);
+    }
+
+    /* ── Step Cards ── */
+    .step-list {
+      display: flex; flex-direction: column; gap: 14px;
+      counter-reset: step-counter;
+    }
+    .step-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 16px; padding: 20px 22px;
+      display: flex; gap: 16px; align-items: flex-start;
+      counter-increment: step-counter;
+    }
+    .step-num {
+      width: 36px; height: 36px; border-radius: 10px; flex-shrink: 0;
+      background: linear-gradient(135deg, var(--green), var(--purple));
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--mono); font-size: 14px; font-weight: 800;
+      color: #fff;
+    }
+    .step-card h3 { font-size: 16px; font-weight: 800; margin-bottom: 4px; }
+    .step-card p { font-size: 14px; margin-bottom: 0; }
+
+    /* ── CTA Section ── */
+    .cta-section {
+      background: linear-gradient(135deg, rgba(16,185,129,.08), rgba(99,102,241,.06));
+      border: 1px solid rgba(16,185,129,.2);
+      border-radius: 18px; padding: 32px; text-align: center;
+      margin-top: 8px;
+    }
+    .cta-section h2 { font-size: 22px; margin-bottom: 10px; }
+    .cta-section p { max-width: 500px; margin: 0 auto 20px; }
+    .cta-btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: linear-gradient(135deg, var(--green), #059669);
+      color: #fff; border-radius: 100px; padding: 12px 28px;
+      font-size: 14px; font-weight: 700; text-decoration: none;
+      font-family: var(--font); transition: all .15s;
+      box-shadow: 0 4px 14px rgba(16,185,129,.3);
+    }
+    .cta-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(16,185,129,.4); }
+
+    /* ── Print ── */
+    @media print {
+      body::before, header, .menu-overlay, .site-footer, .ad-slot, .cta-section { display: none !important; }
+      .app { max-width: 100%; padding: 0; }
+      .article-hero { padding-top: 0; }
+      .article-body p, .article-body li { color: #222; }
+      .card, .highlight-box, .factor-card, .step-card { break-inside: avoid; border: 1px solid #ccc; }
+    }
+
+    /* ── Mobile ── */
+    @media (max-width: 640px) {
+      .article-hero h1 { font-size: 28px; }
+      .factor-grid { grid-template-columns: 1fr; }
+      .comparison-table { font-size: 12px; }
+      .comparison-table th, .comparison-table td { padding: 8px 10px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+
+    <!-- Hero -->
+    <div class="article-hero">
+      <div class="article-badge">🛟 Financial Safety Net</div>
+      <h1>How Much <span>Emergency Fund</span> Do I Need?</h1>
+      <p class="subtitle">An emergency fund is the foundation of financial security. Here is how to figure out your target number, where to keep it, and a realistic plan to build one from zero.</p>
+      <div class="article-meta">
+        <span>9 min read</span>
+        <span class="dot"></span>
+        <span>Updated March 2026</span>
+      </div>
+    </div>
+
+    <!-- Article Body -->
+    <div class="article-body">
+
+      <!-- Intro -->
+      <section>
+        <h2>Why You Need an Emergency Fund</h2>
+        <p>Life is unpredictable. A car breakdown, a medical bill, a sudden job loss &mdash; these are not questions of <em>if</em> but <em>when</em>. An emergency fund is a dedicated cash reserve designed to cover unexpected expenses without forcing you into debt.</p>
+        <p>Without one, a single surprise expense can cascade into credit card debt, missed payments, and mounting stress. With one, the same event becomes a manageable inconvenience rather than a financial crisis. Think of it as self-insurance: you are paying yourself a premium now so you do not have to borrow at high interest rates later.</p>
+      </section>
+
+      <!-- The General Rule -->
+      <section>
+        <h2>The General Guideline: 3 to 6 Months of Expenses</h2>
+        <div class="highlight-box">
+          <p><strong>The standard advice is to save 3 to 6 months' worth of essential living expenses.</strong> Not income &mdash; expenses. This means the money you actually need to cover housing, food, transportation, insurance, utilities, and minimum debt payments each month.</p>
+          <p>If your essential monthly expenses are <strong>$3,500</strong>, your target range is <strong>$10,500 to $21,000</strong>.</p>
+        </div>
+        <p>This range exists because not everyone faces the same level of risk. Your ideal target depends on several personal factors.</p>
+      </section>
+
+      <!-- Factors -->
+      <section>
+        <h2>Factors That Affect Your Target</h2>
+        <p>The right number is not the same for everyone. Consider these variables when choosing where to land within (or outside) the 3-to-6-month range:</p>
+        <div class="factor-grid">
+          <div class="factor-card">
+            <div class="factor-icon">💼</div>
+            <h3>Job Stability</h3>
+            <p>If you work in a volatile industry, are self-employed, or rely on commissions, lean toward 6 months or more. A government employee with strong job protections may be comfortable closer to 3 months.</p>
+          </div>
+          <div class="factor-card">
+            <div class="factor-icon">👨‍👩‍👧‍👦</div>
+            <h3>Dependents</h3>
+            <p>Supporting a family means higher stakes. If others rely on your income, a larger cushion provides more breathing room during tough stretches.</p>
+          </div>
+          <div class="factor-card">
+            <div class="factor-icon">💰</div>
+            <h3>Income Sources</h3>
+            <p>A dual-income household may need less in reserves since both partners losing their jobs simultaneously is less likely. A single-income household has more concentrated risk.</p>
+          </div>
+          <div class="factor-card">
+            <div class="factor-icon">🏥</div>
+            <h3>Health & Insurance</h3>
+            <p>High-deductible health plans, older vehicles, or aging home systems increase the chance of large unexpected expenses. Factor these into your target.</p>
+          </div>
+          <div class="factor-card">
+            <div class="factor-icon">🏠</div>
+            <h3>Homeownership</h3>
+            <p>Homeowners face repair costs that renters do not: a new roof, a broken furnace, plumbing failures. Consider adding a buffer for home maintenance emergencies.</p>
+          </div>
+          <div class="factor-card">
+            <div class="factor-icon">📊</div>
+            <h3>Existing Debt</h3>
+            <p>If you carry significant debt, a smaller starter fund ($1,000 to $2,000) may make sense initially. Once high-interest debt is under control, build the full fund.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Where to Keep It -->
+      <section>
+        <h2>Where to Keep Your Emergency Fund</h2>
+        <p>Your emergency fund needs to be <strong>liquid</strong> (easy to access quickly), <strong>safe</strong> (not subject to market volatility), and ideally earning <strong>some interest</strong>. Here is how common options compare:</p>
+        <table class="comparison-table">
+          <thead>
+            <tr>
+              <th>Account Type</th>
+              <th>Typical APY</th>
+              <th>Liquidity</th>
+              <th>FDIC Insured</th>
+              <th>Recommended?</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>High-Yield Savings (HYSA)</strong></td>
+              <td class="num">4.0 &ndash; 5.0%</td>
+              <td>1&ndash;2 business days</td>
+              <td><span class="tag-yes">Yes</span></td>
+              <td class="hl">Best choice</td>
+            </tr>
+            <tr>
+              <td><strong>Money Market Account</strong></td>
+              <td class="num">3.5 &ndash; 4.5%</td>
+              <td>Same day or next day</td>
+              <td><span class="tag-yes">Yes</span></td>
+              <td>Great option</td>
+            </tr>
+            <tr>
+              <td><strong>Regular Savings</strong></td>
+              <td class="num">0.01 &ndash; 0.5%</td>
+              <td>Instant</td>
+              <td><span class="tag-yes">Yes</span></td>
+              <td><span class="tag-mid">OK for starter</span></td>
+            </tr>
+            <tr>
+              <td><strong>Checking Account</strong></td>
+              <td class="num">~0%</td>
+              <td>Instant</td>
+              <td><span class="tag-yes">Yes</span></td>
+              <td><span class="tag-no">Too tempting</span></td>
+            </tr>
+            <tr>
+              <td><strong>CDs</strong></td>
+              <td class="num">4.0 &ndash; 5.0%</td>
+              <td>Penalty for early withdrawal</td>
+              <td><span class="tag-yes">Yes</span></td>
+              <td><span class="tag-mid">Partial only</span></td>
+            </tr>
+            <tr>
+              <td><strong>Brokerage / Stocks</strong></td>
+              <td class="num">Variable</td>
+              <td>1&ndash;3 business days</td>
+              <td><span class="tag-no">No</span></td>
+              <td><span class="tag-no">Too risky</span></td>
+            </tr>
+          </tbody>
+        </table>
+        <p>A <strong>high-yield savings account (HYSA)</strong> is the gold standard for emergency funds. It keeps your money safe, earns meaningful interest, and is accessible within a day or two. The slight delay in transfers actually works in your favor &mdash; it adds just enough friction to prevent impulsive spending while still being available when you genuinely need it.</p>
+        <p>Avoid keeping your emergency fund in a brokerage account or stocks. A market downturn could slash your fund's value at the exact moment you need it most.</p>
+      </section>
+
+      <!-- How to Build One -->
+      <section>
+        <h2>How to Build Your Emergency Fund Step by Step</h2>
+        <p>Building a five-figure savings cushion can feel overwhelming, especially if you are starting from zero. The key is to break it into manageable phases:</p>
+
+        <div class="step-list">
+          <div class="step-card">
+            <div class="step-num">1</div>
+            <div>
+              <h3>Set a Starter Goal of $1,000</h3>
+              <p>Before worrying about the full 3-to-6-month target, focus on accumulating your first $1,000. This covers most minor emergencies &mdash; a car repair, an urgent medical copay, or a broken appliance &mdash; and keeps them from becoming credit card debt.</p>
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-num">2</div>
+            <div>
+              <h3>Calculate Your Monthly Essentials</h3>
+              <p>Add up what you truly need to survive each month: rent or mortgage, groceries, utilities, insurance, transportation, and minimum debt payments. Exclude discretionary spending like dining out, subscriptions, and entertainment. This number is your "one month" baseline.</p>
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-num">3</div>
+            <div>
+              <h3>Automate a Monthly Transfer</h3>
+              <p>Set up an automatic transfer from your checking account to your HYSA on payday. Even $100 or $200 per month adds up. Automation removes willpower from the equation &mdash; you cannot forget or talk yourself out of saving.</p>
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-num">4</div>
+            <div>
+              <h3>Boost with Windfalls</h3>
+              <p>Tax refunds, bonuses, cash gifts, and side-hustle income can accelerate your progress dramatically. Commit to directing at least 50% of any windfall toward your emergency fund until you hit your target.</p>
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-num">5</div>
+            <div>
+              <h3>Build to Your Full Target</h3>
+              <p>Once you have $1,000, keep going until you reach your 3-to-6-month target. This might take a year or two, and that is perfectly fine. Progress, not perfection, is the goal. Each month you save brings more security.</p>
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-num">6</div>
+            <div>
+              <h3>Replenish After Use</h3>
+              <p>When you use your emergency fund (that is what it is for), make refilling it your next financial priority. Resume automated contributions until the balance is back to your target. This ensures you are always prepared for the next surprise.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Common Mistakes -->
+      <section>
+        <h2>Common Mistakes to Avoid</h2>
+        <div class="card">
+          <div class="card-label">⚠️ Watch Out For</div>
+          <ul>
+            <li><strong>Using it for non-emergencies.</strong> A sale at your favorite store is not an emergency. Define what qualifies before you need the money: job loss, medical events, essential repairs, and unexpected essential bills.</li>
+            <li><strong>Keeping it too accessible.</strong> A separate account at a different bank adds helpful friction. If your emergency fund is one tap away in your daily checking account, it will get spent.</li>
+            <li><strong>Waiting for the "right time" to start.</strong> There is never a perfect moment. Start with whatever you can afford, even if it is $25 a week. Building the habit matters more than the initial amount.</li>
+            <li><strong>Investing it in the stock market.</strong> Your emergency fund is insurance, not an investment. It needs to be there when you need it, regardless of what markets are doing.</li>
+            <li><strong>Stopping once you hit your goal.</strong> Your expenses change over time. Revisit your target annually, especially after major life changes like a move, a new child, or a career shift.</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Key Takeaways -->
+      <section>
+        <h2>Key Takeaways</h2>
+        <div class="card">
+          <div class="card-label">📌 Summary</div>
+          <ul>
+            <li><strong>Target 3 to 6 months of essential expenses.</strong> Adjust based on job stability, dependents, health risks, and income sources.</li>
+            <li><strong>Keep it in a high-yield savings account.</strong> Safe, liquid, and earns meaningful interest.</li>
+            <li><strong>Start with $1,000</strong> as a mini emergency fund, then build from there.</li>
+            <li><strong>Automate your savings.</strong> Consistent contributions matter more than large sporadic deposits.</li>
+            <li><strong>Replenish after every use.</strong> An emergency fund only works if it is funded when the emergency arrives.</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- CTA -->
+      <div class="cta-section">
+        <h2>Calculate Your Target</h2>
+        <p>Plug in your monthly expenses and personal factors to get a customized emergency fund target with a savings timeline.</p>
+        <a href="emergency-fund.html" class="cta-btn">Open Emergency Fund Calculator →</a>
+      </div>
+
+    </div><!-- /article-body -->
+  </div><!-- /app -->
+
+  <script>
+    window.CALCNOVA_PAGE = {
+      id: 'article-emergency-fund',
+      disclaimer: 'This article is for educational purposes only and does not constitute financial advice. Consult a qualified financial advisor for personalized guidance.'
+    };
+  </script>
+  <script src="shared/nav.js"></script>
+</body>
+</html>

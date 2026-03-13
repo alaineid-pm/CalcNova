@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Net Worth Tracker — Assets & Liabilities | CalcNova</title>
+  <meta name="description" content="Free net worth tracker — add your assets and liabilities to calculate your total net worth instantly. No sign-up required.">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="shared/nav.css">
+  <style>
+    .app { position: relative; z-index: 1; max-width: 960px; margin: 0 auto; padding: 0 16px 60px; }
+
+    /* ── HERO ── */
+    .hero {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 28px 28px 24px;
+      margin-bottom: 20px;
+      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;
+    }
+    .hero-title { font-size: 26px; font-weight: 800; letter-spacing: -.5px; }
+    .hero-title span {
+      background: linear-gradient(135deg, var(--green), var(--purple));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .hero-desc { font-size: 14px; color: var(--text-secondary); margin-top: 6px; line-height: 1.5; }
+    .hero-formula {
+      font-family: var(--mono); font-size: 13px;
+      background: var(--bg); border: 1px solid var(--border); border-radius: 12px;
+      padding: 12px 18px; color: var(--text-secondary); white-space: nowrap;
+    }
+    .hero-formula .hlg { color: var(--green); font-weight: 700; }
+    .hero-formula .hlr { color: var(--red); font-weight: 700; }
+    .hero-formula .hlp { color: var(--purple); font-weight: 700; }
+
+    /* ── CARD ── */
+    .card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 18px; padding: 22px 22px 18px; margin-bottom: 16px;
+    }
+    .card-title {
+      font-size: 11px; font-weight: 700; letter-spacing: .5px; text-transform: uppercase;
+      color: var(--text-muted); margin-bottom: 18px;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .card-title-dot { width: 6px; height: 6px; border-radius: 50%; }
+
+    /* ── ROW TABLE ── */
+    .row-header {
+      display: grid; gap: 10px; align-items: center;
+      font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px;
+      color: var(--text-muted); padding: 0 4px 8px;
+    }
+    .row-header.asset-grid { grid-template-columns: 160px 1fr 140px 36px; }
+    .row-header.liability-grid { grid-template-columns: 160px 1fr 140px 36px; }
+    .entry-row {
+      display: grid; gap: 10px; align-items: center;
+      margin-bottom: 8px; animation: fadeRow .25s ease-out;
+    }
+    .entry-row.asset-grid { grid-template-columns: 160px 1fr 140px 36px; }
+    .entry-row.liability-grid { grid-template-columns: 160px 1fr 140px 36px; }
+
+    @keyframes fadeRow { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
+
+    .entry-row select,
+    .entry-row input[type="text"],
+    .entry-row input[type="number"] {
+      width: 100%;
+      background: var(--bg); border: 1px solid var(--border); border-radius: 10px;
+      color: var(--text-primary); font-family: var(--font); font-size: 13px; font-weight: 600;
+      padding: 9px 12px; outline: none;
+      transition: border-color .2s, box-shadow .2s;
+      appearance: none; -moz-appearance: textfield;
+    }
+    .entry-row input[type="number"]::-webkit-outer-spin-button,
+    .entry-row input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+    .entry-row select { cursor: pointer; padding-right: 28px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239ba3b5' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; }
+    .entry-row input:focus, .entry-row select:focus {
+      border-color: var(--green); box-shadow: 0 0 0 3px rgba(16,185,129,.12);
+    }
+    .val-wrap { position: relative; }
+    .val-prefix {
+      position: absolute; top: 50%; left: 12px; transform: translateY(-50%);
+      font-family: var(--mono); font-size: 13px; font-weight: 700; color: var(--text-muted);
+      pointer-events: none;
+    }
+    .val-wrap input { padding-left: 24px; font-family: var(--mono); }
+
+    .del-btn {
+      width: 36px; height: 36px; border: 1px solid var(--border); border-radius: 10px;
+      background: var(--bg); color: var(--text-muted); font-size: 15px;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      transition: all .15s;
+    }
+    .del-btn:hover { border-color: var(--red); color: var(--red); background: rgba(239,68,68,.06); }
+
+    .add-btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: var(--bg); border: 1px solid var(--border); border-radius: 10px;
+      padding: 8px 16px; font-size: 12px; font-weight: 700; font-family: var(--font);
+      color: var(--text-secondary); cursor: pointer; transition: all .15s; margin-top: 4px;
+    }
+    .add-btn:hover { border-color: var(--green); color: var(--green); }
+
+    /* ── RESULTS ── */
+    .results-section { display: none; margin-top: 8px; }
+    .results-section.visible { display: block; animation: fadeIn .35s ease-out; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    .net-worth-display {
+      text-align: center; padding: 28px 20px;
+    }
+    .net-worth-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 8px; }
+    .net-worth-value {
+      font-family: var(--mono); font-size: 44px; font-weight: 800; letter-spacing: -1px;
+    }
+    .net-worth-value.positive {
+      background: linear-gradient(135deg, var(--green), #34d399);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .net-worth-value.negative { color: var(--red); }
+    .net-worth-value.zero { color: var(--text-muted); }
+
+    .stat-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+    .stat-card {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
+      padding: 18px 20px; text-align: center;
+    }
+    .stat-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; color: var(--text-muted); margin-bottom: 6px; }
+    .stat-value { font-family: var(--mono); font-size: 24px; font-weight: 800; }
+    .stat-value.green { color: var(--green); }
+    .stat-value.red { color: var(--red); }
+
+    /* ── BARS ── */
+    .breakdown-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+    .breakdown-card { background: var(--surface); border: 1px solid var(--border); border-radius: 18px; padding: 22px; }
+    .breakdown-title {
+      font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px;
+      color: var(--text-muted); margin-bottom: 16px; display: flex; align-items: center; gap: 6px;
+    }
+    .bar-group { margin-bottom: 12px; }
+    .bar-group:last-child { margin-bottom: 0; }
+    .bar-label-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }
+    .bar-label { font-size: 12px; font-weight: 600; color: var(--text-secondary); }
+    .bar-amount { font-family: var(--mono); font-size: 12px; font-weight: 700; color: var(--text-primary); }
+    .bar-track { height: 8px; background: var(--bg); border-radius: 4px; overflow: hidden; }
+    .bar-fill { height: 100%; border-radius: 4px; transition: width .4s ease-out; min-width: 2px; }
+    .bar-fill.green { background: linear-gradient(90deg, var(--green), #34d399); }
+    .bar-fill.red { background: linear-gradient(90deg, var(--red), #f87171); }
+    .no-data-msg { font-size: 12px; color: var(--text-muted); font-style: italic; }
+
+    /* ── SUMMARY TABLE ── */
+    .summary-table { width: 100%; border-collapse: collapse; }
+    .summary-table th {
+      font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px;
+      color: var(--text-muted); text-align: left; padding: 8px 10px; border-bottom: 2px solid var(--border);
+    }
+    .summary-table td {
+      font-size: 13px; font-weight: 500; color: var(--text-secondary); padding: 8px 10px;
+      border-bottom: 1px solid var(--border);
+    }
+    .summary-table td.mono { font-family: var(--mono); font-weight: 700; }
+    .summary-table .type-asset { color: var(--green); font-weight: 700; }
+    .summary-table .type-liability { color: var(--red); font-weight: 700; }
+    .summary-table tr:last-child td { border-bottom: none; }
+    .summary-table-footer td {
+      font-weight: 800; font-size: 14px; border-top: 2px solid var(--border); border-bottom: none;
+    }
+
+    /* ── ACTION BUTTONS ── */
+    .action-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
+    .action-btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 10px 20px; border-radius: 10px; border: 1px solid var(--border);
+      background: var(--surface); font-size: 13px; font-weight: 700;
+      font-family: var(--font); color: var(--text-secondary);
+      cursor: pointer; transition: all .15s;
+    }
+    .action-btn:hover { border-color: var(--green); color: var(--green); }
+    .action-btn.primary {
+      background: linear-gradient(135deg, var(--green), var(--purple));
+      border: none; color: #fff;
+    }
+    .action-btn.primary:hover { opacity: .9; transform: translateY(-1px); }
+
+    /* ── TIP ── */
+    .tip-box {
+      background: linear-gradient(135deg, rgba(16,185,129,.06), rgba(99,102,241,.04));
+      border: 1px solid rgba(16,185,129,.2); border-radius: 14px;
+      padding: 14px 18px; font-size: 13px; color: var(--text-secondary); line-height: 1.5;
+      margin-top: 16px;
+    }
+    .tip-box strong { color: var(--green); }
+
+    /* ── TOAST ── */
+    #toast {
+      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(8px); z-index: 200;
+      background: var(--text-primary); color: var(--bg);
+      padding: 10px 18px; border-radius: 100px;
+      font-size: 12px; font-weight: 700; font-family: var(--mono);
+      display: flex; align-items: center; gap: 7px;
+      box-shadow: 0 8px 24px rgba(0,0,0,.25);
+      opacity: 0; transition: opacity .25s, transform .25s; pointer-events: none;
+    }
+
+    /* ── PRINT ── */
+    @media print {
+      body::before { display: none; }
+      .header-right .icon-btn,
+      .header-right .nav-tools-wrap,
+      .header-right .donate-btn,
+      .action-row { display: none !important; }
+      .mega-menu, .menu-overlay { display: none !important; }
+      #toast { display: none !important; }
+      .add-btn { display: none !important; }
+      .del-btn { display: none !important; }
+      .entry-row select, .entry-row input { border-color: #ddd !important; box-shadow: none !important; }
+      .card, .stat-card, .breakdown-card { break-inside: avoid; box-shadow: none; border-color: #ddd; }
+      .results-section.visible { display: block !important; }
+      .hero { break-after: avoid; }
+      .app { max-width: 100%; padding: 0 12px; }
+      .row-header { display: none; }
+      .entry-row.asset-grid, .entry-row.liability-grid {
+        grid-template-columns: 160px 1fr 140px;
+      }
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 640px) {
+      .hero { padding: 20px; flex-direction: column; align-items: flex-start; }
+      .hero-title { font-size: 22px; }
+      .hero-formula { font-size: 11px; padding: 10px 14px; }
+      .stat-row { grid-template-columns: 1fr; }
+      .breakdown-grid { grid-template-columns: 1fr; }
+
+      .row-header { display: none; }
+      .entry-row.asset-grid,
+      .entry-row.liability-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 6px;
+      }
+      .entry-row .val-wrap { grid-column: 1 / -1; }
+      .entry-row .del-btn { grid-column: 2; justify-self: end; }
+      .net-worth-value { font-size: 32px; }
+      .stat-value { font-size: 20px; }
+    }
+    @media (max-width: 380px) {
+      .entry-row.asset-grid,
+      .entry-row.liability-grid {
+        grid-template-columns: 1fr;
+      }
+      .entry-row .del-btn { justify-self: start; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+
+    <!-- HERO -->
+    <div class="hero">
+      <div>
+        <div class="hero-title"><span>Net Worth Tracker</span></div>
+        <div class="hero-desc">Add your assets and liabilities to see your total net worth. Updates live as you type.</div>
+      </div>
+      <div class="hero-formula">
+        <span class="hlp">Net Worth</span> = <span class="hlg">Assets</span> − <span class="hlr">Liabilities</span>
+      </div>
+    </div>
+
+    <!-- AD SLOT -->
+    <div class="ad-slot ad-slot--leaderboard" data-label="Ad Space"></div>
+
+    <!-- ASSETS -->
+    <div class="card" id="assetsCard">
+      <div class="card-title"><div class="card-title-dot" style="background:var(--green)"></div> Assets</div>
+      <div class="row-header asset-grid">
+        <span>Category</span><span>Description</span><span>Value ($)</span><span></span>
+      </div>
+      <div id="assetRows"></div>
+      <button class="add-btn" id="addAssetBtn">+ Add row</button>
+    </div>
+
+    <!-- LIABILITIES -->
+    <div class="card" id="liabilitiesCard">
+      <div class="card-title"><div class="card-title-dot" style="background:var(--red)"></div> Liabilities</div>
+      <div class="row-header liability-grid">
+        <span>Category</span><span>Description</span><span>Amount owed ($)</span><span></span>
+      </div>
+      <div id="liabilityRows"></div>
+      <button class="add-btn" id="addLiabilityBtn">+ Add row</button>
+    </div>
+
+    <!-- RESULTS -->
+    <div class="results-section" id="results">
+
+      <div class="card net-worth-display">
+        <div class="net-worth-label">Your Net Worth</div>
+        <div class="net-worth-value" id="netWorthValue">$0</div>
+      </div>
+
+      <div class="stat-row">
+        <div class="stat-card">
+          <div class="stat-label">Total Assets</div>
+          <div class="stat-value green" id="totalAssetsVal">$0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Total Liabilities</div>
+          <div class="stat-value red" id="totalLiabilitiesVal">$0</div>
+        </div>
+      </div>
+
+      <div class="breakdown-grid">
+        <div class="breakdown-card">
+          <div class="breakdown-title"><div class="card-title-dot" style="background:var(--green)"></div> Assets Breakdown</div>
+          <div id="assetBars"></div>
+        </div>
+        <div class="breakdown-card">
+          <div class="breakdown-title"><div class="card-title-dot" style="background:var(--red)"></div> Liabilities Breakdown</div>
+          <div id="liabilityBars"></div>
+        </div>
+      </div>
+
+      <div class="card" id="summaryCard">
+        <div class="card-title"><div class="card-title-dot" style="background:var(--purple)"></div> Summary</div>
+        <div style="overflow-x:auto">
+          <table class="summary-table" id="summaryTable">
+            <thead>
+              <tr><th>Type</th><th>Category</th><th>Description</th><th style="text-align:right">Amount</th></tr>
+            </thead>
+            <tbody id="summaryBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="action-row">
+        <button class="action-btn primary" id="copyBtn">📋 Copy Report</button>
+        <button class="action-btn" id="printBtn">🖨️ Print</button>
+      </div>
+
+      <div class="tip-box">
+        <strong>Tip:</strong> Revisit monthly to track your progress. Consistent monitoring helps you stay on top of your financial health.
+      </div>
+    </div>
+
+    <!-- AD SLOT -->
+    <div class="ad-slot ad-slot--rectangle" data-label="Ad Space"></div>
+
+  </div>
+
+  <div id="toast"></div>
+
+  <script>
+    window.CALCNOVA_PAGE = { id:'net-worth-tracker', disclaimer:'For informational purposes only. Not financial advice.' };
+  </script>
+  <script src="shared/nav.js"></script>
+
+  <script>
+  (function() {
+    'use strict';
+
+    /* ── CONSTANTS ── */
+    var ASSET_CATEGORIES = ['Cash & Savings','Investments','Retirement Accounts','Real Estate','Vehicles','Other'];
+    var LIABILITY_CATEGORIES = ['Mortgage','Student Loans','Auto Loans','Credit Cards','Personal Loans','Other'];
+
+    var assetRowsEl = document.getElementById('assetRows');
+    var liabilityRowsEl = document.getElementById('liabilityRows');
+    var resultsEl = document.getElementById('results');
+
+    /* ── ROW CREATION ── */
+    function createRow(type) {
+      var cats = type === 'asset' ? ASSET_CATEGORIES : LIABILITY_CATEGORIES;
+      var gridClass = type === 'asset' ? 'asset-grid' : 'liability-grid';
+      var row = document.createElement('div');
+      row.className = 'entry-row ' + gridClass;
+      row.dataset.type = type;
+
+      var selectHtml = '<option value="">Select...</option>';
+      cats.forEach(function(c) { selectHtml += '<option value="' + c + '">' + c + '</option>'; });
+
+      row.innerHTML =
+        '<select class="row-category" aria-label="Category">' + selectHtml + '</select>' +
+        '<input type="text" class="row-desc" placeholder="e.g. ' + (type === 'asset' ? 'Chase checking' : 'Student loan') + '" aria-label="Description">' +
+        '<div class="val-wrap"><span class="val-prefix">$</span><input type="number" class="row-value" min="0" step="0.01" placeholder="0.00" aria-label="Amount"></div>' +
+        '<button class="del-btn" title="Delete row" aria-label="Delete row">&times;</button>';
+
+      // Delete
+      row.querySelector('.del-btn').addEventListener('click', function() {
+        row.style.opacity = '0';
+        row.style.transform = 'translateY(-6px)';
+        row.style.transition = 'opacity .2s, transform .2s';
+        setTimeout(function() { row.remove(); recalculate(); }, 200);
+      });
+
+      // Live calc
+      row.querySelector('.row-category').addEventListener('change', recalculate);
+      row.querySelector('.row-desc').addEventListener('input', recalculate);
+      var valInput = row.querySelector('.row-value');
+      valInput.addEventListener('input', function() {
+        // Validate non-negative
+        if (parseFloat(valInput.value) < 0) valInput.value = 0;
+        recalculate();
+      });
+
+      return row;
+    }
+
+    function addAssetRow() {
+      assetRowsEl.appendChild(createRow('asset'));
+    }
+    function addLiabilityRow() {
+      liabilityRowsEl.appendChild(createRow('liability'));
+    }
+
+    document.getElementById('addAssetBtn').addEventListener('click', addAssetRow);
+    document.getElementById('addLiabilityBtn').addEventListener('click', addLiabilityRow);
+
+    /* ── INITIAL ROWS ── */
+    for (var i = 0; i < 3; i++) addAssetRow();
+    for (var j = 0; j < 2; j++) addLiabilityRow();
+
+    /* ── GATHER DATA ── */
+    function gatherEntries(container) {
+      var rows = container.querySelectorAll('.entry-row');
+      var entries = [];
+      rows.forEach(function(r) {
+        var cat = r.querySelector('.row-category').value;
+        var desc = r.querySelector('.row-desc').value.trim();
+        var val = parseFloat(r.querySelector('.row-value').value);
+        if (isNaN(val) || val < 0) val = 0;
+        if (val > 0) {
+          entries.push({ category: cat || 'Other', description: desc || '(unnamed)', value: val });
+        }
+      });
+      return entries;
+    }
+
+    /* ── FORMAT ── */
+    function fmt(n) {
+      return '$' + n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+
+    /* ── RECALCULATE ── */
+    function recalculate() {
+      var assets = gatherEntries(assetRowsEl);
+      var liabilities = gatherEntries(liabilityRowsEl);
+
+      if (assets.length === 0 && liabilities.length === 0) {
+        resultsEl.classList.remove('visible');
+        return;
+      }
+
+      var totalAssets = assets.reduce(function(s, e) { return s + e.value; }, 0);
+      var totalLiabilities = liabilities.reduce(function(s, e) { return s + e.value; }, 0);
+      var netWorth = totalAssets - totalLiabilities;
+
+      // Net worth display
+      var nwEl = document.getElementById('netWorthValue');
+      nwEl.textContent = (netWorth < 0 ? '-' : '') + fmt(Math.abs(netWorth));
+      nwEl.className = 'net-worth-value ' + (netWorth > 0 ? 'positive' : netWorth < 0 ? 'negative' : 'zero');
+
+      // Stat cards
+      document.getElementById('totalAssetsVal').textContent = fmt(totalAssets);
+      document.getElementById('totalLiabilitiesVal').textContent = fmt(totalLiabilities);
+
+      // Breakdowns
+      renderBars('assetBars', assets, totalAssets, 'green');
+      renderBars('liabilityBars', liabilities, totalLiabilities, 'red');
+
+      // Summary table
+      renderSummary(assets, liabilities, totalAssets, totalLiabilities, netWorth);
+
+      resultsEl.classList.add('visible');
+    }
+
+    /* ── BAR CHARTS ── */
+    function renderBars(containerId, entries, total, colorClass) {
+      var container = document.getElementById(containerId);
+      if (entries.length === 0) {
+        container.innerHTML = '<div class="no-data-msg">No entries yet</div>';
+        return;
+      }
+
+      // Group by category
+      var grouped = {};
+      entries.forEach(function(e) {
+        if (!grouped[e.category]) grouped[e.category] = 0;
+        grouped[e.category] += e.value;
+      });
+
+      // Sort descending
+      var sorted = Object.keys(grouped).map(function(k) { return { cat: k, val: grouped[k] }; });
+      sorted.sort(function(a, b) { return b.val - a.val; });
+
+      var maxVal = sorted[0].val;
+      var html = '';
+      sorted.forEach(function(item) {
+        var pct = maxVal > 0 ? (item.val / maxVal * 100) : 0;
+        html += '<div class="bar-group">' +
+          '<div class="bar-label-row"><span class="bar-label">' + item.cat + '</span><span class="bar-amount">' + fmt(item.val) + '</span></div>' +
+          '<div class="bar-track"><div class="bar-fill ' + colorClass + '" style="width:' + pct + '%"></div></div>' +
+          '</div>';
+      });
+      container.innerHTML = html;
+    }
+
+    /* ── SUMMARY TABLE ── */
+    function renderSummary(assets, liabilities, totalA, totalL, nw) {
+      var body = document.getElementById('summaryBody');
+      var html = '';
+
+      assets.forEach(function(e) {
+        html += '<tr><td class="type-asset">Asset</td><td>' + esc(e.category) + '</td><td>' + esc(e.description) + '</td><td class="mono" style="text-align:right">' + fmt(e.value) + '</td></tr>';
+      });
+      liabilities.forEach(function(e) {
+        html += '<tr><td class="type-liability">Liability</td><td>' + esc(e.category) + '</td><td>' + esc(e.description) + '</td><td class="mono" style="text-align:right;color:var(--red)">-' + fmt(e.value) + '</td></tr>';
+      });
+
+      // Footer
+      html += '<tr class="summary-table-footer"><td colspan="3" style="text-align:right;font-weight:800;color:var(--text-primary)">Net Worth</td><td class="mono" style="text-align:right;color:' + (nw >= 0 ? 'var(--green)' : 'var(--red)') + '">' + (nw < 0 ? '-' : '') + fmt(Math.abs(nw)) + '</td></tr>';
+
+      body.innerHTML = html;
+    }
+
+    function esc(s) {
+      var d = document.createElement('div');
+      d.textContent = s;
+      return d.innerHTML;
+    }
+
+    /* ── COPY REPORT ── */
+    document.getElementById('copyBtn').addEventListener('click', function() {
+      var assets = gatherEntries(assetRowsEl);
+      var liabilities = gatherEntries(liabilityRowsEl);
+      var totalA = assets.reduce(function(s, e) { return s + e.value; }, 0);
+      var totalL = liabilities.reduce(function(s, e) { return s + e.value; }, 0);
+      var nw = totalA - totalL;
+
+      var lines = [];
+      lines.push('========================================');
+      lines.push('  NET WORTH REPORT — CalcNova');
+      lines.push('  Date: ' + new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }));
+      lines.push('========================================');
+      lines.push('');
+
+      if (assets.length > 0) {
+        lines.push('ASSETS');
+        lines.push('----------------------------------------');
+        assets.forEach(function(e) {
+          lines.push('  ' + e.category + ' — ' + e.description + ': ' + fmt(e.value));
+        });
+        lines.push('  TOTAL ASSETS: ' + fmt(totalA));
+        lines.push('');
+      }
+
+      if (liabilities.length > 0) {
+        lines.push('LIABILITIES');
+        lines.push('----------------------------------------');
+        liabilities.forEach(function(e) {
+          lines.push('  ' + e.category + ' — ' + e.description + ': ' + fmt(e.value));
+        });
+        lines.push('  TOTAL LIABILITIES: ' + fmt(totalL));
+        lines.push('');
+      }
+
+      lines.push('========================================');
+      lines.push('  NET WORTH: ' + (nw < 0 ? '-' : '') + fmt(Math.abs(nw)));
+      lines.push('========================================');
+      lines.push('');
+      lines.push('Generated by CalcNova · calcnova.com');
+
+      var text = lines.join('\n');
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(function() {
+          showToast('Report copied to clipboard!');
+        }).catch(function() {
+          fallbackCopy(text);
+        });
+      } else {
+        fallbackCopy(text);
+      }
+    });
+
+    function fallbackCopy(text) {
+      var ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.left = '-9999px';
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand('copy'); showToast('Report copied!'); }
+      catch(e) { showToast('Could not copy'); }
+      document.body.removeChild(ta);
+    }
+
+    /* ── PRINT ── */
+    document.getElementById('printBtn').addEventListener('click', function() {
+      window.print();
+    });
+
+    /* ── TOAST ── */
+    var toastTimer;
+    function showToast(msg) {
+      var t = document.getElementById('toast');
+      t.textContent = msg;
+      t.style.opacity = '1';
+      t.style.transform = 'translateX(-50%) translateY(0)';
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(function() {
+        t.style.opacity = '0';
+        t.style.transform = 'translateX(-50%) translateY(8px)';
+      }, 2500);
+    }
+
+  })();
+  </script>
+</body>
+</html>

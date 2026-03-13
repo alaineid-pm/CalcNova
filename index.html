@@ -156,7 +156,6 @@
       margin-top: 14px; font-size: 11px; font-weight: 700;
       color: var(--green);
     }
-    .tool-card-badge.soon { color: var(--text-muted); }
     .tool-card-badge .dot {
       width: 6px; height: 6px; border-radius: 50%; background: currentColor;
     }
@@ -199,8 +198,6 @@
       font-size: 9px; font-weight: 700; text-transform: uppercase;
       letter-spacing: .3px; padding: 2px 6px; border-radius: 4px;
     }
-    .dir-item-status.live { background: rgba(16,185,129,.1); color: var(--green); border: 1px solid rgba(16,185,129,.2); }
-    .dir-item-status.soon { background: rgba(155,163,181,.08); color: var(--text-muted); border: 1px solid var(--border); }
 
     /* ── ARTICLES ── */
     .articles-grid {
@@ -350,29 +347,30 @@
     </a>
   </div>
 
-  <!-- ── COMING SOON HIGHLIGHTS ── -->
+  <!-- ── MORE TOOLS ── -->
   <div class="section-header">
-    <div class="section-title">Coming <span>Soon</span></div>
+    <div class="section-title">More <span>Tools</span></div>
+    <a href="#all-tools" class="section-link">See all tools &rarr;</a>
   </div>
   <div class="featured-grid">
-    <div class="tool-card" style="cursor:default">
-      <div class="tool-card-icon finance">&#127968;</div>
-      <div class="tool-card-title">Mortgage Calculator</div>
-      <div class="tool-card-desc">Calculate monthly payments, total interest, and amortization schedules. Compare fixed vs. variable rates side by side.</div>
-      <div class="tool-card-badge soon"><div class="dot"></div> Coming soon</div>
-    </div>
-    <div class="tool-card" style="cursor:default">
+    <a href="debt-payoff.html" class="tool-card">
       <div class="tool-card-icon finance">&#128179;</div>
       <div class="tool-card-title">Debt Payoff Planner</div>
       <div class="tool-card-desc">Snowball or avalanche? Enter your debts and see the fastest path to being debt-free with a clear payoff timeline.</div>
-      <div class="tool-card-badge soon"><div class="dot"></div> Coming soon</div>
-    </div>
-    <div class="tool-card" style="cursor:default">
+      <div class="tool-card-badge"><div class="dot"></div> Try it now</div>
+    </a>
+    <a href="fire-calculator.html" class="tool-card">
       <div class="tool-card-icon finance">&#128293;</div>
       <div class="tool-card-title">FIRE Calculator</div>
       <div class="tool-card-desc">Model your path to Financial Independence and Early Retirement. See your FIRE number, timeline, and savings rate needed.</div>
-      <div class="tool-card-badge soon"><div class="dot"></div> Coming soon</div>
-    </div>
+      <div class="tool-card-badge"><div class="dot"></div> Try it now</div>
+    </a>
+    <a href="unit-converter.html" class="tool-card">
+      <div class="tool-card-icon utility">&#128207;</div>
+      <div class="tool-card-title">Unit Converter</div>
+      <div class="tool-card-desc">Convert between 100+ units across length, weight, temperature, volume, speed, digital storage, and more — instantly.</div>
+      <div class="tool-card-badge"><div class="dot"></div> Try it now</div>
+    </a>
   </div>
 
   <!-- ── AD SLOT: Rectangle ── -->
@@ -408,22 +406,22 @@
   <!-- ── ARTICLES ── -->
   <div class="section-header">
     <div class="section-title">Guides &amp; <span>Articles</span></div>
-    <a href="#" class="section-link">View all articles &rarr;</a>
+    <a href="#articles" class="section-link">View all &rarr;</a>
   </div>
   <div class="articles-grid">
-    <a href="#" class="article-card">
+    <a href="article-compound-interest.html" class="article-card">
       <span class="article-card-icon">&#128200;</span>
       <div class="article-card-title">How Compound Interest Actually Works (With Examples)</div>
       <div class="article-card-excerpt">The complete beginner's guide to understanding how your money grows exponentially over time — and how to calculate it yourself.</div>
       <div class="article-card-meta"><span>5 min read</span> &middot; <span>Finance</span></div>
     </a>
-    <a href="#" class="article-card">
+    <a href="article-coast-fire.html" class="article-card">
       <span class="article-card-icon">&#127958;&#65039;</span>
       <div class="article-card-title">What Is Coast FIRE? The Lazy Path to Retirement</div>
       <div class="article-card-excerpt">Coast FIRE means saving enough early so you never need to invest another dollar. Learn the math, the formula, and whether it's right for you.</div>
       <div class="article-card-meta"><span>7 min read</span> &middot; <span>FIRE Movement</span></div>
     </a>
-    <a href="#" class="article-card">
+    <a href="article-debt-snowball-vs-avalanche.html" class="article-card">
       <span class="article-card-icon">&#128179;</span>
       <div class="article-card-title">Debt Snowball vs. Avalanche: Which Strategy Wins?</div>
       <div class="article-card-excerpt">Two popular methods for paying off debt — one saves more money, the other keeps you motivated. We compare both with real numbers.</div>
@@ -442,18 +440,18 @@
         <div class="dir-cat-icon finance" style="background:linear-gradient(135deg,rgba(245,158,11,.15),rgba(245,158,11,.05))">&#128176;</div>
         <div>
           <div class="dir-cat-name">Finance</div>
-          <div class="dir-cat-count">8 tools &middot; 2 live</div>
+          <div class="dir-cat-count">8 tools</div>
         </div>
       </div>
       <ul class="dir-list">
-        <li><a href="compound-interest-calculator.html" class="dir-item"><span class="dir-item-icon">&#128200;</span><span class="dir-item-label">Compound Interest</span><span class="dir-item-status live">Live</span></a></li>
-        <li><a href="coast-fire-calculator.html" class="dir-item"><span class="dir-item-icon">&#127958;&#65039;</span><span class="dir-item-label">Coast FIRE</span><span class="dir-item-status live">Live</span></a></li>
-        <li><div class="dir-item"><span class="dir-item-icon">&#127968;</span><span class="dir-item-label">Mortgage</span><span class="dir-item-status soon">Soon</span></div></li>
-        <li><div class="dir-item"><span class="dir-item-icon">&#127919;</span><span class="dir-item-label">Savings Goal</span><span class="dir-item-status soon">Soon</span></div></li>
-        <li><div class="dir-item"><span class="dir-item-icon">&#128179;</span><span class="dir-item-label">Debt Payoff</span><span class="dir-item-status soon">Soon</span></div></li>
-        <li><div class="dir-item"><span class="dir-item-icon">&#128735;</span><span class="dir-item-label">Emergency Fund</span><span class="dir-item-status soon">Soon</span></div></li>
-        <li><div class="dir-item"><span class="dir-item-icon">&#128293;</span><span class="dir-item-label">FIRE Calculator</span><span class="dir-item-status soon">Soon</span></div></li>
-        <li><div class="dir-item"><span class="dir-item-icon">&#128202;</span><span class="dir-item-label">Net Worth Tracker</span><span class="dir-item-status soon">Soon</span></div></li>
+        <li><a href="compound-interest-calculator.html" class="dir-item"><span class="dir-item-icon">&#128200;</span><span class="dir-item-label">Compound Interest</span></a></li>
+        <li><a href="coast-fire-calculator.html" class="dir-item"><span class="dir-item-icon">&#127958;&#65039;</span><span class="dir-item-label">Coast FIRE</span></a></li>
+        <li><a href="mortgage-calculator.html" class="dir-item"><span class="dir-item-icon">&#127968;</span><span class="dir-item-label">Mortgage</span></a></li>
+        <li><a href="savings-goal.html" class="dir-item"><span class="dir-item-icon">&#127919;</span><span class="dir-item-label">Savings Goal</span></a></li>
+        <li><a href="debt-payoff.html" class="dir-item"><span class="dir-item-icon">&#128179;</span><span class="dir-item-label">Debt Payoff</span></a></li>
+        <li><a href="emergency-fund.html" class="dir-item"><span class="dir-item-icon">&#128735;</span><span class="dir-item-label">Emergency Fund</span></a></li>
+        <li><a href="fire-calculator.html" class="dir-item"><span class="dir-item-icon">&#128293;</span><span class="dir-item-label">FIRE Calculator</span></a></li>
+        <li><a href="net-worth-tracker.html" class="dir-item"><span class="dir-item-icon">&#128202;</span><span class="dir-item-label">Net Worth Tracker</span></a></li>
       </ul>
     </div>
 
@@ -463,15 +461,15 @@
         <div class="dir-cat-icon productivity" style="background:linear-gradient(135deg,rgba(99,102,241,.15),rgba(99,102,241,.05))">&#9201;&#65039;</div>
         <div>
           <div class="dir-cat-name">Productivity</div>
-          <div class="dir-cat-count">5 tools &middot; 2 live</div>
+          <div class="dir-cat-count">5 tools</div>
         </div>
       </div>
       <ul class="dir-list">
-        <li><a href="TimeConvertor.html" class="dir-item"><span class="dir-item-icon">&#127757;</span><span class="dir-item-label">Time Converter</span><span class="dir-item-status live">Live</span></a></li>
-        <li><a href="pomodoro.html" class="dir-item"><span class="dir-item-icon">&#127813;</span><span class="dir-item-label">Pomodoro Timer</span><span class="dir-item-status live">Live</span></a></li>
-        <li><div class="dir-item"><span class="dir-item-icon">&#128336;</span><span class="dir-item-label">World Clock</span><span class="dir-item-status soon">Soon</span></div></li>
-        <li><div class="dir-item"><span class="dir-item-icon">&#128197;</span><span class="dir-item-label">Date Duration</span><span class="dir-item-status soon">Soon</span></div></li>
-        <li><div class="dir-item"><span class="dir-item-icon">&#127874;</span><span class="dir-item-label">Age Calculator</span><span class="dir-item-status soon">Soon</span></div></li>
+        <li><a href="TimeConvertor.html" class="dir-item"><span class="dir-item-icon">&#127757;</span><span class="dir-item-label">Time Converter</span></a></li>
+        <li><a href="pomodoro.html" class="dir-item"><span class="dir-item-icon">&#127813;</span><span class="dir-item-label">Pomodoro Timer</span></a></li>
+        <li><a href="world-clock.html" class="dir-item"><span class="dir-item-icon">&#128336;</span><span class="dir-item-label">World Clock</span></a></li>
+        <li><a href="date-duration.html" class="dir-item"><span class="dir-item-icon">&#128197;</span><span class="dir-item-label">Date Duration</span></a></li>
+        <li><a href="age-calculator.html" class="dir-item"><span class="dir-item-icon">&#127874;</span><span class="dir-item-label">Age Calculator</span></a></li>
       </ul>
     </div>
 
@@ -481,14 +479,14 @@
         <div class="dir-cat-icon utility" style="background:linear-gradient(135deg,rgba(16,185,129,.15),rgba(16,185,129,.05))">&#128295;</div>
         <div>
           <div class="dir-cat-name">Utility</div>
-          <div class="dir-cat-count">4 tools &middot; 0 live</div>
+          <div class="dir-cat-count">4 tools</div>
         </div>
       </div>
       <ul class="dir-list">
-        <li><div class="dir-item"><span class="dir-item-icon">&#128207;</span><span class="dir-item-label">Unit Converter</span><span class="dir-item-status soon">Soon</span></div></li>
-        <li><div class="dir-item"><span class="dir-item-icon">&#128290;</span><span class="dir-item-label">Percentage Calc</span><span class="dir-item-status soon">Soon</span></div></li>
-        <li><div class="dir-item"><span class="dir-item-icon">&#127922;</span><span class="dir-item-label">Random Number</span><span class="dir-item-status soon">Soon</span></div></li>
-        <li><div class="dir-item"><span class="dir-item-icon">&#9997;&#65039;</span><span class="dir-item-label">Word Counter</span><span class="dir-item-status soon">Soon</span></div></li>
+        <li><a href="unit-converter.html" class="dir-item"><span class="dir-item-icon">&#128207;</span><span class="dir-item-label">Unit Converter</span></a></li>
+        <li><a href="percentage-calculator.html" class="dir-item"><span class="dir-item-icon">&#128290;</span><span class="dir-item-label">Percentage Calc</span></a></li>
+        <li><a href="random-number.html" class="dir-item"><span class="dir-item-icon">&#127922;</span><span class="dir-item-label">Random Number</span></a></li>
+        <li><a href="word-counter.html" class="dir-item"><span class="dir-item-icon">&#9997;&#65039;</span><span class="dir-item-label">Word Counter</span></a></li>
       </ul>
     </div>
   </div>

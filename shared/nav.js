@@ -30,11 +30,11 @@
         { id: 'compound-interest', icon: '📈', label: 'Compound Interest', href: 'compound-interest-calculator.html', live: true },
         { id: 'coast-fire',        icon: '🏖️', label: 'Coast FIRE',        href: 'coast-fire-calculator.html',        live: true },
         { id: 'mortgage',          icon: '🏠', label: 'Mortgage Calculator', href: 'mortgage-calculator.html',          live: true },
-        { id: 'savings-goal',      icon: '🎯', label: 'Savings Goal',                                                  live: false },
-        { id: 'debt-payoff',       icon: '💳', label: 'Debt Payoff',                                                   live: false },
-        { id: 'emergency-fund',    icon: '🛟', label: 'Emergency Fund',                                                live: false },
-        { id: 'fire-calculator',   icon: '🔥', label: 'FIRE Calculator',                                               live: false },
-        { id: 'net-worth',         icon: '📊', label: 'Net Worth Tracker',                                             live: false },
+        { id: 'savings-goal',      icon: '🎯', label: 'Savings Goal',      href: 'savings-goal.html',                  live: true },
+        { id: 'debt-payoff',       icon: '💳', label: 'Debt Payoff',        href: 'debt-payoff.html',                  live: true },
+        { id: 'emergency-fund',    icon: '🛟', label: 'Emergency Fund',    href: 'emergency-fund.html',               live: true },
+        { id: 'fire-calculator',   icon: '🔥', label: 'FIRE Calculator',    href: 'fire-calculator.html',              live: true },
+        { id: 'net-worth-tracker',  icon: '📊', label: 'Net Worth Tracker',  href: 'net-worth-tracker.html',            live: true },
       ]
     },
     {
@@ -50,21 +50,21 @@
     {
       id: 'utility', icon: '🔧', label: 'Utility', cssClass: 'utility',
       items: [
-        { id: 'unit-converter',   icon: '📏', label: 'Unit Converter',   live: false },
-        { id: 'percentage-calc',  icon: '🔢', label: 'Percentage Calc',  live: false },
-        { id: 'random-number',    icon: '🎲', label: 'Random Number',    live: false },
-        { id: 'word-counter',     icon: '✍️', label: 'Word Counter',     live: false },
+        { id: 'unit-converter',   icon: '📏', label: 'Unit Converter',   href: 'unit-converter.html', live: true },
+        { id: 'percentage-calculator',  icon: '🔢', label: 'Percentage Calc',  href: 'percentage-calculator.html', live: true },
+        { id: 'random-number',    icon: '🎲', label: 'Random Number',    href: 'random-number.html', live: true },
+        { id: 'word-counter',     icon: '✍️', label: 'Word Counter',     href: 'word-counter.html', live: true },
       ]
     }
   ];
 
   var ARTICLES = [
-    { icon: '📈', label: 'How to Calculate Compound Interest',  href: '#' },
-    { icon: '🏖️', label: 'What Is Coast FIRE?',                href: '#' },
-    { icon: '💳', label: 'Debt Snowball vs Avalanche',          href: '#' },
-    { icon: '🛟', label: 'How Much Emergency Fund Do I Need?',  href: '#' },
-    { icon: '🌍', label: 'Time Zones for Remote Teams',         href: '#' },
-    { icon: '🍅', label: 'The Pomodoro Technique Guide',        href: '#' },
+    { icon: '📈', label: 'How to Calculate Compound Interest',  href: 'article-compound-interest.html' },
+    { icon: '🏖️', label: 'What Is Coast FIRE?',                href: 'article-coast-fire.html' },
+    { icon: '💳', label: 'Debt Snowball vs Avalanche',          href: 'article-debt-snowball-vs-avalanche.html' },
+    { icon: '🛟', label: 'How Much Emergency Fund Do I Need?',  href: 'article-emergency-fund.html' },
+    { icon: '🌍', label: 'Time Zones for Remote Teams',         href: 'article-time-zones-remote-teams.html' },
+    { icon: '🍅', label: 'The Pomodoro Technique Guide',        href: 'article-pomodoro-technique.html' },
   ];
 
   /* ── Page Config ─────────────────────────────────────────── */
@@ -90,12 +90,8 @@
     var cols = NAV_MENU.map(function (cat) {
       var items = cat.items.map(function (item) {
         var isCurrent = item.id === currentId;
-        var badge = item.live
-          ? '<span class="menu-item-badge badge-live">Live</span>'
-          : '<span class="menu-item-badge badge-soon">Soon</span>';
         var inner = '<span class="menu-item-icon">' + item.icon + '</span>'
-                  + '<span class="menu-item-text">' + item.label + '</span>'
-                  + badge;
+                  + '<span class="menu-item-text">' + item.label + '</span>';
         if (isCurrent) {
           return '<li><div class="menu-item current">' + inner + '</div></li>';
         } else if (item.href) {

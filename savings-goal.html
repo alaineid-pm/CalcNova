@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Savings Goal Calculator — Plan Your Savings | CalcNova</title>
+  <meta name="description" content="Free savings goal calculator. Find out how much to save monthly or how long it takes to reach your financial goal — with interest. No login required.">
+
+  <meta property="og:title" content="Savings Goal Calculator — Plan Your Savings | CalcNova">
+  <meta property="og:description" content="Free savings goal calculator. Find out how much to save monthly or how long it takes to reach your financial goal.">
+  <meta property="og:type" content="website">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FinancialProduct",
+    "name": "Savings Goal Calculator",
+    "description": "Free savings goal calculator with interest. Plan monthly deposits or find how long to reach your goal.",
+    "provider": { "@type": "Organization", "name": "CalcNova" },
+    "feesAndCommissionsSpecification": "Free to use, no login required."
+  }
+  </script>
+
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="shared/nav.css">
+  <style>
+    .app { position: relative; z-index: 1; max-width: 960px; margin: 0 auto; padding: 0 16px 60px; }
+
+    /* ── HERO ── */
+    .hero {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 38px 32px;
+      margin-bottom: 20px;
+    }
+    .hero-title { font-size: 26px; font-weight: 800; letter-spacing: -.5px; }
+    .hero-title span {
+      background: linear-gradient(135deg, var(--green), var(--purple));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .hero-desc { font-size: 14px; color: var(--text-secondary); margin-top: 6px; line-height: 1.5; }
+
+    /* ── GRID ── */
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+    @media (max-width: 640px) { .two-col { grid-template-columns: 1fr; } }
+
+    /* ── CARD ── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 22px 22px 18px;
+    }
+    .card-title {
+      font-size: 11px; font-weight: 700; letter-spacing: .5px; text-transform: uppercase;
+      color: var(--text-muted); margin-bottom: 18px;
+      display: flex; align-items: center; gap: 6px;
+      font-family: var(--mono);
+    }
+    .card-title-dot { width: 6px; height: 6px; border-radius: 50%; }
+
+    /* ── FORM ── */
+    .form-group { margin-bottom: 14px; }
+    .form-label { font-size: 12px; font-weight: 600; color: var(--text-secondary); margin-bottom: 6px; display: block; }
+    .form-label-optional { font-size: 11px; font-weight: 500; color: var(--text-muted); margin-left: 4px; }
+
+    .input-row { position: relative; }
+    .input-prefix, .input-suffix {
+      position: absolute; top: 50%; transform: translateY(-50%);
+      font-family: var(--mono); font-size: 13px; font-weight: 700;
+      color: var(--text-muted); pointer-events: none;
+    }
+    .input-prefix { left: 12px; }
+    .input-suffix { right: 12px; }
+
+    input[type="number"], select {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text-primary);
+      font-family: var(--font);
+      font-size: 14px;
+      font-weight: 600;
+      padding: 9px 12px;
+      outline: none;
+      transition: border-color .2s, box-shadow .2s;
+      appearance: none;
+      -moz-appearance: textfield;
+    }
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+    .has-prefix input[type="number"] { padding-left: 28px; }
+    .has-suffix input[type="number"] { padding-right: 36px; }
+
+    input[type="number"]:focus, select:focus {
+      border-color: var(--green);
+      box-shadow: 0 0 0 3px rgba(16,185,129,.12);
+    }
+
+    /* Time input row */
+    .input-time-row { display: grid; grid-template-columns: 1fr 120px; gap: 8px; }
+
+    /* ── SEGMENTED TOGGLE ── */
+    .seg-toggle-wrap {
+      display: flex; gap: 0; margin-bottom: 14px;
+      border: 1px solid var(--border); border-radius: 10px; overflow: hidden;
+    }
+    .seg-btn {
+      flex: 1; padding: 9px 4px;
+      background: var(--bg); border: none; border-right: 1px solid var(--border);
+      color: var(--text-secondary); font-family: var(--font); font-size: 12px; font-weight: 600;
+      cursor: pointer; transition: background .15s, color .15s;
+    }
+    .seg-btn:last-child { border-right: none; }
+    .seg-btn:hover { background: var(--border); }
+    .seg-btn.active { background: var(--green); color: white; }
+
+    /* ── ACTION BUTTONS ── */
+    .action-row {
+      display: flex; gap: 8px; justify-content: flex-end;
+      margin-bottom: 16px; flex-wrap: wrap;
+    }
+    .action-btn {
+      display: flex; align-items: center; gap: 6px;
+      background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+      color: var(--text-secondary); font-family: var(--font); font-size: 13px; font-weight: 600;
+      padding: 8px 16px; cursor: pointer; transition: all .15s; text-decoration: none;
+    }
+    .action-btn:hover { border-color: var(--green); color: var(--green); }
+    .action-btn svg { width: 15px; height: 15px; flex-shrink: 0; }
+
+    /* ── STATS ── */
+    .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 16px; }
+    @media (max-width: 700px) { .stats-row { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 420px) { .stats-row { grid-template-columns: 1fr; } }
+
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px 18px 16px;
+      position: relative;
+      overflow: hidden;
+    }
+    .stat-card.primary {
+      background: linear-gradient(135deg, rgba(16,185,129,.07), rgba(99,102,241,.07));
+      border-color: rgba(16,185,129,.3);
+    }
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0; right: 0;
+      width: 60px; height: 60px;
+      border-radius: 0 16px 0 60px;
+      opacity: .06;
+    }
+    .stat-card.primary::before { background: var(--green); opacity: .3; }
+    .stat-card.green::before { background: var(--green); }
+    .stat-card.purple::before { background: var(--purple); }
+    .stat-card.amber::before { background: var(--amber); }
+
+    .stat-icon { font-size: 18px; margin-bottom: 10px; }
+    .stat-label { font-size: 10px; font-weight: 700; letter-spacing: .5px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 4px; }
+    .stat-value {
+      font-family: var(--mono); font-size: 22px; font-weight: 800;
+      color: var(--text-primary); line-height: 1;
+    }
+    .stat-card.primary .stat-value {
+      background: linear-gradient(135deg, var(--green), var(--purple));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .stat-sub { font-size: 11px; color: var(--text-muted); margin-top: 5px; font-family: var(--mono); }
+
+    /* ── CHART ── */
+    .chart-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 22px 22px 18px;
+      margin-bottom: 16px;
+    }
+    .chart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 8px; }
+    .chart-title {
+      font-size: 11px; font-weight: 700; letter-spacing: .5px; text-transform: uppercase;
+      color: var(--text-muted); font-family: var(--mono);
+    }
+    .chart-legend { display: flex; gap: 14px; flex-wrap: wrap; }
+    .chart-legend-item { display: flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 600; color: var(--text-secondary); }
+    .chart-legend-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+    canvas { width: 100% !important; display: block; }
+
+    /* ── RESULTS SECTION ── */
+    .results-section { opacity: 0; transform: translateY(12px); transition: opacity .4s ease, transform .4s ease; }
+    .results-section.visible { opacity: 1; transform: translateY(0); }
+
+    /* ── MESSAGE CARD ── */
+    .msg-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px 22px;
+      margin-bottom: 16px;
+      display: flex; align-items: center; gap: 12px;
+      font-size: 14px; font-weight: 600; color: var(--text-secondary);
+    }
+    .msg-card.success { border-color: rgba(16,185,129,.4); background: linear-gradient(135deg, rgba(16,185,129,.06), rgba(16,185,129,.02)); }
+    .msg-card.warn { border-color: rgba(245,158,11,.4); background: linear-gradient(135deg, rgba(245,158,11,.06), rgba(245,158,11,.02)); }
+    .msg-icon { font-size: 22px; flex-shrink: 0; }
+
+    /* ── TOAST ── */
+    #toast {
+      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(8px); z-index: 200;
+      background: var(--text-primary); color: var(--bg);
+      padding: 10px 18px; border-radius: 100px;
+      font-size: 12px; font-weight: 700; font-family: var(--mono);
+      display: flex; align-items: center; gap: 7px;
+      box-shadow: 0 8px 24px rgba(0,0,0,.25);
+      opacity: 0;
+      transition: opacity .25s, transform .25s; pointer-events: none;
+    }
+
+    /* ── PRINT SUMMARY ── */
+    .print-summary { display: none; }
+
+    @media (max-width: 640px) {
+      .hero { padding: 28px 20px; }
+      .hero-title { font-size: 20px; }
+    }
+
+    /* ── PRINT ── */
+    @media print {
+      body { background: white !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      body::before { display: none; }
+      header, .action-row, #toast,
+      .nav-tools-wrap, .donate-btn,
+      .two-col, .seg-toggle-wrap { display: none !important; }
+      .mega-menu, .menu-overlay, .site-footer, .footer-disclaimer { display: none !important; }
+      .app { padding: 0; max-width: 100%; }
+      .hero { border: none; padding: 12px 0 8px; margin-bottom: 10px; }
+      .stat-card, .chart-card { page-break-inside: avoid; }
+      .stats-row { grid-template-columns: repeat(4, 1fr); }
+      .card, .stat-card { border: 1px solid #ccc; }
+      .results-section { opacity: 1 !important; transform: none !important; }
+
+      .print-summary {
+        display: block;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        padding: 14px 18px;
+        margin-bottom: 14px;
+        background: #fafafa;
+      }
+      .print-summary-title {
+        font-size: 10px; font-weight: 700; letter-spacing: .5px;
+        text-transform: uppercase; color: #888; margin-bottom: 10px;
+      }
+      .print-summary-grid {
+        display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px 16px;
+      }
+      .print-summary-item .ps-label {
+        font-size: 10px; font-weight: 600; text-transform: uppercase;
+        letter-spacing: .4px; color: #999; margin-bottom: 2px;
+      }
+      .print-summary-item .ps-value {
+        font-size: 14px; font-weight: 700; color: #0f1623;
+        font-family: 'JetBrains Mono', monospace;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-title">Savings Goal <span>Calculator</span></div>
+    <div class="hero-desc">Plan how much to save each month — or find out how long it takes to reach your goal,<br>factoring in interest and existing savings.</div>
+  </div>
+
+  <!-- PRINT SUMMARY -->
+  <div class="print-summary" id="print-summary">
+    <div class="print-summary-title">Calculator Settings</div>
+    <div class="print-summary-grid" id="print-summary-grid"></div>
+  </div>
+
+  <!-- INPUTS -->
+  <div class="two-col">
+    <div class="card">
+      <div class="card-title">
+        <div class="card-title-dot" style="background:var(--green)"></div>
+        Savings Details
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Goal Amount</label>
+        <div class="input-row has-prefix">
+          <span class="input-prefix">$</span>
+          <input type="number" id="goal" value="50000" min="1" step="1000">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Current Savings <span class="form-label-optional">(optional)</span></label>
+        <div class="input-row has-prefix">
+          <span class="input-prefix">$</span>
+          <input type="number" id="current" value="5000" min="0" step="500">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Annual Interest Rate <span class="form-label-optional">(optional)</span></label>
+        <div class="input-row has-suffix">
+          <input type="number" id="rate" value="5" min="0" max="50" step="0.1">
+          <span class="input-suffix">%</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">
+        <div class="card-title-dot" style="background:var(--purple)"></div>
+        Solve For
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">What do you want to calculate?</label>
+        <div class="seg-toggle-wrap">
+          <button class="seg-btn active" id="mode-deposit" onclick="setMode('deposit')">Monthly Deposit</button>
+          <button class="seg-btn" id="mode-time" onclick="setMode('time')">Time to Goal</button>
+        </div>
+      </div>
+
+      <!-- Shown in deposit mode -->
+      <div id="section-time-input" class="form-group">
+        <label class="form-label">Time to Reach Goal</label>
+        <div class="input-time-row">
+          <div class="input-row">
+            <input type="number" id="time-val" value="5" min="1" step="1">
+          </div>
+          <select id="time-unit">
+            <option value="years">Years</option>
+            <option value="months">Months</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Shown in time mode -->
+      <div id="section-pmt-input" class="form-group" style="display:none">
+        <label class="form-label">Monthly Deposit</label>
+        <div class="input-row has-prefix">
+          <span class="input-prefix">$</span>
+          <input type="number" id="pmt-input" value="500" min="1" step="50">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ACTION BUTTONS -->
+  <div class="action-row">
+    <button class="action-btn" onclick="copySummary()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+      </svg>
+      Copy Summary
+    </button>
+    <button class="action-btn" onclick="printPage()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/>
+      </svg>
+      Print Results
+    </button>
+  </div>
+
+  <!-- RESULTS -->
+  <div class="results-section" id="results-section">
+
+    <!-- MESSAGE -->
+    <div id="msg-card" class="msg-card" style="display:none">
+      <span class="msg-icon" id="msg-icon"></span>
+      <span id="msg-text"></span>
+    </div>
+
+    <!-- STATS -->
+    <div class="stats-row" id="stats-row">
+      <div class="stat-card primary">
+        <div class="stat-icon" id="s-icon-primary">💰</div>
+        <div class="stat-label" id="s-label-primary">Monthly Deposit</div>
+        <div class="stat-value" id="s-primary">—</div>
+        <div class="stat-sub" id="s-primary-sub"></div>
+      </div>
+      <div class="stat-card green">
+        <div class="stat-icon">💵</div>
+        <div class="stat-label">Total Contributions</div>
+        <div class="stat-value" id="s-contrib">—</div>
+        <div class="stat-sub" id="s-contrib-sub"></div>
+      </div>
+      <div class="stat-card purple">
+        <div class="stat-icon">✨</div>
+        <div class="stat-label">Interest Earned</div>
+        <div class="stat-value" id="s-interest">—</div>
+        <div class="stat-sub" id="s-interest-sub"></div>
+      </div>
+      <div class="stat-card amber">
+        <div class="stat-icon">🎯</div>
+        <div class="stat-label">Final Balance</div>
+        <div class="stat-value" id="s-final">—</div>
+        <div class="stat-sub" id="s-final-sub"></div>
+      </div>
+    </div>
+
+    <!-- CHART -->
+    <div class="chart-card">
+      <div class="chart-header">
+        <div class="chart-title">Balance Growth Over Time</div>
+        <div class="chart-legend">
+          <div class="chart-legend-item"><div class="chart-legend-dot" style="background:#10b981"></div>Contributions</div>
+          <div class="chart-legend-item"><div class="chart-legend-dot" style="background:#6366f1"></div>Interest</div>
+        </div>
+      </div>
+      <canvas id="chart" height="260"></canvas>
+    </div>
+
+  </div>
+
+</div>
+
+<div id="toast"><span style="color:var(--green);font-size:15px;">&#10003;</span> <span id="toast-msg">Copied!</span></div>
+
+<script>
+  window.CALCNOVA_PAGE = {
+    id: 'savings-goal',
+    disclaimer: 'For informational purposes only. Not financial advice.'
+  };
+</script>
+<script src="shared/nav.js"></script>
+<script>
+  // ── State ──
+  let solveMode = 'deposit'; // 'deposit' | 'time'
+  let lastChartData = [];
+  let lastResult = null;
+  const sym = '$';
+
+  // Listen for dark mode changes from nav
+  document.addEventListener('calcnova:darkchanged', function() { if (lastChartData.length) drawChart(lastChartData); });
+
+  // ── Mode toggle ──
+  function setMode(mode) {
+    solveMode = mode;
+    document.getElementById('mode-deposit').classList.toggle('active', mode === 'deposit');
+    document.getElementById('mode-time').classList.toggle('active', mode === 'time');
+    document.getElementById('section-time-input').style.display = mode === 'deposit' ? '' : 'none';
+    document.getElementById('section-pmt-input').style.display = mode === 'time' ? '' : 'none';
+
+    // Update primary stat label
+    if (mode === 'deposit') {
+      document.getElementById('s-icon-primary').textContent = '💰';
+      document.getElementById('s-label-primary').textContent = 'Monthly Deposit';
+    } else {
+      document.getElementById('s-icon-primary').textContent = '⏱';
+      document.getElementById('s-label-primary').textContent = 'Time to Goal';
+    }
+
+    calculate();
+  }
+
+  // ── Format helpers ──
+  function fmtShort(n) {
+    if (n >= 1e9) return sym + (n / 1e9).toFixed(2) + 'B';
+    if (n >= 1e6) return sym + (n / 1e6).toFixed(2) + 'M';
+    if (n >= 1e3) return sym + (n / 1e3).toFixed(1) + 'K';
+    return sym + n.toFixed(0);
+  }
+  function fmtFull(n) {
+    return sym + Math.abs(n).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+  function fmtTime(totalMonths) {
+    totalMonths = Math.ceil(totalMonths);
+    const yrs = Math.floor(totalMonths / 12);
+    const mos = totalMonths % 12;
+    if (yrs === 0) return mos + (mos === 1 ? ' month' : ' months');
+    if (mos === 0) return yrs + (yrs === 1 ? ' year' : ' years');
+    return yrs + (yrs === 1 ? ' yr ' : ' yrs ') + mos + (mos === 1 ? ' mo' : ' mos');
+  }
+
+  // ── Calculate ──
+  function calculate() {
+    const goal = parseFloat(document.getElementById('goal').value) || 0;
+    const current = parseFloat(document.getElementById('current').value) || 0;
+    const annualRate = parseFloat(document.getElementById('rate').value) || 0;
+    const r = annualRate / 100 / 12; // monthly rate
+
+    const msgCard = document.getElementById('msg-card');
+    const resultsSection = document.getElementById('results-section');
+
+    // Validation: goal must be positive
+    if (goal <= 0) {
+      msgCard.style.display = 'flex';
+      msgCard.className = 'msg-card warn';
+      document.getElementById('msg-icon').textContent = '⚠️';
+      document.getElementById('msg-text').textContent = 'Please enter a goal amount greater than zero.';
+      document.getElementById('stats-row').style.display = 'none';
+      document.querySelector('.chart-card').style.display = 'none';
+      resultsSection.classList.add('visible');
+      lastResult = null;
+      return;
+    }
+
+    // Already reached goal
+    if (current >= goal) {
+      msgCard.style.display = 'flex';
+      msgCard.className = 'msg-card success';
+      document.getElementById('msg-icon').textContent = '🎉';
+      document.getElementById('msg-text').textContent = "You've already reached your goal! Your current savings of " + fmtFull(current) + " meet or exceed your goal of " + fmtFull(goal) + ".";
+      document.getElementById('stats-row').style.display = 'none';
+      document.querySelector('.chart-card').style.display = 'none';
+      resultsSection.classList.add('visible');
+      lastResult = null;
+      return;
+    }
+
+    msgCard.style.display = 'none';
+    document.getElementById('stats-row').style.display = '';
+    document.querySelector('.chart-card').style.display = '';
+
+    let deposit, totalMonths, totalContributions, totalInterest;
+
+    if (solveMode === 'deposit') {
+      // Calculate monthly deposit needed
+      const timeVal = parseFloat(document.getElementById('time-val').value) || 1;
+      const timeUnit = document.getElementById('time-unit').value;
+      totalMonths = timeUnit === 'years' ? Math.round(timeVal * 12) : Math.round(timeVal);
+      if (totalMonths < 1) totalMonths = 1;
+
+      const n = totalMonths;
+
+      if (r > 0) {
+        const compFactor = Math.pow(1 + r, n);
+        deposit = (goal - current * compFactor) / ((compFactor - 1) / r);
+      } else {
+        deposit = (goal - current) / n;
+      }
+
+      // Simulate month by month
+      let balance = current;
+      totalContributions = 0;
+      const data = [];
+      data.push({ month: 0, contributions: current, interest: 0, balance: current });
+
+      for (let m = 1; m <= n; m++) {
+        const interestThisMonth = balance * r;
+        balance += interestThisMonth;
+        balance += deposit;
+        totalContributions += deposit;
+        const cumulContrib = current + totalContributions;
+        const cumulInterest = balance - cumulContrib;
+        data.push({ month: m, contributions: cumulContrib, interest: Math.max(0, cumulInterest), balance: balance });
+      }
+
+      totalInterest = balance - current - totalContributions;
+
+      // Update primary stat
+      if (deposit < 0) {
+        document.getElementById('s-primary').textContent = '-' + fmtFull(Math.abs(deposit));
+        document.getElementById('s-primary-sub').textContent = 'Interest alone exceeds goal';
+        msgCard.style.display = 'flex';
+        msgCard.className = 'msg-card success';
+        document.getElementById('msg-icon').textContent = '🎉';
+        document.getElementById('msg-text').textContent = 'Your current savings plus interest will exceed the goal. No additional deposits needed!';
+        document.getElementById('stats-row').style.display = '';
+        document.querySelector('.chart-card').style.display = '';
+      } else {
+        document.getElementById('s-primary').textContent = fmtFull(deposit);
+        document.getElementById('s-primary-sub').textContent = 'per month for ' + fmtTime(n);
+      }
+
+      document.getElementById('s-contrib').textContent = fmtFull(current + Math.max(totalContributions, 0));
+      document.getElementById('s-contrib-sub').textContent = fmtFull(current) + ' initial + ' + fmtFull(Math.max(totalContributions, 0)) + ' deposits';
+      document.getElementById('s-interest').textContent = fmtFull(Math.max(totalInterest, 0));
+      const intPct = goal > 0 ? (Math.max(totalInterest, 0) / goal * 100).toFixed(1) : '0.0';
+      document.getElementById('s-interest-sub').textContent = intPct + '% of goal from interest';
+      document.getElementById('s-final').textContent = fmtFull(balance);
+      document.getElementById('s-final-sub').textContent = 'Equals your goal';
+
+      lastResult = { mode: 'deposit', deposit, totalMonths: n, totalContributions: current + totalContributions, totalInterest: Math.max(totalInterest, 0), finalBalance: balance, goal, current, annualRate };
+      lastChartData = data;
+      drawChart(data);
+
+    } else {
+      // Time to goal mode
+      const pmt = parseFloat(document.getElementById('pmt-input').value) || 0;
+
+      if (pmt <= 0 && r <= 0) {
+        msgCard.style.display = 'flex';
+        msgCard.className = 'msg-card warn';
+        document.getElementById('msg-icon').textContent = '⚠️';
+        document.getElementById('msg-text').textContent = 'With no monthly deposit and no interest, the goal cannot be reached.';
+        document.getElementById('stats-row').style.display = 'none';
+        document.querySelector('.chart-card').style.display = 'none';
+        resultsSection.classList.add('visible');
+        lastResult = null;
+        return;
+      }
+
+      if (r > 0) {
+        // Check if goal is reachable: if pmt = 0, need current * (1+r)^n = goal => n = ln(goal/current)/ln(1+r)
+        // If pmt > 0: n = ln((goal*r + pmt) / (current*r + pmt)) / ln(1+r)
+        const numerator = goal * r + pmt;
+        const denominator = current * r + pmt;
+        if (denominator <= 0 || numerator / denominator <= 0) {
+          msgCard.style.display = 'flex';
+          msgCard.className = 'msg-card warn';
+          document.getElementById('msg-icon').textContent = '⚠️';
+          document.getElementById('msg-text').textContent = 'The goal cannot be reached with these settings. Try increasing your monthly deposit.';
+          document.getElementById('stats-row').style.display = 'none';
+          document.querySelector('.chart-card').style.display = 'none';
+          resultsSection.classList.add('visible');
+          lastResult = null;
+          return;
+        }
+        totalMonths = Math.log(numerator / denominator) / Math.log(1 + r);
+      } else {
+        totalMonths = (goal - current) / pmt;
+      }
+
+      if (!isFinite(totalMonths) || totalMonths <= 0) {
+        msgCard.style.display = 'flex';
+        msgCard.className = 'msg-card warn';
+        document.getElementById('msg-icon').textContent = '⚠️';
+        document.getElementById('msg-text').textContent = 'The goal cannot be reached with these settings. Try increasing your monthly deposit or interest rate.';
+        document.getElementById('stats-row').style.display = 'none';
+        document.querySelector('.chart-card').style.display = 'none';
+        resultsSection.classList.add('visible');
+        lastResult = null;
+        return;
+      }
+
+      const n = Math.ceil(totalMonths);
+      deposit = pmt;
+
+      // Simulate month by month
+      let balance = current;
+      let totalContrib = 0;
+      const data = [];
+      data.push({ month: 0, contributions: current, interest: 0, balance: current });
+
+      for (let m = 1; m <= n; m++) {
+        const interestThisMonth = balance * r;
+        balance += interestThisMonth;
+        balance += deposit;
+        totalContrib += deposit;
+        const cumulContrib = current + totalContrib;
+        const cumulInterest = balance - cumulContrib;
+        data.push({ month: m, contributions: cumulContrib, interest: Math.max(0, cumulInterest), balance: balance });
+      }
+
+      totalContributions = current + totalContrib;
+      totalInterest = balance - totalContributions;
+
+      // Update stats
+      document.getElementById('s-primary').textContent = fmtTime(totalMonths);
+      document.getElementById('s-primary-sub').textContent = Math.ceil(totalMonths) + ' months total';
+      document.getElementById('s-contrib').textContent = fmtFull(totalContributions);
+      document.getElementById('s-contrib-sub').textContent = fmtFull(current) + ' initial + ' + fmtFull(totalContrib) + ' deposits';
+      document.getElementById('s-interest').textContent = fmtFull(Math.max(totalInterest, 0));
+      const intPct = balance > 0 ? (Math.max(totalInterest, 0) / balance * 100).toFixed(1) : '0.0';
+      document.getElementById('s-interest-sub').textContent = intPct + '% of final from interest';
+      document.getElementById('s-final').textContent = fmtFull(balance);
+      document.getElementById('s-final-sub').textContent = balance >= goal ? 'Goal reached!' : '';
+
+      lastResult = { mode: 'time', deposit: pmt, totalMonths: n, totalContributions, totalInterest: Math.max(totalInterest, 0), finalBalance: balance, goal, current, annualRate };
+      lastChartData = data;
+      drawChart(data);
+    }
+
+    resultsSection.classList.add('visible');
+    updatePrintSummary();
+  }
+
+  // ── Chart (Canvas, stacked area: contributions + interest) ──
+  function drawChart(data) {
+    if (!data.length) return;
+    const canvas = document.getElementById('chart');
+    const dpr = window.devicePixelRatio || 1;
+    const container = canvas.parentElement;
+    const style = getComputedStyle(container);
+    const padH = parseFloat(style.paddingLeft) + parseFloat(style.paddingRight);
+    const W0 = Math.max(100, container.clientWidth - padH);
+    const H0 = Math.max(100, Math.min(260, W0 * 0.4));
+    canvas.width = W0 * dpr;
+    canvas.height = H0 * dpr;
+    canvas.style.height = H0 + 'px';
+    const ctx = canvas.getContext('2d');
+    ctx.scale(dpr, dpr);
+    const W = W0, H = H0;
+
+    const isDark = document.body.classList.contains('dark');
+    const gridColor = isDark ? 'rgba(48,54,61,0.8)' : 'rgba(226,230,239,0.8)';
+    const labelColor = isDark ? '#484f58' : '#9ba3b5';
+
+    ctx.clearRect(0, 0, W, H);
+
+    const padL = 56, padR = 16, padT = 16, padB = 32;
+    const cW = W - padL - padR, cH = H - padT - padB;
+    const nPts = data.length;
+    if (nPts < 2) return;
+
+    const maxVal = Math.max(...data.map(d => d.balance)) * 1.08;
+    if (maxVal <= 0) return;
+
+    const xPos = i => padL + (i / (nPts - 1)) * cW;
+    const yPos = v => padT + cH - (v / maxVal) * cH;
+
+    // Grid lines
+    ctx.font = "500 10px 'JetBrains Mono', monospace";
+    for (let g = 0; g <= 4; g++) {
+      const y = padT + (g / 4) * cH;
+      ctx.strokeStyle = gridColor;
+      ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(padL, y); ctx.lineTo(W - padR, y); ctx.stroke();
+      ctx.fillStyle = labelColor;
+      ctx.textAlign = 'right';
+      ctx.fillText(fmtShort(maxVal * (1 - g / 4)), padL - 7, y + 4);
+    }
+
+    // X labels
+    ctx.fillStyle = labelColor;
+    ctx.textAlign = 'center';
+    const totalMonths = data[nPts - 1].month;
+    const showYears = totalMonths >= 24;
+    const step = Math.max(1, Math.ceil(nPts / 8));
+    data.forEach((d, i) => {
+      if (i % step === 0 || i === nPts - 1) {
+        const label = showYears ? (d.month >= 12 ? 'Yr ' + Math.round(d.month / 12) : 'Mo ' + d.month) : 'Mo ' + d.month;
+        ctx.fillText(label, xPos(i), H - padB + 16);
+      }
+    });
+
+    // Stacked area: interest on top of contributions
+    // Bottom area: contributions (green)
+    const gContrib = ctx.createLinearGradient(0, padT, 0, padT + cH);
+    gContrib.addColorStop(0, 'rgba(16,185,129,0.35)');
+    gContrib.addColorStop(1, 'rgba(16,185,129,0.05)');
+    ctx.beginPath();
+    ctx.moveTo(xPos(0), yPos(data[0].contributions));
+    data.forEach((d, i) => ctx.lineTo(xPos(i), yPos(d.contributions)));
+    ctx.lineTo(xPos(nPts - 1), yPos(0));
+    ctx.lineTo(xPos(0), yPos(0));
+    ctx.closePath();
+    ctx.fillStyle = gContrib;
+    ctx.fill();
+
+    // Top area: total balance (interest portion stacked above contributions)
+    const gInterest = ctx.createLinearGradient(0, padT, 0, padT + cH);
+    gInterest.addColorStop(0, 'rgba(99,102,241,0.3)');
+    gInterest.addColorStop(1, 'rgba(99,102,241,0.02)');
+    ctx.beginPath();
+    ctx.moveTo(xPos(0), yPos(data[0].balance));
+    data.forEach((d, i) => ctx.lineTo(xPos(i), yPos(d.balance)));
+    // Close down to contributions line (reverse)
+    for (let i = nPts - 1; i >= 0; i--) {
+      ctx.lineTo(xPos(i), yPos(data[i].contributions));
+    }
+    ctx.closePath();
+    ctx.fillStyle = gInterest;
+    ctx.fill();
+
+    // Line: contributions
+    ctx.beginPath();
+    data.forEach((d, i) => {
+      const x = xPos(i), y = yPos(d.contributions);
+      i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+    });
+    ctx.strokeStyle = '#10b981';
+    ctx.lineWidth = 2;
+    ctx.lineJoin = 'round';
+    ctx.stroke();
+
+    // Line: total balance
+    ctx.beginPath();
+    data.forEach((d, i) => {
+      const x = xPos(i), y = yPos(d.balance);
+      i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+    });
+    ctx.strokeStyle = '#6366f1';
+    ctx.lineWidth = 2.5;
+    ctx.lineJoin = 'round';
+    ctx.stroke();
+
+    // Dots at last point
+    const last = data[nPts - 1];
+    function drawDot(val, color) {
+      const x = xPos(nPts - 1), y = yPos(val);
+      ctx.beginPath();
+      ctx.arc(x, y, 5, 0, Math.PI * 2);
+      ctx.fillStyle = color;
+      ctx.fill();
+      ctx.strokeStyle = isDark ? '#161b22' : '#ffffff';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+    }
+    drawDot(last.contributions, '#10b981');
+    drawDot(last.balance, '#6366f1');
+  }
+
+  // ── Print Summary ──
+  function updatePrintSummary() {
+    if (!lastResult) return;
+    const r = lastResult;
+    const items = [
+      { label: 'Goal Amount', value: fmtFull(r.goal) },
+      { label: 'Current Savings', value: fmtFull(r.current) },
+      { label: 'Interest Rate', value: r.annualRate.toFixed(1) + '%' },
+    ];
+    if (r.mode === 'deposit') {
+      items.push({ label: 'Time Horizon', value: fmtTime(r.totalMonths) });
+      items.push({ label: 'Monthly Deposit', value: fmtFull(r.deposit) });
+    } else {
+      items.push({ label: 'Monthly Deposit', value: fmtFull(r.deposit) });
+      items.push({ label: 'Time to Goal', value: fmtTime(r.totalMonths) });
+    }
+    items.push({ label: 'Total Contributions', value: fmtFull(r.totalContributions) });
+    items.push({ label: 'Interest Earned', value: fmtFull(r.totalInterest) });
+    items.push({ label: 'Final Balance', value: fmtFull(r.finalBalance) });
+
+    document.getElementById('print-summary-grid').innerHTML = items.map(it =>
+      '<div class="print-summary-item"><div class="ps-label">' + it.label + '</div><div class="ps-value">' + it.value + '</div></div>'
+    ).join('');
+  }
+
+  // ── Copy Summary ──
+  function copySummary() {
+    if (!lastResult) { showToast('Nothing to copy yet'); return; }
+    const r = lastResult;
+    let text = 'Savings Goal Calculator — CalcNova\n';
+    text += '──────────────────────────────\n';
+    text += 'Goal: ' + fmtFull(r.goal) + '\n';
+    text += 'Current Savings: ' + fmtFull(r.current) + '\n';
+    text += 'Interest Rate: ' + r.annualRate.toFixed(1) + '% per year\n';
+    if (r.mode === 'deposit') {
+      text += 'Time Horizon: ' + fmtTime(r.totalMonths) + '\n';
+      text += 'Monthly Deposit Needed: ' + fmtFull(r.deposit) + '\n';
+    } else {
+      text += 'Monthly Deposit: ' + fmtFull(r.deposit) + '\n';
+      text += 'Time to Goal: ' + fmtTime(r.totalMonths) + '\n';
+    }
+    text += 'Total Contributions: ' + fmtFull(r.totalContributions) + '\n';
+    text += 'Interest Earned: ' + fmtFull(r.totalInterest) + '\n';
+    text += 'Final Balance: ' + fmtFull(r.finalBalance) + '\n';
+
+    navigator.clipboard.writeText(text).then(() => {
+      showToast('Summary copied!');
+    }).catch(() => {
+      showToast('Could not copy');
+    });
+  }
+
+  // ── Print ──
+  function printPage() {
+    updatePrintSummary();
+    window.print();
+  }
+
+  // ── Toast ──
+  function showToast(msg) {
+    const toast = document.getElementById('toast');
+    document.getElementById('toast-msg').textContent = msg;
+    toast.style.opacity = '1'; toast.style.transform = 'translateX(-50%) translateY(0)';
+    setTimeout(() => { toast.style.opacity = '0'; toast.style.transform = 'translateX(-50%) translateY(8px)'; }, 2200);
+  }
+
+  // ── Listeners ──
+  ['goal', 'current', 'rate', 'time-val', 'time-unit', 'pmt-input'].forEach(id => {
+    document.getElementById(id).addEventListener('input', calculate);
+  });
+
+  // Redraw on resize
+  let resizeTimer;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => { if (lastChartData.length) { drawChart(lastChartData); } }, 80);
+  });
+
+  // ── Init ──
+  calculate();
+</script>
+</body>
+</html>

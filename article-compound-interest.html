@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>How to Calculate Compound Interest | CalcNova</title>
+  <meta name="description" content="Learn how compound interest works, the formula behind it, and how different compounding frequencies affect your savings. Includes worked examples and the Rule of 72.">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="shared/nav.css">
+  <style>
+    .app { position: relative; z-index: 1; max-width: 960px; margin: 0 auto; padding: 0 16px 60px; }
+
+    /* ── Article Hero ── */
+    .article-hero {
+      padding: 48px 0 36px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 40px;
+      max-width: 720px;
+    }
+    .article-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: linear-gradient(135deg, rgba(16,185,129,.1), rgba(99,102,241,.1));
+      border: 1px solid rgba(16,185,129,.25);
+      border-radius: 100px; padding: 5px 14px;
+      font-size: 11px; font-weight: 700; color: var(--green);
+      letter-spacing: .5px; text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+    .article-hero h1 {
+      font-size: 38px; font-weight: 800; letter-spacing: -.5px;
+      line-height: 1.15; margin-bottom: 14px;
+    }
+    .article-hero h1 span {
+      background: linear-gradient(135deg, var(--green), var(--purple));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .article-hero .subtitle {
+      font-size: 16px; color: var(--text-secondary); line-height: 1.6; max-width: 600px;
+    }
+    .article-meta {
+      margin-top: 16px; font-size: 12px; color: var(--text-muted); font-weight: 500;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .article-meta .dot { width: 3px; height: 3px; border-radius: 50%; background: var(--text-muted); }
+
+    /* ── Article Body ── */
+    .article-body {
+      max-width: 720px;
+      display: flex; flex-direction: column; gap: 28px;
+    }
+    .article-body h2 {
+      font-size: 24px; font-weight: 800; letter-spacing: -.3px;
+      margin-bottom: 12px; color: var(--text-primary);
+    }
+    .article-body h3 {
+      font-size: 18px; font-weight: 700; letter-spacing: -.2px;
+      margin-bottom: 8px; color: var(--text-primary);
+    }
+    .article-body p {
+      font-size: 16px; color: var(--text-secondary); line-height: 1.75;
+      margin-bottom: 14px;
+    }
+    .article-body p:last-child { margin-bottom: 0; }
+    .article-body ul, .article-body ol {
+      padding-left: 0; list-style: none;
+      display: flex; flex-direction: column; gap: 8px;
+      margin-bottom: 14px;
+    }
+    .article-body ul li, .article-body ol li {
+      font-size: 16px; color: var(--text-secondary); line-height: 1.7;
+      padding-left: 22px; position: relative;
+    }
+    .article-body ul li::before {
+      content: ''; position: absolute; left: 0; top: 10px;
+      width: 6px; height: 6px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--green), var(--purple));
+    }
+    .article-body ol { counter-reset: ol-counter; }
+    .article-body ol li { counter-increment: ol-counter; }
+    .article-body ol li::before {
+      content: counter(ol-counter); position: absolute; left: 0; top: 0;
+      font-size: 13px; font-weight: 800; color: var(--green);
+      font-family: var(--mono);
+    }
+    .article-body a { color: var(--green); text-decoration: none; font-weight: 600; }
+    .article-body a:hover { text-decoration: underline; }
+    .article-body strong { color: var(--text-primary); font-weight: 700; }
+
+    /* ── Formula Box ── */
+    .formula-box {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 16px; padding: 24px 28px;
+      text-align: center;
+    }
+    .formula-box .formula {
+      font-family: var(--mono); font-size: 20px; font-weight: 600;
+      color: var(--text-primary); margin-bottom: 16px; letter-spacing: .5px;
+    }
+    .formula-box .formula .hl { color: var(--green); }
+    .formula-box .formula .hlp { color: var(--purple); }
+    .formula-box .legend {
+      display: flex; flex-wrap: wrap; gap: 8px 20px; justify-content: center;
+      font-size: 13px; color: var(--text-secondary);
+    }
+    .formula-box .legend code {
+      font-family: var(--mono); font-weight: 600; font-size: 12px;
+      background: var(--bg); border: 1px solid var(--border);
+      border-radius: 4px; padding: 1px 5px;
+    }
+
+    /* ── Callout Card ── */
+    .card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 18px; padding: 24px 26px;
+    }
+    .card-label {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 11px; font-weight: 800; text-transform: uppercase;
+      letter-spacing: .5px; color: var(--green); margin-bottom: 12px;
+    }
+    .card h3 { margin-top: 0; }
+    .card p:last-child { margin-bottom: 0; }
+
+    /* ── Example Box ── */
+    .example-box {
+      background: linear-gradient(135deg, rgba(16,185,129,.05), rgba(99,102,241,.03));
+      border: 1px solid rgba(16,185,129,.18);
+      border-radius: 16px; padding: 24px 26px;
+    }
+    .example-box .example-title {
+      font-size: 14px; font-weight: 800; color: var(--green);
+      text-transform: uppercase; letter-spacing: .5px;
+      margin-bottom: 10px;
+    }
+    .example-box p { margin-bottom: 10px; }
+    .example-box .result {
+      font-family: var(--mono); font-size: 15px; font-weight: 600;
+      color: var(--text-primary); background: var(--surface);
+      border: 1px solid var(--border); border-radius: 10px;
+      padding: 12px 16px; margin-top: 12px;
+    }
+    .example-box .result .hl { color: var(--green); font-weight: 700; }
+
+    /* ── Comparison Table ── */
+    .comparison-table {
+      width: 100%; border-collapse: collapse;
+      font-size: 14px; margin: 12px 0;
+    }
+    .comparison-table th {
+      text-align: left; font-weight: 700; font-size: 12px;
+      text-transform: uppercase; letter-spacing: .5px;
+      color: var(--text-muted); padding: 10px 14px;
+      border-bottom: 2px solid var(--border);
+    }
+    .comparison-table td {
+      padding: 10px 14px; color: var(--text-secondary);
+      border-bottom: 1px solid var(--border);
+    }
+    .comparison-table tr:last-child td { border-bottom: none; }
+    .comparison-table .num { font-family: var(--mono); font-weight: 600; }
+    .comparison-table .hl { color: var(--green); font-weight: 700; }
+
+    /* ── CTA Section ── */
+    .cta-section {
+      background: linear-gradient(135deg, rgba(16,185,129,.08), rgba(99,102,241,.06));
+      border: 1px solid rgba(16,185,129,.2);
+      border-radius: 18px; padding: 32px; text-align: center;
+      margin-top: 8px;
+    }
+    .cta-section h2 { font-size: 22px; margin-bottom: 10px; }
+    .cta-section p {
+      max-width: 500px; margin: 0 auto 20px;
+    }
+    .cta-btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: linear-gradient(135deg, var(--green), #059669);
+      color: #fff; border-radius: 100px; padding: 12px 28px;
+      font-size: 14px; font-weight: 700; text-decoration: none;
+      font-family: var(--font); transition: all .15s;
+      box-shadow: 0 4px 14px rgba(16,185,129,.3);
+    }
+    .cta-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(16,185,129,.4); }
+
+    /* ── Print ── */
+    @media print {
+      body::before, header, .menu-overlay, .site-footer, .ad-slot, .cta-section { display: none !important; }
+      .app { max-width: 100%; padding: 0; }
+      .article-hero { padding-top: 0; }
+      .article-body p, .article-body li { color: #222; }
+      .card, .example-box, .formula-box { break-inside: avoid; border: 1px solid #ccc; }
+    }
+
+    /* ── Mobile ── */
+    @media (max-width: 640px) {
+      .article-hero h1 { font-size: 28px; }
+      .formula-box .formula { font-size: 15px; }
+      .formula-box .legend { flex-direction: column; align-items: center; }
+      .comparison-table { font-size: 12px; }
+      .comparison-table th, .comparison-table td { padding: 8px 10px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+
+    <!-- Hero -->
+    <div class="article-hero">
+      <div class="article-badge">📈 Finance Guide</div>
+      <h1>How to Calculate <span>Compound Interest</span></h1>
+      <p class="subtitle">Compound interest is one of the most powerful forces in personal finance. Understanding how it works is the first step toward making your money work harder for you.</p>
+      <div class="article-meta">
+        <span>10 min read</span>
+        <span class="dot"></span>
+        <span>Updated March 2026</span>
+      </div>
+    </div>
+
+    <!-- Article Body -->
+    <div class="article-body">
+
+      <!-- Intro -->
+      <section>
+        <h2>What Is Compound Interest?</h2>
+        <p>Compound interest is interest calculated on both the initial principal and the accumulated interest from previous periods. Unlike simple interest, which only earns returns on your original deposit, compound interest lets you earn <strong>interest on your interest</strong>, creating a snowball effect that accelerates your wealth over time.</p>
+        <p>Albert Einstein reportedly called compound interest the "eighth wonder of the world." Whether or not the quote is truly his, the sentiment is accurate: compounding is the mechanism behind most long-term wealth creation. A modest sum invested early can outgrow a much larger sum invested later, simply because it has more time to compound.</p>
+      </section>
+
+      <!-- Formula -->
+      <section>
+        <h2>The Compound Interest Formula</h2>
+        <p>The standard formula for calculating compound interest is:</p>
+        <div class="formula-box">
+          <div class="formula">
+            <span class="hl">A</span> = <span class="hlp">P</span>(1 + <span class="hlp">r</span>/<span class="hlp">n</span>)<sup><span class="hlp">n</span><span class="hlp">t</span></sup>
+          </div>
+          <div class="legend">
+            <span><code>A</code> = final amount</span>
+            <span><code>P</code> = principal (starting balance)</span>
+            <span><code>r</code> = annual interest rate (decimal)</span>
+            <span><code>n</code> = compounding periods per year</span>
+            <span><code>t</code> = time in years</span>
+          </div>
+        </div>
+        <p>To use this formula, convert the annual interest rate from a percentage to a decimal (divide by 100), choose the compounding frequency, and plug in the number of years. The result is the total amount you will have, including your original principal.</p>
+      </section>
+
+      <!-- Simple vs Compound -->
+      <section>
+        <h2>Simple vs. Compound Interest</h2>
+        <p>With <strong>simple interest</strong>, you earn a fixed amount each year based only on the original principal. The formula is straightforward: Interest = P &times; r &times; t. With <strong>compound interest</strong>, each period's interest is added to the principal, so future interest is calculated on a larger balance.</p>
+        <p>The difference may seem small over short periods, but over decades it becomes enormous. Consider $10,000 at 7% for 30 years:</p>
+        <table class="comparison-table">
+          <thead>
+            <tr>
+              <th>Method</th>
+              <th>After 10 Years</th>
+              <th>After 20 Years</th>
+              <th>After 30 Years</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Simple Interest</td>
+              <td class="num">$17,000</td>
+              <td class="num">$24,000</td>
+              <td class="num">$31,000</td>
+            </tr>
+            <tr>
+              <td>Compound Interest</td>
+              <td class="num">$19,672</td>
+              <td class="num">$38,697</td>
+              <td class="num hl">$76,123</td>
+            </tr>
+          </tbody>
+        </table>
+        <p>After 30 years, compound interest delivers more than <strong>double</strong> what simple interest produces on the same initial investment. That gap only widens with higher rates and longer time horizons.</p>
+      </section>
+
+      <!-- Examples -->
+      <section>
+        <h2>Worked Examples</h2>
+
+        <div class="example-box" style="margin-bottom: 16px;">
+          <div class="example-title">Example 1 &mdash; Basic Savings</div>
+          <p>You deposit <strong>$5,000</strong> into a savings account earning <strong>4.5% annual interest</strong>, compounded <strong>monthly</strong>. How much will you have after <strong>5 years</strong>?</p>
+          <p>Using the formula: A = 5000 &times; (1 + 0.045/12)<sup>12&times;5</sup></p>
+          <div class="result">
+            A = 5000 &times; (1.00375)<sup>60</sup> = <span class="hl">$6,258.98</span>
+          </div>
+          <p style="margin-top:10px;">Your $5,000 earned $1,258.98 in interest without you lifting a finger.</p>
+        </div>
+
+        <div class="example-box" style="margin-bottom: 16px;">
+          <div class="example-title">Example 2 &mdash; Long-Term Investing</div>
+          <p>You invest <strong>$10,000</strong> in an index fund averaging <strong>8% annual returns</strong>, compounded <strong>annually</strong>, for <strong>25 years</strong>.</p>
+          <p>A = 10,000 &times; (1 + 0.08/1)<sup>1&times;25</sup></p>
+          <div class="result">
+            A = 10,000 &times; (1.08)<sup>25</sup> = <span class="hl">$68,484.75</span>
+          </div>
+          <p style="margin-top:10px;">Your initial $10,000 grew to nearly seven times its original value. More than $58,000 of that is pure interest earnings.</p>
+        </div>
+
+        <div class="example-box">
+          <div class="example-title">Example 3 &mdash; The Cost of Waiting</div>
+          <p><strong>Investor A</strong> starts with $10,000 at age 25 and lets it grow for 40 years at 7%. <strong>Investor B</strong> starts the same investment at age 35, giving it only 30 years.</p>
+          <div class="result">
+            Investor A (40 years): 10,000 &times; 1.07<sup>40</sup> = <span class="hl">$149,745</span><br>
+            Investor B (30 years): 10,000 &times; 1.07<sup>30</sup> = $76,123
+          </div>
+          <p style="margin-top:10px;">By starting just 10 years earlier, Investor A ends up with nearly <strong>twice as much money</strong> from the same initial investment. Time is the most important ingredient in compounding.</p>
+        </div>
+      </section>
+
+      <!-- Compounding Frequency -->
+      <section>
+        <h2>How Compounding Frequency Matters</h2>
+        <p>The variable <em>n</em> in the formula represents how many times per year interest is calculated and added to the balance. Common compounding frequencies include:</p>
+        <ul>
+          <li><strong>Annually (n = 1)</strong> &mdash; Interest is added once per year. Simplest to calculate, but yields the least.</li>
+          <li><strong>Quarterly (n = 4)</strong> &mdash; Interest compounds four times a year. Common for some bonds and CDs.</li>
+          <li><strong>Monthly (n = 12)</strong> &mdash; The most common frequency for savings accounts and mortgages.</li>
+          <li><strong>Daily (n = 365)</strong> &mdash; Some high-yield savings accounts compound daily, squeezing out slightly more growth.</li>
+        </ul>
+        <p>Here is how $10,000 at 6% grows over 10 years at different frequencies:</p>
+        <table class="comparison-table">
+          <thead>
+            <tr>
+              <th>Frequency</th>
+              <th>Final Amount</th>
+              <th>Interest Earned</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Annually</td><td class="num">$17,908.48</td><td class="num">$7,908.48</td></tr>
+            <tr><td>Quarterly</td><td class="num">$18,140.18</td><td class="num">$8,140.18</td></tr>
+            <tr><td>Monthly</td><td class="num">$18,193.97</td><td class="num">$8,193.97</td></tr>
+            <tr><td>Daily</td><td class="num hl">$18,220.44</td><td class="num hl">$8,220.44</td></tr>
+          </tbody>
+        </table>
+        <p>The difference between annual and daily compounding on $10,000 over a decade is about $312. It is noticeable, but the far bigger lever is the <strong>interest rate itself</strong> and how much <strong>time</strong> you give your investment. Do not obsess over compounding frequency at the expense of simply starting early.</p>
+      </section>
+
+      <!-- Rule of 72 -->
+      <section>
+        <h2>The Rule of 72</h2>
+        <div class="card">
+          <div class="card-label">💡 Quick Tip</div>
+          <h3>Divide 72 by your interest rate to estimate how many years it takes to double your money.</h3>
+          <p>This mental shortcut is surprisingly accurate for rates between 2% and 15%. For example:</p>
+          <ul>
+            <li>At <strong>4%</strong> interest: 72 / 4 = <strong>18 years</strong> to double</li>
+            <li>At <strong>6%</strong> interest: 72 / 6 = <strong>12 years</strong> to double</li>
+            <li>At <strong>8%</strong> interest: 72 / 8 = <strong>9 years</strong> to double</li>
+            <li>At <strong>10%</strong> interest: 72 / 10 = <strong>7.2 years</strong> to double</li>
+          </ul>
+          <p>The Rule of 72 also works in reverse: if you want to know what rate you need to double your money in a certain number of years, divide 72 by the number of years. Want to double in 6 years? You need roughly 12% annual returns.</p>
+        </div>
+      </section>
+
+      <!-- Key Takeaways -->
+      <section>
+        <h2>Key Takeaways</h2>
+        <div class="card">
+          <div class="card-label">📌 Summary</div>
+          <ol>
+            <li><strong>Start early.</strong> Time is the most powerful variable in the compound interest formula. Even small amounts invested early can outgrow large amounts invested later.</li>
+            <li><strong>Reinvest your earnings.</strong> Compound interest only works its magic when interest is left in the account to generate more interest. Withdrawing gains resets the snowball.</li>
+            <li><strong>Higher rates accelerate growth.</strong> The interest rate has a dramatic effect over long periods. A difference of even 1-2% compounds into a significant gap over decades.</li>
+            <li><strong>Compounding frequency helps, but time matters more.</strong> Monthly vs. daily compounding makes a marginal difference. Investing for 30 years instead of 20 makes a massive one.</li>
+            <li><strong>Compound interest works against you on debt.</strong> The same force that grows your savings also grows credit card balances and loans. Pay off high-interest debt as quickly as possible.</li>
+          </ol>
+        </div>
+      </section>
+
+      <!-- CTA -->
+      <div class="cta-section">
+        <h2>See It in Action</h2>
+        <p>Ready to run the numbers for your own situation? Our free calculator lets you experiment with different rates, time horizons, and contribution schedules.</p>
+        <a href="compound-interest-calculator.html" class="cta-btn">Open Compound Interest Calculator →</a>
+      </div>
+
+    </div><!-- /article-body -->
+  </div><!-- /app -->
+
+  <script>
+    window.CALCNOVA_PAGE = {
+      id: 'article-compound-interest',
+      disclaimer: 'This article is for educational purposes only and does not constitute financial advice. Consult a qualified financial advisor for personalized guidance.'
+    };
+  </script>
+  <script src="shared/nav.js"></script>
+</body>
+</html>

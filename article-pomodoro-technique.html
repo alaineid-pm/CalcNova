@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>The Pomodoro Technique: A Complete Guide to Focused Work | CalcNova</title>
+  <meta name="description" content="Learn the Pomodoro Technique for better focus and productivity. History, how it works, benefits, and practical tips for making it part of your workflow.">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="shared/nav.css">
+  <style>
+    /* ── Article Layout ── */
+    .app {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 0 24px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .article {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 20px 0 40px;
+    }
+
+    /* ── Hero ── */
+    .article-hero {
+      text-align: center;
+      padding: 40px 0 32px;
+    }
+
+    .article-category {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--purple);
+      margin-bottom: 16px;
+    }
+
+    .article-title {
+      font-size: clamp(28px, 5vw, 42px);
+      font-weight: 800;
+      line-height: 1.2;
+      letter-spacing: -0.5px;
+      background: linear-gradient(135deg, var(--green), var(--purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 16px;
+    }
+
+    .article-meta {
+      font-size: 14px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .article-meta span {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* ── Content Typography ── */
+    .article-content {
+      font-size: 17px;
+      line-height: 1.7;
+      color: var(--text-primary);
+    }
+
+    .article-content h2 {
+      font-size: 24px;
+      font-weight: 700;
+      margin: 40px 0 16px;
+      letter-spacing: -0.3px;
+      color: var(--text-primary);
+    }
+
+    .article-content h3 {
+      font-size: 20px;
+      font-weight: 600;
+      margin: 32px 0 12px;
+      color: var(--text-primary);
+    }
+
+    .article-content p {
+      margin-bottom: 16px;
+      color: var(--text-secondary);
+    }
+
+    .article-content ul, .article-content ol {
+      margin: 0 0 16px 24px;
+      color: var(--text-secondary);
+    }
+
+    .article-content li {
+      margin-bottom: 8px;
+    }
+
+    .article-content strong {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    .article-content a {
+      color: var(--purple);
+      text-decoration: underline;
+      text-underline-offset: 2px;
+      transition: color 0.15s;
+    }
+
+    .article-content a:hover {
+      color: var(--green);
+    }
+
+    /* ── Callout Card ── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      margin: 24px 0;
+    }
+
+    .card--highlight {
+      border-left: 4px solid var(--green);
+    }
+
+    .card--purple {
+      border-left: 4px solid var(--purple);
+    }
+
+    .card--amber {
+      border-left: 4px solid var(--amber);
+    }
+
+    .card h4 {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .card p, .card li {
+      font-size: 15px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    .card ul, .card ol {
+      margin: 8px 0 0 20px;
+    }
+
+    .card li {
+      margin-bottom: 6px;
+    }
+
+    /* ── Steps Visual ── */
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin: 24px 0;
+    }
+
+    .step {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .step-number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--green), var(--purple));
+      color: #fff;
+      font-weight: 800;
+      font-size: 16px;
+      margin-bottom: 12px;
+    }
+
+    .step-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 6px;
+    }
+
+    .step-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* ── CTA Section ── */
+    .cta-section {
+      text-align: center;
+      padding: 40px 24px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      margin: 40px 0;
+    }
+
+    .cta-section h3 {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .cta-section p {
+      color: var(--text-secondary);
+      margin-bottom: 20px;
+      font-size: 15px;
+    }
+
+    .cta-buttons {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .cta-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 24px;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 700;
+      text-decoration: none;
+      transition: all 0.15s;
+      font-family: var(--font);
+    }
+
+    .cta-btn--primary {
+      background: linear-gradient(135deg, var(--green), var(--purple));
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+    }
+
+    .cta-btn--primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+    }
+
+    /* ── Divider ── */
+    .article-divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 32px 0;
+    }
+
+    /* ── Print ── */
+    @media print {
+      body::before { display: none; }
+      header, .menu-overlay, .site-footer, .cta-section, .ad-slot { display: none !important; }
+      .app { max-width: 100%; padding: 0; }
+      .article { max-width: 100%; }
+      .article-title {
+        -webkit-text-fill-color: #0f1623;
+        color: #0f1623;
+      }
+      .card, .step { break-inside: avoid; border: 1px solid #ccc; }
+    }
+
+    /* ── Mobile ── */
+    @media (max-width: 640px) {
+      .app { padding: 0 16px; }
+      .article-hero { padding: 24px 0 20px; }
+      .article-content { font-size: 16px; }
+      .article-content h2 { font-size: 21px; }
+      .steps { grid-template-columns: 1fr 1fr; }
+      .cta-section { padding: 28px 16px; }
+    }
+
+    @media (max-width: 400px) {
+      .steps { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="article">
+      <div class="article-hero">
+        <div class="article-category">Productivity</div>
+        <h1 class="article-title">The Pomodoro Technique: A Complete Guide to Focused Work</h1>
+        <div class="article-meta">
+          <span>8 min read</span>
+          <span>Updated Mar 2026</span>
+        </div>
+      </div>
+
+      <div class="article-content">
+        <p>
+          Distraction is the default state of modern work. Notifications, open-plan offices, overflowing inboxes, and the ever-present pull of social media conspire to fragment our attention into tiny, unproductive slivers. The Pomodoro Technique is one of the simplest and most effective countermeasures ever devised: a time management method that uses short, focused work intervals to help you accomplish more with less mental fatigue.
+        </p>
+
+        <p>
+          Millions of students, developers, writers, and professionals worldwide swear by it. Here is everything you need to know to start using it today.
+        </p>
+
+        <h2>A Brief History</h2>
+
+        <p>
+          The Pomodoro Technique was created in the late 1980s by Francesco Cirillo, an Italian university student struggling with focus and productivity. Searching for a way to commit to just a few minutes of concentrated study, he grabbed the nearest timer he could find: a tomato-shaped kitchen timer. "Pomodoro" is Italian for tomato, and the name stuck.
+        </p>
+
+        <p>
+          Cirillo refined the method over the following years and published it formally in 1992. What began as a personal study hack became a global productivity phenomenon, praised for its simplicity and adaptability. No apps required, no complex setup &mdash; just a timer and a commitment to work in focused bursts.
+        </p>
+
+        <h2>How the Pomodoro Technique Works</h2>
+
+        <p>
+          The method follows a straightforward cycle that repeats throughout your workday.
+        </p>
+
+        <div class="steps">
+          <div class="step">
+            <div class="step-number">1</div>
+            <div class="step-title">Pick a Task</div>
+            <div class="step-desc">Choose one specific task to work on. Write it down.</div>
+          </div>
+          <div class="step">
+            <div class="step-number">2</div>
+            <div class="step-title">Set the Timer</div>
+            <div class="step-desc">Start a 25-minute timer. This is one "pomodoro."</div>
+          </div>
+          <div class="step">
+            <div class="step-number">3</div>
+            <div class="step-title">Work with Focus</div>
+            <div class="step-desc">Work on the task until the timer rings. No switching.</div>
+          </div>
+          <div class="step">
+            <div class="step-number">4</div>
+            <div class="step-title">Short Break</div>
+            <div class="step-desc">Take a 5-minute break. Stretch, breathe, rest.</div>
+          </div>
+        </div>
+
+        <p>
+          After completing four pomodoros (about two hours of focused work), take a longer break of 15 to 30 minutes. Then start the cycle again.
+        </p>
+
+        <div class="card card--highlight">
+          <h4>The Core Rule</h4>
+          <p>
+            A pomodoro is indivisible. If you are interrupted or tempted to switch tasks during a 25-minute interval, you either deal with the interruption quickly and return, or you cancel the pomodoro and start a fresh one later. There is no such thing as half a pomodoro.
+          </p>
+        </div>
+
+        <h2>Why It Works: The Science of Focus</h2>
+
+        <p>
+          The Pomodoro Technique is effective for several well-understood psychological reasons.
+        </p>
+
+        <h3>It reduces the activation energy of starting</h3>
+        <p>
+          One of the biggest barriers to productivity is simply beginning. Committing to 25 minutes feels far less daunting than committing to "finish the report." The technique lowers the psychological hurdle of starting, which is often the hardest part.
+        </p>
+
+        <h3>It creates urgency without stress</h3>
+        <p>
+          A ticking timer creates a gentle sense of urgency. You know the clock is running, which discourages wandering attention. But because the interval is short, it does not produce the anxious pressure of a looming deadline.
+        </p>
+
+        <h3>It enforces rest</h3>
+        <p>
+          Most people skip breaks when they are "in the zone," then wonder why they feel exhausted by 2 PM. The Pomodoro Technique mandates regular rest. These breaks allow your brain to consolidate information, recover focus, and return to work refreshed. Research in cognitive psychology consistently shows that brief diversions improve sustained attention.
+        </p>
+
+        <h3>It builds time awareness</h3>
+        <p>
+          After tracking your pomodoros for a few days, you develop an accurate sense of how long tasks actually take. This is invaluable for planning and estimating. You stop saying "I will finish that this afternoon" and start saying "That is a four-pomodoro task" &mdash; a much more realistic and actionable assessment.
+        </p>
+
+        <h3>It combats perfectionism</h3>
+        <p>
+          When you only have 25 minutes, there is no time to agonize over whether something is perfect. The technique encourages progress over polish, which is exactly the mindset needed for most productive work.
+        </p>
+
+        <h2>Practical Benefits</h2>
+
+        <ul>
+          <li><strong>Improved focus.</strong> Single-tasking for 25 minutes trains your attention muscles. Over time, you will find it easier to resist distractions even outside of pomodoro sessions.</li>
+          <li><strong>Reduced burnout.</strong> Mandatory breaks prevent the slow accumulation of mental fatigue that leads to afternoon crashes and weekend burnout.</li>
+          <li><strong>Better estimation.</strong> Tracking pomodoros creates a personal record of how long different types of tasks take, making you a better planner.</li>
+          <li><strong>Increased accountability.</strong> Each completed pomodoro is a small win. Seeing a tally of completed intervals at the end of the day is tangible proof of productive work.</li>
+          <li><strong>Lower anxiety.</strong> Instead of facing a mountain of tasks, you face one 25-minute commitment at a time. This reframing reduces overwhelm.</li>
+        </ul>
+
+        <h2>Tips for Making It Work</h2>
+
+        <h3>Handle interruptions with a system</h3>
+        <p>
+          Interruptions are inevitable. The Pomodoro Technique has a built-in strategy: when an internal distraction arises (a thought, an urge to check email), write it down on a sheet of paper and immediately return to your task. For external interruptions (a colleague asking a question), politely ask if it can wait until your break. Most things can.
+        </p>
+
+        <div class="card card--purple">
+          <h4>The "Inform, Negotiate, Call Back" Strategy</h4>
+          <ol>
+            <li><strong>Inform</strong> the interrupter that you are in the middle of something.</li>
+            <li><strong>Negotiate</strong> a time to address their need (your next break, in 10 minutes, etc.).</li>
+            <li><strong>Call back</strong> &mdash; follow through at the agreed time.</li>
+          </ol>
+          <p style="margin-top: 12px;">This preserves your focus while showing respect for the other person's needs.</p>
+        </div>
+
+        <h3>Adjust the intervals to fit your work</h3>
+        <p>
+          The classic 25/5 split works for most people, but it is not sacred. Some people find that 50-minute work intervals with 10-minute breaks suit deep creative work better. Others prefer shorter 15-minute intervals for tasks that require high energy but low duration, like answering emails. Experiment and find what works for your brain and your work style.
+        </p>
+
+        <h3>Pair it with task planning</h3>
+        <p>
+          At the start of each day, list your tasks and estimate how many pomodoros each will require. This combines the Pomodoro Technique with intentional prioritization. At the end of the day, compare your estimates to reality. Over time, your estimates become remarkably accurate.
+        </p>
+
+        <h3>Use breaks wisely</h3>
+        <p>
+          A good break means stepping away from your work &mdash; physically and mentally. Stand up, stretch, walk to the window, get water, or do a brief breathing exercise. Scrolling through social media is not a real break; it keeps your brain in the same stimulation mode. Give your mind genuine rest.
+        </p>
+
+        <h3>Do not force it for every task</h3>
+        <p>
+          The Pomodoro Technique shines for tasks that require sustained focus: writing, coding, studying, designing, analyzing data. It is less useful for highly collaborative or reactive work, like participating in a workshop or handling customer support. Use it where it helps; skip it where it does not.
+        </p>
+
+        <div class="card card--amber">
+          <h4>Common Mistakes to Avoid</h4>
+          <ul>
+            <li>Skipping breaks to "stay in flow" &mdash; this defeats the purpose and leads to faster fatigue.</li>
+            <li>Multitasking during a pomodoro &mdash; the whole point is single-tasking.</li>
+            <li>Being too rigid about the 25-minute rule &mdash; adapt the intervals if they do not suit your work.</li>
+            <li>Not tracking completed pomodoros &mdash; the tally is both motivating and informative.</li>
+            <li>Giving up after one bad day &mdash; like any habit, it takes a week or two to feel natural.</li>
+          </ul>
+        </div>
+
+        <h2>Getting Started Today</h2>
+
+        <p>
+          You do not need any special equipment to try the Pomodoro Technique. A phone timer works. A kitchen timer works. But dedicated Pomodoro timers &mdash; whether physical or digital &mdash; add a layer of ritual and tracking that many people find helpful. They count your completed intervals, manage break durations, and let you review your productivity patterns over time.
+        </p>
+
+        <p>
+          Start with a single day. Pick your most important task, set a timer for 25 minutes, and commit to working on nothing else until the timer rings. Take your five-minute break. Repeat. By the end of the day, you will likely have accomplished more focused work than you have in weeks &mdash; and you will feel less tired doing it.
+        </p>
+
+        <p>
+          The Pomodoro Technique endures because it respects a fundamental truth about human cognition: we are not designed for marathon focus. We are designed for sprints and recovery. Work with your brain, not against it, and the results will speak for themselves.
+        </p>
+
+        <hr class="article-divider">
+
+        <div class="cta-section">
+          <h3>Ready to Try It?</h3>
+          <p>Use CalcNova's free Pomodoro Timer with customizable intervals, session tracking, and audio alerts.</p>
+          <div class="cta-buttons">
+            <a href="pomodoro.html" class="cta-btn cta-btn--primary">Start Pomodoro Timer</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    window.CALCNOVA_PAGE = { id: 'article-pomodoro-technique' };
+  </script>
+  <script src="shared/nav.js"></script>
+</body>
+</html>
