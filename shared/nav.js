@@ -52,7 +52,7 @@
       items: [
         { id: 'unit-converter',   icon: '📏', label: 'Unit Converter',   href: 'unit-converter.html', live: true },
         { id: 'percentage-calculator',  icon: '🔢', label: 'Percentage Calc',  href: 'percentage-calculator.html', live: true },
-        { id: 'random-number',    icon: '🎲', label: 'Random Number',    live: false },
+        { id: 'random-number',    icon: '🎲', label: 'Random Number',    href: 'random-number.html', live: true },
         { id: 'word-counter',     icon: '✍️', label: 'Word Counter',     href: 'word-counter.html', live: true },
       ]
     }
