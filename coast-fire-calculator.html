@@ -692,6 +692,7 @@
       const v = parseFloat(num.value);
       if (!isNaN(v) && v >= min && v <= max) {
         range.value = v;
+        updateSliderFill(range);
         calculate();
       }
     });
@@ -699,7 +700,7 @@
     // On blur or Enter, clamp and tidy up the value
     function commitNum() {
       const v = Math.min(max, Math.max(min, parseFloat(num.value) || min));
-      range.value = v; num.value = v; calculate();
+      range.value = v; num.value = v; updateSliderFill(range); calculate();
     }
     num.addEventListener('change', commitNum);
     num.addEventListener('blur', commitNum);
