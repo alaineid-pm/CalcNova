@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CalcNova · Age Calculator</title>
+  <meta name="description" content="Calculate exact age in years, months, and days. See totals, next birthday, and more — all in your browser." />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="shared/nav.css" />
+
+  <style>
+    .app { position: relative; z-index: 1; max-width: 960px; margin: 0 auto; padding: 0 16px 60px; }
+
+    .pill-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: linear-gradient(135deg, rgba(16,185,129,.1), rgba(99,102,241,.1));
+      border: 1px solid rgba(16,185,129,.25);
+      border-radius: 100px; padding: 6px 14px;
+      font-size: 12px; font-weight: 700; color: var(--green);
+    }
+
+    .hero {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 28px 28px 24px;
+      margin-bottom: 20px;
+      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;
+    }
+    .hero-title { font-size: 26px; font-weight: 800; letter-spacing: -.5px; }
+    .hero-title span {
+      background: linear-gradient(135deg, var(--green), var(--purple));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .hero-desc { font-size: 14px; color: var(--text-secondary); margin-top: 6px; line-height: 1.5; }
+    .hero-formula {
+      font-family: var(--mono);
+      font-size: 13px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 18px;
+      color: var(--text-secondary);
+      white-space: nowrap;
+    }
+    .hero-formula .hl { color: var(--green); font-weight: 700; }
+    .hero-formula .hlp { color: var(--purple); font-weight: 700; }
+
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+    @media (max-width: 640px) { .two-col { grid-template-columns: 1fr; } .hero-formula { display:none; } .hero-title { font-size: 20px; } }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 22px 22px 18px;
+    }
+    .card-title {
+      font-size: 11px; font-weight: 700; letter-spacing: .5px; text-transform: uppercase;
+      color: var(--text-muted); margin-bottom: 18px;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .card-title-dot { width: 6px; height: 6px; border-radius: 50%; }
+
+    .form-group { margin-bottom: 14px; }
+    .form-label { font-size: 12px; font-weight: 600; color: var(--text-secondary); margin-bottom: 6px; display: block; }
+    .form-help { font-size: 12px; color: var(--text-muted); line-height: 1.5; margin-top: 6px; }
+
+    input[type="date"], select {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text-primary);
+      font-family: var(--font);
+      font-size: 14px;
+      font-weight: 600;
+      padding: 9px 12px;
+      outline: none;
+      transition: border-color .2s, box-shadow .2s;
+      appearance: none;
+    }
+    input[type="date"]:focus, select:focus {
+      border-color: var(--green);
+      box-shadow: 0 0 0 3px rgba(16,185,129,.12);
+    }
+
+    .inline-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+
+    .toggle {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 12px; font-weight: 600; color: var(--text-secondary);
+      user-select: none;
+    }
+    .toggle input { width: 18px; height: 18px; accent-color: var(--green); }
+
+    .action-row {
+      display: flex; gap: 8px; justify-content: flex-end;
+      margin-bottom: 16px; flex-wrap: wrap;
+    }
+    .action-btn {
+      display: flex; align-items: center; gap: 6px;
+      background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+      color: var(--text-secondary); font-family: var(--font); font-size: 13px; font-weight: 600;
+      padding: 8px 16px; cursor: pointer; transition: all .15s; text-decoration: none;
+    }
+    .action-btn:hover { border-color: var(--green); color: var(--green); }
+    .action-btn svg { width: 15px; height: 15px; flex-shrink: 0; }
+
+    .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 16px; }
+    @media (max-width: 580px) { .stats-row { grid-template-columns: 1fr; } }
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px 18px 16px;
+      position: relative;
+      overflow: hidden;
+      min-height: 108px;
+    }
+    .stat-card.primary {
+      background: linear-gradient(135deg, rgba(16,185,129,.07), rgba(99,102,241,.07));
+      border-color: rgba(16,185,129,.3);
+    }
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0; right: 0;
+      width: 60px; height: 60px;
+      border-radius: 0 16px 0 60px;
+      opacity: .06;
+    }
+    .stat-card.primary::before { background: var(--green); opacity: .3; }
+    .stat-card.green::before { background: var(--green); }
+    .stat-card.purple::before { background: var(--purple); }
+
+    .stat-icon { font-size: 18px; margin-bottom: 10px; }
+    .stat-label { font-size: 10px; font-weight: 700; letter-spacing: .5px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 4px; }
+    .stat-value {
+      font-family: var(--mono); font-size: 22px; font-weight: 800;
+      color: var(--text-primary); line-height: 1;
+    }
+    .stat-card.primary .stat-value {
+      background: linear-gradient(135deg, var(--green), var(--purple));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .stat-sub { font-size: 11px; color: var(--text-muted); margin-top: 6px; font-family: var(--mono); line-height: 1.45; }
+
+    .table-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+    .table-head-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 20px; border-bottom: 1px solid var(--border);
+    }
+    .table-head-title { font-size: 11px; font-weight: 700; letter-spacing: .5px; text-transform: uppercase; color: var(--text-muted); }
+    .table-scroll { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    tbody tr { border-bottom: 1px solid rgba(226,230,239,.5); }
+    body.dark tbody tr { border-bottom-color: rgba(48,54,61,.5); }
+    tbody tr:last-child { border-bottom: none; }
+    td { padding: 12px 18px; }
+    td:first-child { color: var(--text-secondary); font-weight: 700; width: 42%; }
+    td:last-child { font-family: var(--mono); font-weight: 700; }
+    .td-green { color: var(--green) !important; }
+
+    #toast {
+      position: fixed; bottom: 24px; right: 24px; z-index: 200;
+      background: #0f1623; color: white;
+      padding: 10px 18px; border-radius: 100px;
+      font-size: 12px; font-weight: 700; font-family: var(--mono);
+      display: flex; align-items: center; gap: 7px;
+      box-shadow: 0 8px 24px rgba(0,0,0,.25);
+      opacity: 0; transform: translateY(8px);
+      transition: opacity .25s, transform .25s; pointer-events: none;
+    }
+
+    @media print {
+      body { background: white !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      body::before { display: none; }
+      header, .action-row, #toast, .icon-btn, .pill-badge, .nav-tools-wrap, .donate-btn,
+      .mega-menu, .menu-overlay, .site-footer, .footer-disclaimer { display: none !important; }
+      .app { padding: 0; max-width: 100%; }
+      .hero { border: none; padding: 12px 0 8px; margin-bottom: 10px; }
+      .stat-card, .table-card, .card { page-break-inside: avoid; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="app">
+    <!-- nav.js injects header here -->
+
+    <div class="hero">
+      <div>
+        <div class="pill-badge">🎂 Exact · Instant · Private</div>
+        <div class="hero-title">Age <span>Calculator</span></div>
+        <div class="hero-desc">Calculate an exact age breakdown (years, months, days) — plus totals and next birthday.</div>
+      </div>
+      <div class="hero-formula">
+        Age = <span class="hl">AsOf</span> − <span class="hlp">DOB</span>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div class="card">
+        <div class="card-title"><div class="card-title-dot" style="background:var(--green)"></div>Inputs</div>
+
+        <div class="form-group">
+          <label class="form-label">Date of birth</label>
+          <input type="date" id="dob" />
+          <div class="form-help">Tip: we build dates in <b>local time</b> and normalize to midday to reduce timezone/DST edge cases.</div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">As of date <span style="color:var(--text-muted); font-weight:600;">(optional)</span></label>
+          <input type="date" id="asof" />
+          <div class="form-help">Leave empty to use <b>today</b>.</div>
+        </div>
+
+        <div class="inline-row" style="margin-top:6px;">
+          <label class="toggle"><input type="checkbox" id="treatLeap" checked /> Feb 29 birthdays: treat non‑leap years as Feb 28</label>
+        </div>
+
+        <div class="form-help" id="inputNote" style="margin-top:10px;"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><div class="card-title-dot" style="background:var(--purple)"></div>Quick facts</div>
+
+        <div class="table-card" style="margin-bottom:0;">
+          <div class="table-head-row"><div class="table-head-title">Details</div></div>
+          <div class="table-scroll">
+            <table>
+              <tbody id="factsBody">
+                <tr><td>Born on</td><td>—</td></tr>
+                <tr><td>Day of week</td><td>—</td></tr>
+                <tr><td>Next birthday</td><td>—</td></tr>
+                <tr><td>Countdown</td><td>—</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="action-row">
+      <button class="action-btn" onclick="copySummary()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        Copy
+      </button>
+      <button class="action-btn" onclick="printPage()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+        Print
+      </button>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-card primary">
+        <div class="stat-icon">🧠</div>
+        <div class="stat-label">Exact age</div>
+        <div class="stat-value" id="ageYMD">—</div>
+        <div class="stat-sub" id="ageHint">—</div>
+      </div>
+      <div class="stat-card green">
+        <div class="stat-icon">📆</div>
+        <div class="stat-label">Total days</div>
+        <div class="stat-value" id="totalDays">—</div>
+        <div class="stat-sub" id="weeksDays">—</div>
+      </div>
+      <div class="stat-card purple">
+        <div class="stat-icon">⏱️</div>
+        <div class="stat-label">Total time</div>
+        <div class="stat-value" id="totalHours">—</div>
+        <div class="stat-sub" id="totalMinutes">—</div>
+      </div>
+    </div>
+
+    <div class="table-card">
+      <div class="table-head-row">
+        <div class="table-head-title">Breakdown</div>
+      </div>
+      <div class="table-scroll">
+        <table>
+          <tbody id="breakdownBody">
+            <tr><td>Total months</td><td>—</td></tr>
+            <tr><td>Total weeks</td><td>—</td></tr>
+            <tr><td>Total minutes</td><td>—</td></tr>
+            <tr><td>Total seconds</td><td>—</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- nav.js injects footer here -->
+  </div>
+
+  <div id="toast"><span style="color:var(--green);font-size:15px;">✓</span> <span id="toast-msg">Copied!</span></div>
+
+<script>
+  // -------------------------
+  // Utilities (date-safe)
+  // -------------------------
+  function pad2(n){ return String(n).padStart(2,'0'); }
+
+  // Parse YYYY-MM-DD from <input type=date> into a local-time Date
+  function parseLocalDate(iso) {
+    if (!iso) return null;
+    const m = /^([0-9]{4})-([0-9]{2})-([0-9]{2})$/.exec(iso);
+    if (!m) return null;
+    const y = +m[1], mo = +m[2] - 1, d = +m[3];
+    const dt = new Date(y, mo, d);
+    // Validate
+    if (dt.getFullYear() !== y || dt.getMonth() !== mo || dt.getDate() !== d) return null;
+    // Normalize to midday to reduce DST edge cases when converting to UTC ms
+    dt.setHours(12,0,0,0);
+    return dt;
+  }
+
+  function utcMiddayMs(d){
+    return Date.UTC(d.getFullYear(), d.getMonth(), d.getDate(), 12, 0, 0, 0);
+  }
+
+  function daysBetween(start, end) {
+    // Returns integer day difference: end - start
+    const ms = utcMiddayMs(end) - utcMiddayMs(start);
+    return Math.round(ms / 86400000);
+  }
+
+  function isLeapYear(y){ return (y % 4 === 0 && y % 100 !== 0) || (y % 400 === 0); }
+  function lastDayOfMonth(y, m){ return new Date(y, m + 1, 0).getDate(); }
+
+  // Add months with day clamping (e.g., Jan 31 + 1 month => Feb 28/29)
+  function addMonthsClamped(d, months){
+    const y = d.getFullYear();
+    const m = d.getMonth();
+    const day = d.getDate();
+    let nm = m + months;
+    let ny = y + Math.floor(nm / 12);
+    nm = ((nm % 12) + 12) % 12;
+    const maxD = lastDayOfMonth(ny, nm);
+    const nd = Math.min(day, maxD);
+    const out = new Date(ny, nm, nd);
+    out.setHours(12,0,0,0);
+    return out;
+  }
+
+  // Robust calendar difference in Y/M/D using anchoring
+  function diffYMD(start, end){
+    // assumes start <= end (by date)
+    let years = end.getFullYear() - start.getFullYear();
+    let anchor = addMonthsClamped(start, years * 12);
+    if (utcMiddayMs(anchor) > utcMiddayMs(end)) {
+      years -= 1;
+      anchor = addMonthsClamped(start, years * 12);
+    }
+
+    let months = (end.getFullYear() - anchor.getFullYear()) * 12 + (end.getMonth() - anchor.getMonth());
+    let anchor2 = addMonthsClamped(anchor, months);
+    if (utcMiddayMs(anchor2) > utcMiddayMs(end)) {
+      months -= 1;
+      anchor2 = addMonthsClamped(anchor, months);
+    }
+
+    const days = Math.max(0, daysBetween(anchor2, end));
+    return { years, months, days };
+  }
+
+  function fmtInt(n){ return n.toLocaleString('en-US'); }
+
+  function fmtDateLong(d){
+    return new Intl.DateTimeFormat('en-US', { dateStyle:'full' }).format(d);
+  }
+
+  function weekdayName(d){
+    return new Intl.DateTimeFormat('en-US', { weekday:'long' }).format(d);
+  }
+
+  function nextBirthday(dob, asof, treatLeapAsFeb28) {
+    const y = asof.getFullYear();
+    let m = dob.getMonth();
+    let da = dob.getDate();
+
+    // Leap day handling
+    if (m === 1 && da === 29 && treatLeapAsFeb28 && !isLeapYear(y)) {
+      da = 28;
+    }
+
+    let nb = new Date(y, m, da);
+    nb.setHours(12,0,0,0);
+
+    // If birthday already passed this year, move to next year
+    if (utcMiddayMs(nb) < utcMiddayMs(asof)) {
+      let ny = y + 1;
+      let nda = dob.getDate();
+      if (m === 1 && dob.getDate() === 29 && treatLeapAsFeb28 && !isLeapYear(ny)) nda = 28;
+      nb = new Date(ny, m, nda);
+      nb.setHours(12,0,0,0);
+    }
+    return nb;
+  }
+
+  function calculate() {
+    const dob = parseLocalDate(document.getElementById('dob').value);
+    const asofRaw = parseLocalDate(document.getElementById('asof').value);
+    const treatLeap = document.getElementById('treatLeap').checked;
+
+    const note = document.getElementById('inputNote');
+
+    if (!dob) {
+      note.innerHTML = 'Enter a <b>date of birth</b> to calculate.';
+      renderEmpty();
+      return;
+    }
+
+    const today = new Date();
+    today.setHours(12,0,0,0);
+    const asof = asofRaw || today;
+
+    // Enforce asof >= dob, otherwise we swap and indicate
+    let start = dob, end = asof, swapped = false;
+    if (utcMiddayMs(end) < utcMiddayMs(start)) {
+      swapped = true;
+      start = asof;
+      end = dob;
+    }
+
+    const ymd = diffYMD(start, end);
+    const dTotal = Math.max(0, daysBetween(start, end));
+
+    const hours = dTotal * 24;
+    const minutes = hours * 60;
+    const seconds = minutes * 60;
+
+    const totalMonths = (end.getFullYear() - start.getFullYear()) * 12 + (end.getMonth() - start.getMonth());
+    const adjMonths = (end.getDate() < start.getDate()) ? totalMonths - 1 : totalMonths;
+
+    // Facts
+    const nb = nextBirthday(dob, asof, treatLeap);
+    const nbDays = Math.max(0, daysBetween(asof, nb));
+
+    const facts = [
+      ['Born on', fmtDateLong(dob)],
+      ['Day of week', weekdayName(dob)],
+      ['Next birthday', fmtDateLong(nb)],
+      ['Countdown', nbDays === 0 ? 'Today 🎉' : fmtInt(nbDays) + ' day' + (nbDays===1?'':'s')]
+    ];
+
+    const factsBody = document.getElementById('factsBody');
+    factsBody.innerHTML = facts.map(r => `<tr><td>${r[0]}</td><td class="td-green">${r[1]}</td></tr>`).join('');
+
+    // Stats
+    document.getElementById('ageYMD').textContent = `${ymd.years}y ${ymd.months}m ${ymd.days}d`;
+    document.getElementById('ageHint').textContent = swapped ? 'Note: As-of date is before DOB (showing absolute difference)' : `As of ${new Intl.DateTimeFormat('en-US', { dateStyle:'medium' }).format(asof)}`;
+
+    document.getElementById('totalDays').textContent = fmtInt(dTotal);
+    document.getElementById('weeksDays').textContent = `${fmtInt(Math.floor(dTotal/7))} weeks + ${fmtInt(dTotal%7)} days`;
+
+    document.getElementById('totalHours').textContent = fmtInt(hours);
+    document.getElementById('totalMinutes').textContent = `${fmtInt(minutes)} minutes`;
+
+    // Breakdown
+    const b = [
+      ['Total months', fmtInt(Math.max(0, adjMonths))],
+      ['Total weeks', fmtInt(Math.floor(dTotal/7))],
+      ['Total minutes', fmtInt(minutes)],
+      ['Total seconds', fmtInt(seconds)]
+    ];
+    document.getElementById('breakdownBody').innerHTML = b.map(r => `<tr><td>${r[0]}</td><td class="td-green">${r[1]}</td></tr>`).join('');
+
+    note.innerHTML = swapped ? 'Heads up: your <b>as-of</b> date is earlier than DOB — showing the absolute difference.' : 'All calculations run <b>locally</b> in your browser.';
+
+    // cache summary for copy
+    window.__summary = {
+      dob: dob,
+      asof: asof,
+      exact: ymd,
+      totalDays: dTotal,
+      totalMonths: Math.max(0, adjMonths),
+      nextBirthday: nb,
+      countdownDays: nbDays,
+      swapped: swapped
+    };
+  }
+
+  function renderEmpty(){
+    document.getElementById('factsBody').innerHTML = `
+      <tr><td>Born on</td><td>—</td></tr>
+      <tr><td>Day of week</td><td>—</td></tr>
+      <tr><td>Next birthday</td><td>—</td></tr>
+      <tr><td>Countdown</td><td>—</td></tr>
+    `;
+    document.getElementById('ageYMD').textContent = '—';
+    document.getElementById('ageHint').textContent = '—';
+    document.getElementById('totalDays').textContent = '—';
+    document.getElementById('weeksDays').textContent = '—';
+    document.getElementById('totalHours').textContent = '—';
+    document.getElementById('totalMinutes').textContent = '—';
+    document.getElementById('breakdownBody').innerHTML = `
+      <tr><td>Total months</td><td>—</td></tr>
+      <tr><td>Total weeks</td><td>—</td></tr>
+      <tr><td>Total minutes</td><td>—</td></tr>
+      <tr><td>Total seconds</td><td>—</td></tr>
+    `;
+    window.__summary = null;
+  }
+
+  function showToast(msg){
+    const toast = document.getElementById('toast');
+    document.getElementById('toast-msg').textContent = msg;
+    toast.style.opacity = '1'; toast.style.transform = 'translateY(0)';
+    setTimeout(() => { toast.style.opacity = '0'; toast.style.transform = 'translateY(8px)'; }, 2200);
+  }
+
+  function copySummary(){
+    if (!window.__summary){ showToast('Nothing to copy'); return; }
+    const s = window.__summary;
+    const lines = [
+      'CalcNova · Age Calculator',
+      `DOB: ${s.dob.toISOString().slice(0,10)}`,
+      `As of: ${s.asof.toISOString().slice(0,10)}`,
+      `Exact age: ${s.exact.years}y ${s.exact.months}m ${s.exact.days}d`,
+      `Total days: ${s.totalDays}`,
+      `Total months: ${s.totalMonths}`,
+      `Next birthday: ${s.nextBirthday.toISOString().slice(0,10)} (${s.countdownDays} days)`
+    ];
+    navigator.clipboard.writeText(lines.join('\n')).then(() => showToast('Copied summary!')).catch(() => showToast('Copy failed'));
+  }
+
+  function printPage(){ window.print(); }
+
+  // Inputs
+  ['dob','asof','treatLeap'].forEach(id => {
+    document.getElementById(id).addEventListener('input', calculate);
+    document.getElementById(id).addEventListener('change', calculate);
+  });
+
+  // Default: set as-of to today (but user can clear)
+  (function init(){
+    const t = new Date();
+    const iso = `${t.getFullYear()}-${pad2(t.getMonth()+1)}-${pad2(t.getDate())}`;
+    document.getElementById('asof').value = iso;
+    calculate();
+  })();
+</script>
+
+<script>
+  window.CALCNOVA_PAGE = {
+    id: 'age-calculator',
+    disclaimer: 'This tool is for informational purposes only. Results depend on the dates provided and your browser\'s locale/timezone settings.'
+  };
+</script>
+<script src="shared/nav.js"></script>
+
+</body>
+</html>
