@@ -3,21 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ZonePal · World Time Converter</title>
+<title>CalcNova · World Time Converter</title>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared/nav.css">
 <style>
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 :root {
-  --bg: #f0f2f7; --surface: #ffffff; --border: #e2e6ef;
-  --text-primary: #0f1623; --text-secondary: #5a6478; --text-muted: #9ba3b5;
-  --font: 'Plus Jakarta Sans', sans-serif; --mono: 'JetBrains Mono', monospace;
   --now-color: #f43f5e; --overlap-color: rgba(16,185,129,0.18);
 }
-body.dark {
-  --bg: #0d1117; --surface: #161b22; --border: #30363d;
-  --text-primary: #e6edf3; --text-secondary: #8b949e; --text-muted: #484f58;
-  --overlap-color: rgba(16,185,129,0.22);
-}
+body.dark { --overlap-color: rgba(16,185,129,0.22); }
 body { font-family: var(--font); background: var(--bg); min-height: 100vh; color: var(--text-primary); transition: background .3s, color .3s; }
 body::before { content:''; position:fixed; inset:0; pointer-events:none; z-index:0; background: radial-gradient(ellipse 800px 600px at 10% 0%, rgba(110,231,183,.12) 0%, transparent 60%), radial-gradient(ellipse 600px 500px at 90% 100%, rgba(167,139,250,.12) 0%, transparent 60%); transition: opacity .3s; }
 body.dark::before { opacity: .4; }
@@ -233,30 +226,12 @@ body.dark .tile-night     { background:#1e1535; color:#a78bfa; }
 
 /* TOAST */
 #saveToast { position:fixed; top:20px; right:20px; z-index:200; background:#0f1623; color:white; padding:10px 18px; border-radius:100px; font-size:12px; font-weight:600; font-family:var(--mono); display:flex; align-items:center; gap:7px; box-shadow:0 8px 24px rgba(0,0,0,.25); opacity:0; transform:translateY(-8px); transition:opacity .25s,transform .25s; pointer-events:none; }
+
 </style>
 </head>
 <body>
 <div class="app">
-  <header>
-    <div class="logo">
-      <div class="logo-mark">⏱</div>
-      <div>
-        <div class="logo-text">ZonePal</div>
-        <div class="logo-sub">World Time Converter</div>
-      </div>
-    </div>
-    <div class="header-right">
-      <div class="date-nav">
-        <button onclick="shiftDay(-1)">‹</button>
-        <div class="date-display" id="dateDisplay"></div>
-        <button onclick="shiftDay(1)">›</button>
-        <button onclick="shiftDay(0)" style="font-size:11px;font-weight:700;color:#10b981;">Today</button>
-      </div>
-      <button class="icon-btn" id="darkBtn" onclick="toggleDark()" title="Toggle dark mode">🌙</button>
-      <a href="TimeConvertor.html" class="icon-btn" title="Switch to vertical view">⊞</a>
-      <button class="add-btn" onclick="openModal()">＋ Add City</button>
-    </div>
-  </header>
+  <!-- nav.js injects header here -->
 
   <!-- Selected time panel -->
   <div class="sel-panel" id="selPanel">
@@ -385,7 +360,7 @@ const CELL_W = 46, LABEL_W = 200;
 
 let activeCities = [], homeIdx = 0, selectedHour = null;
 let activeDate = new Date(); activeDate.setHours(0,0,0,0);
-let darkMode = false, features = { now: true, overlap: true };
+let features = { now: true, overlap: true };
 let dragActive = false, saveToastTimer = null, liveTimer = null;
 
 // ── HELPERS ──
@@ -609,14 +584,6 @@ function shiftDay(d) {
   buildGrid();
 }
 
-// ── DARK MODE ──
-function toggleDark() {
-  darkMode=!darkMode;
-  document.body.classList.toggle('dark',darkMode);
-  document.getElementById('darkBtn').textContent=darkMode?'☀️':'🌙';
-  try{localStorage.setItem('zonepal_tl_dark',darkMode?'1':'0');}catch(e){}
-}
-
 // ── FEATURE TOGGLES ──
 function toggleFeature(f) {
   features[f]=!features[f];
@@ -782,12 +749,39 @@ activeCities = loadCities() || [
   CITIES_DB.find(c=>c.name==='Tokyo'),
 ];
 try{ homeIdx=Math.min(parseInt(localStorage.getItem('zonepal_tl_home')||'0',10)||0,activeCities.length-1); }catch(e){homeIdx=0;}
-try{ if(localStorage.getItem('zonepal_tl_dark')==='1') toggleDark(); }catch(e){}
 
 updateDateDisplay();
 buildGrid();
 startLive();
 setTimeout(scrollToNow, 100);
+</script>
+
+<script>
+  window.CALCNOVA_PAGE = {
+    id: 'time-converter',
+    extraHeader: '<div class="date-nav"><button onclick="shiftDay(-1)">&#8249;</button><div class="date-display" id="dateDisplay"></div><button onclick="shiftDay(1)">&#8250;</button><button onclick="shiftDay(0)" style="font-size:11px;font-weight:700;color:#10b981;">Today</button></div>'
+  };
+</script>
+<script src="shared/nav.js"></script>
+<script>
+  // Append page-specific buttons to the shared header
+  (function() {
+    var hr = document.getElementById('cn-header-right');
+    if (hr) {
+      var viewBtn = document.createElement('a');
+      viewBtn.href = 'TimeConvertor.html';
+      viewBtn.className = 'icon-btn';
+      viewBtn.title = 'Switch to vertical view';
+      viewBtn.textContent = '⊞';
+      hr.appendChild(viewBtn);
+
+      var addBtn = document.createElement('button');
+      addBtn.className = 'add-btn';
+      addBtn.innerHTML = '&#xff0b; Add City';
+      addBtn.onclick = function() { openModal(); };
+      hr.appendChild(addBtn);
+    }
+  })();
 </script>
 </body>
 </html>

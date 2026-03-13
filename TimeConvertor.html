@@ -3,39 +3,22 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ZonePal · World Time Converter</title>
+<title>CalcNova · World Time Converter</title>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared/nav.css">
 <style>
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 :root {
-  --bg: #f0f2f7; --surface: #ffffff; --border: #e2e6ef;
-  --text-primary: #0f1623; --text-secondary: #5a6478; --text-muted: #9ba3b5;
-  --font: 'Plus Jakarta Sans', sans-serif; --mono: 'JetBrains Mono', monospace;
+  /* Page-specific tokens */
   --now-color: #f43f5e; --overlap-color: rgba(16,185,129,0.18); --day-border: #6366f1;
 }
-body.dark {
-  --bg: #0d1117; --surface: #161b22; --border: #30363d;
-  --text-primary: #e6edf3; --text-secondary: #8b949e; --text-muted: #484f58;
-  --overlap-color: rgba(16,185,129,0.22);
-}
-body { font-family: var(--font); background: var(--bg); min-height: 100vh; color: var(--text-primary); transition: background .3s, color .3s; }
-body::before { content:''; position:fixed; inset:0; pointer-events:none; z-index:0; background: radial-gradient(ellipse 800px 600px at 10% 0%, rgba(110,231,183,.12) 0%, transparent 60%), radial-gradient(ellipse 600px 500px at 90% 100%, rgba(167,139,250,.12) 0%, transparent 60%); transition: opacity .3s; }
-body.dark::before { opacity: .4; }
+body.dark { --overlap-color: rgba(16,185,129,0.22); }
 .app { position:relative; z-index:1; max-width:1200px; margin:0 auto; padding:0 16px 60px; }
 
-/* HEADER */
-header { padding:24px 0 20px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; }
-.logo { display:flex; align-items:center; gap:10px; }
-.logo-mark { width:38px; height:38px; background:linear-gradient(135deg,#10b981,#6366f1); border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:20px; box-shadow:0 4px 12px rgba(99,102,241,.3); }
-.logo-text { font-size:22px; font-weight:800; letter-spacing:-.5px; background:linear-gradient(135deg,#10b981,#6366f1); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
-.logo-sub { font-size:11px; color:var(--text-muted); letter-spacing:2px; text-transform:uppercase; font-weight:500; margin-top:1px; }
-.header-right { display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+/* Date nav (TimeConvertor-specific header element) */
 .date-nav { display:flex; align-items:center; gap:4px; background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:6px 10px; }
 .date-nav button { background:none; border:none; color:var(--text-secondary); cursor:pointer; width:28px; height:28px; border-radius:7px; font-size:14px; display:flex; align-items:center; justify-content:center; transition:background .15s,color .15s; }
 .date-nav button:hover { background:var(--bg); color:var(--text-primary); }
 .date-display { font-size:13px; font-weight:600; color:var(--text-primary); padding:0 6px; min-width:130px; text-align:center; font-family:var(--mono); }
-.icon-btn { background:var(--surface); border:1px solid var(--border); border-radius:10px; color:var(--text-secondary); font-size:16px; width:38px; height:38px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all .15s; }
-.icon-btn:hover { border-color:#10b981; color:#10b981; }
 .add-btn { display:flex; align-items:center; gap:6px; background:linear-gradient(135deg,#10b981,#6366f1); border:none; border-radius:12px; color:white; font-family:var(--font); font-size:13px; font-weight:700; padding:10px 18px; cursor:pointer; transition:transform .15s,box-shadow .15s; box-shadow:0 4px 14px rgba(99,102,241,.3); }
 .add-btn:hover { transform:translateY(-1px); box-shadow:0 6px 20px rgba(99,102,241,.4); }
 
@@ -207,29 +190,12 @@ body.dark .tile-night     { background:#1e1535; color:#a78bfa; }
 
 /* TOAST */
 #saveToast { position:fixed; top:20px; right:20px; z-index:200; background:#0f1623; color:white; padding:10px 18px; border-radius:100px; font-size:12px; font-weight:600; font-family:var(--mono); display:flex; align-items:center; gap:7px; box-shadow:0 8px 24px rgba(0,0,0,.25); opacity:0; transform:translateY(-8px); transition:opacity .25s,transform .25s; pointer-events:none; }
+
 </style>
 </head>
 <body>
 <div class="app">
-  <header>
-    <div class="logo">
-      <div class="logo-mark">🌐</div>
-      <div>
-        <div class="logo-text">ZonePal</div>
-        <div class="logo-sub">World Time Converter</div>
-      </div>
-    </div>
-    <div class="header-right">
-      <div class="date-nav">
-        <button onclick="shiftDay(-1)">‹</button>
-        <div class="date-display" id="dateDisplay"></div>
-        <button onclick="shiftDay(1)">›</button>
-        <button onclick="shiftDay(0)" style="font-size:11px;font-weight:700;color:#10b981;">Today</button>
-      </div>
-      <button class="icon-btn" id="darkBtn" onclick="toggleDark()" title="Toggle dark mode">🌙</button>
-      <button class="add-btn" onclick="openModal()">＋ Add City</button>
-    </div>
-  </header>
+  <!-- nav.js injects header here -->
 
   <div class="date-strip" id="dateStrip"></div>
 
@@ -340,13 +306,12 @@ const WORK_START = 9, WORK_END = 17;
 let activeDate = new Date(); activeDate.setHours(0,0,0,0);
 let activeCities, homeIdx, saveToastTimer;
 let features = { now:true, day:true, overlap:true };
-let darkMode = false;
 
 // ── PERSIST ──
 function saveCities() {
   try {
-    localStorage.setItem('zonepal_cities', JSON.stringify(activeCities.map(c=>({name:c.name,tz:c.tz}))));
-    localStorage.setItem('zonepal_home', String(homeIdx));
+    localStorage.setItem('cn_cities', JSON.stringify(activeCities.map(c=>({name:c.name,tz:c.tz}))));
+    localStorage.setItem('cn_home', String(homeIdx));
   } catch(e){}
   const t = document.getElementById('saveToast');
   t.style.opacity='1'; t.style.transform='translateY(0)';
@@ -355,7 +320,7 @@ function saveCities() {
 }
 function loadCities() {
   try {
-    const raw = localStorage.getItem('zonepal_cities');
+    const raw = localStorage.getItem('cn_cities');
     if (!raw) return null;
     const r = JSON.parse(raw).map(s=>CITIES_DB.find(c=>c.name===s.name&&c.tz===s.tz)).filter(Boolean);
     return r.length ? r : null;
@@ -366,16 +331,7 @@ activeCities = loadCities() || [
   CITIES_DB.find(c=>c.name==='London'),
   CITIES_DB.find(c=>c.name==='Tokyo'),
 ];
-try { homeIdx = Math.min(parseInt(localStorage.getItem('zonepal_home')||'0',10)||0, activeCities.length-1); } catch(e){ homeIdx=0; }
-
-// ── DARK MODE ──
-function toggleDark() {
-  darkMode = !darkMode;
-  document.body.classList.toggle('dark', darkMode);
-  document.getElementById('darkBtn').textContent = darkMode ? '☀️' : '🌙';
-  try { localStorage.setItem('zonepal_dark', darkMode?'1':'0'); } catch(e){}
-}
-try { if (localStorage.getItem('zonepal_dark')==='1') toggleDark(); } catch(e){}
+try { homeIdx = Math.min(parseInt(localStorage.getItem('cn_home')||'0',10)||0, activeCities.length-1); } catch(e){ homeIdx=0; }
 
 // ── FEATURE TOGGLES ──
 function toggleFeature(f) {
@@ -730,6 +686,28 @@ document.addEventListener('keydown', e => { if(e.key==='Escape') closeModal(); }
 renderAll();
 setInterval(tickClocks, 1000);
 setInterval(buildGrid, 60000);
+</script>
+
+<script>
+  window.CALCNOVA_PAGE = {
+    id: 'time-converter',
+    // Date nav is injected into the header by nav.js, then the Add City button is appended below
+    extraHeader: '<div class="date-nav"><button onclick="shiftDay(-1)">&#8249;</button><div class="date-display" id="dateDisplay"></div><button onclick="shiftDay(1)">&#8250;</button><button onclick="shiftDay(0)" style="font-size:11px;font-weight:700;color:#10b981;">Today</button></div>'
+  };
+</script>
+<script src="shared/nav.js"></script>
+<script>
+  // Append the "Add City" button to the right side of the shared header
+  (function() {
+    var hr = document.getElementById('cn-header-right');
+    if (hr) {
+      var btn = document.createElement('button');
+      btn.className = 'add-btn';
+      btn.innerHTML = '&#xff0b; Add City';
+      btn.onclick = function() { openModal(); };
+      hr.appendChild(btn);
+    }
+  })();
 </script>
 </body>
 </html>
