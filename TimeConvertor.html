@@ -4,81 +4,64 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CalcNova · World Time Converter</title>
+<meta name="description" content="Visually compare time zones, find meeting overlaps, and plan across cities. Toggle between column and timeline views.">
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="shared/nav.css">
 <style>
-:root {
-  /* Page-specific tokens */
-  --now-color: #f43f5e; --overlap-color: rgba(16,185,129,0.18); --day-border: #6366f1;
-}
-body.dark { --overlap-color: rgba(16,185,129,0.22); }
-.app { position:relative; z-index:1; max-width:1200px; margin:0 auto; padding:0 16px 60px; }
+:root { --now-color:#f43f5e; --overlap-color:rgba(16,185,129,.18); --day-border:#6366f1; }
+body.dark { --overlap-color:rgba(16,185,129,.22); }
+.app { position:relative; z-index:1; max-width:1400px; margin:0 auto; padding:0 16px 60px; }
 
-/* Date nav (TimeConvertor-specific header element) */
-.date-nav { display:flex; align-items:center; gap:4px; background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:6px 10px; }
-.date-nav button { background:none; border:none; color:var(--text-secondary); cursor:pointer; width:28px; height:28px; border-radius:7px; font-size:14px; display:flex; align-items:center; justify-content:center; transition:background .15s,color .15s; }
-.date-nav button:hover { background:var(--bg); color:var(--text-primary); }
-.date-display { font-size:13px; font-weight:600; color:var(--text-primary); padding:0 6px; min-width:130px; text-align:center; font-family:var(--mono); }
-.add-btn { display:flex; align-items:center; gap:6px; background:linear-gradient(135deg,#10b981,#6366f1); border:none; border-radius:12px; color:white; font-family:var(--font); font-size:13px; font-weight:700; padding:10px 18px; cursor:pointer; transition:transform .15s,box-shadow .15s; box-shadow:0 4px 14px rgba(99,102,241,.3); }
+/* VIEW TOGGLE BUTTON */
+.view-toggle-btn { background:var(--surface); border:1px solid var(--border); border-radius:10px; color:var(--text-secondary); font-size:18px; width:38px; height:38px; min-width:38px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all .15s; font-family:var(--font); }
+.view-toggle-btn:hover { border-color:var(--green); color:var(--green); }
+
+/* ADD CITY BTN */
+.add-btn { display:flex; align-items:center; gap:6px; background:linear-gradient(135deg,#10b981,#6366f1); border:none; border-radius:12px; color:white; font-family:var(--font); font-size:13px; font-weight:700; padding:9px 16px; cursor:pointer; transition:transform .15s,box-shadow .15s; box-shadow:0 4px 14px rgba(99,102,241,.25); white-space:nowrap; min-height:38px; }
 .add-btn:hover { transform:translateY(-1px); box-shadow:0 6px 20px rgba(99,102,241,.4); }
 
+/* DATE NAV (inside extraHeader) */
+.date-nav-wrap { display:flex; align-items:center; gap:3px; }
+.date-nav-wrap .icon-btn { width:30px; height:30px; min-width:30px; font-size:20px; }
+.today-btn { font-size:11px !important; font-weight:800 !important; color:#10b981 !important; width:auto !important; padding:0 8px !important; }
+
 /* DATE STRIP */
-.date-strip { display:flex; gap:6px; margin-bottom:20px; overflow-x:auto; padding-bottom:4px; scrollbar-width:none; }
+.date-strip { display:flex; gap:6px; margin-bottom:18px; overflow-x:auto; padding-bottom:4px; scrollbar-width:none; }
 .date-strip::-webkit-scrollbar { display:none; }
-.date-chip { flex-shrink:0; background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:8px 14px; text-align:center; cursor:pointer; transition:all .15s; }
+.date-chip { flex-shrink:0; background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:8px 14px; text-align:center; cursor:pointer; transition:all .15s; user-select:none; }
 .date-chip:hover { border-color:#10b981; }
 .date-chip.active { background:linear-gradient(135deg,#10b981,#059669); border-color:transparent; color:white; box-shadow:0 4px 12px rgba(16,185,129,.35); }
 .date-chip .chip-day { font-size:10px; font-weight:600; letter-spacing:1.5px; text-transform:uppercase; color:var(--text-muted); margin-bottom:2px; }
 .date-chip.active .chip-day { color:rgba(255,255,255,.75); }
 .date-chip .chip-num { font-size:18px; font-weight:800; line-height:1; font-family:var(--mono); }
 
-/* CONTROLS BAR */
-.controls-bar { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; margin-bottom:20px; }
-.legend { display:flex; flex-wrap:wrap; gap:8px; padding:12px 16px; background:var(--surface); border-radius:14px; border:1px solid var(--border); flex:1; }
-.legend-item { display:flex; align-items:center; gap:6px; font-size:11px; font-weight:600; color:var(--text-secondary); }
-.legend-dot { width:12px; height:12px; border-radius:3px; }
-.toggle-pills { display:flex; gap:6px; }
-.toggle-pill { display:flex; align-items:center; gap:5px; background:var(--surface); border:1px solid var(--border); border-radius:100px; padding:6px 12px; font-size:11px; font-weight:700; cursor:pointer; transition:all .15s; color:var(--text-secondary); white-space:nowrap; }
+/* LEGEND + TOGGLE PILLS */
+.controls-bar { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; margin-bottom:18px; }
+.bottom-bar { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; margin-top:14px; }
+.legend { display:flex; flex-wrap:wrap; gap:7px; padding:10px 14px; background:var(--surface); border-radius:13px; border:1px solid var(--border); flex:1; }
+.legend-item { display:flex; align-items:center; gap:5px; font-size:11px; font-weight:600; color:var(--text-secondary); }
+.legend-dot { width:11px; height:11px; border-radius:3px; }
+.toggle-pills { display:flex; gap:6px; flex-shrink:0; }
+.toggle-pill { display:flex; align-items:center; gap:5px; background:var(--surface); border:1px solid var(--border); border-radius:100px; padding:6px 12px; font-size:11px; font-weight:700; cursor:pointer; transition:all .15s; color:var(--text-secondary); white-space:nowrap; user-select:none; }
 .toggle-pill:hover { border-color:#10b981; color:#10b981; }
 .toggle-pill.on { background:#10b981; border-color:#10b981; color:white; }
 .toggle-pill .dot { width:7px; height:7px; border-radius:50%; background:currentColor; opacity:.7; }
 
-/* GRID */
+/* ═══════════════════════════════════
+   VERTICAL VIEW
+   ═══════════════════════════════════ */
 .grid-outer { overflow-x:auto; padding-bottom:8px; }
 .grid-outer::-webkit-scrollbar { height:6px; }
 .grid-outer::-webkit-scrollbar-track { background:var(--border); border-radius:3px; }
 .grid-outer::-webkit-scrollbar-thumb { background:#c4c9d6; border-radius:3px; }
-
-.time-grid {
-  display: inline-grid;
-  grid-template-rows: auto repeat(24, 34px);
-  gap: 0;
-  column-gap: 8px;
-  min-width: max-content;
-}
-
-.col-header-cell {
-  width: 160px;
-  min-width: 160px;
-}
-
-.col-header {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 16px 16px 0 0;
-  padding: 16px 14px 14px;
-  position: relative;
-  cursor: grab;
-  user-select: none;
-  height: 100%;
-}
-.col-header:active { cursor: grabbing; }
-.home-col .col-header { background: linear-gradient(160deg,#0f2027 0%,#1a2a3a 100%); border-color: rgba(16,185,129,.4); }
-
+.time-grid { display:inline-grid; grid-template-rows:auto repeat(24,34px); gap:0; column-gap:8px; min-width:max-content; }
+.col-header-cell { width:160px; min-width:160px; }
+.col-header { background:var(--surface); border:1px solid var(--border); border-radius:16px 16px 0 0; padding:16px 14px 14px; position:relative; cursor:grab; user-select:none; height:100%; }
+.col-header:active { cursor:grabbing; }
+.home-col .col-header { background:linear-gradient(160deg,#0f2027,#1a2a3a); border-color:rgba(16,185,129,.4); }
 .drag-handle { position:absolute; top:10px; left:10px; display:flex; flex-direction:column; gap:2px; opacity:0; transition:opacity .15s; cursor:grab; padding:4px; }
 .col-header-cell:hover .drag-handle { opacity:.5; }
 .drag-handle span { display:block; width:14px; height:2px; border-radius:1px; background:#999; }
-
 .home-badge { display:inline-flex; align-items:center; gap:4px; background:linear-gradient(135deg,#10b981,#059669); color:white; font-size:9px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; padding:3px 8px; border-radius:100px; margin-bottom:10px; }
 .col-accent { height:3px; border-radius:2px; margin-bottom:12px; }
 .col-city-name { font-size:15px; font-weight:800; letter-spacing:-.3px; line-height:1.1; margin-bottom:2px; }
@@ -88,58 +71,16 @@ body.dark { --overlap-color: rgba(16,185,129,0.22); }
 .col-current-time { font-family:var(--mono); font-size:20px; font-weight:700; letter-spacing:-1px; line-height:1; margin-bottom:2px; }
 .col-offset { font-size:10px; color:var(--text-muted); font-family:var(--mono); font-weight:500; }
 .home-col .col-offset { color:rgba(255,255,255,.35); }
-
 .col-remove { position:absolute; top:10px; right:10px; width:22px; height:22px; border-radius:6px; border:none; background:none; color:var(--text-muted); font-size:14px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:background .15s,color .15s; opacity:0; }
 .col-header-cell:hover .col-remove { opacity:1; }
 .col-remove:hover { background:#fee2e2; color:#ef4444; }
-
-/* TILES */
-.hour-tile {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 0 14px;
-  cursor: pointer; user-select: none;
-  height: 34px;
-  border-left: 1px solid rgba(0,0,0,.04);
-  border-right: 1px solid rgba(0,0,0,.04);
-  position: relative;
-  transition: filter .1s;
-}
-.hour-tile.first-tile { border-top: 1px solid rgba(0,0,0,.04); }
-.hour-tile.last-tile  { border-bottom: 1px solid rgba(0,0,0,.04); border-radius: 0 0 14px 14px; }
-.tile-time   { font-family:var(--mono); font-size:13px; font-weight:700; letter-spacing:-.3px; position:relative; z-index:1; }
+.hour-tile { display:flex; align-items:center; justify-content:space-between; padding:0 14px; cursor:pointer; user-select:none; height:34px; border-left:1px solid rgba(0,0,0,.04); border-right:1px solid rgba(0,0,0,.04); position:relative; transition:filter .1s; }
+.hour-tile.first-tile { border-top:1px solid rgba(0,0,0,.04); }
+.hour-tile.last-tile { border-bottom:1px solid rgba(0,0,0,.04); border-radius:0 0 14px 14px; }
+.tile-time { font-family:var(--mono); font-size:13px; font-weight:700; letter-spacing:-.3px; position:relative; z-index:1; }
 .tile-period { font-size:9px; font-weight:700; letter-spacing:1px; text-transform:uppercase; opacity:.6; font-family:var(--mono); position:relative; z-index:1; }
-.hour-tile.highlighted { filter: brightness(.86) saturate(1.4); }
-.hour-tile.selected-range { outline: 2px solid rgba(0,0,0,.3); outline-offset: -2px; }
-
-.tile-sleep     { background:#dde1ea; color:#7a8298; }
-.tile-early     { background:#bfdbfe; color:#1d4ed8; }
-.tile-morning   { background:#a7f3d0; color:#065f46; }
-.tile-work      { background:#6ee7b7; color:#064e3b; }
-.tile-afternoon { background:#fde68a; color:#78350f; }
-.tile-evening   { background:#fca5a5; color:#7f1d1d; }
-.tile-night     { background:#c4b5fd; color:#4c1d95; }
-
-body.dark .tile-sleep     { background:#1e2330; color:#6b7280; }
-body.dark .tile-early     { background:#1e2d45; color:#60a5fa; }
-body.dark .tile-morning   { background:#14312b; color:#34d399; }
-body.dark .tile-work      { background:#0d3321; color:#6ee7b7; }
-body.dark .tile-afternoon { background:#322a0e; color:#fcd34d; }
-body.dark .tile-evening   { background:#321515; color:#fca5a5; }
-body.dark .tile-night     { background:#1e1535; color:#a78bfa; }
-
-/* NOW LINE */
-.now-tile::before { content:''; position:absolute; inset:0; background:rgba(244,63,94,.12); border:2px solid rgba(244,63,94,.5); pointer-events:none; z-index:0; }
-.now-tile::after  { content:'▶ NOW'; position:absolute; top:50%; transform:translateY(-50%); right:8px; font-size:9px; font-weight:800; letter-spacing:1px; color:#f43f5e; font-family:var(--mono); opacity:.9; pointer-events:none; z-index:2; }
-
-/* DAY BOUNDARY */
-.day-boundary-tile::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:var(--day-border); z-index:3; border-radius:2px 2px 0 0; opacity:.8; }
-.day-label { position:absolute; top:2px; right:8px; font-size:8px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; color:var(--day-border); font-family:var(--mono); z-index:4; pointer-events:none; }
-
-/* OVERLAP */
-.overlap-tile::after { content:''; position:absolute; inset:0; background:var(--overlap-color); border-left:3px solid #10b981; pointer-events:none; z-index:0; }
-.overlap-badge { position:absolute; right:8px; top:50%; transform:translateY(-50%); background:#10b981; color:white; font-size:8px; font-weight:800; padding:2px 5px; border-radius:4px; letter-spacing:.5px; z-index:2; pointer-events:none; font-family:var(--mono); }
-
-/* ADD COL */
+.hour-tile.highlighted { filter:brightness(.86) saturate(1.4); }
+.hour-tile.selected-range { outline:2px solid rgba(0,0,0,.3); outline-offset:-2px; }
 .add-col-header { width:160px; min-width:160px; }
 .add-col-inner { background:var(--surface); border:2px dashed var(--border); border-radius:16px; padding:24px 14px; display:flex; flex-direction:column; align-items:center; gap:10px; cursor:pointer; transition:border-color .2s,background .2s; text-align:center; height:100%; justify-content:center; }
 .add-col-inner:hover { border-color:#10b981; background:rgba(16,185,129,.04); }
@@ -147,16 +88,120 @@ body.dark .tile-night     { background:#1e1535; color:#a78bfa; }
 .add-col-inner:hover .add-col-icon { transform:scale(1.1); }
 .add-col-text { font-size:12px; font-weight:600; color:var(--text-secondary); }
 .add-tile-placeholder { height:34px; }
+.col-header-cell.drag-over-left  { box-shadow:-3px 0 0 0 #10b981; }
+.col-header-cell.drag-over-right { box-shadow: 3px 0 0 0 #10b981; }
+.col-header-cell.dragging .col-header { opacity:.3; }
+.col-header-cell.dragging .hour-tile  { opacity:.3; }
+.col-header-cell.will-be-home { box-shadow:-4px 0 0 0 #f43f5e, 0 0 0 2px rgba(244,63,94,.25); }
+.drag-ghost { position:fixed; top:-9999px; left:-9999px; width:160px; background:var(--surface); border-radius:14px; padding:14px; box-shadow:0 16px 40px rgba(0,0,0,.25); border:2px solid #10b981; pointer-events:none; z-index:9999; font-family:var(--font); opacity:0; }
+.drag-ghost .g-name { font-size:15px; font-weight:800; color:var(--text-primary); }
+.drag-ghost .g-time { font-family:var(--mono); font-size:18px; font-weight:700; color:#10b981; margin-top:4px; }
+.drag-ghost.will-be-home { border-color:#f43f5e; }
+.drag-ghost.will-be-home .g-time { color:#f43f5e; }
+.drag-ghost .g-hint { font-size:10px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:#10b981; margin-top:6px; opacity:0; transition:opacity .15s; }
+.drag-ghost.will-be-home .g-hint { color:#f43f5e; opacity:1; }
+.tooltip-bar { position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(20px); background:#0f1623; color:white; padding:10px 20px; border-radius:100px; font-size:13px; font-weight:600; font-family:var(--mono); box-shadow:0 8px 24px rgba(0,0,0,.3); opacity:0; pointer-events:none; transition:opacity .2s,transform .2s; z-index:50; white-space:nowrap; }
+.tooltip-bar.show { opacity:1; transform:translateX(-50%) translateY(0); }
+.now-tile::before { content:''; position:absolute; inset:0; background:rgba(244,63,94,.12); border:2px solid rgba(244,63,94,.5); pointer-events:none; z-index:0; }
+.now-tile::after  { content:'\25B6 NOW'; position:absolute; top:50%; transform:translateY(-50%); right:8px; font-size:9px; font-weight:800; letter-spacing:1px; color:#f43f5e; font-family:var(--mono); opacity:.9; pointer-events:none; z-index:2; }
+.day-boundary-tile::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:var(--day-border); z-index:3; border-radius:2px 2px 0 0; opacity:.8; }
+.day-label { position:absolute; top:2px; right:8px; font-size:8px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; color:var(--day-border); font-family:var(--mono); z-index:4; pointer-events:none; }
+.overlap-tile::after { content:''; position:absolute; inset:0; background:var(--overlap-color); border-left:3px solid #10b981; pointer-events:none; z-index:0; }
+.overlap-badge { position:absolute; right:8px; top:50%; transform:translateY(-50%); background:#10b981; color:white; font-size:8px; font-weight:800; padding:2px 5px; border-radius:4px; letter-spacing:.5px; z-index:2; pointer-events:none; font-family:var(--mono); }
 
-/* DRAG INDICATORS */
-.col-header-cell.drag-over-left  { box-shadow: -3px 0 0 0 #10b981; }
-.col-header-cell.drag-over-right { box-shadow:  3px 0 0 0 #10b981; }
-.col-header-cell.dragging .col-header { opacity: .3; }
-.col-header-cell.dragging .hour-tile  { opacity: .3; }
+/* ═══════════════════════════════════
+   HORIZONTAL VIEW
+   ═══════════════════════════════════ */
+.sel-panel { background:var(--surface); border:1px solid var(--border); border-radius:18px; overflow:hidden; max-height:0; opacity:0; padding:0 20px; margin-bottom:0; transition:max-height .35s cubic-bezier(.16,1,.3,1),opacity .25s,padding .3s,margin-bottom .3s; }
+.sel-panel.open { max-height:240px; opacity:1; padding:18px 20px; margin-bottom:16px; }
+.sel-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; }
+.sel-title { font-size:12px; font-weight:700; letter-spacing:.5px; text-transform:uppercase; color:var(--text-muted); }
+.sel-headline { font-family:var(--mono); font-size:14px; font-weight:800; color:var(--text-primary); }
+.sel-close { background:none; border:none; color:var(--text-muted); cursor:pointer; font-size:16px; width:28px; height:28px; border-radius:7px; display:flex; align-items:center; justify-content:center; }
+.sel-close:hover { background:var(--bg); }
+.sel-cards { display:flex; flex-wrap:wrap; gap:10px; }
+.sel-card { background:var(--bg); border:1px solid var(--border); border-radius:12px; padding:12px 16px; min-width:140px; flex:1; }
+.sel-card.home-card { background:linear-gradient(135deg,#0f2027,#1a2e3f); border-color:rgba(16,185,129,.3); }
+.sc-badge { font-size:8px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; color:#10b981; margin-bottom:5px; }
+.sc-city { font-size:12px; font-weight:700; color:var(--text-secondary); margin-bottom:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.sel-card.home-card .sc-city { color:rgba(255,255,255,.6); }
+.sc-time { font-family:var(--mono); font-size:20px; font-weight:800; color:var(--text-primary); line-height:1; }
+.sel-card.home-card .sc-time { color:#10b981; }
+.sc-date { font-size:10px; color:var(--text-muted); margin-top:3px; font-family:var(--mono); }
+.sel-card.home-card .sc-date { color:rgba(255,255,255,.3); }
+.tl-outer { overflow-x:auto; padding-bottom:10px; position:relative; border-radius:18px; }
+.tl-outer::-webkit-scrollbar { height:6px; }
+.tl-outer::-webkit-scrollbar-track { background:var(--border); border-radius:3px; }
+.tl-outer::-webkit-scrollbar-thumb { background:#c4c9d6; border-radius:3px; }
+.tl-grid { display:inline-grid; row-gap:0; column-gap:0; min-width:max-content; position:relative; }
+.tl-corner { background:var(--surface); border-bottom:2px solid var(--border); border-right:3px solid var(--border); position:sticky; left:0; z-index:20; display:flex; align-items:flex-end; padding:0 14px 10px; font-size:9px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:var(--text-muted); }
+.hour-hdr { background:var(--surface); border-bottom:2px solid var(--border); border-right:1px solid rgba(0,0,0,.05); height:52px; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; padding-bottom:10px; gap:4px; cursor:pointer; user-select:none; position:relative; transition:background .1s; }
+.hour-hdr:hover { background:rgba(99,102,241,.05); }
+.hdr-label { font-family:var(--mono); font-size:10px; font-weight:700; color:var(--text-secondary); letter-spacing:.3px; }
+.now-hdr .hdr-label { color:var(--now-color); font-weight:800; }
+.now-hdr::after { content:'\25BC'; position:absolute; bottom:-1px; font-size:7px; color:var(--now-color); }
+.overlap-dot { width:5px; height:5px; border-radius:50%; background:#10b981; flex-shrink:0; }
+.city-label { background:var(--surface); border-bottom:1px solid var(--border); border-right:3px solid var(--border); position:sticky; left:0; z-index:10; display:flex; align-items:center; gap:12px; padding:10px 14px; min-height:68px; transition:background .2s; }
+.city-label.home-row { background:linear-gradient(120deg,#0e1d2a,#162638); }
+.cl-accent { width:4px; align-self:stretch; border-radius:3px; flex-shrink:0; }
+.cl-info { flex:1; overflow:hidden; min-width:0; }
+.cl-badge { display:inline-flex; align-items:center; gap:3px; background:linear-gradient(135deg,#10b981,#059669); color:white; font-size:8px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; padding:2px 7px; border-radius:100px; margin-bottom:4px; }
+.cl-name { font-size:14px; font-weight:800; letter-spacing:-.3px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.home-row .cl-name { color:#fff; }
+.cl-country { font-size:10px; color:var(--text-muted); font-weight:500; }
+.home-row .cl-country { color:rgba(255,255,255,.4); }
+.cl-live { font-family:var(--mono); font-size:11px; font-weight:700; color:var(--text-secondary); margin-top:3px; }
+.home-row .cl-live { color:#10b981; }
+.cl-offset { font-size:9px; font-family:var(--mono); color:var(--text-muted); }
+.home-row .cl-offset { color:rgba(255,255,255,.25); }
+.cl-remove { width:22px; height:22px; flex-shrink:0; border:none; background:none; color:var(--text-muted); border-radius:6px; cursor:pointer; font-size:13px; display:flex; align-items:center; justify-content:center; opacity:0; transition:opacity .15s,background .15s,color .15s; }
+.city-label:hover .cl-remove { opacity:1; }
+.cl-remove:hover { background:#fee2e2; color:#ef4444; }
+.h-drag-handle { display:flex; flex-direction:column; gap:3px; padding:4px; opacity:0; transition:opacity .15s; cursor:grab; flex-shrink:0; align-self:center; border-radius:4px; }
+.city-label:hover .h-drag-handle { opacity:.45; }
+.h-drag-handle:hover { opacity:1 !important; background:rgba(0,0,0,.06); }
+.h-drag-handle:active { cursor:grabbing; }
+.h-drag-handle span { display:block; width:13px; height:2px; border-radius:1px; background:currentColor; }
+.home-row .h-drag-handle span { background:rgba(255,255,255,.5); }
+#rowGhost { position:fixed; top:-9999px; left:20px; width:185px; background:var(--surface); border-radius:14px; padding:14px 16px; box-shadow:0 16px 40px rgba(0,0,0,.28); border:2px solid #10b981; pointer-events:none; z-index:9999; font-family:var(--font); opacity:0; }
+#rowGhost.will-be-home { border-color:#f43f5e; }
+.rg-name { font-size:14px; font-weight:800; color:var(--text-primary); }
+.rg-time { font-family:var(--mono); font-size:17px; font-weight:700; color:#10b981; margin-top:4px; }
+#rowGhost.will-be-home .rg-time { color:#f43f5e; }
+.rg-hint { font-size:9px; font-weight:800; letter-spacing:1px; text-transform:uppercase; color:#f43f5e; margin-top:6px; opacity:0; }
+#rowGhost.will-be-home .rg-hint { opacity:1; }
+#dropLine { position:fixed; height:3px; background:#10b981; border-radius:2px; pointer-events:none; z-index:9998; opacity:0; box-shadow:0 0 8px rgba(16,185,129,.5); }
+#dropLine.will-be-home { background:#f43f5e; }
+.row-dragging { opacity:.25 !important; pointer-events:none; }
+.h-cell { height:68px; border-bottom:1px solid rgba(0,0,0,.05); border-right:1px solid rgba(0,0,0,.06); display:flex; flex-direction:column; align-items:center; justify-content:center; cursor:pointer; user-select:none; position:relative; font-family:var(--mono); gap:2px; transition:filter .08s; }
+.h-cell:hover { filter:brightness(.89) saturate(1.2); }
+.c-hr { font-size:14px; font-weight:800; line-height:1; }
+.c-ap { font-size:9px; font-weight:800; letter-spacing:.4px; text-transform:uppercase; opacity:.9; }
+.h-cell.col-sel { filter:brightness(.82) saturate(1.5); outline:2px solid rgba(99,102,241,.9); outline-offset:-2px; z-index:2; }
+.hour-hdr.col-sel { background:rgba(99,102,241,.1); outline:2px solid rgba(99,102,241,.8); outline-offset:-2px; }
+.hour-hdr.col-sel .hdr-label { color:#6366f1; font-weight:800; }
+.h-cell.now-col::after { content:''; position:absolute; inset:0; border:2px solid rgba(244,63,94,.5); background:rgba(244,63,94,.08); pointer-events:none; }
+.h-cell.overlap-col::before { content:''; position:absolute; inset:0; border-left:3px solid #10b981; background:var(--overlap-color); pointer-events:none; z-index:0; }
+#nowLine { position:absolute; top:0; bottom:0; width:2px; background:var(--now-color); opacity:.8; pointer-events:none; z-index:15; box-shadow:0 0 8px rgba(244,63,94,.5); border-radius:1px; }
+#nowLine::before { content:''; position:absolute; top:0; left:50%; transform:translateX(-50%); width:8px; height:8px; border-radius:50%; background:var(--now-color); margin-top:-1px; }
+.add-row-btn { display:flex; align-items:center; justify-content:center; gap:8px; width:100%; margin-top:4px; background:var(--surface); border:2px dashed var(--border); border-radius:14px; padding:14px; color:var(--text-muted); font-size:12px; font-weight:600; cursor:pointer; transition:all .2s; font-family:var(--font); }
+.add-row-btn:hover { border-color:#10b981; color:#10b981; background:rgba(16,185,129,.04); }
 
-/* HOME DROP INDICATOR — glows red/pink when dragging over leftmost slot */
-.col-header-cell.will-be-home { box-shadow: -4px 0 0 0 #f43f5e, 0 0 0 2px rgba(244,63,94,.25); }
-.col-header-cell.will-be-home .col-header { outline: 2px dashed rgba(244,63,94,.5); border-radius: 16px 16px 0 0; }
+/* SHARED TILE COLORS */
+.tile-sleep     { background:#dde1ea; color:#7a8298; }
+.tile-early     { background:#bfdbfe; color:#1d4ed8; }
+.tile-morning   { background:#a7f3d0; color:#065f46; }
+.tile-work      { background:#6ee7b7; color:#064e3b; }
+.tile-afternoon { background:#fde68a; color:#78350f; }
+.tile-evening   { background:#fca5a5; color:#7f1d1d; }
+.tile-night     { background:#c4b5fd; color:#4c1d95; }
+body.dark .tile-sleep     { background:#1e2330; color:#6b7280; }
+body.dark .tile-early     { background:#1e2d45; color:#60a5fa; }
+body.dark .tile-morning   { background:#14312b; color:#34d399; }
+body.dark .tile-work      { background:#0d3321; color:#6ee7b7; }
+body.dark .tile-afternoon { background:#322a0e; color:#fcd34d; }
+body.dark .tile-evening   { background:#321515; color:#fca5a5; }
+body.dark .tile-night     { background:#1e1535; color:#a78bfa; }
 
 /* MODAL */
 .modal-overlay { position:fixed; inset:0; background:rgba(15,22,35,.55); backdrop-filter:blur(6px); z-index:100; display:flex; align-items:center; justify-content:center; padding:20px; opacity:0; pointer-events:none; transition:opacity .2s; }
@@ -175,71 +220,108 @@ body.dark .tile-night     { background:#1e1535; color:#a78bfa; }
 .modal-close { position:absolute; top:20px; right:20px; width:32px; height:32px; border-radius:8px; border:none; background:var(--bg); cursor:pointer; font-size:16px; color:var(--text-secondary); display:flex; align-items:center; justify-content:center; }
 .modal-close:hover { background:var(--border); }
 
-/* TOOLTIP */
-.tooltip-bar { position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(20px); background:#0f1623; color:white; padding:10px 20px; border-radius:100px; font-size:13px; font-weight:600; font-family:var(--mono); box-shadow:0 8px 24px rgba(0,0,0,.3); opacity:0; pointer-events:none; transition:opacity .2s,transform .2s; z-index:50; white-space:nowrap; }
-.tooltip-bar.show { opacity:1; transform:translateX(-50%) translateY(0); }
-
-/* GHOST */
-.drag-ghost { position:fixed; top:-9999px; left:-9999px; width:160px; background:var(--surface); border-radius:14px; padding:14px; box-shadow:0 16px 40px rgba(0,0,0,.25); border:2px solid #10b981; pointer-events:none; z-index:9999; font-family:var(--font); opacity:0; }
-.drag-ghost .g-name { font-size:15px; font-weight:800; color:var(--text-primary); }
-.drag-ghost .g-time { font-family:var(--mono); font-size:18px; font-weight:700; color:#10b981; margin-top:4px; }
-.drag-ghost.will-be-home { border-color:#f43f5e; }
-.drag-ghost.will-be-home .g-time { color:#f43f5e; }
-.drag-ghost .g-hint { font-size:10px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:#10b981; margin-top:6px; opacity:0; transition:opacity .15s; }
-.drag-ghost.will-be-home .g-hint { color:#f43f5e; opacity:1; }
-
 /* TOAST */
 #saveToast { position:fixed; top:20px; right:20px; z-index:200; background:#0f1623; color:white; padding:10px 18px; border-radius:100px; font-size:12px; font-weight:600; font-family:var(--mono); display:flex; align-items:center; gap:7px; box-shadow:0 8px 24px rgba(0,0,0,.25); opacity:0; transform:translateY(-8px); transition:opacity .25s,transform .25s; pointer-events:none; }
-
 </style>
 </head>
 <body>
 <div class="app">
   <!-- nav.js injects header here -->
 
-  <div class="date-strip" id="dateStrip"></div>
-
-  <div class="controls-bar">
-    <div class="legend">
-      <div class="legend-item"><div class="legend-dot" style="background:#dde1ea"></div>Sleep</div>
-      <div class="legend-item"><div class="legend-dot" style="background:#bfdbfe"></div>Early</div>
-      <div class="legend-item"><div class="legend-dot" style="background:#a7f3d0"></div>Morning</div>
-      <div class="legend-item"><div class="legend-dot" style="background:#6ee7b7"></div>Work</div>
-      <div class="legend-item"><div class="legend-dot" style="background:#fde68a"></div>Afternoon</div>
-      <div class="legend-item"><div class="legend-dot" style="background:#fca5a5"></div>Evening</div>
-      <div class="legend-item"><div class="legend-dot" style="background:#c4b5fd"></div>Night</div>
+  <!-- ═══════════════ VERTICAL VIEW ═══════════════ -->
+  <div id="verticalView">
+    <div class="date-strip" id="dateStrip"></div>
+    <div class="controls-bar">
+      <div class="legend">
+        <div class="legend-item"><div class="legend-dot" style="background:#dde1ea"></div>Sleep</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#bfdbfe"></div>Early</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#a7f3d0"></div>Morning</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#6ee7b7"></div>Work</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#fde68a"></div>Afternoon</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#fca5a5"></div>Evening</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#c4b5fd"></div>Night</div>
+      </div>
+      <div class="toggle-pills">
+        <div class="toggle-pill on" id="vPillNow"     onclick="toggleFeature('now')">    <div class="dot"></div>Now line</div>
+        <div class="toggle-pill on" id="vPillDay"     onclick="toggleFeature('day')">    <div class="dot"></div>Day marker</div>
+        <div class="toggle-pill on" id="vPillOverlap" onclick="toggleFeature('overlap')"><div class="dot"></div>Overlap</div>
+      </div>
     </div>
-    <div class="toggle-pills">
-      <div class="toggle-pill on" id="pillNow"     onclick="toggleFeature('now')">    <div class="dot"></div>Now line</div>
-      <div class="toggle-pill on" id="pillDay"     onclick="toggleFeature('day')">    <div class="dot"></div>Day marker</div>
-      <div class="toggle-pill on" id="pillOverlap" onclick="toggleFeature('overlap')"><div class="dot"></div>Overlap</div>
+    <div class="grid-outer">
+      <div class="time-grid" id="timeGrid"></div>
     </div>
   </div>
 
-  <div class="grid-outer">
-    <div class="time-grid" id="timeGrid"></div>
+  <!-- ═══════════════ HORIZONTAL VIEW ═══════════════ -->
+  <div id="horizontalView" style="display:none">
+    <div class="sel-panel" id="selPanel">
+      <div class="sel-header">
+        <div>
+          <div class="sel-title">Conversion at a glance</div>
+          <div class="sel-headline" id="selHeadline"></div>
+        </div>
+        <button class="sel-close" onclick="clearSelection()" title="Close">&#x2715;</button>
+      </div>
+      <div class="sel-cards" id="selCards"></div>
+    </div>
+    <div class="tl-outer" id="tlOuter">
+      <div class="tl-grid" id="tlGrid"></div>
+    </div>
+    <button class="add-row-btn" onclick="openModal()">&#xff0b; Add another city</button>
+    <div class="bottom-bar">
+      <div class="legend">
+        <div class="legend-item"><div class="legend-dot" style="background:#dde1ea"></div>Sleep</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#bfdbfe"></div>Early</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#a7f3d0"></div>Morning</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#6ee7b7"></div>Work</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#fde68a"></div>Afternoon</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#fca5a5"></div>Evening</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#c4b5fd"></div>Night</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#10b981;border-radius:50%"></div>Best overlap</div>
+      </div>
+      <div class="toggle-pills">
+        <div class="toggle-pill on" id="hPillNow"     onclick="toggleFeature('now')">    <div class="dot"></div>Now</div>
+        <div class="toggle-pill on" id="hPillOverlap" onclick="toggleFeature('overlap')"><div class="dot"></div>Overlap</div>
+      </div>
+    </div>
   </div>
 </div>
 
+<!-- Shared: Modal -->
 <div class="modal-overlay" id="modalOverlay" onclick="closeModalOnBg(event)">
   <div class="modal">
-    <button class="modal-close" onclick="closeModal()">✕</button>
+    <button class="modal-close" onclick="closeModal()">&#x2715;</button>
     <div class="modal-title">Add a City</div>
-    <input class="search-input" id="searchInput" placeholder="Search city or timezone…" oninput="filterCities(this.value)" autocomplete="off">
+    <input class="search-input" id="searchInput" placeholder="Search city or timezone&#x2026;" oninput="filterCities(this.value)" autocomplete="off">
     <div class="city-list" id="cityList"></div>
   </div>
 </div>
 
+<!-- Shared: Save toast -->
+<div id="saveToast"><span style="color:#10b981;font-size:14px;">&#x2713;</span> Saved</div>
+
+<!-- Vertical only -->
 <div class="tooltip-bar" id="tooltipBar"></div>
-<div id="saveToast"><span style="color:#10b981;font-size:14px;">✓</span> Saved</div>
 <div class="drag-ghost" id="dragGhost">
   <div class="g-name" id="ghostName"></div>
   <div class="g-time" id="ghostTime"></div>
-  <div class="g-hint" id="ghostHint">🏠 Set as Home</div>
+  <div class="g-hint">&#x1F3E0; Set as Home</div>
 </div>
 
+<!-- Horizontal only -->
+<div id="rowGhost">
+  <div class="rg-name" id="rgName"></div>
+  <div class="rg-time" id="rgTime"></div>
+  <div class="rg-hint">&#x1F3E0; Set as Home</div>
+</div>
+<div id="dropLine"></div>
 <script>
-const CITIES_DB = [
+/* ════════════════════════════════════════════════════════
+   CalcNova · World Time Converter (Vertical + Horizontal)
+   ════════════════════════════════════════════════════════ */
+
+/* ── CITIES DATABASE ── */
+var CITIES_DB = [
   {name:"New York",country:"United States",tz:"America/New_York"},
   {name:"Los Angeles",country:"United States",tz:"America/Los_Angeles"},
   {name:"Chicago",country:"United States",tz:"America/Chicago"},
@@ -297,54 +379,66 @@ const CITIES_DB = [
   {name:"Nairobi",country:"Kenya",tz:"Africa/Nairobi"},
   {name:"Casablanca",country:"Morocco",tz:"Africa/Casablanca"},
   {name:"Beirut",country:"Lebanon",tz:"Asia/Beirut"},
-  {name:"UTC",country:"Coordinated Universal Time",tz:"UTC"},
+  {name:"UTC",country:"Coordinated Universal Time",tz:"UTC"}
 ];
-const ACCENTS = ['linear-gradient(90deg,#10b981,#34d399)','linear-gradient(90deg,#6366f1,#818cf8)','linear-gradient(90deg,#f59e0b,#fcd34d)','linear-gradient(90deg,#ef4444,#f87171)','linear-gradient(90deg,#06b6d4,#67e8f9)','linear-gradient(90deg,#ec4899,#f9a8d4)'];
-const ACCENT_COLORS = ['#065f46','#312e81','#78350f','#7f1d1d','#164e63','#831843'];
-const WORK_START = 9, WORK_END = 17;
 
-let activeDate = new Date(); activeDate.setHours(0,0,0,0);
-let activeCities, homeIdx, saveToastTimer;
-let features = { now:true, day:true, overlap:true };
+/* ── VERTICAL ACCENTS ── */
+var V_ACCENTS = [
+  'linear-gradient(90deg,#10b981,#34d399)',
+  'linear-gradient(90deg,#6366f1,#818cf8)',
+  'linear-gradient(90deg,#f59e0b,#fcd34d)',
+  'linear-gradient(90deg,#ef4444,#f87171)',
+  'linear-gradient(90deg,#06b6d4,#67e8f9)',
+  'linear-gradient(90deg,#ec4899,#f9a8d4)'
+];
+var V_ACCENT_COLORS = ['#065f46','#312e81','#78350f','#7f1d1d','#164e63','#831843'];
 
-// ── PERSIST ──
+/* ── HORIZONTAL ACCENTS ── */
+var H_ACCENTS = ['#10b981','#6366f1','#f59e0b','#ef4444','#3b82f6','#ec4899','#8b5cf6','#14b8a6'];
+
+var WORK_START = 9, WORK_END = 17;
+var CELL_W = 46, LABEL_W = 200;
+
+/* ── STATE ── */
+var activeDate = new Date(); activeDate.setHours(0,0,0,0);
+var activeCities, homeIdx, saveToastTimer;
+var currentView = 'vertical';
+var features = { now:true, day:true, overlap:true };
+var selectedHour = null;
+var liveTimer = null;
+var vTickTimer = null;
+
+/* Vertical drag state */
+var vDragIdx = null, vOverIdx = null, vGhostEl, vGhostOffX, vGhostOffY;
+
+/* Horizontal drag state */
+var hDragActive = false, hRowDragIdx = null, hRowOverIdx = null;
+
+/* ── PERSISTENCE ── */
 function saveCities() {
   try {
-    localStorage.setItem('cn_cities', JSON.stringify(activeCities.map(c=>({name:c.name,tz:c.tz}))));
+    localStorage.setItem('cn_cities', JSON.stringify(activeCities.map(function(c){ return {name:c.name,tz:c.tz}; })));
     localStorage.setItem('cn_home', String(homeIdx));
-  } catch(e){}
-  const t = document.getElementById('saveToast');
-  t.style.opacity='1'; t.style.transform='translateY(0)';
+  } catch(e) {}
+  var t = document.getElementById('saveToast');
+  t.style.opacity = '1'; t.style.transform = 'translateY(0)';
   clearTimeout(saveToastTimer);
-  saveToastTimer = setTimeout(()=>{ t.style.opacity='0'; t.style.transform='translateY(-8px)'; }, 1800);
+  saveToastTimer = setTimeout(function(){ t.style.opacity='0'; t.style.transform='translateY(-8px)'; }, 1800);
 }
+
 function loadCities() {
   try {
-    const raw = localStorage.getItem('cn_cities');
+    var raw = localStorage.getItem('cn_cities') || localStorage.getItem('zonepal_tl_cities');
     if (!raw) return null;
-    const r = JSON.parse(raw).map(s=>CITIES_DB.find(c=>c.name===s.name&&c.tz===s.tz)).filter(Boolean);
+    var r = JSON.parse(raw).map(function(s){ return CITIES_DB.find(function(c){ return c.name===s.name && c.tz===s.tz; }); }).filter(Boolean);
     return r.length ? r : null;
-  } catch(e){ return null; }
-}
-activeCities = loadCities() || [
-  CITIES_DB.find(c=>c.name==='New York'),
-  CITIES_DB.find(c=>c.name==='London'),
-  CITIES_DB.find(c=>c.name==='Tokyo'),
-];
-try { homeIdx = Math.min(parseInt(localStorage.getItem('cn_home')||'0',10)||0, activeCities.length-1); } catch(e){ homeIdx=0; }
-
-// ── FEATURE TOGGLES ──
-function toggleFeature(f) {
-  features[f] = !features[f];
-  const k = 'pill'+f.charAt(0).toUpperCase()+f.slice(1);
-  document.getElementById(k).classList.toggle('on', features[f]);
-  buildGrid();
+  } catch(e) { return null; }
 }
 
-// ── HELPERS ──
+/* ── HELPERS ── */
 function getTileClass(h) {
-  if (h<5) return 'tile-sleep'; if (h<7) return 'tile-early'; if (h<9) return 'tile-morning';
-  if (h<17) return 'tile-work'; if (h<20) return 'tile-afternoon'; if (h<22) return 'tile-evening';
+  if(h<5) return 'tile-sleep'; if(h<7) return 'tile-early'; if(h<9) return 'tile-morning';
+  if(h<17) return 'tile-work'; if(h<20) return 'tile-afternoon'; if(h<22) return 'tile-evening';
   return 'tile-night';
 }
 function getLocalHour(utcDate, tz) {
@@ -353,43 +447,49 @@ function getLocalHour(utcDate, tz) {
 function getLocalDate(utcDate, tz) {
   return new Intl.DateTimeFormat('en-US',{timeZone:tz,year:'numeric',month:'2-digit',day:'2-digit'}).format(utcDate);
 }
+function localHourToUTC(date, hour, tz) {
+  var probe = new Date(date.getTime()+hour*3600000);
+  return probe.getTime()+(hour-getLocalHour(probe,tz))*3600000;
+}
+function getUTCOffset(tz) {
+  var s = new Intl.DateTimeFormat('en',{timeZone:tz,timeZoneName:'shortOffset'}).formatToParts(new Date());
+  return (s.find(function(p){ return p.type==='timeZoneName'; })||{value:'UTC'}).value;
+}
 function formatCurrentTime(tz) {
   return new Intl.DateTimeFormat('en-US',{timeZone:tz,hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:true}).format(new Date());
 }
-function getUTCOffset(tz) {
-  const s = new Intl.DateTimeFormat('en',{timeZone:tz,timeZoneName:'shortOffset'}).formatToParts(new Date());
-  return (s.find(p=>p.type==='timeZoneName')||{value:'UTC'}).value;
+function fmtFullTime(utcMs, tz) {
+  return new Intl.DateTimeFormat('en-US',{timeZone:tz,hour:'numeric',minute:'2-digit',hour12:true}).format(new Date(utcMs));
 }
-function localHourToUTC(date, hour, tz) {
-  const probe = new Date(date.getTime()+hour*3600000);
-  return probe.getTime()+(hour-getLocalHour(probe,tz))*3600000;
+function fmtDate(utcMs, tz) {
+  return new Intl.DateTimeFormat('en-US',{timeZone:tz,weekday:'short',month:'short',day:'numeric'}).format(new Date(utcMs));
 }
-
+function getCurrentHomeHour() {
+  var now = new Date(), todayMs = (function(){ var d=new Date(); d.setHours(0,0,0,0); return d.getTime(); })();
+  if (activeDate.getTime() !== todayMs) return -1;
+  return getLocalHour(now, activeCities[homeIdx].tz);
+}
+function getCurrentMinute(tz) {
+  return parseInt(new Intl.DateTimeFormat('en-US',{timeZone:tz,minute:'2-digit'}).format(new Date()),10);
+}
 function computeOverlapHours() {
-  const set = new Set();
+  var set = new Set();
   if (activeCities.length < 2) return set;
-  const homeTz = activeCities[homeIdx].tz;
-  for (let h=0; h<24; h++) {
-    const utcMs = localHourToUTC(activeDate, h, homeTz);
-    if (activeCities.every(c => { const lh=getLocalHour(new Date(utcMs),c.tz); return lh>=WORK_START&&lh<WORK_END; }))
+  var homeTz = activeCities[homeIdx].tz;
+  for (var h=0; h<24; h++) {
+    var utcMs = localHourToUTC(activeDate, h, homeTz);
+    if (activeCities.every(function(c){ var lh=getLocalHour(new Date(utcMs),c.tz); return lh>=WORK_START&&lh<WORK_END; }))
       set.add(h);
   }
   return set;
 }
-function getCurrentHomeHour() {
-  const now = new Date();
-  const todayMs = (()=>{ const d=new Date(); d.setHours(0,0,0,0); return d.getTime(); })();
-  if (activeDate.getTime() !== todayMs) return -1;
-  return getLocalHour(now, activeCities[homeIdx].tz);
-}
 function buildDayBoundaryMap() {
-  const map = {};
-  const homeTz = activeCities[homeIdx].tz;
-  activeCities.forEach((city, ci) => {
+  var map = {}, homeTz = activeCities[homeIdx].tz;
+  activeCities.forEach(function(city, ci) {
     map[ci] = {};
-    let prev = null;
-    for (let h=0; h<24; h++) {
-      const d = getLocalDate(new Date(localHourToUTC(activeDate,h,homeTz)), city.tz);
+    var prev = null;
+    for (var h=0; h<24; h++) {
+      var d = getLocalDate(new Date(localHourToUTC(activeDate,h,homeTz)), city.tz);
       if (prev && d !== prev) map[ci][h] = true;
       prev = d;
     }
@@ -397,316 +497,530 @@ function buildDayBoundaryMap() {
   return map;
 }
 
-// ── BUILD GRID ──
-function buildGrid() {
-  const grid = document.getElementById('timeGrid');
+/* ── FEATURE TOGGLES ── */
+function toggleFeature(f) {
+  features[f] = !features[f];
+  var cap = f.charAt(0).toUpperCase()+f.slice(1);
+  var vEl = document.getElementById('vPill'+cap);
+  var hEl = document.getElementById('hPill'+cap);
+  if(vEl) vEl.classList.toggle('on', features[f]);
+  if(hEl) hEl.classList.toggle('on', features[f]);
+  if (currentView==='vertical') buildVerticalGrid();
+  else buildHorizontalGrid();
+}
+
+/* ══════════════════════════════════════
+   VERTICAL VIEW
+   ══════════════════════════════════════ */
+function buildDateStrip() {
+  var strip = document.getElementById('dateStrip'); if(!strip) return;
+  strip.innerHTML = '';
+  var today = new Date(); today.setHours(0,0,0,0);
+  for (var i=-3; i<=6; i++) {
+    var d = new Date(today.getTime()+i*86400000);
+    var chip = document.createElement('div');
+    chip.className = 'date-chip'+(d.getTime()===activeDate.getTime()?' active':'');
+    var days = ['SUN','MON','TUE','WED','THU','FRI','SAT'];
+    chip.innerHTML = '<div class="chip-day">'+days[d.getDay()]+'</div><div class="chip-num">'+d.getDate()+'</div>';
+    (function(dd){ chip.onclick = function(){ activeDate=dd; renderAll(); }; })(d);
+    strip.appendChild(chip);
+  }
+  var a = strip.querySelector('.active');
+  if(a) a.scrollIntoView({inline:'center',behavior:'smooth',block:'nearest'});
+}
+
+function buildVerticalGrid() {
+  var grid = document.getElementById('timeGrid'); if(!grid) return;
   grid.innerHTML = '';
+  var n = activeCities.length, showAdd = n < 6, totalCols = n+(showAdd?1:0);
+  grid.style.gridTemplateColumns = 'repeat('+totalCols+', 160px)';
+  grid.style.gridTemplateRows = 'auto repeat(24, 34px)';
+  var overlapHours = features.overlap ? computeOverlapHours() : new Set();
+  var nowHour      = features.now     ? getCurrentHomeHour()  : -1;
+  var dayBoundary  = features.day     ? buildDayBoundaryMap() : {};
+  var homeTz       = activeCities[homeIdx].tz;
 
-  const n = activeCities.length;
-  const showAdd = n < 6;
-  const totalCols = n + (showAdd ? 1 : 0);
-
-  grid.style.gridTemplateColumns = `repeat(${totalCols}, 160px)`;
-  grid.style.gridTemplateRows = `auto repeat(24, 34px)`;
-
-  const overlapHours  = features.overlap ? computeOverlapHours() : new Set();
-  const nowHour       = features.now     ? getCurrentHomeHour()  : -1;
-  const dayBoundary   = features.day     ? buildDayBoundaryMap() : {};
-  const homeTz        = activeCities[homeIdx].tz;
-
-  // ── ROW 1: headers ──
-  activeCities.forEach((city, idx) => {
-    const isHome = idx === homeIdx;
-    const ai = idx % ACCENTS.length;
-
-    const cell = document.createElement('div');
-    cell.className = 'col-header-cell' + (isHome ? ' home-col' : '');
-    cell.dataset.idx = idx;
-    cell.style.gridRow = '1';
-
-    const hdr = document.createElement('div');
-    hdr.className = 'col-header';
-    hdr.innerHTML = `
-      <div class="drag-handle"><span></span><span></span><span></span></div>
-      ${!isHome ? `<button class="col-remove">✕</button>` : ''}
-      ${isHome
-        ? `<div class="home-badge">🏠 Home</div>`
-        : `<div class="col-accent" style="background:${ACCENTS[ai]}"></div>`}
-      <div class="col-city-name">${city.name}</div>
-      <div class="col-country">${city.country}</div>
-      <div class="col-current-time" id="ct-${idx}" style="color:${isHome?'#10b981':ACCENT_COLORS[ai]}">${formatCurrentTime(city.tz)}</div>
-      <div class="col-offset">${getUTCOffset(city.tz)}</div>
-    `;
-
-    const rmBtn = hdr.querySelector('.col-remove');
-    if (rmBtn) {
-      rmBtn.addEventListener('mousedown', e => e.stopPropagation());
-      rmBtn.addEventListener('click', () => removeCity(idx));
+  /* Headers */
+  activeCities.forEach(function(city, idx) {
+    var isHome = idx===homeIdx, ai = idx%V_ACCENTS.length;
+    var cell = document.createElement('div');
+    cell.className = 'col-header-cell'+(isHome?' home-col':'');
+    cell.dataset.idx = idx; cell.style.gridRow = '1';
+    var hdr = document.createElement('div'); hdr.className = 'col-header';
+    hdr.innerHTML = '<div class="drag-handle"><span></span><span></span><span></span></div>'
+      +(!isHome?'<button class="col-remove">\u2715</button>':'')
+      +(isHome
+        ?'<div class="home-badge">\uD83C\uDFE0 Home</div>'
+        :'<div class="col-accent" style="background:'+V_ACCENTS[ai]+'"></div>')
+      +'<div class="col-city-name">'+city.name+'</div>'
+      +'<div class="col-country">'+city.country+'</div>'
+      +'<div class="col-current-time" id="ct-'+idx+'" style="color:'+(isHome?'#10b981':V_ACCENT_COLORS[ai])+'">'+formatCurrentTime(city.tz)+'</div>'
+      +'<div class="col-offset">'+getUTCOffset(city.tz)+'</div>';
+    var rmBtn = hdr.querySelector('.col-remove');
+    if(rmBtn) {
+      rmBtn.addEventListener('mousedown', function(e){ e.stopPropagation(); });
+      rmBtn.addEventListener('click', (function(i){ return function(){ removeCity(i); }; })(idx));
     }
-    hdr.addEventListener('mousedown', e => onHeaderMouseDown(e, cell));
-    cell.appendChild(hdr);
-    grid.appendChild(cell);
+    hdr.addEventListener('mousedown', (function(c){ return function(e){ onVDragStart(e,c); }; })(cell));
+    cell.appendChild(hdr); grid.appendChild(cell);
   });
 
-  // Add column header
   if (showAdd) {
-    const addHdr = document.createElement('div');
-    addHdr.className = 'add-col-header';
-    addHdr.style.gridRow = '1';
-    addHdr.innerHTML = `<div class="add-col-inner" onclick="openModal()"><div class="add-col-icon">＋</div><div class="add-col-text">Add city</div></div>`;
+    var addHdr = document.createElement('div');
+    addHdr.className = 'add-col-header'; addHdr.style.gridRow = '1';
+    addHdr.innerHTML = '<div class="add-col-inner" onclick="openModal()"><div class="add-col-icon">\uff0b</div><div class="add-col-text">Add city</div></div>';
     grid.appendChild(addHdr);
   }
 
-  // ── ROWS 2–25: tiles ──
-  for (let h = 0; h < 24; h++) {
-    const utcMs   = localHourToUTC(activeDate, h, homeTz);
-    const isNow   = h === nowHour;
-    const isOvlp  = overlapHours.has(h);
-
-    activeCities.forEach((city, idx) => {
-      const lh = (idx === homeIdx) ? h : getLocalHour(new Date(utcMs), city.tz);
-      const disp = lh===0?12:(lh>12?lh-12:lh);
-      const period = lh>=12?'pm':'am';
-      const isBound = dayBoundary[idx] && dayBoundary[idx][h];
-
-      const tile = document.createElement('div');
-      tile.className = [
-        'hour-tile',
-        getTileClass(lh),
-        isNow   ? 'now-tile'           : '',
-        isOvlp  ? 'overlap-tile'       : '',
-        isBound ? 'day-boundary-tile'  : '',
-        h === 0  ? 'first-tile'        : '',
-        h === 23 ? 'last-tile'         : '',
+  /* Tiles */
+  for (var h=0; h<24; h++) {
+    var utcMs = localHourToUTC(activeDate, h, homeTz);
+    var isNow = h===nowHour, isOvlp = overlapHours.has(h);
+    activeCities.forEach(function(city, idx) {
+      var lh = (idx===homeIdx) ? h : getLocalHour(new Date(utcMs), city.tz);
+      var disp = lh===0?12:(lh>12?lh-12:lh);
+      var period = lh>=12?'pm':'am';
+      var isBound = dayBoundary[idx] && dayBoundary[idx][h];
+      var tile = document.createElement('div');
+      tile.className = ['hour-tile',getTileClass(lh),
+        isNow?'now-tile':'',isOvlp?'overlap-tile':'',isBound?'day-boundary-tile':'',
+        h===0?'first-tile':'',h===23?'last-tile':''
       ].filter(Boolean).join(' ');
-
       tile.dataset.homeHour = h;
-      tile.style.gridRow    = `${h + 2}`;
-      tile.style.gridColumn = `${idx + 1}`;
-
-      let extra = '';
-      if (isOvlp && idx === 0) extra += `<span class="overlap-badge">✓ ALL</span>`;
-      if (isBound) extra += `<span class="day-label">+1d</span>`;
-
-      tile.innerHTML = `<span class="tile-time">${disp}:00</span><span class="tile-period">${period}</span>${extra}`;
-      tile.addEventListener('mouseenter', () => onTileHover(h));
-      tile.addEventListener('mouseleave', onTileLeave);
-      tile.addEventListener('click', () => onTileClick(h));
+      tile.style.gridRow = (h+2); tile.style.gridColumn = (idx+1);
+      var extra = '';
+      if(isOvlp && idx===0) extra += '<span class="overlap-badge">\u2713 ALL</span>';
+      if(isBound) extra += '<span class="day-label">+1d</span>';
+      tile.innerHTML = '<span class="tile-time">'+disp+':00</span><span class="tile-period">'+period+'</span>'+extra;
+      tile.addEventListener('mouseenter', (function(hh){ return function(){ onVTileHover(hh); }; })(h));
+      tile.addEventListener('mouseleave', onVTileLeave);
+      tile.addEventListener('click', (function(hh){ return function(){ onVTileClick(hh); }; })(h));
       grid.appendChild(tile);
     });
-
     if (showAdd) {
-      const ph = document.createElement('div');
-      ph.className = 'add-tile-placeholder';
-      ph.style.gridRow    = `${h + 2}`;
-      ph.style.gridColumn = `${n + 1}`;
+      var ph = document.createElement('div'); ph.className = 'add-tile-placeholder';
+      ph.style.gridRow = (h+2); ph.style.gridColumn = (n+1);
       grid.appendChild(ph);
     }
   }
-
-  if (nowHour >= 0) {
-    const nt = grid.querySelector('.now-tile');
-    if (nt) setTimeout(() => nt.scrollIntoView({block:'center',behavior:'smooth'}), 80);
+  if (nowHour>=0) {
+    var nt = grid.querySelector('.now-tile');
+    if(nt) setTimeout(function(){ nt.scrollIntoView({block:'center',behavior:'smooth'}); }, 80);
   }
 }
 
-// ── DRAG ──
-let dragIdx=null, overIdx=null, ghostEl, ghostOffX, ghostOffY;
-
-function onHeaderMouseDown(e, cell) {
-  if (e.target.closest('button')) return;
+/* Vertical drag */
+function onVDragStart(e, cell) {
+  if(e.target.closest('button')) return;
   e.preventDefault();
-  dragIdx = parseInt(cell.dataset.idx, 10);
-  const city = activeCities[dragIdx];
-  ghostEl = document.getElementById('dragGhost');
+  vDragIdx = parseInt(cell.dataset.idx, 10);
+  var city = activeCities[vDragIdx];
+  vGhostEl = document.getElementById('dragGhost');
   document.getElementById('ghostName').textContent = city.name;
   document.getElementById('ghostTime').textContent = formatCurrentTime(city.tz);
-  const rect = cell.getBoundingClientRect();
-  ghostOffX = e.clientX - rect.left;
-  ghostOffY = e.clientY - rect.top;
-  ghostEl.style.left = (e.clientX - ghostOffX) + 'px';
-  ghostEl.style.top  = (e.clientY - ghostOffY) + 'px';
-  ghostEl.style.opacity = '1';
-  ghostEl.classList.remove('will-be-home');
+  var rect = cell.getBoundingClientRect();
+  vGhostOffX = e.clientX-rect.left; vGhostOffY = e.clientY-rect.top;
+  vGhostEl.style.left = (e.clientX-vGhostOffX)+'px'; vGhostEl.style.top = (e.clientY-vGhostOffY)+'px';
+  vGhostEl.style.opacity = '1'; vGhostEl.classList.remove('will-be-home');
   cell.classList.add('dragging');
-  document.addEventListener('mousemove', onDragMove);
-  document.addEventListener('mouseup',   onDragEnd);
+  document.addEventListener('mousemove', onVDragMove);
+  document.addEventListener('mouseup', onVDragEnd);
+}
+function onVDragMove(e) {
+  if(vDragIdx===null) return;
+  vGhostEl.style.left = (e.clientX-vGhostOffX)+'px'; vGhostEl.style.top = (e.clientY-vGhostOffY)+'px';
+  var cells = document.querySelectorAll('.col-header-cell');
+  var found = null;
+  cells.forEach(function(c){ c.classList.remove('drag-over-left','drag-over-right','will-be-home'); });
+  cells.forEach(function(c){
+    var r = c.getBoundingClientRect();
+    if(e.clientX>=r.left && e.clientX<=r.right) {
+      found = parseInt(c.dataset.idx,10);
+      if(!isNaN(found) && found!==vDragIdx) {
+        vOverIdx = found;
+        if(found===0) { c.classList.add('will-be-home'); vGhostEl.classList.add('will-be-home'); }
+        else { c.classList.add(e.clientX<r.left+r.width/2?'drag-over-left':'drag-over-right'); vGhostEl.classList.remove('will-be-home'); }
+      }
+    }
+  });
+  if(found===null||found===vDragIdx){ vOverIdx=null; vGhostEl.classList.remove('will-be-home'); }
+}
+function onVDragEnd(e) {
+  document.removeEventListener('mousemove',onVDragMove); document.removeEventListener('mouseup',onVDragEnd);
+  vGhostEl.style.opacity='0'; vGhostEl.style.top='-9999px'; vGhostEl.classList.remove('will-be-home');
+  document.querySelectorAll('.col-header-cell').forEach(function(c){ c.classList.remove('dragging','drag-over-left','drag-over-right','will-be-home'); });
+  if(vDragIdx!==null && vOverIdx!==null && vDragIdx!==vOverIdx) {
+    var oc = document.querySelector('.col-header-cell[data-idx="'+vOverIdx+'"]');
+    var ins = vOverIdx;
+    if(oc && vOverIdx!==0) { var r=oc.getBoundingClientRect(); if(e.clientX>=r.left+r.width/2) ins=vOverIdx+1; }
+    var item = activeCities.splice(vDragIdx,1)[0];
+    var wasHome = vDragIdx===homeIdx;
+    if(!wasHome && homeIdx>vDragIdx) homeIdx--;
+    var t = ins>vDragIdx?ins-1:ins;
+    t = Math.max(0, Math.min(t, activeCities.length));
+    activeCities.splice(t,0,item);
+    if(t===0) homeIdx=0;
+    else if(wasHome) homeIdx=t;
+    else if(homeIdx>=t) homeIdx++;
+    saveCities(); renderAll();
+  } else buildVerticalGrid();
+  vDragIdx=null; vOverIdx=null;
 }
 
-function onDragMove(e) {
-  if (dragIdx === null) return;
-  ghostEl.style.left = (e.clientX - ghostOffX) + 'px';
-  ghostEl.style.top  = (e.clientY - ghostOffY) + 'px';
+/* Vertical tile events */
+var tipTimer;
+function onVTileHover(h) {
+  document.querySelectorAll('.hour-tile').forEach(function(t){ t.classList.remove('highlighted'); });
+  document.querySelectorAll('[data-home-hour="'+h+'"]').forEach(function(t){ t.classList.add('highlighted'); });
+  var utcMs = localHourToUTC(activeDate, h, activeCities[homeIdx].tz);
+  var times = activeCities.map(function(c){ var lh=getLocalHour(new Date(utcMs),c.tz); return c.name+' '+(lh===0?12:lh>12?lh-12:lh)+(lh>=12?'pm':'am'); }).join('  \u00B7  ');
+  clearTimeout(tipTimer);
+  var el=document.getElementById('tooltipBar'); el.textContent=times; el.classList.add('show');
+}
+function onVTileLeave() {
+  document.querySelectorAll('.hour-tile').forEach(function(t){ t.classList.remove('highlighted'); });
+  tipTimer=setTimeout(function(){ document.getElementById('tooltipBar').classList.remove('show'); },200);
+}
+function onVTileClick(h) {
+  document.querySelectorAll('.hour-tile').forEach(function(t){ t.classList.remove('selected-range'); });
+  document.querySelectorAll('[data-home-hour="'+h+'"]').forEach(function(t){ t.classList.add('selected-range'); });
+}
 
-  const cells = document.querySelectorAll('.col-header-cell');
-  let found = null;
-  let foundSide = null;
-  cells.forEach(c => {
-    c.classList.remove('drag-over-left','drag-over-right','will-be-home');
-    const r = c.getBoundingClientRect();
-    if (e.clientX >= r.left && e.clientX <= r.right) {
-      found = parseInt(c.dataset.idx, 10);
-      foundSide = e.clientX < r.left + r.width/2 ? 'left' : 'right';
+/* Vertical live clocks */
+function tickClocksV() {
+  activeCities.forEach(function(c,i){ var el=document.getElementById('ct-'+i); if(el) el.textContent=formatCurrentTime(c.tz); });
+}
+
+/* ══════════════════════════════════════
+   HORIZONTAL VIEW
+   ══════════════════════════════════════ */
+function buildHorizontalGrid() {
+  var grid = document.getElementById('tlGrid'); if(!grid) return;
+  grid.innerHTML = '';
+  grid.style.gridTemplateColumns = LABEL_W+'px repeat(24, '+CELL_W+'px)';
+  var homeTz = activeCities[homeIdx].tz;
+  var overlapHours = features.overlap ? computeOverlapHours() : new Set();
+  var nowHour = features.now ? getCurrentHomeHour() : -1;
+
+  /* Corner */
+  var corner = document.createElement('div'); corner.className = 'tl-corner';
+  corner.textContent = activeCities[homeIdx].name+' \u2192';
+  grid.appendChild(corner);
+
+  /* Hour headers */
+  for (var h=0; h<24; h++) {
+    var isSel=h===selectedHour, isNow=h===nowHour, isOvlp=overlapHours.has(h);
+    var cls='hour-hdr'; if(isNow) cls+=' now-hdr'; if(isSel) cls+=' col-sel';
+    var hdr=document.createElement('div'); hdr.className=cls; hdr.dataset.h=h;
+    if(isOvlp){ var dot=document.createElement('span'); dot.className='overlap-dot'; hdr.appendChild(dot); }
+    var lbl=document.createElement('span'); lbl.className='hdr-label';
+    var hn=h===0||h===12?12:h%12;
+    lbl.innerHTML='<span style="display:block;line-height:1">'+hn+'</span><span style="display:block;font-size:8px;font-weight:800;letter-spacing:.3px;opacity:.8">'+(h<12?'AM':'PM')+'</span>';
+    hdr.appendChild(lbl);
+    hdr.addEventListener('mousedown',(function(hh){ return function(e){ e.preventDefault(); hDragActive=true; selectHour(hh); }; })(h));
+    hdr.addEventListener('mouseenter',(function(hh){ return function(){ if(hDragActive) selectHour(hh); }; })(h));
+    grid.appendChild(hdr);
+  }
+
+  /* City rows */
+  activeCities.forEach(function(city, ci) {
+    var isHome=ci===homeIdx, accent=H_ACCENTS[ci%H_ACCENTS.length];
+    var label=document.createElement('div'); label.className='city-label'+(isHome?' home-row':''); label.dataset.ci=ci;
+    var handle=document.createElement('div'); handle.className='h-drag-handle'; handle.title='Drag to reorder';
+    for(var i=0;i<3;i++) handle.appendChild(document.createElement('span'));
+    handle.addEventListener('mousedown',(function(cii){ return function(e){ e.preventDefault(); e.stopPropagation(); onHRowDragStart(e,cii); }; })(ci));
+    var accentBar=document.createElement('div'); accentBar.className='cl-accent'; accentBar.style.background=accent;
+    var info=document.createElement('div'); info.className='cl-info';
+    if(isHome) info.innerHTML+='<div class="cl-badge">\uD83C\uDFE0 Home</div>';
+    info.innerHTML+='<div class="cl-name">'+city.name+'</div><div class="cl-country">'+city.country+'</div><div class="cl-live" id="cl-'+ci+'">'+formatCurrentTime(city.tz)+'</div><div class="cl-offset">'+getUTCOffset(city.tz)+'</div>';
+    label.appendChild(handle); label.appendChild(accentBar); label.appendChild(info);
+    if(!isHome) {
+      var rm=document.createElement('button'); rm.className='cl-remove'; rm.title='Remove'; rm.textContent='\u2715';
+      rm.addEventListener('click',(function(cii){ return function(){ removeCity(cii); }; })(ci));
+      label.appendChild(rm);
+    }
+    grid.appendChild(label);
+
+    for (var h=0; h<24; h++) {
+      var utcMs=localHourToUTC(activeDate,h,homeTz);
+      var localH=getLocalHour(new Date(utcMs),city.tz);
+      var parts=new Intl.DateTimeFormat('en-US',{timeZone:city.tz,hour:'numeric',minute:'2-digit',hour12:true}).formatToParts(new Date(utcMs));
+      var hr=(parts.find(function(p){return p.type==='hour';})||{value:'0'}).value;
+      var mn=(parts.find(function(p){return p.type==='minute';})||{value:'00'}).value;
+      var ap=((parts.find(function(p){return p.type==='dayperiod';})||{value:''}).value||'').toUpperCase();
+      var hasMin=mn!=='00';
+      var isSel2=h===selectedHour, isNow2=h===nowHour, isOvlp2=overlapHours.has(h);
+      var cls2='h-cell '+getTileClass(localH);
+      if(isNow2) cls2+=' now-col'; if(isOvlp2) cls2+=' overlap-col'; if(isSel2) cls2+=' col-sel';
+      var cell=document.createElement('div'); cell.className=cls2; cell.dataset.h=h; cell.dataset.ci=ci;
+      var hrEl=document.createElement('span'); hrEl.className='c-hr'; hrEl.textContent=hasMin?hr+':'+mn:hr;
+      var apEl=document.createElement('span'); apEl.className='c-ap'; apEl.textContent=ap;
+      cell.appendChild(hrEl); cell.appendChild(apEl);
+      cell.addEventListener('mousedown',(function(hh){ return function(e){ e.preventDefault(); hDragActive=true; selectHour(hh); }; })(h));
+      cell.addEventListener('mouseenter',(function(hh){ return function(){ if(hDragActive) selectHour(hh); }; })(h));
+      grid.appendChild(cell);
     }
   });
 
-  if (found !== null && found !== dragIdx) {
-    overIdx = found;
-    const oc = document.querySelector(`.col-header-cell[data-idx="${overIdx}"]`);
-    if (oc) {
-      const r = oc.getBoundingClientRect();
-      // Whole leftmost column is the "set as home" zone — ignore left/right half
-      if (overIdx === 0) {
-        oc.classList.add('will-be-home');
-        ghostEl.classList.add('will-be-home');
-      } else {
-        const side = e.clientX < r.left + r.width/2 ? 'left' : 'right';
-        let ins = overIdx + (side === 'right' ? 1 : 0);
-        let t = ins > dragIdx ? ins - 1 : ins;
-        t = Math.max(0, Math.min(t, activeCities.length - 1));
-        oc.classList.add(side === 'left' ? 'drag-over-left' : 'drag-over-right');
-        ghostEl.classList.remove('will-be-home');
-      }
-    }
+  /* Now fractional line */
+  var tlOuter=document.getElementById('tlOuter');
+  var nowLine=document.getElementById('nowLine');
+  if(nowHour>=0) {
+    if(!nowLine){ nowLine=document.createElement('div'); nowLine.id='nowLine'; tlOuter.appendChild(nowLine); }
+    positionNowLine(nowHour);
   } else {
-    overIdx = null;
-    ghostEl.classList.remove('will-be-home');
+    if(nowLine) nowLine.remove();
+  }
+  updateLiveTimes();
+}
+
+function positionNowLine(nowHour) {
+  var nowLine=document.getElementById('nowLine'); if(!nowLine||!activeCities.length) return;
+  var mins=getCurrentMinute(activeCities[homeIdx].tz);
+  var leftPx=LABEL_W+nowHour*CELL_W+(mins/60)*CELL_W;
+  nowLine.style.left=leftPx+'px';
+  nowLine.style.height=(52+68*activeCities.length)+'px';
+  nowLine.style.top='0';
+}
+
+/* Horizontal selection */
+function selectHour(h) {
+  selectedHour = (selectedHour===h && !hDragActive) ? null : h;
+  updateHSelected();
+}
+function clearSelection() { selectedHour=null; updateHSelected(); }
+function updateHSelected() {
+  document.querySelectorAll('#tlGrid .h-cell, #tlGrid .hour-hdr').forEach(function(el){
+    el.classList.toggle('col-sel', parseInt(el.dataset.h,10)===selectedHour);
+  });
+  renderHPanel();
+}
+function renderHPanel() {
+  var panel=document.getElementById('selPanel'); if(!panel) return;
+  if(selectedHour===null){ panel.classList.remove('open'); return; }
+  var homeTz=activeCities[homeIdx].tz;
+  var utcMs=localHourToUTC(activeDate,selectedHour,homeTz);
+  document.getElementById('selHeadline').textContent=fmtFullTime(utcMs,homeTz)+'  \u00B7  '+fmtDate(utcMs,homeTz)+'  in  '+activeCities[homeIdx].name;
+  var cards=document.getElementById('selCards'); cards.innerHTML='';
+  activeCities.forEach(function(city,ci){
+    var isHome=ci===homeIdx;
+    var card=document.createElement('div'); card.className='sel-card'+(isHome?' home-card':'');
+    card.innerHTML=(isHome?'<div class="sc-badge">\uD83C\uDFE0 Home</div>':'')+'<div class="sc-city">'+city.name+'</div><div class="sc-time">'+fmtFullTime(utcMs,city.tz)+'</div><div class="sc-date">'+fmtDate(utcMs,city.tz)+'</div>';
+    cards.appendChild(card);
+  });
+  panel.classList.add('open');
+}
+
+/* Horizontal live times */
+function updateLiveTimes() {
+  activeCities.forEach(function(city,ci){ var el=document.getElementById('cl-'+ci); if(el) el.textContent=formatCurrentTime(city.tz); });
+}
+function startLive() {
+  stopLive();
+  liveTimer=setInterval(function(){ updateLiveTimes(); positionNowLine(getCurrentHomeHour()); },1000);
+}
+function stopLive() { clearInterval(liveTimer); liveTimer=null; }
+
+/* Scroll to now */
+function scrollToNow() {
+  var nowHour=getCurrentHomeHour(); if(nowHour<0) return;
+  var outer=document.getElementById('tlOuter'); if(!outer) return;
+  var targetLeft=LABEL_W+nowHour*CELL_W-outer.clientWidth/2+CELL_W/2;
+  outer.scrollLeft=Math.max(0,targetLeft);
+}
+
+/* Horizontal row drag */
+function onHRowDragStart(e, ci) {
+  hRowDragIdx=ci;
+  var ghost=document.getElementById('rowGhost');
+  document.getElementById('rgName').textContent=activeCities[ci].name;
+  document.getElementById('rgTime').textContent=formatCurrentTime(activeCities[ci].tz);
+  ghost.style.top=(e.clientY-20)+'px'; ghost.style.opacity='1';
+  ghost.classList.remove('will-be-home');
+  document.querySelectorAll('#tlGrid [data-ci="'+ci+'"]').forEach(function(el){ el.classList.add('row-dragging'); });
+  document.addEventListener('mousemove', onHRowDragMove);
+  document.addEventListener('mouseup', onHRowDragEnd);
+}
+function onHRowDragMove(e) {
+  if(hRowDragIdx===null) return;
+  var ghost=document.getElementById('rowGhost'); ghost.style.top=(e.clientY-20)+'px';
+  var labels=[].slice.call(document.querySelectorAll('#tlGrid .city-label'));
+  var targetCi=null, insertBefore=true;
+  labels.forEach(function(lbl){
+    var r=lbl.getBoundingClientRect();
+    if(e.clientY>=r.top && e.clientY<r.bottom){ targetCi=parseInt(lbl.dataset.ci,10); insertBefore=(targetCi===0)||(e.clientY<r.top+r.height/2); }
+  });
+  if(targetCi!==null) {
+    var ins=insertBefore?targetCi:targetCi+1, t=ins>hRowDragIdx?ins-1:ins;
+    t=Math.max(0,Math.min(t,activeCities.length-1)); hRowOverIdx=t;
+    var willBeHome=t===0&&hRowDragIdx!==0; ghost.classList.toggle('will-be-home',willBeHome);
+    var dropLine=document.getElementById('dropLine');
+    var tgtLbl=document.querySelector('#tlGrid .city-label[data-ci="'+targetCi+'"]');
+    if(tgtLbl){ var r2=tgtLbl.getBoundingClientRect(), outerR=document.getElementById('tlOuter').getBoundingClientRect();
+      dropLine.style.left=outerR.left+'px'; dropLine.style.width=outerR.width+'px';
+      dropLine.style.top=(insertBefore?r2.top:r2.bottom)-1.5+'px'; dropLine.style.opacity='1';
+      dropLine.classList.toggle('will-be-home',willBeHome); }
+  } else {
+    hRowOverIdx=null; document.getElementById('dropLine').style.opacity='0'; ghost.classList.remove('will-be-home');
   }
 }
-
-function onDragEnd(e) {
-  document.removeEventListener('mousemove', onDragMove);
-  document.removeEventListener('mouseup',   onDragEnd);
-  ghostEl.style.opacity = '0'; ghostEl.style.top = '-9999px';
-  ghostEl.classList.remove('will-be-home');
-  document.querySelectorAll('.col-header-cell').forEach(c => c.classList.remove('dragging','drag-over-left','drag-over-right','will-be-home'));
-
-  if (dragIdx !== null && overIdx !== null && dragIdx !== overIdx) {
-    const oc = document.querySelector(`.col-header-cell[data-idx="${overIdx}"]`);
-    let ins = overIdx;
-    // Whole leftmost column = position 0 drop zone; skip half-check
-    if (oc && overIdx !== 0) { const r = oc.getBoundingClientRect(); if (e.clientX >= r.left + r.width/2) ins = overIdx+1; }
-    const item = activeCities.splice(dragIdx, 1)[0];
-    const wasHome = dragIdx === homeIdx;
-    if (!wasHome && homeIdx > dragIdx) homeIdx--;
-    let t = ins > dragIdx ? ins-1 : ins;
-    t = Math.max(0, Math.min(t, activeCities.length));
-    activeCities.splice(t, 0, item);
-    // If dropped at position 0, it becomes the new home
-    if (t === 0) {
-      homeIdx = 0;
-    } else if (wasHome) {
-      homeIdx = t;
-    } else if (homeIdx >= t) {
-      homeIdx++;
-    }
-    saveCities(); renderAll();
-  } else {
-    buildGrid();
-  }
-  dragIdx = null; overIdx = null;
+function onHRowDragEnd(e) {
+  document.removeEventListener('mousemove',onHRowDragMove); document.removeEventListener('mouseup',onHRowDragEnd);
+  var ghost=document.getElementById('rowGhost'); ghost.style.opacity='0'; ghost.style.top='-9999px'; ghost.classList.remove('will-be-home');
+  document.getElementById('dropLine').style.opacity='0';
+  document.querySelectorAll('.row-dragging').forEach(function(el){ el.classList.remove('row-dragging'); });
+  if(hRowDragIdx!==null && hRowOverIdx!==null && hRowDragIdx!==hRowOverIdx) {
+    var item=activeCities.splice(hRowDragIdx,1)[0], wasHome=hRowDragIdx===homeIdx;
+    if(!wasHome && homeIdx>hRowDragIdx) homeIdx--;
+    activeCities.splice(hRowOverIdx,0,item);
+    if(hRowOverIdx===0) homeIdx=0;
+    else if(wasHome) homeIdx=hRowOverIdx;
+    else if(homeIdx>=hRowOverIdx) homeIdx++;
+    saveCities(); buildHorizontalGrid();
+  } else buildHorizontalGrid();
+  hRowDragIdx=null; hRowOverIdx=null;
 }
 
-// ── TILE EVENTS ──
-function onTileHover(h) {
-  document.querySelectorAll('.hour-tile').forEach(t => t.classList.remove('highlighted'));
-  document.querySelectorAll(`[data-home-hour="${h}"]`).forEach(t => t.classList.add('highlighted'));
-  const utcMs = localHourToUTC(activeDate, h, activeCities[homeIdx].tz);
-  const times = activeCities.map(c => { const lh=getLocalHour(new Date(utcMs),c.tz); return `${c.name} ${lh===0?12:lh>12?lh-12:lh}${lh>=12?'pm':'am'}`; }).join('  ·  ');
-  showTooltip(times);
-}
-function onTileLeave() {
-  document.querySelectorAll('.hour-tile').forEach(t => t.classList.remove('highlighted'));
-  hideTooltip();
-}
-function onTileClick(h) {
-  document.querySelectorAll('.hour-tile').forEach(t => t.classList.remove('selected-range'));
-  document.querySelectorAll(`[data-home-hour="${h}"]`).forEach(t => t.classList.add('selected-range'));
-}
+/* ══════════════════════════════════════
+   SHARED FUNCTIONS
+   ══════════════════════════════════════ */
 
-// ── CITY MANAGEMENT ──
+/* City management */
 function removeCity(idx) {
-  if (activeCities.length <= 1 || idx === homeIdx) return;
-  activeCities.splice(idx, 1);
-  if (homeIdx > idx) homeIdx--;
+  if(activeCities.length<=1 || idx===homeIdx) return;
+  activeCities.splice(idx,1); if(homeIdx>idx) homeIdx--;
   saveCities(); renderAll();
 }
-function addCity(name) {
-  const city = CITIES_DB.find(c => c.name === name);
-  if (city && activeCities.length < 6) { activeCities.push(city); saveCities(); closeModal(); renderAll(); }
+function addCity(city) {
+  var maxLen = currentView==='vertical' ? 6 : 8;
+  if(activeCities.length>=maxLen) return;
+  activeCities.push(city); saveCities(); closeModal(); renderAll();
 }
 
-// ── DATE ──
-function buildDateStrip() {
-  const strip = document.getElementById('dateStrip'); strip.innerHTML = '';
-  const today = new Date(); today.setHours(0,0,0,0);
-  for (let i=-3; i<=6; i++) {
-    const d = new Date(today.getTime()+i*86400000);
-    const chip = document.createElement('div');
-    chip.className = 'date-chip'+(d.getTime()===activeDate.getTime()?' active':'');
-    const days=['SUN','MON','TUE','WED','THU','FRI','SAT'];
-    chip.innerHTML=`<div class="chip-day">${days[d.getDay()]}</div><div class="chip-num">${d.getDate()}</div>`;
-    chip.onclick = () => { activeDate = d; renderAll(); };
-    strip.appendChild(chip);
-  }
-  const a = strip.querySelector('.active');
-  if (a) a.scrollIntoView({inline:'center',behavior:'smooth',block:'nearest'});
-}
+/* Date nav */
 function updateDateDisplay() {
-  document.getElementById('dateDisplay').textContent = activeDate.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric',year:'numeric'});
+  var el=document.getElementById('dateDisplay'); if(!el) return;
+  var today=new Date(); today.setHours(0,0,0,0);
+  var isToday=activeDate.getTime()===today.getTime();
+  el.textContent=isToday?'Today':activeDate.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric',year:'numeric'});
 }
 function shiftDay(n) {
-  if (n===0) { activeDate=new Date(); activeDate.setHours(0,0,0,0); }
-  else activeDate = new Date(activeDate.getTime()+n*86400000);
-  renderAll();
+  if(n===0){activeDate=new Date(); activeDate.setHours(0,0,0,0);}
+  else activeDate=new Date(activeDate.getTime()+n*86400000);
+  selectedHour=null; renderAll();
 }
 
-// ── MODAL ──
-function openModal() { document.getElementById('searchInput').value=''; renderCityList(''); document.getElementById('modalOverlay').classList.add('open'); setTimeout(()=>document.getElementById('searchInput').focus(),100); }
+/* Modal */
+function openModal() {
+  document.getElementById('searchInput').value=''; filterCities('');
+  document.getElementById('modalOverlay').classList.add('open');
+  setTimeout(function(){ document.getElementById('searchInput').focus(); },100);
+}
 function closeModal() { document.getElementById('modalOverlay').classList.remove('open'); }
-function closeModalOnBg(e) { if(e.target===document.getElementById('modalOverlay')) closeModal(); }
-function filterCities(q) { renderCityList(q.toLowerCase()); }
-function renderCityList(q) {
-  const list = document.getElementById('cityList');
-  const already = new Set(activeCities.map(c=>c.tz+c.name));
-  const filtered = CITIES_DB.filter(c=>!already.has(c.tz+c.name)&&(c.name.toLowerCase().includes(q)||c.country.toLowerCase().includes(q)||c.tz.toLowerCase().includes(q))).slice(0,30);
-  list.innerHTML = filtered.map(c=>`<div class="city-option" onclick="addCity('${c.name.replace(/'/g,"\\'")}')"><div><div class="city-option-name">${c.name}</div><div class="city-option-country">${c.country}</div></div><div class="city-option-time">${formatCurrentTime(c.tz)}</div></div>`).join('');
+function closeModalOnBg(e){ if(e.target===document.getElementById('modalOverlay')) closeModal(); }
+function filterCities(q) {
+  var list=document.getElementById('cityList');
+  var added=new Set(activeCities.map(function(c){ return c.tz+c.name; }));
+  var results=CITIES_DB.filter(function(c){ return !added.has(c.tz+c.name)&&(c.name+' '+c.country).toLowerCase().includes(q.toLowerCase()); });
+  list.innerHTML=''; results.slice(0,40).forEach(function(city){
+    var opt=document.createElement('div'); opt.className='city-option';
+    opt.innerHTML='<div><div class="city-option-name">'+city.name+'</div><div class="city-option-country">'+city.country+'</div></div><div class="city-option-time">'+formatCurrentTime(city.tz)+'</div>';
+    opt.addEventListener('click',function(){ addCity(city); });
+    list.appendChild(opt);
+  });
 }
 
-// ── TOOLTIP ──
-let tipTimer;
-function showTooltip(t) { clearTimeout(tipTimer); const el=document.getElementById('tooltipBar'); el.textContent=t; el.classList.add('show'); }
-function hideTooltip() { tipTimer = setTimeout(()=>document.getElementById('tooltipBar').classList.remove('show'), 200); }
+/* View switching */
+function updateViewBtn() {
+  var b=document.getElementById('viewToggleBtn'); if(!b) return;
+  b.textContent=currentView==='vertical'?'\u229F':'\u229E';
+  b.title=currentView==='vertical'?'Switch to horizontal timeline view':'Switch to vertical column view';
+}
+function switchView(v) {
+  if(v===currentView) return;
+  stopLive(); clearInterval(vTickTimer); vTickTimer=null;
+  currentView=v;
+  try{localStorage.setItem('cn_tc_view',v);}catch(e){}
+  document.getElementById('verticalView').style.display=v==='vertical'?'':'none';
+  document.getElementById('horizontalView').style.display=v==='horizontal'?'':'none';
+  updateViewBtn(); selectedHour=null; renderAll();
+  if(v==='horizontal'){startLive();setTimeout(scrollToNow,100);}
+  else{ vTickTimer=setInterval(tickClocksV,1000); }
+}
 
-// ── CLOCKS ──
-function tickClocks() { activeCities.forEach((c,i)=>{ const el=document.getElementById('ct-'+i); if(el) el.textContent=formatCurrentTime(c.tz); }); }
+/* Main render */
+function renderAll() {
+  updateDateDisplay();
+  if(currentView==='vertical'){ buildDateStrip(); buildVerticalGrid(); }
+  else{ buildHorizontalGrid(); }
+}
 
-function renderAll() { buildDateStrip(); updateDateDisplay(); buildGrid(); }
-document.addEventListener('keydown', e => { if(e.key==='Escape') closeModal(); });
-renderAll();
-setInterval(tickClocks, 1000);
-setInterval(buildGrid, 60000);
+/* Keyboard shortcuts */
+document.addEventListener('keydown', function(e){
+  if(e.key==='Escape'){ closeModal(); clearSelection(); }
+});
+document.addEventListener('mouseup', function(){ hDragActive=false; });
+
+/* ── INIT (load state, but don't render yet) ── */
+activeCities = loadCities() || [
+  CITIES_DB.find(function(c){return c.name==='New York';}),
+  CITIES_DB.find(function(c){return c.name==='London';}),
+  CITIES_DB.find(function(c){return c.name==='Tokyo';})
+];
+try{ homeIdx=Math.min(parseInt(localStorage.getItem('cn_home')||'0',10)||0, activeCities.length-1); }catch(e){homeIdx=0;}
+try{ currentView=localStorage.getItem('cn_tc_view')||'vertical'; }catch(e){currentView='vertical';}
 </script>
 
 <script>
   window.CALCNOVA_PAGE = {
     id: 'time-converter',
-    // Date nav is injected into the header by nav.js, then the Add City button is appended below
-    extraHeader: '<div class="date-nav"><button onclick="shiftDay(-1)">&#8249;</button><div class="date-display" id="dateDisplay"></div><button onclick="shiftDay(1)">&#8250;</button><button onclick="shiftDay(0)" style="font-size:11px;font-weight:700;color:#10b981;">Today</button></div>'
+    extraHeader:
+      '<span id="dateDisplay" style="font-size:13px;font-weight:600;color:var(--text-secondary);font-family:var(--mono);padding:0 4px;white-space:nowrap;"></span>' +
+      '<button class="icon-btn" onclick="shiftDay(-1)" style="min-width:30px;width:30px;height:30px;font-size:20px;line-height:1;">\u2039</button>' +
+      '<button class="icon-btn" onclick="shiftDay(0)" style="font-size:11px;font-weight:800;color:#10b981;width:auto;padding:0 10px;min-width:48px;">Today</button>' +
+      '<button class="icon-btn" onclick="shiftDay(1)"  style="min-width:30px;width:30px;height:30px;font-size:20px;line-height:1;">\u203a</button>'
   };
 </script>
 <script src="shared/nav.js"></script>
 <script>
-  // Append the "Add City" button to the right side of the shared header
+  /* Post-nav.js injection: add buttons, show correct view, initial render */
   (function() {
     var hr = document.getElementById('cn-header-right');
     if (hr) {
-      var btn = document.createElement('button');
-      btn.className = 'add-btn';
-      btn.innerHTML = '&#xff0b; Add City';
-      btn.onclick = function() { openModal(); };
-      hr.appendChild(btn);
+      var donate = hr.querySelector('.donate-btn');
+      /* View toggle button */
+      var vBtn = document.createElement('button');
+      vBtn.className = 'icon-btn view-toggle-btn';
+      vBtn.id = 'viewToggleBtn';
+      vBtn.onclick = function() { switchView(currentView==='vertical'?'horizontal':'vertical'); };
+      hr.insertBefore(vBtn, donate);
+      /* Add City button */
+      var addBtn = document.createElement('button');
+      addBtn.className = 'add-btn';
+      addBtn.innerHTML = '\uff0b Add City';
+      addBtn.onclick = function() { openModal(); };
+      hr.insertBefore(addBtn, donate);
     }
+
+    /* Show/hide correct view */
+    document.getElementById('verticalView').style.display   = currentView==='vertical'   ? '' : 'none';
+    document.getElementById('horizontalView').style.display = currentView==='horizontal' ? '' : 'none';
+    updateViewBtn();
+
+    /* Initial render (now that #dateDisplay exists in DOM) */
+    renderAll();
+
+    if (currentView === 'horizontal') {
+      startLive();
+      setTimeout(scrollToNow, 100);
+    } else {
+      vTickTimer = setInterval(tickClocksV, 1000);
+    }
+
+    /* Rebuild grid every minute for time accuracy */
+    setInterval(function(){
+      if(currentView==='vertical') buildVerticalGrid();
+    }, 60000);
   })();
 </script>
 </body>
