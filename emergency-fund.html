@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Emergency Fund Calculator — How Much Do You Need? | CalcNova</title>
+  <meta name="description" content="Free emergency fund calculator — find out how much you need saved, how long it will take, and track your progress toward financial security.">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Emergency Fund Calculator — How Much Do You Need? | CalcNova">
+  <meta property="og:description" content="Free emergency fund calculator — find out how much you need saved, how long it will take, and track your progress toward financial security.">
+  <meta property="og:type" content="website">
+
+  <!-- JSON-LD Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FinancialProduct",
+    "name": "Emergency Fund Calculator",
+    "description": "Free emergency fund calculator to determine how much you need and how long it will take to build your safety net.",
+    "provider": {
+      "@type": "Organization",
+      "name": "CalcNova"
+    },
+    "feesAndCommissionsSpecification": "Free to use, no login required."
+  }
+  </script>
+
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="shared/nav.css">
+  <style>
+    .app { position: relative; z-index: 1; max-width: 960px; margin: 0 auto; padding: 0 16px 60px; }
+
+    /* ── HERO ── */
+    .hero {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 38px 32px;
+      margin-bottom: 20px;
+    }
+    .hero-title { font-size: 28px; font-weight: 800; letter-spacing: -.5px; margin-bottom: 8px; }
+    .hero-title span {
+      background: linear-gradient(135deg, var(--green), var(--purple));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .hero-desc { font-size: 14px; color: var(--text-secondary); line-height: 1.6; max-width: 600px; }
+
+    /* ── GRID ── */
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+    @media (max-width: 640px) { .two-col { grid-template-columns: 1fr; } }
+
+    /* ── CARD ── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 22px;
+    }
+    .card-title {
+      font-family: var(--mono);
+      font-size: 11px; font-weight: 700; letter-spacing: .5px; text-transform: uppercase;
+      color: var(--text-muted); margin-bottom: 18px;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .card-title-dot { width: 6px; height: 6px; border-radius: 50%; }
+
+    /* ── FORM ── */
+    .form-group { margin-bottom: 14px; }
+    .form-group:last-child { margin-bottom: 0; }
+    .form-label { font-size: 12px; font-weight: 600; color: var(--text-secondary); margin-bottom: 6px; display: block; }
+
+    .input-row { position: relative; }
+    .input-prefix, .input-suffix {
+      position: absolute; top: 50%; transform: translateY(-50%);
+      font-family: var(--mono); font-size: 13px; font-weight: 700;
+      color: var(--text-muted); pointer-events: none;
+    }
+    .input-prefix { left: 12px; }
+    .input-suffix { right: 12px; }
+
+    input[type="number"], select {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text-primary);
+      font-family: var(--font);
+      font-size: 14px;
+      font-weight: 600;
+      padding: 9px 12px;
+      outline: none;
+      transition: border-color .2s, box-shadow .2s;
+      appearance: none;
+      -moz-appearance: textfield;
+    }
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+    .has-prefix input[type="number"] { padding-left: 28px; }
+    .has-suffix input[type="number"] { padding-right: 36px; }
+
+    select {
+      cursor: pointer;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239ba3b5' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      padding-right: 32px;
+    }
+
+    input[type="number"]:focus, select:focus {
+      border-color: var(--green);
+      box-shadow: 0 0 0 3px rgba(16,185,129,.12);
+    }
+
+    /* ── COLLAPSIBLE BREAKDOWN ── */
+    .breakdown-toggle {
+      display: flex; align-items: center; gap: 8px;
+      background: none; border: none; cursor: pointer;
+      font-family: var(--font); font-size: 12px; font-weight: 700;
+      color: var(--green); padding: 8px 0; margin-top: 4px;
+      transition: color .15s;
+    }
+    .breakdown-toggle:hover { color: var(--purple); }
+    .breakdown-toggle svg { width: 14px; height: 14px; transition: transform .2s; }
+    .breakdown-toggle.open svg { transform: rotate(180deg); }
+    .breakdown-content {
+      max-height: 0; overflow: hidden;
+      transition: max-height .35s ease;
+    }
+    .breakdown-content.open { max-height: 600px; }
+    .breakdown-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+      padding-top: 10px;
+    }
+    @media (max-width: 480px) { .breakdown-grid { grid-template-columns: 1fr; } }
+    .breakdown-sum {
+      font-size: 12px; color: var(--text-muted); margin-top: 10px;
+      font-family: var(--mono); font-weight: 600;
+    }
+    .breakdown-sum span { color: var(--green); }
+
+    /* ── ACTION ROW ── */
+    .action-row {
+      display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap;
+    }
+    .action-btn {
+      display: flex; align-items: center; gap: 7px;
+      padding: 9px 18px; border-radius: 10px; font-size: 13px; font-weight: 600;
+      cursor: pointer; transition: all .15s; font-family: var(--font);
+      background: var(--surface); border: 1px solid var(--border); color: var(--text-secondary);
+    }
+    .action-btn svg { width: 15px; height: 15px; }
+    .action-btn:hover { border-color: var(--green); color: var(--green); }
+
+    .calc-btn {
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      width: 100%; padding: 12px; border-radius: 12px; border: none;
+      background: linear-gradient(135deg, var(--green), var(--purple));
+      color: #fff; font-family: var(--font); font-size: 14px; font-weight: 700;
+      cursor: pointer; transition: all .15s;
+      box-shadow: 0 4px 14px rgba(16,185,129,.3);
+      margin-top: 6px;
+    }
+    .calc-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(16,185,129,.4); }
+
+    /* ── RESULTS ── */
+    #results { display: none; }
+    #results.show { display: block; }
+
+    /* ── STATUS BANNER ── */
+    .status-banner {
+      border-radius: 16px; padding: 18px 20px;
+      margin-bottom: 16px;
+      display: flex; align-items: center; gap: 16px;
+    }
+    .status-banner.reached {
+      background: linear-gradient(135deg, rgba(16,185,129,.1), rgba(16,185,129,.05));
+      border: 1px solid rgba(16,185,129,.3);
+    }
+    .status-banner.saving-needed {
+      background: linear-gradient(135deg, rgba(245,158,11,.1), rgba(245,158,11,.05));
+      border: 1px solid rgba(245,158,11,.3);
+    }
+    .status-banner.on-track {
+      background: linear-gradient(135deg, rgba(99,102,241,.08), rgba(16,185,129,.05));
+      border: 1px solid rgba(99,102,241,.25);
+    }
+    .status-icon { font-size: 32px; flex-shrink: 0; }
+    .status-title { font-size: 17px; font-weight: 800; margin-bottom: 3px; }
+    .status-title.green { color: var(--green); }
+    .status-title.amber { color: var(--amber); }
+    .status-title.purple { color: var(--purple); }
+    .status-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.5; }
+
+    /* ── STATS ── */
+    .stats-row {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 16px;
+    }
+    @media (max-width: 640px) { .stats-row { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 400px) { .stats-row { grid-template-columns: 1fr; } }
+
+    .stat-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 16px; padding: 18px 16px;
+    }
+    .stat-card.green { border-color: rgba(16,185,129,.2); background: linear-gradient(135deg, rgba(16,185,129,.03), transparent); }
+    .stat-card.purple { border-color: rgba(99,102,241,.2); background: linear-gradient(135deg, rgba(99,102,241,.03), transparent); }
+    .stat-card.amber { border-color: rgba(245,158,11,.2); background: linear-gradient(135deg, rgba(245,158,11,.03), transparent); }
+    .stat-card.primary {
+      border-color: rgba(16,185,129,.3);
+      background: linear-gradient(135deg, rgba(16,185,129,.08), rgba(99,102,241,.04));
+    }
+
+    .stat-icon { font-size: 20px; margin-bottom: 6px; }
+    .stat-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .4px; color: var(--text-muted); margin-bottom: 4px; }
+    .stat-value { font-family: var(--mono); font-size: 20px; font-weight: 700; color: var(--text-primary); }
+    .stat-value.td-green { color: var(--green); }
+    .stat-value.td-purple { color: var(--purple); }
+    .stat-value.td-amber { color: var(--amber); }
+    .stat-sub { font-size: 11px; color: var(--text-muted); margin-top: 3px; }
+
+    /* ── PROGRESS BAR ── */
+    .progress-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 18px; padding: 22px; margin-bottom: 16px;
+    }
+    .progress-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+    .progress-title { font-size: 13px; font-weight: 700; color: var(--text-primary); }
+    .progress-pct { font-family: var(--mono); font-size: 16px; font-weight: 700; color: var(--green); }
+    .progress-track {
+      height: 14px; background: var(--bg); border-radius: 7px; overflow: hidden; margin-bottom: 10px;
+      border: 1px solid var(--border);
+    }
+    .progress-fill {
+      height: 100%; border-radius: 7px;
+      background: linear-gradient(90deg, var(--green), var(--purple));
+      transition: width .6s cubic-bezier(.4,0,.2,1);
+    }
+    .progress-labels { display: flex; justify-content: space-between; font-size: 11px; color: var(--text-muted); font-weight: 600; }
+
+    /* ── CHART ── */
+    .chart-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 18px; padding: 22px; margin-bottom: 16px;
+    }
+    .chart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 8px; }
+    .chart-title { font-size: 14px; font-weight: 700; color: var(--text-primary); }
+    .chart-legend { display: flex; gap: 14px; flex-wrap: wrap; }
+    .chart-legend-item { display: flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 600; color: var(--text-muted); }
+    .chart-legend-dot { width: 8px; height: 8px; border-radius: 50%; }
+    canvas { width: 100%; display: block; border-radius: 8px; }
+
+    /* ── TOAST ── */
+    #toast {
+      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(8px); z-index: 200;
+      background: var(--text-primary); color: var(--bg);
+      padding: 10px 18px; border-radius: 100px;
+      font-size: 12px; font-weight: 700; font-family: var(--mono);
+      display: flex; align-items: center; gap: 7px;
+      box-shadow: 0 8px 24px rgba(0,0,0,.25);
+      opacity: 0;
+      transition: opacity .25s, transform .25s; pointer-events: none;
+    }
+
+    /* ── FADE IN ── */
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+    .fade-in { animation: fadeUp .4s ease-out both; }
+    .fade-in-d1 { animation-delay: .05s; }
+    .fade-in-d2 { animation-delay: .10s; }
+    .fade-in-d3 { animation-delay: .15s; }
+    .fade-in-d4 { animation-delay: .20s; }
+
+    /* ── PRINT ── */
+    .print-summary { display: none; }
+
+    @media print {
+      body::before { display: none; }
+      .header-right .icon-btn,
+      .header-right .nav-tools-wrap,
+      .header-right .donate-btn,
+      .action-row,
+      .breakdown-toggle,
+      .calc-btn { display: none !important; }
+      .mega-menu, .menu-overlay { display: none !important; }
+      #toast { display: none !important; }
+      .chart-card { page-break-inside: avoid; }
+
+      .print-summary {
+        display: block;
+        background: #fff; border: 1px solid #ddd; border-radius: 10px;
+        padding: 16px 20px; margin-bottom: 16px;
+        font-family: 'Plus Jakarta Sans', sans-serif;
+      }
+      .print-summary-title {
+        font-size: 13px; font-weight: 700; text-transform: uppercase;
+        letter-spacing: .5px; color: #888; margin-bottom: 10px;
+      }
+      .print-summary-grid {
+        display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px 16px;
+      }
+      .print-summary-item .ps-label {
+        font-size: 10px; font-weight: 600; text-transform: uppercase;
+        letter-spacing: .4px; color: #999; margin-bottom: 2px;
+      }
+      .print-summary-item .ps-value {
+        font-size: 14px; font-weight: 700; color: #0f1623;
+        font-family: 'JetBrains Mono', monospace;
+      }
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 640px) {
+      .hero { padding: 28px 20px; }
+      .hero-title { font-size: 22px; }
+      .card { padding: 18px 16px; }
+    }
+    @media (max-width: 400px) {
+      .hero { padding: 22px 16px; }
+      .hero-title { font-size: 20px; }
+      .action-row { flex-direction: column; }
+      .action-btn { justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+
+  <!-- HERO -->
+  <div class="hero fade-in">
+    <div class="hero-title">Emergency Fund <span>Calculator</span></div>
+    <div class="hero-desc">Find out how much you need in your emergency fund, how long it will take to build, and track your progress toward financial security.</div>
+  </div>
+
+  <!-- INPUT SECTION -->
+  <div class="two-col fade-in fade-in-d1">
+
+    <!-- Left: Expenses & Coverage -->
+    <div class="card">
+      <div class="card-title">
+        <div class="card-title-dot" style="background:var(--green)"></div>
+        Expenses &amp; Coverage
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="monthlyExpenses">Monthly Essential Expenses</label>
+        <div class="input-row has-prefix">
+          <span class="input-prefix">$</span>
+          <input type="number" id="monthlyExpenses" min="0" step="1" placeholder="3,500">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="monthsCoverage">Months of Coverage</label>
+        <select id="monthsCoverage">
+          <option value="3">3 months</option>
+          <option value="6" selected>6 months</option>
+          <option value="9">9 months</option>
+          <option value="12">12 months</option>
+        </select>
+      </div>
+
+      <!-- Collapsible Expense Breakdown -->
+      <button class="breakdown-toggle" id="breakdownToggle" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        Optional expense breakdown
+      </button>
+      <div class="breakdown-content" id="breakdownContent">
+        <div class="breakdown-grid">
+          <div class="form-group">
+            <label class="form-label" for="bkHousing">Housing / Rent</label>
+            <div class="input-row has-prefix">
+              <span class="input-prefix">$</span>
+              <input type="number" id="bkHousing" class="bk-input" min="0" step="1" placeholder="0">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="bkUtilities">Utilities</label>
+            <div class="input-row has-prefix">
+              <span class="input-prefix">$</span>
+              <input type="number" id="bkUtilities" class="bk-input" min="0" step="1" placeholder="0">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="bkGroceries">Groceries</label>
+            <div class="input-row has-prefix">
+              <span class="input-prefix">$</span>
+              <input type="number" id="bkGroceries" class="bk-input" min="0" step="1" placeholder="0">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="bkInsurance">Insurance Premiums</label>
+            <div class="input-row has-prefix">
+              <span class="input-prefix">$</span>
+              <input type="number" id="bkInsurance" class="bk-input" min="0" step="1" placeholder="0">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="bkTransport">Transportation</label>
+            <div class="input-row has-prefix">
+              <span class="input-prefix">$</span>
+              <input type="number" id="bkTransport" class="bk-input" min="0" step="1" placeholder="0">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="bkDebt">Minimum Debt Payments</label>
+            <div class="input-row has-prefix">
+              <span class="input-prefix">$</span>
+              <input type="number" id="bkDebt" class="bk-input" min="0" step="1" placeholder="0">
+            </div>
+          </div>
+          <div class="form-group" style="grid-column: 1 / -1;">
+            <label class="form-label" for="bkOther">Other Essentials</label>
+            <div class="input-row has-prefix">
+              <span class="input-prefix">$</span>
+              <input type="number" id="bkOther" class="bk-input" min="0" step="1" placeholder="0">
+            </div>
+          </div>
+        </div>
+        <div class="breakdown-sum" id="breakdownSum">Breakdown total: <span>$0</span></div>
+      </div>
+    </div>
+
+    <!-- Right: Savings & Rate -->
+    <div class="card">
+      <div class="card-title">
+        <div class="card-title-dot" style="background:var(--purple)"></div>
+        Savings Plan
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="currentSavings">Current Emergency Savings</label>
+        <div class="input-row has-prefix">
+          <span class="input-prefix">$</span>
+          <input type="number" id="currentSavings" min="0" step="1" value="0" placeholder="0">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="monthlySaving">Monthly Amount You Can Save</label>
+        <div class="input-row has-prefix">
+          <span class="input-prefix">$</span>
+          <input type="number" id="monthlySaving" min="0" step="1" placeholder="500">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="annualRate">Annual Interest Rate on Savings</label>
+        <div class="input-row has-suffix">
+          <input type="number" id="annualRate" min="0" max="100" step="0.01" value="0" placeholder="0">
+          <span class="input-suffix">%</span>
+        </div>
+      </div>
+
+      <button class="calc-btn" id="calcBtn" type="button">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4z"/><line x1="8" y1="8" x2="8" y2="8.01"/><line x1="12" y1="8" x2="16" y2="8"/><line x1="8" y1="12" x2="8" y2="12.01"/><line x1="12" y1="12" x2="16" y2="12"/><line x1="8" y1="16" x2="16" y2="16"/></svg>
+        Calculate Emergency Fund
+      </button>
+    </div>
+  </div>
+
+  <!-- RESULTS -->
+  <div id="results">
+
+    <!-- Status Banner -->
+    <div id="statusBanner" class="fade-in"></div>
+
+    <!-- Print Summary -->
+    <div class="print-summary" id="printSummary">
+      <div class="print-summary-title">Emergency Fund Summary</div>
+      <div class="print-summary-grid" id="printGrid"></div>
+    </div>
+
+    <!-- Stat Cards -->
+    <div class="stats-row fade-in fade-in-d1" id="statsRow"></div>
+
+    <!-- Progress Bar -->
+    <div class="progress-card fade-in fade-in-d2" id="progressCard">
+      <div class="progress-header">
+        <div class="progress-title">Fund Progress</div>
+        <div class="progress-pct" id="progressPct">0%</div>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" id="progressFill" style="width:0%"></div>
+      </div>
+      <div class="progress-labels">
+        <span id="progressCurrent">$0</span>
+        <span id="progressTarget">$0</span>
+      </div>
+    </div>
+
+    <!-- Chart -->
+    <div class="chart-card fade-in fade-in-d3" id="chartCard">
+      <div class="chart-header">
+        <div class="chart-title">Savings Growth Over Time</div>
+        <div class="chart-legend">
+          <div class="chart-legend-item"><div class="chart-legend-dot" style="background:var(--green)"></div>Balance</div>
+          <div class="chart-legend-item"><div class="chart-legend-dot" style="background:var(--purple)"></div>Target</div>
+        </div>
+      </div>
+      <canvas id="growthChart" height="260"></canvas>
+    </div>
+
+    <!-- Actions -->
+    <div class="action-row fade-in fade-in-d4">
+      <button class="action-btn" id="copyBtn" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        Copy Summary
+      </button>
+      <button class="action-btn" id="printBtn" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+        Print Results
+      </button>
+    </div>
+
+  </div>
+
+</div>
+
+<div id="toast"><span id="toast-msg"></span></div>
+
+<script>
+  window.CALCNOVA_PAGE = { id:'emergency-fund', disclaimer:'For informational purposes only. Not financial advice.' };
+</script>
+<script src="shared/nav.js"></script>
+<script>
+(function() {
+  'use strict';
+
+  // ── DOM refs ──
+  const $ = id => document.getElementById(id);
+  const monthlyExpensesEl = $('monthlyExpenses');
+  const monthsCoverageEl  = $('monthsCoverage');
+  const currentSavingsEl  = $('currentSavings');
+  const monthlySavingEl   = $('monthlySaving');
+  const annualRateEl      = $('annualRate');
+  const resultsEl         = $('results');
+
+  // Breakdown
+  const bkFields = document.querySelectorAll('.bk-input');
+  const breakdownSumEl = $('breakdownSum');
+  const breakdownToggleEl = $('breakdownToggle');
+  const breakdownContentEl = $('breakdownContent');
+
+  // ── Breakdown toggle ──
+  breakdownToggleEl.addEventListener('click', () => {
+    breakdownToggleEl.classList.toggle('open');
+    breakdownContentEl.classList.toggle('open');
+  });
+
+  // ── Breakdown sum auto-fill ──
+  function updateBreakdownSum() {
+    let sum = 0;
+    bkFields.forEach(f => { sum += parseFloat(f.value) || 0; });
+    breakdownSumEl.querySelector('span').textContent = '$' + fmtNum(sum);
+    if (sum > 0) {
+      monthlyExpensesEl.value = sum;
+    }
+  }
+  bkFields.forEach(f => f.addEventListener('input', updateBreakdownSum));
+
+  // ── Formatting helpers ──
+  function fmtCurrency(n) {
+    return '$' + n.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+  }
+  function fmtNum(n) {
+    return n.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+  }
+  function fmtCurrency2(n) {
+    return '$' + n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+
+  function projectedDate(months) {
+    const d = new Date();
+    d.setMonth(d.getMonth() + Math.ceil(months));
+    return d.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+  }
+
+  const MONTH_NAMES = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  function monthLabel(offset) {
+    const d = new Date();
+    d.setMonth(d.getMonth() + offset);
+    return MONTH_NAMES[d.getMonth()] + ' ' + d.getFullYear();
+  }
+
+  // ── Toast ──
+  function showToast(msg) {
+    const el = $('toast');
+    $('toast-msg').textContent = msg;
+    el.style.opacity = '1';
+    el.style.transform = 'translateX(-50%) translateY(0)';
+    setTimeout(() => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateX(-50%) translateY(8px)';
+    }, 2200);
+  }
+
+  // ── Calculate ──
+  let lastResult = null;
+
+  function calculate() {
+    const expenses = parseFloat(monthlyExpensesEl.value);
+    const months   = parseInt(monthsCoverageEl.value);
+    const current  = parseFloat(currentSavingsEl.value) || 0;
+    const pmt      = parseFloat(monthlySavingEl.value) || 0;
+    const rate     = (parseFloat(annualRateEl.value) || 0) / 100;
+
+    // Validation
+    if (!expenses || expenses <= 0) {
+      showToast('Please enter your monthly expenses');
+      return;
+    }
+
+    const target    = expenses * months;
+    const remaining = Math.max(0, target - current);
+    const pctFunded = Math.min(100, (current / target) * 100);
+
+    let monthsToFund = 0;
+    let totalContributions = 0;
+    let interestEarned = 0;
+    let alreadyFunded = current >= target;
+    let cannotReach = false;
+
+    // Build growth data
+    let growthData = [];
+    let balance = current;
+
+    if (alreadyFunded) {
+      monthsToFund = 0;
+      growthData.push({ month: 0, balance: current });
+    } else if (pmt <= 0) {
+      cannotReach = true;
+      // Still show growth line (flat) for a few months
+      for (let i = 0; i <= 12; i++) {
+        growthData.push({ month: i, balance: current });
+      }
+    } else {
+      const r = rate / 12;
+
+      if (r > 0) {
+        // FV formula with recurring payments: FV = PV*(1+r)^n + PMT*((1+r)^n - 1)/r
+        // Solve for n: n = ln((target*r + PMT) / (current*r + PMT)) / ln(1+r)
+        const numerator   = target * r + pmt;
+        const denominator = current * r + pmt;
+
+        if (denominator <= 0) {
+          cannotReach = true;
+        } else {
+          monthsToFund = Math.log(numerator / denominator) / Math.log(1 + r);
+          if (!isFinite(monthsToFund) || monthsToFund < 0) {
+            monthsToFund = 0;
+            alreadyFunded = true;
+          }
+        }
+      } else {
+        monthsToFund = remaining / pmt;
+      }
+
+      if (!cannotReach) {
+        const totalMonths = Math.ceil(monthsToFund);
+        balance = current;
+        growthData.push({ month: 0, balance: balance });
+        const r = rate / 12;
+        for (let i = 1; i <= totalMonths; i++) {
+          const interest = balance * r;
+          balance += pmt + interest;
+          interestEarned += interest;
+          totalContributions += pmt;
+          growthData.push({ month: i, balance: Math.min(balance, target * 1.05) });
+        }
+        // Ensure last point hits target
+        if (growthData.length > 1) {
+          growthData[growthData.length - 1].balance = target;
+        }
+      }
+    }
+
+    lastResult = {
+      target, remaining, current, pmt, rate,
+      pctFunded, monthsToFund, totalContributions, interestEarned,
+      alreadyFunded, cannotReach, growthData, expenses, months
+    };
+
+    renderResults(lastResult);
+  }
+
+  function renderResults(r) {
+    resultsEl.classList.add('show');
+
+    // ── Status banner ──
+    const bannerEl = $('statusBanner');
+    if (r.alreadyFunded) {
+      bannerEl.className = 'status-banner reached fade-in';
+      bannerEl.innerHTML = `
+        <div class="status-icon">🎉</div>
+        <div>
+          <div class="status-title green">Congratulations! Your emergency fund is fully funded.</div>
+          <div class="status-desc">You have ${fmtCurrency(r.current)} saved, which covers ${r.months} months of expenses (${fmtCurrency(r.target)} target). Great job building your financial safety net!</div>
+        </div>`;
+    } else if (r.cannotReach) {
+      bannerEl.className = 'status-banner saving-needed fade-in';
+      bannerEl.innerHTML = `
+        <div class="status-icon">⚠️</div>
+        <div>
+          <div class="status-title amber">Set a monthly savings amount</div>
+          <div class="status-desc">You still need ${fmtCurrency(r.remaining)} to reach your ${fmtCurrency(r.target)} target. Enter a monthly savings amount above to see how long it will take to build your emergency fund.</div>
+        </div>`;
+    } else {
+      bannerEl.className = 'status-banner on-track fade-in';
+      bannerEl.innerHTML = `
+        <div class="status-icon">📊</div>
+        <div>
+          <div class="status-title purple">You'll be fully funded by ${projectedDate(r.monthsToFund)}</div>
+          <div class="status-desc">Saving ${fmtCurrency(r.pmt)}/month${r.rate > 0 ? ' at ' + (r.rate * 100).toFixed(2) + '% APY' : ''}, you'll reach your ${fmtCurrency(r.target)} target in ${Math.ceil(r.monthsToFund)} month${Math.ceil(r.monthsToFund) !== 1 ? 's' : ''}.</div>
+        </div>`;
+    }
+
+    // ── Stat cards ──
+    const statsHtml = `
+      <div class="stat-card primary">
+        <div class="stat-icon">🎯</div>
+        <div class="stat-label">Target Fund</div>
+        <div class="stat-value td-green">${fmtCurrency(r.target)}</div>
+        <div class="stat-sub">${r.months} months of expenses</div>
+      </div>
+      <div class="stat-card ${r.remaining > 0 ? 'amber' : 'green'}">
+        <div class="stat-icon">${r.remaining > 0 ? '📈' : '✅'}</div>
+        <div class="stat-label">Amount Still Needed</div>
+        <div class="stat-value ${r.remaining > 0 ? 'td-amber' : 'td-green'}">${fmtCurrency(r.remaining)}</div>
+        <div class="stat-sub">${r.alreadyFunded ? 'Fully funded!' : fmtCurrency(r.current) + ' saved so far'}</div>
+      </div>
+      <div class="stat-card purple">
+        <div class="stat-icon">📅</div>
+        <div class="stat-label">Months to Fully Funded</div>
+        <div class="stat-value td-purple">${r.alreadyFunded ? '0' : r.cannotReach ? '—' : Math.ceil(r.monthsToFund)}</div>
+        <div class="stat-sub">${r.alreadyFunded ? 'Already there!' : r.cannotReach ? 'Set savings amount' : projectedDate(r.monthsToFund)}</div>
+      </div>
+      ${!r.alreadyFunded && !r.cannotReach ? `
+      <div class="stat-card green">
+        <div class="stat-icon">💵</div>
+        <div class="stat-label">Total Contributions</div>
+        <div class="stat-value td-green">${fmtCurrency2(r.totalContributions)}</div>
+        <div class="stat-sub">From monthly savings</div>
+      </div>
+      <div class="stat-card ${r.interestEarned > 0 ? 'purple' : ''}">
+        <div class="stat-icon">🏦</div>
+        <div class="stat-label">Interest Earned</div>
+        <div class="stat-value ${r.interestEarned > 0 ? 'td-purple' : ''}">${fmtCurrency2(r.interestEarned)}</div>
+        <div class="stat-sub">${r.rate > 0 ? (r.rate * 100).toFixed(2) + '% annual rate' : 'No interest'}</div>
+      </div>
+      ` : ''}
+    `;
+    $('statsRow').innerHTML = statsHtml;
+
+    // ── Progress bar ──
+    const pct = Math.min(100, r.pctFunded);
+    $('progressPct').textContent = pct.toFixed(1) + '%';
+    $('progressFill').style.width = pct + '%';
+    $('progressCurrent').textContent = fmtCurrency(r.current);
+    $('progressTarget').textContent = fmtCurrency(r.target);
+
+    // ── Chart ──
+    if (!r.alreadyFunded && !r.cannotReach) {
+      $('chartCard').style.display = '';
+      drawChart(r);
+    } else if (r.cannotReach) {
+      $('chartCard').style.display = 'none';
+    } else {
+      $('chartCard').style.display = 'none';
+    }
+
+    // ── Print summary ──
+    let printItems = `
+      <div class="print-summary-item"><div class="ps-label">Target</div><div class="ps-value">${fmtCurrency(r.target)}</div></div>
+      <div class="print-summary-item"><div class="ps-label">Current</div><div class="ps-value">${fmtCurrency(r.current)}</div></div>
+      <div class="print-summary-item"><div class="ps-label">Remaining</div><div class="ps-value">${fmtCurrency(r.remaining)}</div></div>
+    `;
+    if (!r.alreadyFunded && !r.cannotReach) {
+      printItems += `
+        <div class="print-summary-item"><div class="ps-label">Months</div><div class="ps-value">${Math.ceil(r.monthsToFund)}</div></div>
+        <div class="print-summary-item"><div class="ps-label">Contributions</div><div class="ps-value">${fmtCurrency2(r.totalContributions)}</div></div>
+        <div class="print-summary-item"><div class="ps-label">Interest</div><div class="ps-value">${fmtCurrency2(r.interestEarned)}</div></div>
+      `;
+    }
+    $('printGrid').innerHTML = printItems;
+
+    // Scroll to results
+    resultsEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  // ── Chart ──
+  function drawChart(r) {
+    const canvas = $('growthChart');
+    const dpr = window.devicePixelRatio || 1;
+    const rect = canvas.parentElement.getBoundingClientRect();
+    const W = rect.width - 44; // padding
+    const H = 260;
+    canvas.width = (W + 44) * dpr;
+    canvas.height = H * dpr;
+    canvas.style.width = (W + 44) + 'px';
+    canvas.style.height = H + 'px';
+
+    const ctx = canvas.getContext('2d');
+    ctx.scale(dpr, dpr);
+    ctx.clearRect(0, 0, W + 44, H);
+
+    const data = r.growthData;
+    if (data.length < 2) return;
+
+    const padL = 60, padR = 16, padT = 20, padB = 36;
+    const chartW = W + 44 - padL - padR;
+    const chartH = H - padT - padB;
+
+    const maxMonth = data[data.length - 1].month;
+    const maxVal   = Math.max(r.target, ...data.map(d => d.balance)) * 1.08;
+
+    function xPos(month) { return padL + (month / maxMonth) * chartW; }
+    function yPos(val) { return padT + chartH - (val / maxVal) * chartH; }
+
+    const isDark = document.body.classList.contains('dark');
+    const gridColor = isDark ? 'rgba(48,54,61,.6)' : 'rgba(226,230,239,.8)';
+    const textColor = isDark ? '#8b949e' : '#9ba3b5';
+
+    // Grid lines
+    ctx.strokeStyle = gridColor;
+    ctx.lineWidth = 1;
+    const gridSteps = 5;
+    for (let i = 0; i <= gridSteps; i++) {
+      const val = (maxVal / gridSteps) * i;
+      const y = yPos(val);
+      ctx.beginPath();
+      ctx.moveTo(padL, y);
+      ctx.lineTo(padL + chartW, y);
+      ctx.stroke();
+
+      ctx.fillStyle = textColor;
+      ctx.font = '10px JetBrains Mono';
+      ctx.textAlign = 'right';
+      ctx.fillText('$' + fmtNum(Math.round(val)), padL - 8, y + 3);
+    }
+
+    // X-axis labels
+    ctx.textAlign = 'center';
+    const labelCount = Math.min(6, maxMonth);
+    const labelStep = Math.max(1, Math.floor(maxMonth / labelCount));
+    for (let m = 0; m <= maxMonth; m += labelStep) {
+      const x = xPos(m);
+      ctx.fillStyle = textColor;
+      ctx.font = '10px JetBrains Mono';
+      ctx.fillText(monthLabel(m), x, H - 8);
+    }
+    // Always label last
+    if (maxMonth % labelStep !== 0) {
+      ctx.fillText(monthLabel(maxMonth), xPos(maxMonth), H - 8);
+    }
+
+    // Target line (dashed)
+    ctx.strokeStyle = isDark ? '#6366f1' : '#6366f1';
+    ctx.lineWidth = 1.5;
+    ctx.setLineDash([6, 4]);
+    ctx.beginPath();
+    ctx.moveTo(padL, yPos(r.target));
+    ctx.lineTo(padL + chartW, yPos(r.target));
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Target label
+    ctx.fillStyle = '#6366f1';
+    ctx.font = '600 10px Plus Jakarta Sans';
+    ctx.textAlign = 'left';
+    ctx.fillText('Target: ' + fmtCurrency(r.target), padL + 4, yPos(r.target) - 6);
+
+    // Balance area fill
+    const gradient = ctx.createLinearGradient(0, padT, 0, padT + chartH);
+    gradient.addColorStop(0, isDark ? 'rgba(16,185,129,.25)' : 'rgba(16,185,129,.15)');
+    gradient.addColorStop(1, isDark ? 'rgba(16,185,129,.02)' : 'rgba(16,185,129,.02)');
+
+    ctx.beginPath();
+    ctx.moveTo(xPos(data[0].month), yPos(0));
+    data.forEach(d => ctx.lineTo(xPos(d.month), yPos(d.balance)));
+    ctx.lineTo(xPos(data[data.length - 1].month), yPos(0));
+    ctx.closePath();
+    ctx.fillStyle = gradient;
+    ctx.fill();
+
+    // Balance line
+    ctx.beginPath();
+    data.forEach((d, i) => {
+      const x = xPos(d.month);
+      const y = yPos(d.balance);
+      if (i === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    });
+    ctx.strokeStyle = '#10b981';
+    ctx.lineWidth = 2.5;
+    ctx.lineJoin = 'round';
+    ctx.stroke();
+
+    // End dot
+    const lastD = data[data.length - 1];
+    ctx.beginPath();
+    ctx.arc(xPos(lastD.month), yPos(lastD.balance), 4, 0, Math.PI * 2);
+    ctx.fillStyle = '#10b981';
+    ctx.fill();
+    ctx.strokeStyle = isDark ? '#161b22' : '#fff';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+  }
+
+  // ── Copy ──
+  $('copyBtn').addEventListener('click', () => {
+    if (!lastResult) return;
+    const r = lastResult;
+    let text = `Emergency Fund Summary\n`;
+    text += `━━━━━━━━━━━━━━━━━━━━━\n`;
+    text += `Target Emergency Fund: ${fmtCurrency(r.target)}\n`;
+    text += `Current Savings: ${fmtCurrency(r.current)}\n`;
+    text += `Amount Still Needed: ${fmtCurrency(r.remaining)}\n`;
+    text += `Monthly Expenses: ${fmtCurrency(r.expenses)}\n`;
+    text += `Coverage: ${r.months} months\n`;
+    if (!r.alreadyFunded && !r.cannotReach) {
+      text += `Months to Fully Funded: ${Math.ceil(r.monthsToFund)}\n`;
+      text += `Projected Date: ${projectedDate(r.monthsToFund)}\n`;
+      text += `Total Contributions: ${fmtCurrency2(r.totalContributions)}\n`;
+      text += `Interest Earned: ${fmtCurrency2(r.interestEarned)}\n`;
+    }
+    text += `Progress: ${r.pctFunded.toFixed(1)}%\n`;
+    text += `━━━━━━━━━━━━━━━━━━━━━\n`;
+    text += `Calculated with CalcNova`;
+
+    navigator.clipboard.writeText(text).then(() => showToast('Summary copied to clipboard'));
+  });
+
+  // ── Print ──
+  $('printBtn').addEventListener('click', () => {
+    window.print();
+  });
+
+  // ── Calculate button ──
+  $('calcBtn').addEventListener('click', calculate);
+
+  // ── Enter key ──
+  document.querySelectorAll('input[type="number"], select').forEach(el => {
+    el.addEventListener('keydown', e => { if (e.key === 'Enter') calculate(); });
+  });
+
+  // ── Redraw chart on resize / dark mode ──
+  let resizeTimer;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => { if (lastResult && !lastResult.alreadyFunded && !lastResult.cannotReach) drawChart(lastResult); }, 150);
+  });
+  document.addEventListener('calcnova:darkchanged', () => {
+    if (lastResult && !lastResult.alreadyFunded && !lastResult.cannotReach) {
+      setTimeout(() => drawChart(lastResult), 50);
+    }
+  });
+
+})();
+</script>
+</body>
+</html>

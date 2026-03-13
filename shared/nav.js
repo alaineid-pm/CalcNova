@@ -32,7 +32,7 @@
         { id: 'mortgage',          icon: '🏠', label: 'Mortgage Calculator', href: 'mortgage-calculator.html',          live: true },
         { id: 'savings-goal',      icon: '🎯', label: 'Savings Goal',                                                  live: false },
         { id: 'debt-payoff',       icon: '💳', label: 'Debt Payoff',                                                   live: false },
-        { id: 'emergency-fund',    icon: '🛟', label: 'Emergency Fund',                                                live: false },
+        { id: 'emergency-fund',    icon: '🛟', label: 'Emergency Fund',    href: 'emergency-fund.html',               live: true },
         { id: 'fire-calculator',   icon: '🔥', label: 'FIRE Calculator',    href: 'fire-calculator.html',              live: true },
         { id: 'net-worth-tracker',  icon: '📊', label: 'Net Worth Tracker',  href: 'net-worth-tracker.html',            live: true },
       ]

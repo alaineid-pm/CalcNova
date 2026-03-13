@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>FIRE Calculator — Financial Independence Retire Early | CalcNova</title>
+  <meta name="description" content="Free FIRE calculator — find out how many years until you reach Financial Independence and can Retire Early. Includes inflation adjustment and milestone tracking.">
+
+  <meta property="og:title" content="FIRE Calculator — Financial Independence Retire Early | CalcNova">
+  <meta property="og:description" content="Free FIRE calculator — find out how many years until you reach Financial Independence and can Retire Early.">
+  <meta property="og:type" content="website">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FinancialProduct",
+    "name": "FIRE Calculator",
+    "description": "Free FIRE calculator to determine your Financial Independence number and years to retire early.",
+    "provider": { "@type": "Organization", "name": "CalcNova" },
+    "feesAndCommissionsSpecification": "Free to use, no login required."
+  }
+  </script>
+
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="shared/nav.css">
+  <style>
+    .app { position: relative; z-index: 1; max-width: 960px; margin: 0 auto; padding: 0 16px 60px; }
+
+    .pill-badge {
+      display: flex; align-items: center; gap: 6px;
+      background: linear-gradient(135deg, rgba(239,68,68,.1), rgba(245,158,11,.1));
+      border: 1px solid rgba(239,68,68,.3);
+      border-radius: 100px; padding: 6px 14px;
+      font-size: 12px; font-weight: 700; color: var(--red);
+    }
+
+    /* ── HERO ── */
+    .hero {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 28px 28px 24px;
+      margin-bottom: 20px;
+      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;
+    }
+    .hero-title { font-size: 26px; font-weight: 800; letter-spacing: -.5px; }
+    .hero-title span {
+      background: linear-gradient(135deg, var(--red), var(--amber));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .hero-desc { font-size: 14px; color: var(--text-secondary); margin-top: 6px; line-height: 1.5; }
+
+    .hero-formula {
+      font-family: var(--mono); font-size: 13px;
+      background: var(--bg); border: 1px solid var(--border);
+      border-radius: 12px; padding: 12px 18px;
+      color: var(--text-secondary); white-space: nowrap;
+    }
+    .hero-formula .hl { color: var(--red); font-weight: 700; }
+    .hero-formula .hlp { color: var(--amber); font-weight: 700; }
+
+    /* ── GRID ── */
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+    @media (max-width: 640px) { .two-col { grid-template-columns: 1fr; } }
+
+    /* ── CARD ── */
+    .card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 18px; padding: 22px 22px 18px;
+    }
+    .card-title {
+      font-size: 11px; font-weight: 700; letter-spacing: .5px; text-transform: uppercase;
+      color: var(--text-muted); margin-bottom: 18px;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .card-title-dot { width: 6px; height: 6px; border-radius: 50%; }
+
+    /* ── FORM ── */
+    .form-group { margin-bottom: 14px; }
+    .form-label { font-size: 12px; font-weight: 600; color: var(--text-secondary); margin-bottom: 6px; display: block; }
+    .form-label-optional { font-size: 11px; font-weight: 500; color: var(--text-muted); margin-left: 4px; }
+
+    .input-row { position: relative; }
+    .input-prefix, .input-suffix {
+      position: absolute; top: 50%; transform: translateY(-50%);
+      font-family: var(--mono); font-size: 13px; font-weight: 700;
+      color: var(--text-muted); pointer-events: none;
+    }
+    .input-prefix { left: 12px; }
+    .input-suffix { right: 12px; }
+
+    input[type="number"] {
+      width: 100%; background: var(--bg); border: 1px solid var(--border);
+      border-radius: 10px; color: var(--text-primary); font-family: var(--font);
+      font-size: 14px; font-weight: 600; padding: 9px 12px; outline: none;
+      transition: border-color .2s, box-shadow .2s;
+      appearance: none; -moz-appearance: textfield;
+    }
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+    .has-prefix input[type="number"] { padding-left: 28px; }
+    .has-suffix input[type="number"] { padding-right: 36px; }
+
+    input[type="number"]:focus {
+      border-color: var(--red);
+      box-shadow: 0 0 0 3px rgba(239,68,68,.12);
+    }
+
+    /* ── ACTION ROW ── */
+    .action-row { display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
+    .action-btn {
+      display: flex; align-items: center; gap: 7px;
+      padding: 9px 18px; border-radius: 10px; font-size: 13px; font-weight: 600;
+      cursor: pointer; transition: all .15s; font-family: var(--font);
+      background: var(--surface); border: 1px solid var(--border); color: var(--text-secondary);
+    }
+    .action-btn svg { width: 15px; height: 15px; }
+    .action-btn:hover { border-color: var(--red); color: var(--red); }
+
+    .btn-calc {
+      background: linear-gradient(135deg, var(--red), var(--amber));
+      border: none; color: #fff; font-weight: 700; padding: 12px 28px;
+      border-radius: 10px; font-size: 14px; cursor: pointer; font-family: var(--font);
+      transition: all .15s; width: 100%; margin-top: 4px;
+      box-shadow: 0 4px 14px rgba(239,68,68,.3);
+    }
+    .btn-calc:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(239,68,68,.4); }
+
+    /* ── STATS ── */
+    .stats-row {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 16px;
+    }
+    @media (max-width: 640px) { .stats-row { grid-template-columns: 1fr; } }
+
+    .stat-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 14px; padding: 16px 14px; text-align: center;
+      transition: transform .15s;
+    }
+    .stat-card:hover { transform: translateY(-2px); }
+    .stat-label {
+      font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .4px;
+      color: var(--text-muted); margin-bottom: 6px;
+    }
+    .stat-value {
+      font-family: var(--mono); font-size: 22px; font-weight: 700;
+      color: var(--text-primary); letter-spacing: -.5px;
+    }
+    .stat-sub { font-size: 11px; color: var(--text-secondary); margin-top: 4px; }
+
+    .stat-value.green { color: var(--green); }
+    .stat-value.red { color: var(--red); }
+    .stat-value.amber { color: var(--amber); }
+    .stat-value.purple { color: var(--purple); }
+
+    /* ── RESULTS SECTION ── */
+    .results-section { display: none; }
+    .results-section.visible { display: block; }
+
+    /* ── CHART ── */
+    .chart-wrap {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 18px; padding: 22px; margin-bottom: 16px;
+    }
+    .chart-title {
+      font-size: 11px; font-weight: 700; letter-spacing: .5px; text-transform: uppercase;
+      color: var(--text-muted); margin-bottom: 14px;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .chart-canvas-wrap { position: relative; width: 100%; }
+    #fireChart { width: 100%; height: 360px; display: block; }
+
+    .chart-legend {
+      display: flex; align-items: center; gap: 18px; margin-top: 14px; flex-wrap: wrap;
+    }
+    .chart-legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-secondary); }
+    .legend-swatch { width: 12px; height: 3px; border-radius: 2px; }
+
+    /* ── MILESTONE TABLE ── */
+    .milestone-table {
+      width: 100%; border-collapse: collapse; font-size: 13px;
+    }
+    .milestone-table th {
+      text-align: left; font-size: 11px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .4px; color: var(--text-muted); padding: 8px 10px;
+      border-bottom: 1px solid var(--border);
+    }
+    .milestone-table td {
+      padding: 10px; border-bottom: 1px solid var(--border);
+      color: var(--text-secondary); font-weight: 500;
+    }
+    .milestone-table td:first-child { font-weight: 700; color: var(--text-primary); }
+    .milestone-table .mono { font-family: var(--mono); font-weight: 600; }
+
+    /* ── ALREADY FI / WARNING ── */
+    .alert-card {
+      border-radius: 14px; padding: 18px 20px; margin-bottom: 16px;
+      display: flex; align-items: flex-start; gap: 12px;
+      font-size: 14px; font-weight: 500; line-height: 1.5;
+    }
+    .alert-card.success {
+      background: rgba(16,185,129,.08); border: 1px solid rgba(16,185,129,.25); color: var(--green);
+    }
+    .alert-card.warning {
+      background: rgba(245,158,11,.08); border: 1px solid rgba(245,158,11,.25); color: var(--amber);
+    }
+    .alert-icon { font-size: 20px; flex-shrink: 0; line-height: 1; }
+
+    /* ── TOAST ── */
+    #toast {
+      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px);
+      background: var(--text-primary); color: var(--bg); padding: 10px 20px;
+      border-radius: 10px; font-size: 13px; font-weight: 600;
+      opacity: 0; transition: all .3s; pointer-events: none; z-index: 999;
+      font-family: var(--font);
+    }
+    #toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+    /* ── FADE IN ── */
+    .fade-in { animation: fadeIn .4s ease-out both; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* ── PRINT ── */
+    @media print {
+      body::before, header, .menu-overlay, .site-footer, .footer-disclaimer,
+      .btn-calc, .action-row, .ad-slot { display: none !important; }
+      .app { max-width: 100%; padding: 0; }
+      .results-section { display: block !important; }
+      .card, .stat-card, .chart-wrap, .hero { border: 1px solid #ddd; box-shadow: none; break-inside: avoid; }
+      #fireChart { height: 280px; }
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 640px) {
+      .hero { padding: 20px 18px 18px; }
+      .hero-title { font-size: 22px; }
+      .hero-formula { font-size: 11px; padding: 10px 12px; }
+      .card { padding: 18px 16px 14px; }
+      .stat-value { font-size: 18px; }
+      #fireChart { height: 260px; }
+    }
+
+    @media (max-width: 380px) {
+      .hero-formula { display: none; }
+      .stats-row { gap: 8px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+
+    <!-- AD SLOT -->
+    <div class="ad-slot ad-slot--leaderboard" data-label="Ad"></div>
+
+    <!-- HERO -->
+    <div class="hero fade-in">
+      <div>
+        <div style="margin-bottom:10px">
+          <span class="pill-badge">🔥 Financial Independence</span>
+        </div>
+        <div class="hero-title">FIRE <span>Calculator</span></div>
+        <div class="hero-desc">Calculate your Financial Independence number and how many years until you can Retire Early.</div>
+      </div>
+      <div class="hero-formula">
+        <span class="hl">FIRE#</span> = Expenses / <span class="hlp">SWR</span>
+      </div>
+    </div>
+
+    <!-- INPUTS -->
+    <div class="two-col fade-in" style="animation-delay:.05s">
+
+      <!-- LEFT: Financial Inputs -->
+      <div class="card">
+        <div class="card-title">
+          <div class="card-title-dot" style="background:var(--red)"></div>
+          Spending &amp; Savings
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="expenses">Annual Expenses in Retirement</label>
+          <div class="input-row has-prefix">
+            <span class="input-prefix">$</span>
+            <input type="number" id="expenses" placeholder="40,000" min="1" step="1000">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="swr">Safe Withdrawal Rate</label>
+          <div class="input-row has-suffix">
+            <input type="number" id="swr" value="4" min="0.1" max="20" step="0.1">
+            <span class="input-suffix">%</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="assets">Current Invested Assets</label>
+          <div class="input-row has-prefix">
+            <span class="input-prefix">$</span>
+            <input type="number" id="assets" value="0" min="0" step="1000">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="contributions">Annual Contributions</label>
+          <div class="input-row has-prefix">
+            <span class="input-prefix">$</span>
+            <input type="number" id="contributions" placeholder="20,000" min="0" step="1000">
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: Growth & Age -->
+      <div class="card">
+        <div class="card-title">
+          <div class="card-title-dot" style="background:var(--amber)"></div>
+          Growth &amp; Age
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="returnRate">Expected Annual Return</label>
+          <div class="input-row has-suffix">
+            <input type="number" id="returnRate" value="7" min="0" max="30" step="0.1">
+            <span class="input-suffix">%</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="inflation">Expected Inflation <span class="form-label-optional">(optional)</span></label>
+          <div class="input-row has-suffix">
+            <input type="number" id="inflation" value="2.5" min="0" max="20" step="0.1">
+            <span class="input-suffix">%</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="age">Current Age</label>
+          <div class="input-row">
+            <input type="number" id="age" placeholder="30" min="1" max="120" step="1">
+          </div>
+        </div>
+
+        <button class="btn-calc" id="calcBtn" onclick="calculate()">Calculate FIRE Number</button>
+      </div>
+    </div>
+
+    <!-- RESULTS -->
+    <div class="results-section" id="results">
+
+      <!-- ALERT (dynamic) -->
+      <div id="alertArea"></div>
+
+      <!-- STAT CARDS -->
+      <div class="stats-row fade-in" id="statsRow">
+        <div class="stat-card">
+          <div class="stat-label">FIRE Number</div>
+          <div class="stat-value red" id="statFireNum">—</div>
+          <div class="stat-sub" id="statFireNumSub"></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Years to FIRE</div>
+          <div class="stat-value amber" id="statYears">—</div>
+          <div class="stat-sub" id="statYearsSub"></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">FIRE Age</div>
+          <div class="stat-value green" id="statAge">—</div>
+          <div class="stat-sub" id="statAgeSub"></div>
+        </div>
+      </div>
+
+      <div class="stats-row fade-in" id="statsRow2" style="animation-delay:.08s">
+        <div class="stat-card">
+          <div class="stat-label">Total Contributions</div>
+          <div class="stat-value purple" id="statContrib">—</div>
+          <div class="stat-sub" id="statContribSub"></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Investment Growth</div>
+          <div class="stat-value green" id="statGrowth">—</div>
+          <div class="stat-sub" id="statGrowthSub"></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Inflation-Adj FIRE</div>
+          <div class="stat-value red" id="statRealFire">—</div>
+          <div class="stat-sub" id="statRealFireSub"></div>
+        </div>
+      </div>
+
+      <!-- CHART -->
+      <div class="chart-wrap fade-in" style="animation-delay:.12s">
+        <div class="chart-title">
+          <div class="card-title-dot" style="background:var(--red)"></div>
+          Portfolio Growth Over Time
+        </div>
+        <div class="chart-canvas-wrap">
+          <canvas id="fireChart"></canvas>
+        </div>
+        <div class="chart-legend" id="chartLegend">
+          <div class="chart-legend-item"><div class="legend-swatch" style="background:var(--green)"></div> Portfolio Balance</div>
+          <div class="chart-legend-item"><div class="legend-swatch" style="background:var(--red);height:2px;border-top:1px dashed var(--red)"></div> FIRE Number (Nominal)</div>
+          <div class="chart-legend-item" id="legendReal" style="display:none"><div class="legend-swatch" style="background:var(--amber);height:2px;border-top:1px dashed var(--amber)"></div> FIRE Number (Inflation-Adj)</div>
+        </div>
+      </div>
+
+      <!-- MILESTONES -->
+      <div class="card fade-in" style="animation-delay:.16s; margin-bottom:16px">
+        <div class="card-title">
+          <div class="card-title-dot" style="background:var(--green)"></div>
+          Milestones
+        </div>
+        <table class="milestone-table" id="milestoneTable">
+          <thead>
+            <tr><th>Milestone</th><th>Year</th><th>Age</th><th>Balance</th></tr>
+          </thead>
+          <tbody id="milestoneBody"></tbody>
+        </table>
+      </div>
+
+      <!-- ACTIONS -->
+      <div class="action-row fade-in" style="animation-delay:.2s">
+        <button class="action-btn" onclick="copyResults()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy Results
+        </button>
+        <button class="action-btn" onclick="window.print()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+          Print
+        </button>
+      </div>
+
+      <!-- AD SLOT -->
+      <div class="ad-slot ad-slot--rectangle" data-label="Ad"></div>
+    </div>
+
+  </div>
+
+  <div id="toast"></div>
+
+  <script>
+    window.CALCNOVA_PAGE = {
+      id: 'fire-calculator',
+      disclaimer: 'For informational purposes only. Not financial advice.'
+    };
+  </script>
+  <script src="shared/nav.js"></script>
+
+  <script>
+  (function() {
+    'use strict';
+
+    /* ── Helpers ── */
+    function $(id) { return document.getElementById(id); }
+    function fmt(n) {
+      if (n >= 1e6) return '$' + (n / 1e6).toFixed(2) + 'M';
+      return '$' + Math.round(n).toLocaleString('en-US');
+    }
+    function fmtFull(n) { return '$' + Math.round(n).toLocaleString('en-US'); }
+    function showToast(msg) {
+      var t = $('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      setTimeout(function() { t.classList.remove('show'); }, 2200);
+    }
+
+    /* ── Main Calculation ── */
+    window.calculate = function() {
+      // Gather inputs
+      var expenses = parseFloat($('expenses').value);
+      var swr = parseFloat($('swr').value);
+      var assets = parseFloat($('assets').value) || 0;
+      var contributions = parseFloat($('contributions').value);
+      var nominalReturn = parseFloat($('returnRate').value) / 100;
+      var inflationRate = parseFloat($('inflation').value);
+      var currentAge = parseInt($('age').value);
+
+      // Validation
+      if (!expenses || expenses <= 0) { showToast('Please enter annual expenses.'); return; }
+      if (!swr || swr <= 0) { showToast('Safe withdrawal rate must be greater than 0.'); return; }
+      if (isNaN(contributions) || contributions < 0) { showToast('Please enter annual contributions.'); return; }
+      if (isNaN(currentAge) || currentAge < 1) { showToast('Please enter your current age.'); return; }
+
+      var hasInflation = !isNaN(inflationRate) && inflationRate > 0;
+      var inflationDec = hasInflation ? inflationRate / 100 : 0;
+
+      // FIRE Numbers
+      var fireNominal = expenses / (swr / 100);
+      var realReturn = hasInflation ? ((1 + nominalReturn) / (1 + inflationDec)) - 1 : nominalReturn;
+
+      var alertArea = $('alertArea');
+      alertArea.innerHTML = '';
+
+      // Already FI check
+      if (assets >= fireNominal) {
+        showAlreadyFI(alertArea, assets, fireNominal);
+        showResults(fireNominal, 0, currentAge, assets, 0, assets - assets, hasInflation, inflationDec, expenses, swr, nominalReturn, contributions, currentAge);
+        return;
+      }
+
+      // Check if FIRE is reachable
+      if (nominalReturn <= 0 && contributions <= 0) {
+        showWarning(alertArea, 'With 0% return and no contributions, you will never reach FIRE.');
+        $('results').classList.add('visible');
+        return;
+      }
+
+      // Year-by-year projection
+      var balance = assets;
+      var yearData = [{ year: 0, balance: balance }];
+      var years = 0;
+      var maxYears = 80;
+      var totalContrib = 0;
+
+      while (balance < fireNominal && years < maxYears) {
+        balance = balance * (1 + nominalReturn) + contributions;
+        years++;
+        totalContrib += contributions;
+        yearData.push({ year: years, balance: balance });
+      }
+
+      if (years >= maxYears && balance < fireNominal) {
+        showWarning(alertArea, 'FIRE not reached within 80 years. Consider increasing contributions or expected returns.');
+        showResults(fireNominal, years, currentAge + years, balance, totalContrib, balance - assets - totalContrib, hasInflation, inflationDec, expenses, swr, nominalReturn, contributions, currentAge, yearData, true);
+        return;
+      }
+
+      var totalGrowth = balance - assets - totalContrib;
+      showResults(fireNominal, years, currentAge + years, balance, totalContrib, totalGrowth, hasInflation, inflationDec, expenses, swr, nominalReturn, contributions, currentAge, yearData, false);
+    };
+
+    function showAlreadyFI(container, assets, fireNum) {
+      container.innerHTML =
+        '<div class="alert-card success fade-in">' +
+          '<div class="alert-icon">&#x2705;</div>' +
+          '<div><strong>Congratulations — you are already financially independent!</strong><br>' +
+          'Your current assets (' + fmtFull(assets) + ') exceed your FIRE number (' + fmtFull(fireNum) + ').</div>' +
+        '</div>';
+    }
+
+    function showWarning(container, msg) {
+      container.innerHTML =
+        '<div class="alert-card warning fade-in">' +
+          '<div class="alert-icon">&#x26A0;&#xFE0F;</div>' +
+          '<div>' + msg + '</div>' +
+        '</div>';
+    }
+
+    function showResults(fireNominal, years, fireAge, finalBalance, totalContrib, totalGrowth, hasInflation, inflationDec, expenses, swr, nominalReturn, contributions, currentAge, yearData, cappedAt80) {
+      var resultsEl = $('results');
+      resultsEl.classList.add('visible');
+
+      // Inflation-adjusted FIRE
+      var realFire = hasInflation ? (expenses * Math.pow(1 + inflationDec, years)) / (swr / 100) : fireNominal;
+
+      // Stats
+      $('statFireNum').textContent = fmt(fireNominal);
+      $('statFireNumSub').textContent = 'at ' + swr + '% SWR';
+
+      if (years === 0) {
+        $('statYears').textContent = '0';
+        $('statYearsSub').textContent = 'Already FI';
+      } else if (cappedAt80) {
+        $('statYears').textContent = '80+';
+        $('statYearsSub').textContent = 'Not reached';
+      } else {
+        $('statYears').textContent = years;
+        $('statYearsSub').textContent = 'year' + (years !== 1 ? 's' : '');
+      }
+
+      $('statAge').textContent = cappedAt80 ? 'N/A' : fireAge;
+      var calendarYear = new Date().getFullYear() + years;
+      $('statAgeSub').textContent = cappedAt80 ? '' : 'Year ' + calendarYear;
+
+      $('statContrib').textContent = fmt(totalContrib);
+      $('statContribSub').textContent = years + ' year' + (years !== 1 ? 's' : '') + ' of saving';
+
+      $('statGrowth').textContent = fmt(Math.max(0, totalGrowth));
+      var pctGrowth = totalContrib + parseFloat($('assets').value) > 0
+        ? ((totalGrowth / (totalContrib + parseFloat($('assets').value))) * 100).toFixed(1)
+        : '0';
+      $('statGrowthSub').textContent = pctGrowth + '% return on invested';
+
+      $('statRealFire').textContent = hasInflation ? fmt(realFire) : fmt(fireNominal);
+      $('statRealFireSub').textContent = hasInflation ? 'in today\'s dollars' : 'No inflation adj.';
+
+      // Show real legend item
+      $('legendReal').style.display = hasInflation ? 'flex' : 'none';
+
+      // Draw chart
+      if (yearData && yearData.length > 1) {
+        drawChart(yearData, fireNominal, hasInflation ? realFire : null, hasInflation, inflationDec, expenses, swr, years);
+      }
+
+      // Milestones
+      if (yearData && yearData.length > 1) {
+        buildMilestones(yearData, fireNominal, currentAge);
+      }
+
+      // Scroll to results
+      resultsEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    /* ── Chart Drawing ── */
+    function drawChart(yearData, fireNominal, realFire, hasInflation, inflationDec, expenses, swr, fireYears) {
+      var canvas = $('fireChart');
+      var ctx = canvas.getContext('2d');
+      var dpr = window.devicePixelRatio || 1;
+      var rect = canvas.parentElement.getBoundingClientRect();
+      var w = rect.width;
+      var h = parseInt(getComputedStyle(canvas).height);
+
+      canvas.width = w * dpr;
+      canvas.height = h * dpr;
+      canvas.style.width = w + 'px';
+      canvas.style.height = h + 'px';
+      ctx.scale(dpr, dpr);
+
+      var isDark = document.body.classList.contains('dark');
+      var textColor = isDark ? '#8b949e' : '#5a6478';
+      var gridColor = isDark ? 'rgba(48,54,61,.6)' : 'rgba(226,230,239,.8)';
+
+      // Chart area
+      var pad = { top: 20, right: 20, bottom: 40, left: 65 };
+      var cw = w - pad.left - pad.right;
+      var ch = h - pad.top - pad.bottom;
+
+      // Build real fire targets per year for chart
+      var realFireByYear = [];
+      if (hasInflation) {
+        for (var i = 0; i < yearData.length; i++) {
+          realFireByYear.push((expenses * Math.pow(1 + inflationDec, yearData[i].year)) / (swr / 100));
+        }
+      }
+
+      // Max values
+      var maxBal = 0;
+      for (var i = 0; i < yearData.length; i++) {
+        if (yearData[i].balance > maxBal) maxBal = yearData[i].balance;
+      }
+      var maxY = Math.max(maxBal, fireNominal);
+      if (hasInflation && realFireByYear.length) {
+        var lastReal = realFireByYear[realFireByYear.length - 1];
+        if (lastReal > maxY) maxY = lastReal;
+      }
+      maxY *= 1.1;
+
+      var maxX = yearData[yearData.length - 1].year;
+
+      ctx.clearRect(0, 0, w, h);
+
+      // Grid lines
+      ctx.strokeStyle = gridColor;
+      ctx.lineWidth = 1;
+      var numGridY = 5;
+      for (var i = 0; i <= numGridY; i++) {
+        var gy = pad.top + ch - (i / numGridY) * ch;
+        ctx.beginPath();
+        ctx.moveTo(pad.left, gy);
+        ctx.lineTo(pad.left + cw, gy);
+        ctx.stroke();
+
+        // Y-axis labels
+        var val = (i / numGridY) * maxY;
+        ctx.fillStyle = textColor;
+        ctx.font = '11px JetBrains Mono, monospace';
+        ctx.textAlign = 'right';
+        ctx.fillText(shortFmt(val), pad.left - 8, gy + 4);
+      }
+
+      // X-axis labels
+      ctx.textAlign = 'center';
+      var xStep = Math.max(1, Math.ceil(maxX / 8));
+      for (var i = 0; i <= maxX; i += xStep) {
+        var gx = pad.left + (i / maxX) * cw;
+        ctx.fillStyle = textColor;
+        ctx.fillText('Yr ' + i, gx, h - pad.bottom + 20);
+      }
+
+      // FIRE nominal line (dashed)
+      var fireY = pad.top + ch - (fireNominal / maxY) * ch;
+      ctx.save();
+      ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--red').trim() || '#ef4444';
+      ctx.lineWidth = 1.5;
+      ctx.setLineDash([6, 4]);
+      ctx.beginPath();
+      ctx.moveTo(pad.left, fireY);
+      ctx.lineTo(pad.left + cw, fireY);
+      ctx.stroke();
+      ctx.restore();
+
+      // FIRE real line (dashed) — inflation-adjusted grows over time
+      if (hasInflation && realFireByYear.length > 1) {
+        ctx.save();
+        ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--amber').trim() || '#f59e0b';
+        ctx.lineWidth = 1.5;
+        ctx.setLineDash([4, 4]);
+        ctx.beginPath();
+        for (var i = 0; i < realFireByYear.length; i++) {
+          var rx = pad.left + (yearData[i].year / maxX) * cw;
+          var ry = pad.top + ch - (realFireByYear[i] / maxY) * ch;
+          if (i === 0) ctx.moveTo(rx, ry);
+          else ctx.lineTo(rx, ry);
+        }
+        ctx.stroke();
+        ctx.restore();
+      }
+
+      // Portfolio area fill
+      var green = getComputedStyle(document.documentElement).getPropertyValue('--green').trim() || '#10b981';
+      ctx.save();
+      ctx.beginPath();
+      for (var i = 0; i < yearData.length; i++) {
+        var px = pad.left + (yearData[i].year / maxX) * cw;
+        var py = pad.top + ch - (yearData[i].balance / maxY) * ch;
+        if (i === 0) ctx.moveTo(px, py);
+        else ctx.lineTo(px, py);
+      }
+      ctx.lineTo(pad.left + (yearData[yearData.length - 1].year / maxX) * cw, pad.top + ch);
+      ctx.lineTo(pad.left, pad.top + ch);
+      ctx.closePath();
+      var grad = ctx.createLinearGradient(0, pad.top, 0, pad.top + ch);
+      grad.addColorStop(0, isDark ? 'rgba(16,185,129,.25)' : 'rgba(16,185,129,.18)');
+      grad.addColorStop(1, 'rgba(16,185,129,.02)');
+      ctx.fillStyle = grad;
+      ctx.fill();
+      ctx.restore();
+
+      // Portfolio line
+      ctx.save();
+      ctx.strokeStyle = green;
+      ctx.lineWidth = 2.5;
+      ctx.lineJoin = 'round';
+      ctx.beginPath();
+      for (var i = 0; i < yearData.length; i++) {
+        var px = pad.left + (yearData[i].year / maxX) * cw;
+        var py = pad.top + ch - (yearData[i].balance / maxY) * ch;
+        if (i === 0) ctx.moveTo(px, py);
+        else ctx.lineTo(px, py);
+      }
+      ctx.stroke();
+      ctx.restore();
+
+      // Milestone markers (25%, 50%, 75%, 100%)
+      var milestones = [0.25, 0.5, 0.75, 1.0];
+      var milestoneColors = ['var(--purple)', 'var(--amber)', 'var(--red)', 'var(--green)'];
+      var computedColors = [
+        getComputedStyle(document.documentElement).getPropertyValue('--purple').trim() || '#6366f1',
+        getComputedStyle(document.documentElement).getPropertyValue('--amber').trim() || '#f59e0b',
+        getComputedStyle(document.documentElement).getPropertyValue('--red').trim() || '#ef4444',
+        green
+      ];
+
+      for (var m = 0; m < milestones.length; m++) {
+        var target = fireNominal * milestones[m];
+        for (var i = 0; i < yearData.length; i++) {
+          if (yearData[i].balance >= target) {
+            var mx = pad.left + (yearData[i].year / maxX) * cw;
+            var my = pad.top + ch - (yearData[i].balance / maxY) * ch;
+
+            ctx.save();
+            ctx.fillStyle = computedColors[m];
+            ctx.beginPath();
+            ctx.arc(mx, my, 5, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.fillStyle = isDark ? '#161b22' : '#ffffff';
+            ctx.beginPath();
+            ctx.arc(mx, my, 2.5, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+
+            // Label
+            ctx.save();
+            ctx.fillStyle = computedColors[m];
+            ctx.font = 'bold 10px Plus Jakarta Sans, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText(Math.round(milestones[m] * 100) + '%', mx, my - 10);
+            ctx.restore();
+            break;
+          }
+        }
+      }
+    }
+
+    function shortFmt(n) {
+      if (n >= 1e6) return '$' + (n / 1e6).toFixed(1) + 'M';
+      if (n >= 1e3) return '$' + (n / 1e3).toFixed(0) + 'K';
+      return '$' + Math.round(n);
+    }
+
+    /* ── Milestones Table ── */
+    function buildMilestones(yearData, fireNominal, currentAge) {
+      var tbody = $('milestoneBody');
+      tbody.innerHTML = '';
+      var milestones = [
+        { pct: 25, label: '25% of FIRE' },
+        { pct: 50, label: '50% of FIRE' },
+        { pct: 75, label: '75% of FIRE' },
+        { pct: 100, label: '100% — FIRE!' }
+      ];
+      var baseYear = new Date().getFullYear();
+
+      for (var m = 0; m < milestones.length; m++) {
+        var target = fireNominal * (milestones[m].pct / 100);
+        var found = false;
+        for (var i = 0; i < yearData.length; i++) {
+          if (yearData[i].balance >= target) {
+            var tr = document.createElement('tr');
+            tr.innerHTML =
+              '<td>' + milestones[m].label + '</td>' +
+              '<td class="mono">' + (baseYear + yearData[i].year) + '</td>' +
+              '<td class="mono">' + (currentAge + yearData[i].year) + '</td>' +
+              '<td class="mono">' + fmtFull(Math.round(yearData[i].balance)) + '</td>';
+            tbody.appendChild(tr);
+            found = true;
+            break;
+          }
+        }
+        if (!found) {
+          var tr = document.createElement('tr');
+          tr.innerHTML =
+            '<td>' + milestones[m].label + '</td>' +
+            '<td class="mono" colspan="3" style="color:var(--text-muted)">Not reached within 80 years</td>';
+          tbody.appendChild(tr);
+        }
+      }
+    }
+
+    /* ── Copy Results ── */
+    window.copyResults = function() {
+      var expenses = $('expenses').value;
+      var swr = $('swr').value;
+      var text = '=== FIRE Calculator Results ===\n';
+      text += 'FIRE Number: ' + $('statFireNum').textContent + '\n';
+      text += 'Years to FIRE: ' + $('statYears').textContent + '\n';
+      text += 'FIRE Age: ' + $('statAge').textContent + '\n';
+      text += 'Total Contributions: ' + $('statContrib').textContent + '\n';
+      text += 'Investment Growth: ' + $('statGrowth').textContent + '\n';
+      text += 'Inflation-Adjusted FIRE: ' + $('statRealFire').textContent + '\n';
+      text += '\n--- Inputs ---\n';
+      text += 'Annual Expenses: $' + expenses + '\n';
+      text += 'Safe Withdrawal Rate: ' + swr + '%\n';
+      text += 'Current Assets: $' + $('assets').value + '\n';
+      text += 'Annual Contributions: $' + $('contributions').value + '\n';
+      text += 'Expected Return: ' + $('returnRate').value + '%\n';
+      text += 'Inflation: ' + ($('inflation').value || 'N/A') + '%\n';
+      text += 'Current Age: ' + $('age').value + '\n';
+      text += '\nGenerated by CalcNova FIRE Calculator';
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(function() {
+          showToast('Results copied to clipboard');
+        });
+      } else {
+        // Fallback
+        var ta = document.createElement('textarea');
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        showToast('Results copied to clipboard');
+      }
+    };
+
+    /* ── Redraw chart on dark mode toggle ── */
+    document.addEventListener('calcnova:darkchanged', function() {
+      var btn = $('calcBtn');
+      if ($('results').classList.contains('visible')) {
+        calculate();
+      }
+    });
+
+    /* ── Redraw chart on resize ── */
+    var resizeTimer;
+    window.addEventListener('resize', function() {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(function() {
+        if ($('results').classList.contains('visible')) {
+          calculate();
+        }
+      }, 200);
+    });
+
+  })();
+  </script>
+</body>
+</html>
