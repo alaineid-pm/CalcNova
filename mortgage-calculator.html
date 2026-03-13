@@ -1,0 +1,1419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mortgage Payment Calculator · CalcNova</title>
+  <meta name="description" content="Free mortgage calculator to estimate monthly payments, total interest, and amortization schedule. Calculate your mortgage payment instantly — no login required." />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Mortgage Payment Calculator · CalcNova" />
+  <meta property="og:description" content="Free mortgage calculator to estimate monthly payments, total interest, and amortization schedule. Calculate your mortgage payment instantly — no login required." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://calcnova.app/mortgage-calculator.html" />
+
+  <!-- JSON-LD Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FinancialProduct",
+    "name": "Mortgage Payment Calculator",
+    "description": "Free mortgage calculator to estimate monthly payments, total interest, and full amortization schedule.",
+    "url": "https://calcnova.app/mortgage-calculator.html",
+    "provider": {
+      "@type": "Organization",
+      "name": "CalcNova",
+      "url": "https://calcnova.app"
+    },
+    "feesAndCommissionsSpecification": "Free to use, no login required."
+  }
+  </script>
+
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="shared/nav.css" />
+  <style>
+    .app { position: relative; z-index: 1; max-width: 960px; margin: 0 auto; padding: 0 16px 60px; }
+
+    /* ── PAGE HERO ── */
+    .hero {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 28px 28px 24px;
+      margin-bottom: 20px;
+      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;
+    }
+    .hero-title { font-size: 26px; font-weight: 800; letter-spacing: -.5px; }
+    .hero-title span {
+      background: linear-gradient(135deg, var(--green), var(--purple));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .hero-desc { font-size: 14px; color: var(--text-secondary); margin-top: 6px; line-height: 1.5; }
+
+    .hero-formula {
+      font-family: var(--mono);
+      font-size: 13px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 18px;
+      color: var(--text-secondary);
+      white-space: nowrap;
+    }
+    .hero-formula .hl  { color: var(--green);  font-weight: 700; }
+    .hero-formula .hlp { color: var(--purple); font-weight: 700; }
+
+    /* ── GRID ── */
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+    @media (max-width: 640px) { .two-col { grid-template-columns: 1fr; } }
+
+    /* ── CARD ── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 22px 22px 18px;
+    }
+    .card-title {
+      font-size: 11px; font-weight: 700; letter-spacing: .5px; text-transform: uppercase;
+      color: var(--text-muted); margin-bottom: 18px;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .card-title-dot { width: 6px; height: 6px; border-radius: 50%; }
+
+    /* ── FORM ── */
+    .form-group { margin-bottom: 14px; }
+    .form-label { font-size: 12px; font-weight: 600; color: var(--text-secondary); margin-bottom: 6px; display: block; }
+    .form-label-optional { font-size: 11px; font-weight: 500; color: var(--text-muted); margin-left: 4px; }
+
+    .input-row { position: relative; }
+    .input-prefix, .input-suffix {
+      position: absolute; top: 50%; transform: translateY(-50%);
+      font-family: var(--mono); font-size: 13px; font-weight: 700;
+      color: var(--text-muted); pointer-events: none;
+    }
+    .input-prefix { left: 12px; }
+    .input-suffix { right: 12px; }
+
+    input[type="number"], select {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text-primary);
+      font-family: var(--font);
+      font-size: 14px;
+      font-weight: 600;
+      padding: 9px 12px;
+      outline: none;
+      transition: border-color .2s, box-shadow .2s;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+    .has-prefix input[type="number"] { padding-left: 28px; }
+    .has-suffix input[type="number"] { padding-right: 36px; }
+
+    input[type="number"]:focus, select:focus {
+      border-color: var(--green);
+      box-shadow: 0 0 0 3px rgba(16,185,129,.12);
+    }
+    input[type="number"].error { border-color: var(--red); box-shadow: 0 0 0 3px rgba(239,68,68,.1); }
+    .field-error { font-size: 11px; color: var(--red); margin-top: 4px; font-weight: 600; display: none; }
+    .field-error.visible { display: block; }
+
+    /* Select arrow */
+    .select-wrap { position: relative; }
+    .select-wrap::after {
+      content: '';
+      position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+      width: 0; height: 0;
+      border-left: 4px solid transparent; border-right: 4px solid transparent;
+      border-top: 5px solid var(--text-muted);
+      pointer-events: none;
+    }
+    .select-wrap select { padding-right: 30px; }
+
+    /* ── DOWN PAYMENT MODE TOGGLE ── */
+    .down-mode-wrap {
+      display: flex; gap: 0; margin-bottom: 8px;
+      border: 1px solid var(--border); border-radius: 10px; overflow: hidden; width: fit-content;
+    }
+    .down-mode-btn {
+      padding: 5px 14px;
+      background: var(--bg); border: none; border-right: 1px solid var(--border);
+      color: var(--text-secondary); font-family: var(--mono); font-size: 12px; font-weight: 700;
+      cursor: pointer; transition: background .15s, color .15s;
+    }
+    .down-mode-btn:last-child { border-right: none; }
+    .down-mode-btn.active { background: var(--green); color: white; }
+
+    /* ── RANGE SLIDERS ── */
+    .slider-wrap { margin-top: 8px; }
+    input[type="range"] {
+      width: 100%; height: 4px;
+      -webkit-appearance: none; appearance: none;
+      background: var(--border); border-radius: 4px; outline: none; cursor: pointer;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 18px; height: 18px; border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 0 3px rgba(16,185,129,.2);
+      cursor: pointer;
+    }
+    input[type="range"]::-moz-range-thumb {
+      width: 18px; height: 18px; border-radius: 50%;
+      background: var(--green); border: none;
+    }
+
+    /* ── OPTIONAL SECTION (collapsible) ── */
+    .section-toggle {
+      display: flex; align-items: center; gap: 6px; width: 100%;
+      background: none; border: none; border-top: 1px solid var(--border);
+      padding: 12px 0 4px; margin-top: 4px;
+      color: var(--text-secondary); font-family: var(--font); font-size: 12px; font-weight: 700;
+      cursor: pointer; text-align: left; transition: color .15s;
+    }
+    .section-toggle:hover { color: var(--green); }
+    .section-toggle svg { width: 14px; height: 14px; transition: transform .2s; flex-shrink: 0; }
+    .section-toggle.open svg { transform: rotate(180deg); }
+    .collapsible-body { display: none; padding-top: 12px; }
+    .collapsible-body.open { display: block; }
+
+    /* ── RESULT CARD ── */
+    .payment-hero {
+      text-align: center;
+      padding: 16px 0 20px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 16px;
+    }
+    .payment-label {
+      font-size: 10px; font-weight: 700; letter-spacing: .6px; text-transform: uppercase;
+      color: var(--text-muted); margin-bottom: 8px;
+    }
+    .payment-value {
+      font-family: var(--mono); font-size: 36px; font-weight: 800;
+      background: linear-gradient(135deg, var(--green), var(--purple));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+      line-height: 1;
+    }
+    .payment-sub { font-size: 12px; color: var(--text-muted); margin-top: 6px; font-family: var(--mono); }
+
+    .result-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 9px 0; border-bottom: 1px solid rgba(226,230,239,.5);
+    }
+    body.dark .result-row { border-bottom-color: rgba(48,54,61,.5); }
+    .result-row:last-child { border-bottom: none; }
+    .result-key { font-size: 12px; font-weight: 600; color: var(--text-secondary); }
+    .result-val { font-family: var(--mono); font-size: 13px; font-weight: 700; color: var(--text-primary); }
+    .result-sub { font-size: 11px; color: var(--text-muted); font-family: var(--mono); font-weight: 400; }
+
+    /* ── ACTION BUTTONS ── */
+    .action-row {
+      display: flex; gap: 8px; justify-content: flex-end;
+      margin-bottom: 16px; flex-wrap: wrap;
+    }
+    .action-btn {
+      display: flex; align-items: center; gap: 6px;
+      background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+      color: var(--text-secondary); font-family: var(--font); font-size: 13px; font-weight: 600;
+      padding: 8px 16px; cursor: pointer; transition: all .15s; text-decoration: none;
+    }
+    .action-btn:hover { border-color: var(--green); color: var(--green); }
+    .action-btn svg { width: 15px; height: 15px; flex-shrink: 0; }
+
+    /* ── STATS ── */
+    .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 16px; }
+    @media (max-width: 760px) { .stats-row { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 420px) { .stats-row { grid-template-columns: 1fr; } }
+
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 16px 16px 14px;
+      position: relative; overflow: hidden;
+    }
+    .stat-card.primary {
+      background: linear-gradient(135deg, rgba(16,185,129,.07), rgba(99,102,241,.07));
+      border-color: rgba(16,185,129,.3);
+    }
+    .stat-card.secondary { border-color: rgba(99,102,241,.2); }
+    .stat-card.tertiary  { border-color: rgba(245,158,11,.2); }
+    .stat-card::before {
+      content: ''; position: absolute; top: 0; right: 0;
+      width: 50px; height: 50px; border-radius: 0 16px 0 50px; opacity: .06;
+    }
+    .stat-card.primary::before  { background: var(--green); opacity: .3; }
+    .stat-card.secondary::before { background: var(--purple); }
+    .stat-card.tertiary::before  { background: var(--amber); }
+    .stat-card.quaternary::before { background: var(--text-muted); }
+    .stat-label { font-size: 10px; font-weight: 700; letter-spacing: .5px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 6px; }
+    .stat-value {
+      font-family: var(--mono); font-size: 18px; font-weight: 800;
+      color: var(--text-primary); line-height: 1;
+    }
+    .stat-card.primary .stat-value {
+      background: linear-gradient(135deg, var(--green), var(--purple));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .stat-card.secondary .stat-value { color: var(--purple); }
+    .stat-card.tertiary  .stat-value { color: var(--amber); }
+    .stat-sub { font-size: 11px; color: var(--text-muted); margin-top: 4px; font-family: var(--mono); }
+
+    /* ── CHART ── */
+    .chart-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 22px 22px 18px;
+      margin-bottom: 16px;
+    }
+    .chart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+    .chart-title { font-size: 11px; font-weight: 700; letter-spacing: .5px; text-transform: uppercase; color: var(--text-muted); }
+
+    .pie-layout { display: flex; align-items: center; gap: 28px; flex-wrap: wrap; }
+    .pie-canvas-wrap { flex-shrink: 0; display: flex; justify-content: center; }
+    canvas { display: block; }
+
+    .pie-legend { flex: 1; min-width: 160px; }
+    .pie-legend-item {
+      display: flex; align-items: center; gap: 8px;
+      padding: 7px 0; border-bottom: 1px solid rgba(226,230,239,.4);
+    }
+    body.dark .pie-legend-item { border-bottom-color: rgba(48,54,61,.4); }
+    .pie-legend-item:last-child { border-bottom: none; }
+    .pie-legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+    .pie-legend-label { font-size: 12px; font-weight: 600; color: var(--text-secondary); flex: 1; }
+    .pie-legend-amt { font-family: var(--mono); font-size: 12px; font-weight: 700; color: var(--text-primary); }
+    .pie-legend-pct { font-size: 11px; color: var(--text-muted); font-family: var(--mono); margin-left: 4px; }
+
+    /* ── TABLE ── */
+    .table-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+    .table-head-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 20px; border-bottom: 1px solid var(--border); flex-wrap: wrap; gap: 8px;
+    }
+    .table-head-title { font-size: 11px; font-weight: 700; letter-spacing: .5px; text-transform: uppercase; color: var(--text-muted); }
+
+    .chart-toggle-row { display: flex; gap: 6px; }
+    .chart-toggle {
+      display: flex; align-items: center; gap: 5px;
+      background: var(--bg); border: 1px solid var(--border); border-radius: 100px;
+      padding: 4px 10px; font-size: 11px; font-weight: 700; cursor: pointer;
+      transition: all .15s; color: var(--text-secondary); font-family: var(--font);
+    }
+    .chart-toggle:hover { border-color: var(--green); color: var(--green); }
+    .chart-toggle.on { background: var(--green); border-color: var(--green); color: white; }
+
+    .table-scroll { overflow-x: auto; }
+    .table-scroll::-webkit-scrollbar { width: 5px; height: 5px; }
+    .table-scroll::-webkit-scrollbar-track { background: var(--border); }
+    .table-scroll::-webkit-scrollbar-thumb { background: #c4c9d6; border-radius: 3px; }
+
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    thead th {
+      background: var(--bg); color: var(--text-muted);
+      font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px;
+      padding: 10px 16px; text-align: right;
+      position: sticky; top: 0; z-index: 1;
+      border-bottom: 1px solid var(--border);
+    }
+    thead th:first-child { text-align: left; }
+    tbody tr { border-bottom: 1px solid rgba(226,230,239,.5); transition: background .12s; }
+    body.dark tbody tr { border-bottom-color: rgba(48,54,61,.5); }
+    tbody tr:hover { background: var(--bg); }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr.tbl-alt { background: rgba(226,230,239,.15); }
+    body.dark tbody tr.tbl-alt { background: rgba(48,54,61,.15); }
+    tbody td { padding: 10px 16px; text-align: right; font-family: var(--mono); font-size: 12px; }
+    tbody td:first-child { text-align: left; font-family: var(--font); font-weight: 600; color: var(--text-secondary); }
+    tfoot td { padding: 10px 16px; text-align: right; font-family: var(--mono); font-size: 12px; font-weight: 700; background: var(--bg); border-top: 1px solid var(--border); }
+    tfoot td:first-child { text-align: left; font-family: var(--font); font-weight: 700; color: var(--text-primary); }
+    .td-green  { color: var(--green)  !important; font-weight: 700; }
+    .td-purple { color: var(--purple) !important; }
+    .td-amber  { color: var(--amber)  !important; }
+    .td-red    { color: var(--red)    !important; }
+
+    .show-all-wrap { text-align: center; padding: 12px; border-top: 1px solid var(--border); }
+    .show-all-btn {
+      background: var(--bg); border: 1px solid var(--border); border-radius: 100px;
+      color: var(--text-secondary); font-family: var(--font); font-size: 12px; font-weight: 700;
+      padding: 6px 20px; cursor: pointer; transition: all .15s;
+    }
+    .show-all-btn:hover { border-color: var(--green); color: var(--green); }
+
+    /* ── TOAST ── */
+    #toast {
+      position: fixed; bottom: 24px; right: 24px; z-index: 200;
+      background: #0f1623; color: white;
+      padding: 10px 18px; border-radius: 100px;
+      font-size: 12px; font-weight: 700; font-family: var(--mono);
+      display: flex; align-items: center; gap: 7px;
+      box-shadow: 0 8px 24px rgba(0,0,0,.25);
+      opacity: 0; transform: translateY(8px);
+      transition: opacity .25s, transform .25s; pointer-events: none;
+    }
+
+    /* ── SEO SECTION ── */
+    .seo-section {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 18px; padding: 28px 28px 24px; margin-top: 24px;
+    }
+    .seo-section h2 { font-size: 18px; font-weight: 700; color: var(--text-primary); margin-bottom: 10px; }
+    .seo-section h3 { font-size: 15px; font-weight: 600; color: var(--text-primary); margin-top: 20px; margin-bottom: 8px; }
+    .seo-section p  { font-size: 14px; color: var(--text-secondary); line-height: 1.7; }
+
+    /* ── ADVANCED SECTION ── */
+    .adv-section-body { display: none; padding-top: 12px; }
+    .adv-section-body.open { display: block; }
+
+    /* ── PRINT SUMMARY ── */
+    .print-summary { display: none; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 640px) {
+      .hero-formula { display: none; }
+      .hero-title { font-size: 20px; }
+      .payment-value { font-size: 28px; }
+    }
+
+    /* ── PRINT ── */
+    @media print {
+      body { background: white !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      body::before { display: none; }
+      header, .action-row, .chart-card, #toast,
+      .icon-btn, .hero-formula, .section-toggle,
+      .show-all-wrap, .nav-tools-wrap, .donate-btn,
+      .mega-menu, .menu-overlay, .site-footer, .footer-disclaimer { display: none !important; }
+      .app { padding: 0; max-width: 100%; }
+      .hero { border: none; padding: 12px 0 8px; margin-bottom: 10px; }
+      .two-col { grid-template-columns: 1fr; }
+      .stats-row { grid-template-columns: repeat(4, 1fr); }
+      .stat-card, .table-card, .card { page-break-inside: avoid; border: 1px solid #ccc; }
+      .table-scroll { max-height: none; overflow: visible; }
+      .collapsible-body { display: block !important; }
+      .seo-section { display: none; }
+      .print-summary {
+        display: block; border: 1px solid #ddd; border-radius: 10px;
+        padding: 14px 18px; margin-bottom: 14px; background: #fafafa;
+      }
+      .print-summary-title {
+        font-size: 10px; font-weight: 700; letter-spacing: .5px;
+        text-transform: uppercase; color: #888; margin-bottom: 10px;
+      }
+      .print-summary-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px 16px; }
+      .print-summary-item .ps-label {
+        font-size: 10px; font-weight: 600; text-transform: uppercase;
+        letter-spacing: .4px; color: #999; margin-bottom: 2px;
+      }
+      .print-summary-item .ps-value {
+        font-size: 14px; font-weight: 700; color: #0f1623; font-family: 'JetBrains Mono', monospace;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+
+  <!-- nav.js injects header here -->
+
+  <!-- HERO -->
+  <div class="hero">
+    <div>
+      <div class="hero-title">Mortgage <span>Calculator</span></div>
+      <div class="hero-desc">Estimate your monthly payment, total interest, and full amortization schedule — instantly in your browser.</div>
+    </div>
+    <div class="hero-formula">
+      M = <span class="hl">P</span> · <span class="hlp">r</span>(1+<span class="hlp">r</span>)<sup><span class="hlp">n</span></sup> / ((1+<span class="hlp">r</span>)<sup><span class="hlp">n</span></sup>−1)
+    </div>
+  </div>
+
+  <!-- PRINT SUMMARY (screen: hidden, print: visible) -->
+  <div class="print-summary" id="print-summary">
+    <div class="print-summary-title">Mortgage Calculator Settings</div>
+    <div class="print-summary-grid" id="print-summary-grid"></div>
+  </div>
+
+  <!-- TWO-COLUMN LAYOUT -->
+  <div class="two-col">
+
+    <!-- LEFT: INPUTS -->
+    <div class="card">
+      <div class="card-title">
+        <div class="card-title-dot" style="background:var(--green)"></div>
+        Inputs
+      </div>
+
+      <!-- Home Price -->
+      <div class="form-group">
+        <label class="form-label" for="home-price">Home Price</label>
+        <div class="input-row has-prefix">
+          <span class="input-prefix">$</span>
+          <input type="number" id="home-price" value="500000" min="0" step="1000" />
+        </div>
+        <div class="slider-wrap">
+          <input type="range" id="home-price-slider" min="50000" max="2000000" step="5000" value="500000" />
+        </div>
+        <div class="field-error" id="err-home-price">Please enter a valid home price.</div>
+      </div>
+
+      <!-- Down Payment -->
+      <div class="form-group">
+        <label class="form-label">Down Payment</label>
+        <div class="down-mode-wrap">
+          <button class="down-mode-btn active" id="dm-dollar" onclick="setDownMode('dollar')">$</button>
+          <button class="down-mode-btn" id="dm-pct" onclick="setDownMode('pct')">%</button>
+        </div>
+        <div class="input-row" id="down-input-row">
+          <span class="input-prefix" id="down-prefix">$</span>
+          <input type="number" id="down-payment" value="100000" min="0" step="1000" style="padding-left:28px" />
+          <span class="input-suffix" id="down-suffix" style="display:none">%</span>
+        </div>
+        <div class="slider-wrap">
+          <input type="range" id="down-payment-slider" min="0" max="500000" step="5000" value="100000" />
+        </div>
+        <div class="field-error" id="err-down-payment">Down payment cannot exceed home price.</div>
+      </div>
+
+      <!-- Interest Rate -->
+      <div class="form-group">
+        <label class="form-label" for="interest-rate">Interest Rate</label>
+        <div class="input-row has-suffix">
+          <input type="number" id="interest-rate" value="6.5" min="0.1" max="20" step="0.05" />
+          <span class="input-suffix">%</span>
+        </div>
+        <div class="slider-wrap">
+          <input type="range" id="interest-rate-slider" min="0.1" max="20" step="0.05" value="6.5" />
+        </div>
+        <div class="field-error" id="err-interest-rate">Rate must be between 0.1% and 20%.</div>
+      </div>
+
+      <!-- Amortization Period -->
+      <div class="form-group">
+        <label class="form-label" for="amort-period">Amortization Period</label>
+        <div class="select-wrap">
+          <select id="amort-period">
+            <option value="10">10 years</option>
+            <option value="15">15 years</option>
+            <option value="20">20 years</option>
+            <option value="25" selected>25 years</option>
+            <option value="30">30 years</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Mortgage Term -->
+      <div class="form-group">
+        <label class="form-label">Mortgage Term <span class="form-label-optional">(informational)</span></label>
+        <div class="select-wrap">
+          <select id="mortgage-term">
+            <option value="1">1 year</option>
+            <option value="2">2 years</option>
+            <option value="3">3 years</option>
+            <option value="5" selected>5 years</option>
+            <option value="7">7 years</option>
+            <option value="10">10 years</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Payment Frequency -->
+      <div class="form-group">
+        <label class="form-label" for="payment-freq">Payment Frequency</label>
+        <div class="select-wrap">
+          <select id="payment-freq">
+            <option value="monthly" selected>Monthly</option>
+            <option value="biweekly">Bi-weekly</option>
+            <option value="weekly">Weekly</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Optional Costs (collapsible) -->
+      <button class="section-toggle" id="opt-toggle" onclick="toggleOptional()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="6 9 12 15 18 9"/>
+        </svg>
+        Optional Costs
+      </button>
+      <div class="collapsible-body" id="opt-body">
+        <div class="form-group">
+          <label class="form-label" for="property-tax">Property Tax <span class="form-label-optional">($ / year)</span></label>
+          <div class="input-row has-prefix">
+            <span class="input-prefix">$</span>
+            <input type="number" id="property-tax" value="" min="0" step="100" placeholder="0" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="home-insurance">Home Insurance <span class="form-label-optional">($ / year)</span></label>
+          <div class="input-row has-prefix">
+            <span class="input-prefix">$</span>
+            <input type="number" id="home-insurance" value="" min="0" step="50" placeholder="0" />
+          </div>
+        </div>
+        <div class="form-group" style="margin-bottom:0">
+          <label class="form-label" for="pmi">PMI / CMHC <span class="form-label-optional">($ / month)</span></label>
+          <div class="input-row has-prefix">
+            <span class="input-prefix">$</span>
+            <input type="number" id="pmi" value="" min="0" step="10" placeholder="0" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Advanced: Extra Payments (collapsible) -->
+      <button class="section-toggle" id="adv-toggle" onclick="toggleAdvanced()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="6 9 12 15 18 9"/>
+        </svg>
+        Advanced Options
+      </button>
+      <div class="collapsible-body" id="adv-body">
+        <div class="form-group" style="margin-bottom:0">
+          <label class="form-label" for="extra-payment">Extra Monthly Payment <span class="form-label-optional">(optional)</span></label>
+          <div class="input-row has-prefix">
+            <span class="input-prefix">$</span>
+            <input type="number" id="extra-payment" value="" min="0" step="50" placeholder="0" />
+          </div>
+          <div id="extra-payment-impact" style="margin-top:8px; font-size:12px; color:var(--green); font-weight:600; display:none;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: PAYMENT SUMMARY -->
+    <div class="card">
+      <div class="card-title">
+        <div class="card-title-dot" style="background:var(--purple)"></div>
+        Payment Summary
+      </div>
+
+      <!-- Main payment display -->
+      <div class="payment-hero">
+        <div class="payment-label" id="payment-freq-label">Monthly Payment</div>
+        <div class="payment-value" id="res-payment">—</div>
+        <div class="payment-sub" id="res-payment-sub">principal + interest</div>
+      </div>
+
+      <!-- Detail rows -->
+      <div class="result-row">
+        <span class="result-key">Loan Amount</span>
+        <span class="result-val" id="res-loan-amount">—</span>
+      </div>
+      <div class="result-row">
+        <span class="result-key">Down Payment</span>
+        <span>
+          <span class="result-val" id="res-down-amount">—</span>
+          <span class="result-sub" id="res-down-pct"></span>
+        </span>
+      </div>
+      <div class="result-row">
+        <span class="result-key">Total Interest</span>
+        <span class="result-val td-purple" id="res-total-interest">—</span>
+      </div>
+      <div class="result-row">
+        <span class="result-key">Total Cost</span>
+        <span class="result-val" id="res-total-cost">—</span>
+      </div>
+      <div class="result-row" id="opt-costs-row" style="display:none">
+        <span class="result-key">Total Monthly (w/ costs)</span>
+        <span class="result-val td-amber" id="res-total-monthly">—</span>
+      </div>
+      <div class="result-row" id="extra-payoff-row" style="display:none">
+        <span class="result-key">Payoff with Extra Payments</span>
+        <span>
+          <span class="result-val td-green" id="res-extra-payoff">—</span>
+          <span class="result-sub" id="res-extra-savings"></span>
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ACTION ROW -->
+  <div class="action-row">
+    <button class="action-btn" onclick="resetDefaults()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.83"/>
+      </svg>
+      Reset
+    </button>
+    <button class="action-btn" onclick="shareLink()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
+        <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+      </svg>
+      Share Link
+    </button>
+    <button class="action-btn" onclick="copySummary()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+      </svg>
+      Copy Summary
+    </button>
+    <button class="action-btn" onclick="exportCSV()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+      </svg>
+      Export CSV
+    </button>
+    <button class="action-btn" onclick="window.print()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="6 9 6 2 18 2 18 9"/>
+        <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
+        <rect x="6" y="14" width="12" height="8"/>
+      </svg>
+      Export PDF
+    </button>
+  </div>
+
+  <!-- STATS ROW -->
+  <div class="stats-row">
+    <div class="stat-card primary">
+      <div class="stat-label" id="stat-payment-label">Monthly Payment</div>
+      <div class="stat-value" id="stat-payment">—</div>
+      <div class="stat-sub" id="stat-payment-sub">principal + interest</div>
+    </div>
+    <div class="stat-card secondary">
+      <div class="stat-label">Total Interest Paid</div>
+      <div class="stat-value" id="stat-interest">—</div>
+      <div class="stat-sub" id="stat-interest-sub"></div>
+    </div>
+    <div class="stat-card tertiary">
+      <div class="stat-label">Total Cost of Loan</div>
+      <div class="stat-value" id="stat-total-cost">—</div>
+      <div class="stat-sub" id="stat-total-sub"></div>
+    </div>
+    <div class="stat-card quaternary">
+      <div class="stat-label">Interest-to-Principal</div>
+      <div class="stat-value" id="stat-ratio">—</div>
+      <div class="stat-sub">ratio of interest paid</div>
+    </div>
+  </div>
+
+  <!-- PIE CHART -->
+  <div class="chart-card">
+    <div class="chart-header">
+      <div class="chart-title">Payment Breakdown</div>
+    </div>
+    <div class="pie-layout">
+      <div class="pie-canvas-wrap">
+        <canvas id="pie-chart" width="240" height="240"></canvas>
+      </div>
+      <div class="pie-legend" id="pie-legend"></div>
+    </div>
+  </div>
+
+  <!-- AMORTIZATION TABLE -->
+  <div class="table-card">
+    <div class="table-head-row">
+      <div class="table-head-title">Amortization Schedule</div>
+      <div class="chart-toggle-row">
+        <button class="chart-toggle on" id="tog-yearly" onclick="setTableView('yearly')">Yearly</button>
+        <button class="chart-toggle" id="tog-monthly" onclick="setTableView('monthly')">Monthly</button>
+      </div>
+    </div>
+    <div class="table-scroll" id="amort-scroll">
+      <table id="amort-table">
+        <thead id="amort-thead"></thead>
+        <tbody id="amort-tbody"></tbody>
+        <tfoot id="amort-tfoot"></tfoot>
+      </table>
+    </div>
+    <div class="show-all-wrap" id="show-all-wrap">
+      <button class="show-all-btn" id="show-all-btn" onclick="toggleShowAll()">Show All</button>
+    </div>
+  </div>
+
+  <!-- SEO SECTION -->
+  <div class="seo-section">
+    <h2>How to Use This Mortgage Calculator</h2>
+    <p>Enter your home price, down payment, interest rate, and amortization period to instantly see your estimated mortgage payment. Adjust the payment frequency to see monthly, bi-weekly, or weekly payment amounts. Add optional costs like property tax, insurance, and PMI for a complete picture of your true housing cost.</p>
+
+    <h3>What is a Mortgage Payment?</h3>
+    <p>A mortgage payment is the regular amount paid to a lender to repay a home loan. Each payment is split between principal — the amount borrowed — and interest, which is the cost of borrowing. In the early years of a mortgage, the majority of each payment goes toward interest. Over time, a greater portion is applied to the principal as the balance decreases.</p>
+
+    <h3>How Mortgage Interest Works</h3>
+    <p>Mortgage interest is calculated on the outstanding loan balance each period. The formula used here is the standard amortizing loan formula: M = P · r(1+r)^n / ((1+r)^n − 1), where P is the principal, r is the periodic interest rate, and n is the total number of payments. With a fixed-rate mortgage, your payment stays the same each period but the proportion of interest vs. principal shifts gradually over time.</p>
+
+    <h3>How to Reduce Your Mortgage Costs</h3>
+    <p>There are several proven strategies to reduce the total cost of your mortgage. Making a larger down payment reduces your loan balance and eliminates PMI once you reach 20% equity. Choosing a shorter amortization period (e.g. 15 years instead of 25) dramatically reduces total interest paid, although your monthly payment will be higher. Making extra payments directly against the principal — even small amounts — can shave years off your mortgage and save tens of thousands in interest. Finally, shopping for the best available interest rate before committing can have a significant long-term impact.</p>
+
+    <h3>Understanding Amortization</h3>
+    <p>Amortization is the process of paying off a loan through regular scheduled payments over time. An amortization schedule shows every payment broken down into its principal and interest components, along with the remaining loan balance after each payment. Early payments are interest-heavy; later payments are principal-heavy. The full amortization table generated by this calculator shows the complete repayment timeline — you can view it year by year or month by month and export it as a CSV spreadsheet for your records.</p>
+  </div>
+
+  <!-- nav.js injects footer here -->
+
+</div>
+
+<div id="toast">
+  <span style="color:var(--green);font-size:15px;">✓</span>
+  <span id="toast-msg">Copied!</span>
+</div>
+
+<script>
+// ── State ───────────────────────────────────────────────────────────────────
+let downMode = 'dollar'; // 'dollar' | 'pct'
+let tableView = 'yearly'; // 'yearly' | 'monthly'
+let showAllRows = false;
+let lastSchedule = [];
+let lastPieData = null;
+
+// ── Formatters ───────────────────────────────────────────────────────────────
+function fmtCurrency(n) {
+  return '$' + n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+function fmtCurrencyRound(n) {
+  return '$' + Math.round(n).toLocaleString('en-US');
+}
+function fmtShort(n) {
+  if (n >= 1e6) return '$' + (n / 1e6).toFixed(2) + 'M';
+  if (n >= 1e3) return '$' + (n / 1e3).toFixed(0) + 'K';
+  return '$' + Math.round(n);
+}
+function formatDateShort(d) {
+  return d.toLocaleDateString('en-US', { year: 'numeric', month: 'short' });
+}
+function fmtYears(n) {
+  const yrs = Math.floor(n);
+  const mos = Math.round((n - yrs) * 12);
+  if (mos === 0) return yrs + ' yr' + (yrs !== 1 ? 's' : '');
+  if (yrs === 0) return mos + ' mo';
+  return yrs + ' yr ' + mos + ' mo';
+}
+
+// ── Down Payment Mode ─────────────────────────────────────────────────────
+function setDownMode(mode) {
+  const homePrice = parseFloat(document.getElementById('home-price').value) || 0;
+  const currentVal = parseFloat(document.getElementById('down-payment').value) || 0;
+
+  if (mode === 'pct' && downMode === 'dollar') {
+    const pct = homePrice > 0 ? Math.min(50, (currentVal / homePrice) * 100) : 0;
+    document.getElementById('down-payment').value = parseFloat(pct.toFixed(2));
+  } else if (mode === 'dollar' && downMode === 'pct') {
+    const amt = homePrice * currentVal / 100;
+    document.getElementById('down-payment').value = Math.round(amt);
+  }
+
+  downMode = mode;
+  document.getElementById('dm-dollar').classList.toggle('active', mode === 'dollar');
+  document.getElementById('dm-pct').classList.toggle('active', mode === 'pct');
+  document.getElementById('down-prefix').style.display = mode === 'dollar' ? '' : 'none';
+  document.getElementById('down-suffix').style.display = mode === 'pct' ? '' : 'none';
+  document.getElementById('down-payment').style.paddingLeft = mode === 'dollar' ? '28px' : '12px';
+  document.getElementById('down-payment').style.paddingRight = mode === 'pct' ? '36px' : '12px';
+  updateDownSlider();
+  calculate();
+}
+
+function updateDownSlider() {
+  const hp = parseFloat(document.getElementById('home-price').value) || 0;
+  const slider = document.getElementById('down-payment-slider');
+  if (downMode === 'dollar') {
+    slider.min = 0;
+    slider.max = hp > 0 ? hp : 500000;
+    slider.step = Math.max(1000, Math.round(hp / 100 / 1000) * 1000);
+  } else {
+    slider.min = 0;
+    slider.max = 50;
+    slider.step = 0.5;
+  }
+  slider.value = parseFloat(document.getElementById('down-payment').value) || 0;
+}
+
+// ── Collapsible Sections ──────────────────────────────────────────────────
+function toggleOptional() {
+  const btn = document.getElementById('opt-toggle');
+  const body = document.getElementById('opt-body');
+  btn.classList.toggle('open');
+  body.classList.toggle('open');
+}
+function toggleAdvanced() {
+  const btn = document.getElementById('adv-toggle');
+  const body = document.getElementById('adv-body');
+  btn.classList.toggle('open');
+  body.classList.toggle('open');
+}
+
+// ── Frequency Helper ──────────────────────────────────────────────────────
+function getFrequency() {
+  const v = document.getElementById('payment-freq').value;
+  if (v === 'biweekly') return { periods: 26, label: 'Bi-weekly', adjective: 'Bi-weekly' };
+  if (v === 'weekly')   return { periods: 52, label: 'Weekly',    adjective: 'Weekly'    };
+  return                       { periods: 12, label: 'Monthly',   adjective: 'Monthly'   };
+}
+
+// ── Validation ────────────────────────────────────────────────────────────
+function validate() {
+  let ok = true;
+  const hp  = parseFloat(document.getElementById('home-price').value) || 0;
+  const dp  = parseFloat(document.getElementById('down-payment').value) || 0;
+  const r   = parseFloat(document.getElementById('interest-rate').value) || 0;
+
+  const errHP  = document.getElementById('err-home-price');
+  const errDP  = document.getElementById('err-down-payment');
+  const errR   = document.getElementById('err-interest-rate');
+  const inpHP  = document.getElementById('home-price');
+  const inpDP  = document.getElementById('down-payment');
+  const inpR   = document.getElementById('interest-rate');
+
+  if (hp <= 0) {
+    errHP.classList.add('visible'); inpHP.classList.add('error'); ok = false;
+  } else {
+    errHP.classList.remove('visible'); inpHP.classList.remove('error');
+  }
+
+  const dpDollar = downMode === 'dollar' ? dp : hp * dp / 100;
+  if (dpDollar > hp && hp > 0) {
+    errDP.classList.add('visible'); inpDP.classList.add('error'); ok = false;
+  } else {
+    errDP.classList.remove('visible'); inpDP.classList.remove('error');
+  }
+
+  if (r < 0.1 || r > 20) {
+    errR.classList.add('visible'); inpR.classList.add('error'); ok = false;
+  } else {
+    errR.classList.remove('visible'); inpR.classList.remove('error');
+  }
+
+  return ok;
+}
+
+// ── Core Calculation ──────────────────────────────────────────────────────
+function calculate() {
+  if (!validate()) return;
+
+  const homePrice  = parseFloat(document.getElementById('home-price').value) || 0;
+  const freq       = getFrequency();
+  const dpRaw      = parseFloat(document.getElementById('down-payment').value) || 0;
+  let downAmt, downPct;
+  if (downMode === 'pct') {
+    downPct = dpRaw;
+    downAmt = homePrice * downPct / 100;
+  } else {
+    downAmt = dpRaw;
+    downPct = homePrice > 0 ? (downAmt / homePrice * 100) : 0;
+  }
+
+  const principal   = Math.max(0, homePrice - downAmt);
+  const annualRate  = parseFloat(document.getElementById('interest-rate').value) || 0;
+  const amortYears  = parseInt(document.getElementById('amort-period').value) || 25;
+  const n           = amortYears * freq.periods;
+  const r           = annualRate / 100 / freq.periods;
+
+  let periodicPayment;
+  if (r === 0) {
+    periodicPayment = principal / n;
+  } else {
+    const factor = Math.pow(1 + r, n);
+    periodicPayment = principal * r * factor / (factor - 1);
+  }
+
+  const taxAnnual       = parseFloat(document.getElementById('property-tax').value)   || 0;
+  const insuranceAnnual = parseFloat(document.getElementById('home-insurance').value)  || 0;
+  const pmiMonthly      = parseFloat(document.getElementById('pmi').value)             || 0;
+  const extraMonthly    = parseFloat(document.getElementById('extra-payment').value)   || 0;
+
+  const taxPeriodic       = taxAnnual / freq.periods;
+  const insurancePeriodic = insuranceAnnual / freq.periods;
+  const pmiPeriodic       = pmiMonthly * 12 / freq.periods;
+  const totalPeriodicPayment = periodicPayment + taxPeriodic + insurancePeriodic + pmiPeriodic;
+
+  const totalInterest = Math.max(0, (periodicPayment * n) - principal);
+  const totalCost     = periodicPayment * n + downAmt;
+  const ratio         = principal > 0 ? totalInterest / principal : 0;
+
+  // Extra payment calculation
+  let extraPayoffYears = null;
+  let extraInterestSaved = 0;
+  if (extraMonthly > 0 && principal > 0) {
+    const extraPeriodic = extraMonthly * 12 / freq.periods;
+    let bal = principal;
+    let extraPmts = 0;
+    let extraIntTotal = 0;
+    while (bal > 0.01 && extraPmts < n * 2) {
+      const intPmt = bal * r;
+      const prinPmt = Math.min(periodicPayment + extraPeriodic - intPmt, bal);
+      bal = Math.max(0, bal - prinPmt);
+      extraIntTotal += intPmt;
+      extraPmts++;
+    }
+    extraPayoffYears = extraPmts / freq.periods;
+    extraInterestSaved = totalInterest - extraIntTotal;
+  }
+
+  // Build full amortization schedule
+  lastSchedule = buildAmortization(principal, r, n, periodicPayment, freq, extraMonthly);
+
+  // Update UI
+  const freqLabel = freq.adjective + ' Payment';
+  document.getElementById('payment-freq-label').textContent = freqLabel;
+  document.getElementById('stat-payment-label').textContent = freqLabel;
+  document.getElementById('res-payment').textContent = fmtCurrency(periodicPayment);
+  document.getElementById('res-payment-sub').textContent = 'principal + interest';
+  document.getElementById('res-loan-amount').textContent  = fmtCurrency(principal);
+  document.getElementById('res-down-amount').textContent  = fmtCurrencyRound(downAmt);
+  document.getElementById('res-down-pct').textContent     = '(' + downPct.toFixed(1) + '%)';
+  document.getElementById('res-total-interest').textContent = fmtCurrencyRound(totalInterest);
+  document.getElementById('res-total-cost').textContent     = fmtCurrencyRound(totalCost);
+
+  const hasOptCosts = taxAnnual > 0 || insuranceAnnual > 0 || pmiMonthly > 0;
+  document.getElementById('opt-costs-row').style.display = hasOptCosts ? '' : 'none';
+  if (hasOptCosts) {
+    document.getElementById('res-total-monthly').textContent = fmtCurrency(totalPeriodicPayment);
+  }
+
+  if (extraPayoffYears !== null) {
+    document.getElementById('extra-payoff-row').style.display = '';
+    document.getElementById('res-extra-payoff').textContent  = fmtYears(extraPayoffYears);
+    document.getElementById('res-extra-savings').textContent = '−' + fmtCurrencyRound(extraInterestSaved) + ' interest';
+    document.getElementById('extra-payment-impact').style.display = '';
+    document.getElementById('extra-payment-impact').textContent =
+      'Saves ' + fmtCurrencyRound(extraInterestSaved) + ' in interest · payoff in ' + fmtYears(extraPayoffYears);
+  } else {
+    document.getElementById('extra-payoff-row').style.display = 'none';
+    document.getElementById('extra-payment-impact').style.display = 'none';
+  }
+
+  // Stats
+  document.getElementById('stat-payment').textContent    = fmtCurrency(periodicPayment);
+  document.getElementById('stat-payment-sub').textContent = 'principal + interest';
+  document.getElementById('stat-interest').textContent   = fmtCurrencyRound(totalInterest);
+  document.getElementById('stat-interest-sub').textContent = (principal > 0 ? (totalInterest / principal * 100).toFixed(1) : '0') + '% of principal';
+  document.getElementById('stat-total-cost').textContent = fmtCurrencyRound(totalCost);
+  document.getElementById('stat-total-sub').textContent  = 'incl. ' + fmtCurrencyRound(downAmt) + ' down';
+  document.getElementById('stat-ratio').textContent      = ratio.toFixed(2) + 'x';
+
+  // Pie chart data
+  const pieData = [
+    { label: 'Principal', value: principal, color: '#10b981' },
+    { label: 'Interest',  value: totalInterest, color: '#6366f1' },
+  ];
+  if (taxAnnual > 0)       pieData.push({ label: 'Property Tax', value: taxAnnual * amortYears, color: '#f59e0b' });
+  if (insuranceAnnual > 0) pieData.push({ label: 'Insurance',   value: insuranceAnnual * amortYears, color: '#3b82f6' });
+  if (pmiMonthly > 0)      pieData.push({ label: 'PMI/CMHC',    value: pmiMonthly * 12 * amortYears, color: '#ef4444' });
+  lastPieData = pieData;
+  drawPieChart(pieData);
+
+  renderAmortTable(lastSchedule, freq);
+  updatePrintSummary(homePrice, downAmt, downPct, annualRate, amortYears, freq, periodicPayment, totalInterest, totalCost);
+}
+
+// ── Amortization Builder ──────────────────────────────────────────────────
+function buildAmortization(principal, r, n, payment, freq, extraMonthly) {
+  extraMonthly = extraMonthly || 0;
+  const rows = [];
+  let balance = principal;
+  const now = new Date();
+  let date = new Date(now.getFullYear(), now.getMonth(), 1);
+
+  const extraPeriodic = extraMonthly > 0 ? extraMonthly * 12 / freq.periods : 0;
+
+  for (let i = 1; i <= n; i++) {
+    const interestPmt  = balance * r;
+    const principalPmt = Math.min(payment + extraPeriodic - interestPmt, balance);
+    balance = Math.max(0, balance - principalPmt);
+
+    rows.push({
+      num: i,
+      date: new Date(date),
+      payment: payment + extraPeriodic,
+      principal: principalPmt,
+      interest: interestPmt,
+      balance: balance,
+    });
+
+    // Advance date
+    if (freq.periods === 12)      date.setMonth(date.getMonth() + 1);
+    else if (freq.periods === 26) date.setDate(date.getDate() + 14);
+    else                          date.setDate(date.getDate() + 7);
+
+    if (balance <= 0.01) break;
+  }
+  return rows;
+}
+
+// ── Yearly Aggregation ────────────────────────────────────────────────────
+function aggregateYearly(rows) {
+  const years = {};
+  rows.forEach(row => {
+    const yr = row.date.getFullYear();
+    if (!years[yr]) {
+      years[yr] = { year: yr, num: yr, date: row.date, payments: 0, principal: 0, interest: 0, balance: 0 };
+    }
+    years[yr].payments  += row.payment;
+    years[yr].principal += row.principal;
+    years[yr].interest  += row.interest;
+    years[yr].balance    = row.balance;
+  });
+  return Object.values(years);
+}
+
+// ── Render Amortization Table ─────────────────────────────────────────────
+function setTableView(v) {
+  tableView = v;
+  showAllRows = false;
+  document.getElementById('tog-yearly').classList.toggle('on', v === 'yearly');
+  document.getElementById('tog-monthly').classList.toggle('on', v === 'monthly');
+  renderAmortTable(lastSchedule, getFrequency());
+}
+
+function toggleShowAll() {
+  showAllRows = !showAllRows;
+  document.getElementById('show-all-btn').textContent = showAllRows ? 'Show Less' : 'Show All';
+  renderAmortTable(lastSchedule, getFrequency());
+}
+
+function renderAmortTable(schedule, freq) {
+  if (!schedule || !schedule.length) return;
+
+  const isYearly = tableView === 'yearly';
+  const rows = isYearly ? aggregateYearly(schedule) : schedule;
+  const PREVIEW = 10;
+  const displayRows = showAllRows ? rows : rows.slice(0, PREVIEW);
+
+  // Header
+  const thead = document.getElementById('amort-thead');
+  const col0  = isYearly ? 'Year' : '#';
+  thead.innerHTML = `<tr>
+    <th>${col0}</th>
+    <th>Date</th>
+    <th>Payment</th>
+    <th>Principal</th>
+    <th>Interest</th>
+    <th>Balance</th>
+  </tr>`;
+
+  // Body
+  const tbody = document.getElementById('amort-tbody');
+  let totalPayment = 0, totalPrincipal = 0, totalInterest = 0;
+  tbody.innerHTML = displayRows.map((row, idx) => {
+    totalPayment   += row.payment   || row.payments || 0;
+    totalPrincipal += row.principal;
+    totalInterest  += row.interest;
+    const isAlt = idx % 2 === 1;
+    const label = isYearly ? row.year : '#' + row.num;
+    const dateStr = row.date ? formatDateShort(row.date) : '';
+    const payAmt  = isYearly ? (row.payments || row.payment || 0) : row.payment;
+    return `<tr${isAlt ? ' class="tbl-alt"' : ''}>
+      <td>${label}</td>
+      <td>${dateStr}</td>
+      <td>${fmtCurrency(payAmt)}</td>
+      <td class="td-green">${fmtCurrency(row.principal)}</td>
+      <td class="td-purple">${fmtCurrency(row.interest)}</td>
+      <td>${fmtCurrency(row.balance)}</td>
+    </tr>`;
+  }).join('');
+
+  // Footer totals
+  const tfoot = document.getElementById('amort-tfoot');
+  tfoot.innerHTML = `<tr>
+    <td>Totals</td>
+    <td></td>
+    <td>${fmtCurrency(totalPayment)}</td>
+    <td class="td-green">${fmtCurrency(totalPrincipal)}</td>
+    <td class="td-purple">${fmtCurrency(totalInterest)}</td>
+    <td>—</td>
+  </tr>`;
+
+  const wrap = document.getElementById('show-all-wrap');
+  wrap.style.display = rows.length > PREVIEW ? '' : 'none';
+}
+
+// ── Pie Chart ─────────────────────────────────────────────────────────────
+function drawPieChart(data) {
+  const canvas  = document.getElementById('pie-chart');
+  const dpr     = window.devicePixelRatio || 1;
+  const rawSize = Math.min(canvas.parentElement.clientWidth || 240, 240);
+  const size    = Math.max(rawSize, 120);
+  canvas.width  = size * dpr;
+  canvas.height = size * dpr;
+  canvas.style.width  = size + 'px';
+  canvas.style.height = size + 'px';
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+
+  const cx = size / 2, cy = size / 2;
+  const outerR = size / 2 - 8;
+  const innerR = outerR * 0.55;
+  const total  = data.reduce((s, d) => s + Math.max(0, d.value), 0);
+  if (total <= 0) { ctx.clearRect(0, 0, size, size); return; }
+
+  // Draw segments
+  let startAngle = -Math.PI / 2;
+  data.forEach(seg => {
+    if (seg.value <= 0) return;
+    const sweep = (seg.value / total) * 2 * Math.PI;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.arc(cx, cy, outerR, startAngle, startAngle + sweep);
+    ctx.closePath();
+    ctx.fillStyle = seg.color;
+    ctx.fill();
+    startAngle += sweep;
+  });
+
+  // Donut hole
+  ctx.beginPath();
+  ctx.arc(cx, cy, innerR, 0, 2 * Math.PI);
+  const surfaceColor = getComputedStyle(document.documentElement).getPropertyValue('--surface').trim() || '#ffffff';
+  ctx.fillStyle = surfaceColor;
+  ctx.fill();
+
+  // Center labels
+  const principal = data.find(d => d.label === 'Principal');
+  ctx.textAlign = 'center';
+  ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--text-primary').trim() || '#0f1623';
+  ctx.font = `700 ${Math.round(size * 0.075)}px 'JetBrains Mono', monospace`;
+  ctx.fillText(fmtShort(principal ? principal.value : 0), cx, cy - 8);
+  ctx.font = `500 ${Math.round(size * 0.055)}px 'Plus Jakarta Sans', sans-serif`;
+  ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--text-muted').trim() || '#9ba3b5';
+  ctx.fillText('Principal', cx, cy + 14);
+
+  // Legend
+  const legend = document.getElementById('pie-legend');
+  legend.innerHTML = data.map(seg => {
+    if (seg.value <= 0) return '';
+    const pct = ((seg.value / total) * 100).toFixed(1);
+    return `<div class="pie-legend-item">
+      <div class="pie-legend-dot" style="background:${seg.color}"></div>
+      <span class="pie-legend-label">${seg.label}</span>
+      <span class="pie-legend-amt">${fmtCurrencyRound(seg.value)}</span>
+      <span class="pie-legend-pct">${pct}%</span>
+    </div>`;
+  }).join('');
+}
+
+// ── Share Link ────────────────────────────────────────────────────────────
+function getShareURL() {
+  const params = new URLSearchParams({
+    price:    document.getElementById('home-price').value,
+    down:     document.getElementById('down-payment').value,
+    downMode: downMode,
+    rate:     document.getElementById('interest-rate').value,
+    amort:    document.getElementById('amort-period').value,
+    term:     document.getElementById('mortgage-term').value,
+    freq:     document.getElementById('payment-freq').value,
+    tax:      document.getElementById('property-tax').value   || '',
+    ins:      document.getElementById('home-insurance').value || '',
+    pmi:      document.getElementById('pmi').value            || '',
+    extra:    document.getElementById('extra-payment').value  || '',
+  });
+  return window.location.origin + window.location.pathname + '?' + params.toString();
+}
+
+function shareLink() {
+  const url = getShareURL();
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(url).then(() => showToast('Link copied!'));
+  } else {
+    const ta = document.createElement('textarea');
+    ta.value = url; document.body.appendChild(ta); ta.select();
+    document.execCommand('copy'); document.body.removeChild(ta);
+    showToast('Link copied!');
+  }
+}
+
+function loadFromURL() {
+  const p = new URLSearchParams(window.location.search);
+  if (!p.get('price')) return;
+  if (p.get('price'))    document.getElementById('home-price').value    = p.get('price');
+  if (p.get('down'))     document.getElementById('down-payment').value  = p.get('down');
+  if (p.get('rate'))     document.getElementById('interest-rate').value = p.get('rate');
+  if (p.get('amort'))    document.getElementById('amort-period').value  = p.get('amort');
+  if (p.get('term'))     document.getElementById('mortgage-term').value = p.get('term');
+  if (p.get('freq'))     document.getElementById('payment-freq').value  = p.get('freq');
+  if (p.get('tax'))      document.getElementById('property-tax').value  = p.get('tax');
+  if (p.get('ins'))      document.getElementById('home-insurance').value = p.get('ins');
+  if (p.get('pmi'))      document.getElementById('pmi').value           = p.get('pmi');
+  if (p.get('extra'))    document.getElementById('extra-payment').value = p.get('extra');
+  if (p.get('downMode')) {
+    setDownMode(p.get('downMode'));
+  }
+  // sync sliders
+  syncAllSliders();
+}
+
+// ── Copy Summary ──────────────────────────────────────────────────────────
+function copySummary() {
+  const hp    = document.getElementById('home-price').value;
+  const dp    = document.getElementById('down-payment').value;
+  const rate  = document.getElementById('interest-rate').value;
+  const amort = document.getElementById('amort-period').value;
+  const freq  = getFrequency();
+  const pmt   = document.getElementById('res-payment').textContent;
+  const ti    = document.getElementById('res-total-interest').textContent;
+  const tc    = document.getElementById('res-total-cost').textContent;
+
+  const text = [
+    'Mortgage Calculator Summary — CalcNova',
+    '─────────────────────────────────────',
+    'Home Price:          $' + parseFloat(hp).toLocaleString('en-US'),
+    'Down Payment:        ' + (downMode === 'dollar' ? '$' + parseFloat(dp).toLocaleString('en-US') : dp + '%'),
+    'Interest Rate:       ' + rate + '%',
+    'Amortization:        ' + amort + ' years',
+    'Payment Frequency:   ' + freq.label,
+    '─────────────────────────────────────',
+    freq.adjective + ' Payment:  ' + pmt,
+    'Total Interest:      ' + ti,
+    'Total Cost:          ' + tc,
+    '─────────────────────────────────────',
+    'calcnova.app/mortgage-calculator.html',
+  ].join('\n');
+
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(text).then(() => showToast('Summary copied!'));
+  } else {
+    const ta = document.createElement('textarea');
+    ta.value = text; document.body.appendChild(ta); ta.select();
+    document.execCommand('copy'); document.body.removeChild(ta);
+    showToast('Summary copied!');
+  }
+}
+
+// ── Export CSV ────────────────────────────────────────────────────────────
+function exportCSV() {
+  const rows = lastSchedule;
+  if (!rows || !rows.length) return;
+  const headers = ['Payment #', 'Date', 'Payment', 'Principal', 'Interest', 'Balance'];
+  const lines = [headers.join(',')];
+  rows.forEach(r => {
+    lines.push([
+      r.num,
+      formatDateShort(r.date),
+      r.payment.toFixed(2),
+      r.principal.toFixed(2),
+      r.interest.toFixed(2),
+      r.balance.toFixed(2),
+    ].join(','));
+  });
+  const blob = new Blob([lines.join('\n')], { type: 'text/csv' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'amortization-schedule.csv'; a.click();
+  URL.revokeObjectURL(url);
+  showToast('CSV exported!');
+}
+
+// ── Reset ─────────────────────────────────────────────────────────────────
+function resetDefaults() {
+  document.getElementById('home-price').value    = 500000;
+  document.getElementById('down-payment').value  = 100000;
+  document.getElementById('interest-rate').value = 6.5;
+  document.getElementById('amort-period').value  = 25;
+  document.getElementById('mortgage-term').value = 5;
+  document.getElementById('payment-freq').value  = 'monthly';
+  document.getElementById('property-tax').value  = '';
+  document.getElementById('home-insurance').value = '';
+  document.getElementById('pmi').value           = '';
+  document.getElementById('extra-payment').value = '';
+  if (downMode !== 'dollar') setDownMode('dollar');
+  syncAllSliders();
+  calculate();
+  showToast('Reset to defaults');
+}
+
+// ── Slider Sync ───────────────────────────────────────────────────────────
+function syncAllSliders() {
+  document.getElementById('home-price-slider').value    = document.getElementById('home-price').value;
+  document.getElementById('down-payment-slider').value  = document.getElementById('down-payment').value;
+  document.getElementById('interest-rate-slider').value = document.getElementById('interest-rate').value;
+  updateDownSlider();
+}
+
+// ── Print Summary ─────────────────────────────────────────────────────────
+function updatePrintSummary(hp, downAmt, downPct, rate, amort, freq, pmt, ti, tc) {
+  const items = [
+    { label: 'Home Price',     value: fmtCurrencyRound(hp) },
+    { label: 'Down Payment',   value: fmtCurrencyRound(downAmt) + ' (' + downPct.toFixed(1) + '%)' },
+    { label: 'Interest Rate',  value: rate + '%' },
+    { label: 'Amortization',   value: amort + ' years' },
+    { label: 'Frequency',      value: freq.label },
+    { label: freq.adjective + ' Payment', value: fmtCurrency(pmt) },
+    { label: 'Total Interest', value: fmtCurrencyRound(ti) },
+    { label: 'Total Cost',     value: fmtCurrencyRound(tc) },
+  ];
+  document.getElementById('print-summary-grid').innerHTML = items.map(it =>
+    `<div class="print-summary-item"><div class="ps-label">${it.label}</div><div class="ps-value">${it.value}</div></div>`
+  ).join('');
+}
+
+// ── Toast ─────────────────────────────────────────────────────────────────
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  document.getElementById('toast-msg').textContent = msg;
+  t.style.opacity = '1'; t.style.transform = 'translateY(0)';
+  setTimeout(() => { t.style.opacity = '0'; t.style.transform = 'translateY(8px)'; }, 2200);
+}
+
+// ── Dark Mode Listener ────────────────────────────────────────────────────
+document.addEventListener('calcnova:darkchanged', function () {
+  if (lastPieData) drawPieChart(lastPieData);
+});
+
+// ── Wire Up Events ────────────────────────────────────────────────────────
+// Home price input + slider
+document.getElementById('home-price').addEventListener('input', function () {
+  document.getElementById('home-price-slider').value = this.value;
+  updateDownSlider();
+  calculate();
+});
+document.getElementById('home-price-slider').addEventListener('input', function () {
+  document.getElementById('home-price').value = this.value;
+  updateDownSlider();
+  calculate();
+});
+
+// Down payment input + slider
+document.getElementById('down-payment').addEventListener('input', function () {
+  document.getElementById('down-payment-slider').value = this.value;
+  calculate();
+});
+document.getElementById('down-payment-slider').addEventListener('input', function () {
+  document.getElementById('down-payment').value = this.value;
+  calculate();
+});
+
+// Interest rate input + slider
+document.getElementById('interest-rate').addEventListener('input', function () {
+  document.getElementById('interest-rate-slider').value = this.value;
+  calculate();
+});
+document.getElementById('interest-rate-slider').addEventListener('input', function () {
+  document.getElementById('interest-rate').value = this.value;
+  calculate();
+});
+
+// Selects and optional fields
+['amort-period', 'mortgage-term', 'payment-freq',
+ 'property-tax', 'home-insurance', 'pmi', 'extra-payment'].forEach(id => {
+  document.getElementById(id).addEventListener('input', calculate);
+});
+
+// Resize: redraw pie chart
+let resizeTimer;
+window.addEventListener('resize', () => {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(() => { if (lastPieData) drawPieChart(lastPieData); }, 80);
+});
+
+// ── Init ──────────────────────────────────────────────────────────────────
+loadFromURL();
+calculate();
+</script>
+
+<script>
+  window.CALCNOVA_PAGE = {
+    id: 'mortgage',
+    disclaimer: 'This mortgage calculator is for informational purposes only and does not constitute financial advice. Consult a licensed mortgage professional for personalized guidance.'
+  };
+</script>
+<script src="shared/nav.js"></script>
+</body>
+</html>
