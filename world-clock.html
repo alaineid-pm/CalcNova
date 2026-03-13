@@ -38,7 +38,7 @@
       display:flex; align-items:center; gap:10px; flex-wrap:wrap; justify-content:flex-end;
     }
 
-    select, input[type="text"]{
+    input[type="text"]{
       background: var(--bg);
       border: 1px solid var(--border);
       border-radius: 10px;
@@ -52,9 +52,60 @@
       appearance: none;
       min-height: 40px;
     }
-    select:focus, input[type="text"]:focus{
+    input[type="text"]:focus{
       border-color: var(--green);
       box-shadow: 0 0 0 3px rgba(16,185,129,.12);
+    }
+
+    .search-wrap {
+      position: relative;
+    }
+    #citySearch {
+      width: 220px;
+    }
+    .search-results {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      margin-top: 4px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      max-height: 280px;
+      overflow-y: auto;
+      z-index: 100;
+      box-shadow: 0 8px 24px rgba(0,0,0,.15);
+    }
+    .search-results.open { display: block; }
+    .search-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 14px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-primary);
+      border-bottom: 1px solid var(--border);
+      transition: background .1s;
+    }
+    .search-item:last-child { border-bottom: none; }
+    .search-item:hover, .search-item.active {
+      background: rgba(16,185,129,.08);
+    }
+    .search-item-city { font-weight: 700; }
+    .search-item-tz {
+      font-size: 11px;
+      color: var(--text-muted);
+      font-family: var(--mono);
+    }
+    .search-empty {
+      padding: 14px;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 13px;
     }
 
     .action-btn {
@@ -174,11 +225,10 @@
       </div>
 
       <div class="hero-right">
-        <select id="citySelect"></select>
-        <button class="action-btn" onclick="addSelected()">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
-          Add
-        </button>
+        <div class="search-wrap">
+          <input type="text" id="citySearch" placeholder="Search city..." autocomplete="off" />
+          <div class="search-results" id="searchResults"></div>
+        </div>
         <button class="action-btn" onclick="copyAll()">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
           Copy
@@ -202,23 +252,234 @@
   <div id="toast"><span style="color:var(--green);font-size:15px;">✓</span> <span id="toast-msg">Copied!</span></div>
 
 <script>
-  // Curated defaults (IANA time zones)
+  // Comprehensive world city list (IANA time zones)
   const CITY_PRESETS = [
-    { label: 'Toronto (America/Toronto)', tz: 'America/Toronto' },
-    { label: 'New York (America/New_York)', tz: 'America/New_York' },
-    { label: 'Los Angeles (America/Los_Angeles)', tz: 'America/Los_Angeles' },
-    { label: 'London (Europe/London)', tz: 'Europe/London' },
-    { label: 'Paris (Europe/Paris)', tz: 'Europe/Paris' },
-    { label: 'Dubai (Asia/Dubai)', tz: 'Asia/Dubai' },
-    { label: 'Mumbai (Asia/Kolkata)', tz: 'Asia/Kolkata' },
-    { label: 'Singapore (Asia/Singapore)', tz: 'Asia/Singapore' },
-    { label: 'Tokyo (Asia/Tokyo)', tz: 'Asia/Tokyo' },
-    { label: 'Sydney (Australia/Sydney)', tz: 'Australia/Sydney' },
-    { label: 'Auckland (Pacific/Auckland)', tz: 'Pacific/Auckland' }
+    // North America
+    { city: 'Anchorage', tz: 'America/Anchorage' },
+    { city: 'Calgary', tz: 'America/Edmonton' },
+    { city: 'Chicago', tz: 'America/Chicago' },
+    { city: 'Dallas', tz: 'America/Chicago' },
+    { city: 'Denver', tz: 'America/Denver' },
+    { city: 'Detroit', tz: 'America/Detroit' },
+    { city: 'Edmonton', tz: 'America/Edmonton' },
+    { city: 'Honolulu', tz: 'Pacific/Honolulu' },
+    { city: 'Houston', tz: 'America/Chicago' },
+    { city: 'Los Angeles', tz: 'America/Los_Angeles' },
+    { city: 'Mexico City', tz: 'America/Mexico_City' },
+    { city: 'Miami', tz: 'America/New_York' },
+    { city: 'Montreal', tz: 'America/Toronto' },
+    { city: 'New York', tz: 'America/New_York' },
+    { city: 'Ottawa', tz: 'America/Toronto' },
+    { city: 'Panama City', tz: 'America/Panama' },
+    { city: 'Phoenix', tz: 'America/Phoenix' },
+    { city: 'San Francisco', tz: 'America/Los_Angeles' },
+    { city: 'Seattle', tz: 'America/Los_Angeles' },
+    { city: 'Toronto', tz: 'America/Toronto' },
+    { city: 'Vancouver', tz: 'America/Vancouver' },
+    { city: 'Washington D.C.', tz: 'America/New_York' },
+    { city: 'Winnipeg', tz: 'America/Winnipeg' },
+
+    // South America
+    { city: 'Bogota', tz: 'America/Bogota' },
+    { city: 'Buenos Aires', tz: 'America/Argentina/Buenos_Aires' },
+    { city: 'Caracas', tz: 'America/Caracas' },
+    { city: 'Lima', tz: 'America/Lima' },
+    { city: 'Santiago', tz: 'America/Santiago' },
+    { city: 'Sao Paulo', tz: 'America/Sao_Paulo' },
+
+    // Europe
+    { city: 'Amsterdam', tz: 'Europe/Amsterdam' },
+    { city: 'Athens', tz: 'Europe/Athens' },
+    { city: 'Barcelona', tz: 'Europe/Madrid' },
+    { city: 'Belgrade', tz: 'Europe/Belgrade' },
+    { city: 'Berlin', tz: 'Europe/Berlin' },
+    { city: 'Brussels', tz: 'Europe/Brussels' },
+    { city: 'Bucharest', tz: 'Europe/Bucharest' },
+    { city: 'Budapest', tz: 'Europe/Budapest' },
+    { city: 'Copenhagen', tz: 'Europe/Copenhagen' },
+    { city: 'Dublin', tz: 'Europe/Dublin' },
+    { city: 'Edinburgh', tz: 'Europe/London' },
+    { city: 'Frankfurt', tz: 'Europe/Berlin' },
+    { city: 'Geneva', tz: 'Europe/Zurich' },
+    { city: 'Helsinki', tz: 'Europe/Helsinki' },
+    { city: 'Istanbul', tz: 'Europe/Istanbul' },
+    { city: 'Kyiv', tz: 'Europe/Kyiv' },
+    { city: 'Lisbon', tz: 'Europe/Lisbon' },
+    { city: 'London', tz: 'Europe/London' },
+    { city: 'Madrid', tz: 'Europe/Madrid' },
+    { city: 'Milan', tz: 'Europe/Rome' },
+    { city: 'Moscow', tz: 'Europe/Moscow' },
+    { city: 'Munich', tz: 'Europe/Berlin' },
+    { city: 'Oslo', tz: 'Europe/Oslo' },
+    { city: 'Paris', tz: 'Europe/Paris' },
+    { city: 'Prague', tz: 'Europe/Prague' },
+    { city: 'Rome', tz: 'Europe/Rome' },
+    { city: 'Stockholm', tz: 'Europe/Stockholm' },
+    { city: 'Vienna', tz: 'Europe/Vienna' },
+    { city: 'Warsaw', tz: 'Europe/Warsaw' },
+    { city: 'Zurich', tz: 'Europe/Zurich' },
+
+    // Middle East
+    { city: 'Amman', tz: 'Asia/Amman' },
+    { city: 'Baghdad', tz: 'Asia/Baghdad' },
+    { city: 'Bahrain', tz: 'Asia/Bahrain' },
+    { city: 'Beirut', tz: 'Asia/Beirut' },
+    { city: 'Doha', tz: 'Asia/Qatar' },
+    { city: 'Dubai', tz: 'Asia/Dubai' },
+    { city: 'Jerusalem', tz: 'Asia/Jerusalem' },
+    { city: 'Kuwait City', tz: 'Asia/Kuwait' },
+    { city: 'Muscat', tz: 'Asia/Muscat' },
+    { city: 'Riyadh', tz: 'Asia/Riyadh' },
+    { city: 'Tehran', tz: 'Asia/Tehran' },
+    { city: 'Tel Aviv', tz: 'Asia/Jerusalem' },
+
+    // Africa
+    { city: 'Accra', tz: 'Africa/Accra' },
+    { city: 'Addis Ababa', tz: 'Africa/Addis_Ababa' },
+    { city: 'Cairo', tz: 'Africa/Cairo' },
+    { city: 'Cape Town', tz: 'Africa/Johannesburg' },
+    { city: 'Casablanca', tz: 'Africa/Casablanca' },
+    { city: 'Dakar', tz: 'Africa/Dakar' },
+    { city: 'Johannesburg', tz: 'Africa/Johannesburg' },
+    { city: 'Lagos', tz: 'Africa/Lagos' },
+    { city: 'Nairobi', tz: 'Africa/Nairobi' },
+    { city: 'Tunis', tz: 'Africa/Tunis' },
+
+    // South Asia
+    { city: 'Colombo', tz: 'Asia/Colombo' },
+    { city: 'Delhi', tz: 'Asia/Kolkata' },
+    { city: 'Dhaka', tz: 'Asia/Dhaka' },
+    { city: 'Islamabad', tz: 'Asia/Karachi' },
+    { city: 'Karachi', tz: 'Asia/Karachi' },
+    { city: 'Kathmandu', tz: 'Asia/Kathmandu' },
+    { city: 'Kolkata', tz: 'Asia/Kolkata' },
+    { city: 'Mumbai', tz: 'Asia/Kolkata' },
+    { city: 'New Delhi', tz: 'Asia/Kolkata' },
+
+    // East & Southeast Asia
+    { city: 'Bangkok', tz: 'Asia/Bangkok' },
+    { city: 'Beijing', tz: 'Asia/Shanghai' },
+    { city: 'Hanoi', tz: 'Asia/Ho_Chi_Minh' },
+    { city: 'Ho Chi Minh City', tz: 'Asia/Ho_Chi_Minh' },
+    { city: 'Hong Kong', tz: 'Asia/Hong_Kong' },
+    { city: 'Jakarta', tz: 'Asia/Jakarta' },
+    { city: 'Kuala Lumpur', tz: 'Asia/Kuala_Lumpur' },
+    { city: 'Manila', tz: 'Asia/Manila' },
+    { city: 'Osaka', tz: 'Asia/Tokyo' },
+    { city: 'Seoul', tz: 'Asia/Seoul' },
+    { city: 'Shanghai', tz: 'Asia/Shanghai' },
+    { city: 'Shenzhen', tz: 'Asia/Shanghai' },
+    { city: 'Singapore', tz: 'Asia/Singapore' },
+    { city: 'Taipei', tz: 'Asia/Taipei' },
+    { city: 'Tokyo', tz: 'Asia/Tokyo' },
+
+    // Central Asia
+    { city: 'Almaty', tz: 'Asia/Almaty' },
+    { city: 'Tashkent', tz: 'Asia/Tashkent' },
+    { city: 'Tbilisi', tz: 'Asia/Tbilisi' },
+    { city: 'Yerevan', tz: 'Asia/Yerevan' },
+
+    // Oceania
+    { city: 'Adelaide', tz: 'Australia/Adelaide' },
+    { city: 'Auckland', tz: 'Pacific/Auckland' },
+    { city: 'Brisbane', tz: 'Australia/Brisbane' },
+    { city: 'Fiji', tz: 'Pacific/Fiji' },
+    { city: 'Melbourne', tz: 'Australia/Melbourne' },
+    { city: 'Perth', tz: 'Australia/Perth' },
+    { city: 'Sydney', tz: 'Australia/Sydney' },
+    { city: 'Wellington', tz: 'Pacific/Auckland' }
   ];
 
   const DEFAULT_CITIES = ['America/Toronto','Europe/London','Asia/Dubai'];
 
+  // ── Search ──
+  let activeIndex = -1;
+  let filteredResults = [];
+
+  function openSearch(results) {
+    const container = document.getElementById('searchResults');
+    filteredResults = results;
+    activeIndex = -1;
+
+    if (results.length === 0) {
+      container.innerHTML = '<div class="search-empty">No cities found</div>';
+      container.classList.add('open');
+      return;
+    }
+
+    container.innerHTML = results.map((c, i) =>
+      `<div class="search-item" data-index="${i}" data-tz="${c.tz}">
+        <span class="search-item-city">${c.city}</span>
+        <span class="search-item-tz">${c.tz}</span>
+      </div>`
+    ).join('');
+    container.classList.add('open');
+  }
+
+  function closeSearch() {
+    const container = document.getElementById('searchResults');
+    container.classList.remove('open');
+    container.innerHTML = '';
+    filteredResults = [];
+    activeIndex = -1;
+  }
+
+  function addCity(tz) {
+    if (!tz) return;
+    if (state.cities.includes(tz)) { showToast('Already added'); return; }
+    state.cities.push(tz);
+    persist();
+    render();
+    showToast('Added');
+    document.getElementById('citySearch').value = '';
+    closeSearch();
+  }
+
+  function handleSearchInput() {
+    const query = document.getElementById('citySearch').value.trim().toLowerCase();
+    if (!query) { closeSearch(); return; }
+
+    const results = CITY_PRESETS.filter(c =>
+      c.city.toLowerCase().includes(query) || c.tz.toLowerCase().includes(query)
+    ).slice(0, 12);
+
+    openSearch(results);
+  }
+
+  function handleSearchKeydown(e) {
+    const container = document.getElementById('searchResults');
+    if (!container.classList.contains('open') || filteredResults.length === 0) return;
+
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      activeIndex = Math.min(activeIndex + 1, filteredResults.length - 1);
+      updateActiveItem();
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      activeIndex = Math.max(activeIndex - 1, 0);
+      updateActiveItem();
+    } else if (e.key === 'Enter') {
+      e.preventDefault();
+      if (activeIndex >= 0 && activeIndex < filteredResults.length) {
+        addCity(filteredResults[activeIndex].tz);
+      } else if (filteredResults.length === 1) {
+        addCity(filteredResults[0].tz);
+      }
+    } else if (e.key === 'Escape') {
+      closeSearch();
+      document.getElementById('citySearch').blur();
+    }
+  }
+
+  function updateActiveItem() {
+    const items = document.querySelectorAll('.search-item');
+    items.forEach((el, i) => el.classList.toggle('active', i === activeIndex));
+    if (activeIndex >= 0 && items[activeIndex]) {
+      items[activeIndex].scrollIntoView({ block: 'nearest' });
+    }
+  }
+
+  // ── Toast ──
   function showToast(msg){
     const toast = document.getElementById('toast');
     document.getElementById('toast-msg').textContent = msg;
@@ -226,8 +487,7 @@
     setTimeout(() => { toast.style.opacity = '0'; toast.style.transform = 'translateY(8px)'; }, 2200);
   }
 
-  function pad2(n){ return String(n).padStart(2,'0'); }
-
+  // ── Formatting helpers ──
   function fmtTime(tz, d){
     return new Intl.DateTimeFormat('en-US', {
       timeZone: tz,
@@ -244,7 +504,6 @@
   }
 
   function fmtOffset(tz, d){
-    // Prefer ECMA-402: timeZoneName:'shortOffset' (shows GMT+X). Fallback to numeric offset derived from parts.
     try{
       const parts = new Intl.DateTimeFormat('en-US', { timeZone: tz, timeZoneName:'shortOffset', hour:'2-digit' }).formatToParts(d);
       const off = parts.find(p => p.type === 'timeZoneName');
@@ -265,13 +524,15 @@
     return hour >= 6 && hour < 18;
   }
 
-  function shortTz(tz){
+  function cityName(tz){
+    const preset = CITY_PRESETS.find(x => x.tz === tz);
+    if (preset) return preset.city;
     return tz.split('/').pop().replace(/_/g,' ');
   }
 
+  // ── Card rendering ──
   function buildCard(tz){
-    const label = CITY_PRESETS.find(x=>x.tz===tz)?.label || (shortTz(tz) + ' ('+tz+')');
-
+    const name = cityName(tz);
     const card = document.createElement('div');
     card.className = 'clock-card';
     card.dataset.tz = tz;
@@ -279,21 +540,18 @@
     card.innerHTML = `
       <div class="city-row">
         <div>
-          <div class="city-name">${label.replace(/\s*\([^)]*\)\s*/,'')}</div>
+          <div class="city-name">${name}</div>
           <div class="city-tz">${tz}</div>
         </div>
-        <button class="remove-btn" title="Remove" onclick="removeCity('${tz}')">✕</button>
+        <button class="remove-btn" title="Remove" onclick="removeCity('${tz}')">&#x2715;</button>
       </div>
-
       <div class="time-big" id="t-${tz}">—</div>
       <div class="date-small" id="d-${tz}">—</div>
-
       <div class="meta-row">
         <div class="chip">Offset <strong id="o-${tz}">—</strong></div>
         <div class="chip"><span id="dn-${tz}">—</span></div>
       </div>
     `;
-
     return card;
   }
 
@@ -321,29 +579,14 @@
       dn.textContent = day ? '☀️ Day' : '🌙 Night';
 
       const card = document.querySelector(`.clock-card[data-tz="${tz}"]`);
-      if (card){
-        card.classList.toggle('day', day);
-      }
+      if (card) card.classList.toggle('day', day);
     });
   }
 
-  function addSelected(){
-    const sel = document.getElementById('citySelect');
-    const tz = sel.value;
-    if (!tz) return;
-    if (state.cities.includes(tz)) { showToast('Already added'); return; }
-    state.cities.push(tz);
-    persist();
-    render();
-    showToast('Added');
-  }
-
+  // ── City management ──
   function removeCity(tz){
     state.cities = state.cities.filter(x => x !== tz);
-    if (state.cities.length === 0){
-      // keep at least one city
-      state.cities = ['America/Toronto'];
-    }
+    if (state.cities.length === 0) state.cities = ['America/Toronto'];
     persist();
     render();
   }
@@ -352,15 +595,14 @@
     const now = new Date();
     const lines = ['CalcNova · World Clock', ''];
     state.cities.forEach(tz => {
-      const label = CITY_PRESETS.find(x=>x.tz===tz)?.label || tz;
-      lines.push(`${label}: ${fmtTime(tz, now)} (${fmtOffset(tz, now)}) · ${fmtDate(tz, now)}`);
+      lines.push(`${cityName(tz)}: ${fmtTime(tz, now)} (${fmtOffset(tz, now)}) · ${fmtDate(tz, now)}`);
     });
     navigator.clipboard.writeText(lines.join('\n')).then(()=>showToast('Copied!')).catch(()=>showToast('Copy failed'));
   }
 
   function printPage(){ window.print(); }
 
-  // Persistence
+  // ── Persistence ──
   const LS_KEY = 'cn_world_clock_cities';
   const state = { cities: [] };
 
@@ -379,18 +621,32 @@
     return DEFAULT_CITIES.slice();
   }
 
-  // Init
+  // ── Init ──
   (function init(){
-    const sel = document.getElementById('citySelect');
-    sel.innerHTML = CITY_PRESETS.map(c => `<option value="${c.tz}">${c.label}</option>`).join('');
+    const searchInput = document.getElementById('citySearch');
+    const resultsContainer = document.getElementById('searchResults');
+
+    searchInput.addEventListener('input', handleSearchInput);
+    searchInput.addEventListener('keydown', handleSearchKeydown);
+    searchInput.addEventListener('focus', function() {
+      if (searchInput.value.trim()) handleSearchInput();
+    });
+
+    // Click on search result
+    resultsContainer.addEventListener('click', function(e) {
+      const item = e.target.closest('.search-item');
+      if (item) addCity(item.dataset.tz);
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(e) {
+      if (!e.target.closest('.search-wrap')) closeSearch();
+    });
 
     state.cities = restore();
     render();
-
-    // keep clock updated
     setInterval(tick, 1000);
 
-    // redraw on dark mode change (nav.js dispatches this)
     document.addEventListener('calcnova:darkchanged', function(){ tick(); });
   })();
 </script>
