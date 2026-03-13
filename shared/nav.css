@@ -157,9 +157,6 @@ a.menu-item:hover { background: var(--bg); color: var(--text-primary); }
 }
 .menu-item-icon { font-size: 15px; flex-shrink: 0; width: 20px; text-align: center; }
 .menu-item-text { flex: 1; }
-.menu-item-badge { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .3px; padding: 2px 6px; border-radius: 4px; flex-shrink: 0; }
-.badge-live { background: rgba(16,185,129,.1); color: var(--green); border: 1px solid rgba(16,185,129,.2); }
-.badge-soon { background: rgba(155,163,181,.08); color: var(--text-muted); border: 1px solid var(--border); }
 
 /* Articles section inside mega menu */
 .menu-articles { margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--border); }

@@ -90,12 +90,8 @@
     var cols = NAV_MENU.map(function (cat) {
       var items = cat.items.map(function (item) {
         var isCurrent = item.id === currentId;
-        var badge = item.live
-          ? '<span class="menu-item-badge badge-live">Live</span>'
-          : '<span class="menu-item-badge badge-soon">Soon</span>';
         var inner = '<span class="menu-item-icon">' + item.icon + '</span>'
-                  + '<span class="menu-item-text">' + item.label + '</span>'
-                  + badge;
+                  + '<span class="menu-item-text">' + item.label + '</span>';
         if (isCurrent) {
           return '<li><div class="menu-item current">' + inner + '</div></li>';
         } else if (item.href) {
