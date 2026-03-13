@@ -200,9 +200,15 @@
     .hz-hour-block {
       min-width: 48px; flex: 1; position: relative; border-left: 1px solid rgba(255,255,255,.06);
       transition: filter .15s; cursor: pointer; align-self: stretch; min-height: 100%;
+      display: flex; align-items: center; justify-content: center;
     }
     .hz-hour-block:first-child { border-left: none; }
     .hz-hour-block:hover { filter: brightness(1.15); }
+    .hz-block-label {
+      font-size: 10px; font-family: var(--mono); font-weight: 600;
+      color: rgba(255,255,255,.75); pointer-events: none; user-select: none;
+      text-shadow: 0 1px 2px rgba(0,0,0,.3);
+    }
 
     .hz-now-line {
       position: absolute; top: 0; bottom: 0; width: 2px; background: var(--red);
@@ -1262,6 +1268,10 @@ function renderHorizontal(now) {
       block.setAttribute('data-local-hour', localH);
       block.setAttribute('data-tz', city.id);
       block.setAttribute('data-idx', idx);
+      var lbl = document.createElement('span');
+      lbl.className = 'hz-block-label';
+      lbl.textContent = formatHourShort(localH, state.clockFormat);
+      block.appendChild(lbl);
       row.appendChild(block);
     }
 
