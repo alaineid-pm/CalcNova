@@ -207,15 +207,15 @@
     }
     .hz-action-btn:hover { border-color: var(--green); color: var(--green); }
 
-    .hz-timeline-area { flex: 1; overflow-x: auto; overflow-y: hidden; position: relative; }
+    .hz-timeline-area { flex: 1; overflow-x: hidden; overflow-y: hidden; position: relative; }
     .hz-hour-header {
       display: flex; height: 36px; border-bottom: 1px solid var(--border);
       position: sticky; top: 0; z-index: 5; background: var(--surface);
     }
     .hz-hour-label {
-      min-width: 48px; flex: 1; display: flex; align-items: center; justify-content: center;
+      flex: 1; min-width: 0; display: flex; align-items: center; justify-content: center;
       font-size: 10px; font-family: var(--mono); color: var(--text-muted); font-weight: 500;
-      border-left: 1px solid var(--border); user-select: none;
+      border-left: 1px solid var(--border); user-select: none; overflow: hidden;
     }
     .hz-hour-label:first-child { border-left: none; }
     .hz-timeline-row {
@@ -223,9 +223,9 @@
     }
     .hz-timeline-row:last-of-type { border-bottom: none; }
     .hz-hour-block {
-      min-width: 48px; flex: 1; position: relative; border-left: 1px solid rgba(255,255,255,.06);
+      flex: 1; min-width: 0; position: relative; border-left: 1px solid rgba(255,255,255,.06);
       transition: filter .15s; cursor: pointer; align-self: stretch; min-height: 100%;
-      display: flex; align-items: center; justify-content: center;
+      display: flex; align-items: center; justify-content: center; overflow: hidden;
     }
     .hz-hour-block:first-child { border-left: none; }
     .hz-hour-block:hover { filter: brightness(1.15); }
@@ -394,6 +394,10 @@
     /* ── DRAGGING ── */
     .city-card.dragging { opacity: .5; }
     .city-card.drag-over { border-color: var(--green); border-style: dashed; }
+    .hz-info-row.dragging { opacity: .5; }
+    .hz-info-row.drag-over { border-color: var(--green); border-style: dashed; }
+    .hz-info-row .hz-drag-handle { cursor: grab; opacity: .4; font-size: 12px; margin-right: 4px; }
+    .hz-info-row:hover .hz-drag-handle { opacity: .8; }
 
     /* ── RESPONSIVE ── */
     @media (max-width: 768px) {
@@ -1267,6 +1271,7 @@ function renderHorizontal(now) {
     infoRow.className = 'hz-info-row';
     infoRow.setAttribute('data-idx', idx);
     infoRow.setAttribute('tabindex', '0');
+    if (!isHome) infoRow.setAttribute('draggable', 'true');
     var dayBadge = '';
     if (cityDateStr !== homeDateStr) {
       var homeD = new Date(homeDateStr);
@@ -1274,7 +1279,7 @@ function renderHorizontal(now) {
       dayBadge = cityD > homeD ? ' <span class="day-badge tomorrow compact">+1d</span>' : ' <span class="day-badge yesterday compact">\u22121d</span>';
     }
     infoRow.innerHTML =
-      '<div class="hz-city-name">' + (isHome ? '&#127968; ' : '') + esc(city.label) + '</div>' +
+      '<div class="hz-city-name">' + (!isHome ? '<span class="hz-drag-handle" title="Drag to reorder">&#10495;</span>' : '&#127968; ') + esc(city.label) + '</div>' +
       '<div class="hz-city-country">' + esc(city.country) + '</div>' +
       '<div class="hz-city-meta">' +
         '<span class="hz-city-utc">' + formatUtcOffset(city.id) + '</span>' +
@@ -1499,7 +1504,7 @@ function showMeetingPopover(hour, tz, evt) {
   // Build a date at the specified hour in the home tz
   var homeOff = getTimezoneOffsetMinutes(state.homeCity, now);
   var homeNow = new Date(now.getTime() + homeOff * 60000);
-  homeNow.setHours(hour, 0, 0, 0);
+  homeNow.setUTCHours(hour, 0, 0, 0);
   var meetingUtc = new Date(homeNow.getTime() - homeOff * 60000);
 
   var title = document.getElementById('meetingTitle');
@@ -1786,6 +1791,42 @@ function initDelegatedListeners() {
       state.cities.splice(idx + 1, 0, item);
       saveState(); render();
     }
+  });
+
+  // Horizontal: drag and drop reorder
+  hzInfoCol.addEventListener('dragstart', function(e) {
+    var row = e.target.closest('.hz-info-row');
+    if (!row) return;
+    var idx = parseInt(row.getAttribute('data-idx'), 10);
+    if (idx === 0 && state.cities[idx].id === state.homeCity) { e.preventDefault(); return; }
+    e.dataTransfer.setData('text/plain', idx);
+    row.classList.add('dragging');
+  });
+  hzInfoCol.addEventListener('dragend', function(e) {
+    var row = e.target.closest('.hz-info-row');
+    if (row) row.classList.remove('dragging');
+  });
+  hzInfoCol.addEventListener('dragover', function(e) {
+    e.preventDefault();
+    var row = e.target.closest('.hz-info-row');
+    if (row) row.classList.add('drag-over');
+  });
+  hzInfoCol.addEventListener('dragleave', function(e) {
+    var row = e.target.closest('.hz-info-row');
+    if (row) row.classList.remove('drag-over');
+  });
+  hzInfoCol.addEventListener('drop', function(e) {
+    e.preventDefault();
+    var row = e.target.closest('.hz-info-row');
+    if (!row) return;
+    row.classList.remove('drag-over');
+    var from = parseInt(e.dataTransfer.getData('text/plain'), 10);
+    var to = parseInt(row.getAttribute('data-idx'), 10);
+    if (from === to) return;
+    if (to === 0 && state.cities[from].id !== state.homeCity) return;
+    var item = state.cities.splice(from, 1)[0];
+    state.cities.splice(to, 0, item);
+    saveState(); render();
   });
 }
 
