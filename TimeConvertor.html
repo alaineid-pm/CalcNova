@@ -182,7 +182,7 @@
     }
     .hz-action-btn:hover { border-color: var(--green); color: var(--green); }
 
-    .hz-timeline-area { flex: 1; overflow-x: auto; position: relative; }
+    .hz-timeline-area { flex: 1; overflow-x: auto; overflow-y: hidden; position: relative; }
     .hz-hour-header {
       display: flex; height: 36px; border-bottom: 1px solid var(--border);
       position: sticky; top: 0; z-index: 5; background: var(--surface);
@@ -196,10 +196,10 @@
     .hz-timeline-row {
       display: flex; min-height: 64px; border-bottom: 1px solid var(--border); position: relative;
     }
-    .hz-timeline-row:last-child { border-bottom: none; }
+    .hz-timeline-row:last-of-type { border-bottom: none; }
     .hz-hour-block {
       min-width: 48px; flex: 1; position: relative; border-left: 1px solid rgba(255,255,255,.06);
-      transition: filter .15s; cursor: pointer;
+      transition: filter .15s; cursor: pointer; align-self: stretch; min-height: 100%;
     }
     .hz-hour-block:first-child { border-left: none; }
     .hz-hour-block:hover { filter: brightness(1.15); }
@@ -1283,6 +1283,15 @@ function renderHorizontal(now) {
 
     timelineArea.appendChild(row);
   });
+
+  // Sync row heights between info column and timeline area
+  var infoRows = infoCol.querySelectorAll('.hz-info-row');
+  var timelineRows = timelineArea.querySelectorAll('.hz-timeline-row');
+  for (var ri = 0; ri < infoRows.length; ri++) {
+    var maxH = Math.max(infoRows[ri].offsetHeight, timelineRows[ri] ? timelineRows[ri].offsetHeight : 0);
+    infoRows[ri].style.height = maxH + 'px';
+    if (timelineRows[ri]) timelineRows[ri].style.height = maxH + 'px';
+  }
 
   // Now line
   var nowPct = ((homeH * 60 + homeM) / 1440) * 100;
