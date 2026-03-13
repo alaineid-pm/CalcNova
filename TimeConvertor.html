@@ -11,6 +11,18 @@
   <meta property="og:url" content="https://alaineid-pm.github.io/CalcNova/TimeConvertor.html">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "CalcNova World Time Converter",
+    "url": "https://alaineid-pm.github.io/CalcNova/TimeConvertor.html",
+    "description": "Free world time converter. Compare current times in multiple cities, find meeting overlap, and share timezone views.",
+    "applicationCategory": "UtilityApplication",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+  }
+  </script>
   <link rel="stylesheet" href="shared/nav.css">
   <style>
     .app { position: relative; z-index: 1; max-width: 1060px; margin: 0 auto; padding: 0 16px 60px; }
@@ -121,12 +133,25 @@
     }
     .day-badge.tomorrow { background: rgba(99,102,241,.1); color: var(--purple); border: 1px solid rgba(99,102,241,.2); }
     .day-badge.yesterday { background: rgba(245,158,11,.1); color: var(--amber); border: 1px solid rgba(245,158,11,.2); }
+    .day-badge.compact { font-size: 10px; padding: 1px 6px; }
+    .hz-block-offset {
+      font-size: 8px; font-family: var(--mono); color: rgba(255,255,255,.5);
+      position: absolute; bottom: 2px; left: 50%; transform: translateX(-50%);
+      pointer-events: none; white-space: nowrap;
+    }
 
     /* ── TIMELINE STRIP (Vertical card) ── */
+    .timeline-strip-wrap { position: relative; }
     .timeline-strip { display: flex; height: 36px; border-radius: 8px; overflow: hidden; position: relative; cursor: pointer; }
     .timeline-block { flex: 1; position: relative; transition: filter .15s; }
     .timeline-block:hover { filter: brightness(1.15); }
     .timeline-block + .timeline-block { border-left: 1px solid rgba(255,255,255,.12); }
+    .timeline-strip-ticks {
+      display: flex; justify-content: space-between; margin-top: 3px; padding: 0 1px;
+    }
+    .timeline-strip-tick {
+      font-size: 9px; color: var(--text-muted); font-family: var(--mono); font-weight: 500;
+    }
     .timeline-now { position: absolute; top: 0; bottom: 0; width: 2px; background: var(--red); z-index: 2; pointer-events: none; }
     .timeline-now::before {
       content: ''; position: absolute; top: -4px; left: 50%; transform: translateX(-50%);
@@ -150,7 +175,7 @@
     }
     .hz-container { display: flex; position: relative; }
     .hz-info-col {
-      width: 200px; min-width: 200px; flex-shrink: 0; position: sticky; left: 0;
+      width: 220px; min-width: 220px; flex-shrink: 0; position: sticky; left: 0;
       z-index: 10; background: var(--surface); border-right: 1px solid var(--border);
     }
     .hz-info-header {
@@ -374,7 +399,7 @@
     @media (max-width: 768px) {
       .page-title-bar { flex-direction: column; align-items: flex-start; }
       .scrubber-handle { width: 24px; height: 24px; }
-      .hz-info-col { width: 160px; min-width: 160px; }
+      .hz-info-col { width: 170px; min-width: 170px; }
     }
     @media (max-width: 480px) {
       .section-title { font-size: 20px; }
@@ -851,10 +876,20 @@ function parseUrlParams() {
   var ids = p.get('cities').split(',').filter(Boolean);
   if (ids.length === 0) return null;
   var cities = [];
-  ids.forEach(function(id) {
-    var c = findCityById(id);
-    if (c) cities.push({ id: c.id, label: c.label, country: c.country });
-    else cities.push({ id: id, label: id.split('/').pop().replace(/_/g,' '), country: '' });
+  ids.forEach(function(entry) {
+    var parts = entry.split(':');
+    var id = parts[0];
+    var label = parts.length > 1 ? parts.slice(1).join(':') : null;
+    // Try to find matching city by id+label, then just id
+    var c = null;
+    if (label) {
+      for (var i = 0; i < CITIES.length; i++) {
+        if (CITIES[i].id === id && CITIES[i].label === label) { c = CITIES[i]; break; }
+      }
+    }
+    if (!c) c = findCityById(id);
+    if (c) cities.push({ id: c.id, label: label || c.label, country: c.country });
+    else cities.push({ id: id, label: label || id.split('/').pop().replace(/_/g,' '), country: '' });
   });
   var home = p.get('home') || cities[0].id;
   var time = p.get('time') || null;
@@ -1031,12 +1066,16 @@ function renderScrubber(now) {
   handle.setAttribute('aria-valuenow', totalMin);
 
   var label = document.getElementById('scrubberLabel');
+  var homeLbl = '';
+  for (var ci = 0; ci < state.cities.length; ci++) {
+    if (state.cities[ci].id === state.homeCity) { homeLbl = state.cities[ci].label; break; }
+  }
   if (state.scrubberTime) {
-    label.textContent = formatTime(now, state.homeCity, state.clockFormat);
+    label.textContent = formatTime(now, state.homeCity, state.clockFormat) + ' ' + homeLbl;
     document.getElementById('scrubberReset').classList.add('visible');
     document.getElementById('scrubberPulse').style.display = 'none';
   } else {
-    label.textContent = 'Now — ' + formatTime(now, state.homeCity, state.clockFormat);
+    label.textContent = 'Now \u2014 ' + formatTime(now, state.homeCity, state.clockFormat) + ' ' + homeLbl;
     document.getElementById('scrubberReset').classList.remove('visible');
     document.getElementById('scrubberPulse').style.display = '';
   }
@@ -1092,6 +1131,8 @@ function renderVertical(now) {
     center.innerHTML = '<div class="city-time">' + timeStr + '</div><div class="city-date">' + dateStr + badgeHtml + '</div>';
 
     // Timeline strip
+    var stripWrap = document.createElement('div');
+    stripWrap.className = 'timeline-strip-wrap';
     var strip = document.createElement('div');
     strip.className = 'timeline-strip';
     var cityH = getHourInTz(now, city.id);
@@ -1109,10 +1150,21 @@ function renderVertical(now) {
     nowMarker.className = 'timeline-now';
     nowMarker.style.left = nowPct + '%';
     strip.appendChild(nowMarker);
+    stripWrap.appendChild(strip);
+    // Hour tick labels at 6h intervals
+    var tickRow = document.createElement('div');
+    tickRow.className = 'timeline-strip-ticks';
+    [0, 6, 12, 18, 24].forEach(function(th) {
+      var tick = document.createElement('span');
+      tick.className = 'timeline-strip-tick';
+      tick.textContent = formatHourShort(th % 24, state.clockFormat);
+      tickRow.appendChild(tick);
+    });
+    stripWrap.appendChild(tickRow);
 
     card.appendChild(top);
     card.appendChild(center);
-    card.appendChild(strip);
+    card.appendChild(stripWrap);
     container.appendChild(card);
 
     // Drag events
@@ -1155,42 +1207,18 @@ function renderVertical(now) {
     });
   });
 
-  // Event delegation for buttons
-  container.addEventListener('click', function(e) {
-    var btn = e.target.closest('[data-action]');
-    if (!btn) {
-      var block = e.target.closest('.timeline-block');
-      if (block) {
-        var h = parseInt(block.getAttribute('data-hour'), 10);
-        var tz = block.getAttribute('data-tz');
-        showMeetingPopover(h, tz, e);
-      }
-      return;
-    }
-    var action = btn.getAttribute('data-action');
-    var idx = parseInt(btn.getAttribute('data-idx'), 10);
-    if (action === 'home') setHome(idx);
-    if (action === 'remove') removeCity(idx);
-  });
-
-  // Timeline tooltip
-  container.addEventListener('mouseover', function(e) {
-    var block = e.target.closest('.timeline-block');
-    if (block) {
-      var h = parseInt(block.getAttribute('data-hour'), 10);
-      var phase = getPhase(h);
-      showTooltip(formatHourLabel(h, state.clockFormat) + ' — ' + phase.name, e);
-    }
-  });
-  container.addEventListener('mouseout', function(e) {
-    if (e.target.closest('.timeline-block')) hideTooltip();
-  });
 }
+
+/* Vertical layout delegated listeners — set up once in initDelegatedListeners() */
 
 /* ── HORIZONTAL LAYOUT ── */
 function renderHorizontal(now) {
   var infoCol = document.getElementById('hzInfoCol');
   var timelineArea = document.getElementById('hzTimelineArea');
+  var homeLabel = '';
+  for (var hi = 0; hi < state.cities.length; hi++) {
+    if (state.cities[hi].id === state.homeCity) { homeLabel = state.cities[hi].label; break; }
+  }
   infoCol.innerHTML = '<div class="hz-info-header">Cities</div>';
   timelineArea.innerHTML = '';
 
@@ -1198,16 +1226,19 @@ function renderHorizontal(now) {
   var homeM = getMinuteInTz(now, state.homeCity);
   var homeDateStr = getDateStr(now, state.homeCity);
 
-  // Hour header
+  // Hour header — labeled as home city's hours
   var headerRow = document.createElement('div');
   headerRow.className = 'hz-hour-header';
   for (var h = 0; h < 24; h++) {
     var lbl = document.createElement('div');
     lbl.className = 'hz-hour-label';
     lbl.textContent = formatHourShort(h, state.clockFormat);
+    if (h === 0) lbl.title = homeLabel + ' time';
     headerRow.appendChild(lbl);
   }
   timelineArea.appendChild(headerRow);
+  // Update info header to indicate home timezone reference
+  infoCol.innerHTML = '<div class="hz-info-header" title="Hours shown in ' + esc(homeLabel) + ' time">Cities <span style="font-weight:500;text-transform:none;letter-spacing:0;font-size:10px;color:var(--green);">\u2014 ' + esc(homeLabel) + ' time \u2192</span></div>';
 
   // Compute overlap
   var overlapStart = -1, overlapEnd = -1;
@@ -1234,11 +1265,13 @@ function renderHorizontal(now) {
     // Info row
     var infoRow = document.createElement('div');
     infoRow.className = 'hz-info-row';
+    infoRow.setAttribute('data-idx', idx);
+    infoRow.setAttribute('tabindex', '0');
     var dayBadge = '';
     if (cityDateStr !== homeDateStr) {
       var homeD = new Date(homeDateStr);
       var cityD = new Date(cityDateStr);
-      dayBadge = cityD > homeD ? ' <span class="day-badge tomorrow" style="font-size:10px;padding:1px 6px;">+1</span>' : ' <span class="day-badge yesterday" style="font-size:10px;padding:1px 6px;">-1</span>';
+      dayBadge = cityD > homeD ? ' <span class="day-badge tomorrow compact">+1d</span>' : ' <span class="day-badge yesterday compact">\u22121d</span>';
     }
     infoRow.innerHTML =
       '<div class="hz-city-name">' + (isHome ? '&#127968; ' : '') + esc(city.label) + '</div>' +
@@ -1259,6 +1292,7 @@ function renderHorizontal(now) {
     row.className = 'hz-timeline-row';
     var offDiff = getTimezoneOffsetMinutes(city.id) - getTimezoneOffsetMinutes(state.homeCity);
 
+    var offMinRemainder = Math.abs(offDiff) % 60;
     for (var h = 0; h < 24; h++) {
       var localH = ((h + Math.round(offDiff / 60)) % 24 + 24) % 24;
       var block = document.createElement('div');
@@ -1268,10 +1302,18 @@ function renderHorizontal(now) {
       block.setAttribute('data-local-hour', localH);
       block.setAttribute('data-tz', city.id);
       block.setAttribute('data-idx', idx);
+      block.setAttribute('data-city-label', city.label);
       var lbl = document.createElement('span');
       lbl.className = 'hz-block-label';
       lbl.textContent = formatHourShort(localH, state.clockFormat);
       block.appendChild(lbl);
+      // Show minute offset indicator for non-integer hour offsets (e.g. UTC+5:30)
+      if (offMinRemainder > 0) {
+        var offInd = document.createElement('span');
+        offInd.className = 'hz-block-offset';
+        offInd.textContent = ':' + (offMinRemainder < 10 ? '0' : '') + offMinRemainder;
+        block.appendChild(offInd);
+      }
       row.appendChild(block);
     }
 
@@ -1331,42 +1373,9 @@ function renderHorizontal(now) {
   highlight.className = 'hz-col-highlight';
   highlight.id = 'hzColHighlight';
   timelineArea.appendChild(highlight);
-
-  // Hover interaction
-  timelineArea.addEventListener('mousemove', function(e) {
-    var block = e.target.closest('.hz-hour-block');
-    if (!block) { highlight.style.display = 'none'; hideTooltip(); return; }
-    var homeHour = parseInt(block.getAttribute('data-home-hour'), 10);
-    var left = (homeHour / 24) * 100;
-    var w = (1 / 24) * 100;
-    highlight.style.left = left + '%';
-    highlight.style.width = w + '%';
-    highlight.style.display = 'block';
-    showTooltip(formatHourLabel(homeHour, state.clockFormat) + ' (home)', e);
-  });
-  timelineArea.addEventListener('mouseleave', function() {
-    highlight.style.display = 'none'; hideTooltip();
-  });
-
-  // Click for meeting
-  timelineArea.addEventListener('click', function(e) {
-    var block = e.target.closest('.hz-hour-block');
-    if (block) {
-      var homeHour = parseInt(block.getAttribute('data-home-hour'), 10);
-      showMeetingPopover(homeHour, state.homeCity, e);
-    }
-  });
-
-  // Info col actions
-  infoCol.addEventListener('click', function(e) {
-    var btn = e.target.closest('[data-action]');
-    if (!btn) return;
-    var action = btn.getAttribute('data-action');
-    var idx = parseInt(btn.getAttribute('data-idx'), 10);
-    if (action === 'home') setHome(idx);
-    if (action === 'remove') removeCity(idx);
-  });
 }
+
+/* Horizontal layout delegated listeners — set up once in initDelegatedListeners() */
 
 /* ══════════════════════════════════════════════════════════════
    CITY ACTIONS
@@ -1391,14 +1400,33 @@ function removeCity(idx) {
   });
 }
 
+var pendingDupCity = null;
 function addCity(city) {
-  // Check dups
+  // Check exact dups (same id + label)
   for (var i = 0; i < state.cities.length; i++) {
     if (state.cities[i].id === city.id && state.cities[i].label === city.label) {
       showToast(esc(city.label) + ' is already in your list.');
       return;
     }
   }
+  // Check same timezone ID (different label) — warn but allow
+  var sameZone = null;
+  for (var j = 0; j < state.cities.length; j++) {
+    if (state.cities[j].id === city.id) { sameZone = state.cities[j]; break; }
+  }
+  if (sameZone && !pendingDupCity) {
+    pendingDupCity = city;
+    showToast(esc(city.label) + ' shares timezone with ' + esc(sameZone.label) + '. ', 'Add anyway', function() {
+      var c = pendingDupCity;
+      pendingDupCity = null;
+      if (c) {
+        state.cities.push({ id: c.id, label: c.label, country: c.country });
+        saveState(); render(); closeSearch();
+      }
+    });
+    return;
+  }
+  pendingDupCity = null;
   state.cities.push({ id: city.id, label: city.label, country: city.country });
   saveState(); render();
   closeSearch();
@@ -1497,8 +1525,8 @@ function showMeetingPopover(hour, tz, evt) {
 
   // Position
   var x = evt.clientX, y = evt.clientY;
-  pop.style.left = Math.min(x, window.innerWidth - 400) + 'px';
-  pop.style.top = Math.min(y + 10, window.innerHeight - 300) + 'px';
+  pop.style.left = Math.max(8, Math.min(x, window.innerWidth - 400)) + 'px';
+  pop.style.top = Math.max(8, Math.min(y + 10, window.innerHeight - 300)) + 'px';
   pop.classList.add('visible');
   pop._meetingUtc = meetingUtc;
   pop._hour = hour;
@@ -1527,7 +1555,7 @@ function copyMeetingTimes() {
 function buildShareUrl() {
   var base = window.location.origin + window.location.pathname;
   var params = new URLSearchParams();
-  params.set('cities', state.cities.map(function(c) { return c.id; }).join(','));
+  params.set('cities', state.cities.map(function(c) { return c.id + ':' + c.label; }).join(','));
   params.set('home', state.homeCity);
   if (state.scrubberTime) params.set('time', state.scrubberTime);
   params.set('layout', state.layout);
@@ -1664,6 +1692,103 @@ function esc(s) {
 /* ══════════════════════════════════════════════════════════════
    INIT
    ══════════════════════════════════════════════════════════════ */
+/* ── Delegated event listeners (set up ONCE, never re-attached) ── */
+function initDelegatedListeners() {
+  var vertContainer = document.getElementById('cityListVertical');
+  var hzTimelineArea = document.getElementById('hzTimelineArea');
+  var hzInfoCol = document.getElementById('hzInfoCol');
+
+  // Vertical: button actions + timeline click + tooltip
+  vertContainer.addEventListener('click', function(e) {
+    var btn = e.target.closest('[data-action]');
+    if (btn) {
+      var action = btn.getAttribute('data-action');
+      var idx = parseInt(btn.getAttribute('data-idx'), 10);
+      if (action === 'home') setHome(idx);
+      if (action === 'remove') removeCity(idx);
+      return;
+    }
+    var block = e.target.closest('.timeline-block');
+    if (block) {
+      var h = parseInt(block.getAttribute('data-hour'), 10);
+      var tz = block.getAttribute('data-tz');
+      showMeetingPopover(h, tz, e);
+    }
+  });
+  vertContainer.addEventListener('mouseover', function(e) {
+    var block = e.target.closest('.timeline-block');
+    if (block) {
+      var h = parseInt(block.getAttribute('data-hour'), 10);
+      var phase = getPhase(h);
+      showTooltip(formatHourLabel(h, state.clockFormat) + ' \u2014 ' + phase.name, e);
+    }
+  });
+  vertContainer.addEventListener('mouseout', function(e) {
+    if (e.target.closest('.timeline-block')) hideTooltip();
+  });
+
+  // Horizontal: hover highlight, tooltip, click for meeting
+  hzTimelineArea.addEventListener('mousemove', function(e) {
+    var hl = document.getElementById('hzColHighlight');
+    if (!hl) return;
+    var block = e.target.closest('.hz-hour-block');
+    if (!block) { hl.style.display = 'none'; hideTooltip(); return; }
+    var homeHour = parseInt(block.getAttribute('data-home-hour'), 10);
+    var localHour = parseInt(block.getAttribute('data-local-hour'), 10);
+    var cityLabel = block.getAttribute('data-city-label') || '';
+    hl.style.left = (homeHour / 24) * 100 + '%';
+    hl.style.width = (1 / 24) * 100 + '%';
+    hl.style.display = 'block';
+    // Show exact local time including minutes for half-hour offsets
+    var tz = block.getAttribute('data-tz');
+    var now = getNow();
+    var exactTime = formatTime(now, tz, state.clockFormat);
+    showTooltip(cityLabel + ': ' + exactTime, e);
+  });
+  hzTimelineArea.addEventListener('mouseleave', function() {
+    var hl = document.getElementById('hzColHighlight');
+    if (hl) hl.style.display = 'none';
+    hideTooltip();
+  });
+  hzTimelineArea.addEventListener('click', function(e) {
+    var block = e.target.closest('.hz-hour-block');
+    if (block) {
+      var homeHour = parseInt(block.getAttribute('data-home-hour'), 10);
+      showMeetingPopover(homeHour, state.homeCity, e);
+    }
+  });
+
+  // Horizontal: info column actions + keyboard reorder
+  hzInfoCol.addEventListener('click', function(e) {
+    var btn = e.target.closest('[data-action]');
+    if (!btn) return;
+    var action = btn.getAttribute('data-action');
+    var idx = parseInt(btn.getAttribute('data-idx'), 10);
+    if (action === 'home') setHome(idx);
+    if (action === 'remove') removeCity(idx);
+  });
+  hzInfoCol.addEventListener('keydown', function(e) {
+    var row = e.target.closest('.hz-info-row');
+    if (!row || !e.shiftKey) return;
+    var idx = parseInt(row.getAttribute('data-idx'), 10);
+    if (isNaN(idx)) return;
+    if (e.key === 'ArrowUp' && idx > 0) {
+      e.preventDefault();
+      if (idx === 1 && state.cities[idx].id !== state.homeCity) return;
+      var item = state.cities.splice(idx, 1)[0];
+      state.cities.splice(idx - 1, 0, item);
+      saveState(); render();
+    }
+    if (e.key === 'ArrowDown' && idx < state.cities.length - 1) {
+      e.preventDefault();
+      if (idx === 0) return;
+      var item = state.cities.splice(idx, 1)[0];
+      state.cities.splice(idx + 1, 0, item);
+      saveState(); render();
+    }
+  });
+}
+
 function init() {
   // Load state
   var urlState = parseUrlParams();
@@ -1676,7 +1801,7 @@ function init() {
     if (urlState.format) state.clockFormat = urlState.format;
   }
 
-  // Event listeners
+  // Event listeners — toolbar controls
   document.getElementById('fmt12').addEventListener('click', function() { state.clockFormat = '12h'; saveState(); render(); });
   document.getElementById('fmt24').addEventListener('click', function() { state.clockFormat = '24h'; saveState(); render(); });
   document.getElementById('layoutVert').addEventListener('click', function() { state.layout = 'vertical'; saveState(); render(); });
@@ -1685,11 +1810,9 @@ function init() {
     state.layout = 'horizontal'; saveState(); render();
   });
   document.getElementById('shareBtn').addEventListener('click', shareLink);
-
   document.getElementById('scrubberReset').addEventListener('click', function() {
     state.scrubberTime = null; saveState(); render();
   });
-
   document.getElementById('addCityBtn').addEventListener('click', openSearch);
   document.getElementById('emptyAddBtn').addEventListener('click', openSearch);
 
@@ -1712,16 +1835,12 @@ function init() {
     }
   });
 
-  // Close search on outside click
+  // Close search/meeting on outside click
   document.addEventListener('click', function(e) {
     var panel = document.getElementById('searchPanel');
     if (panel.classList.contains('open') && !panel.contains(e.target) && e.target.id !== 'addCityBtn' && e.target.id !== 'emptyAddBtn') {
       closeSearch();
     }
-  });
-
-  // Close meeting on outside click
-  document.addEventListener('click', function(e) {
     var pop = document.getElementById('meetingPopover');
     if (pop.classList.contains('visible') && !pop.contains(e.target) && !e.target.closest('.timeline-block') && !e.target.closest('.hz-hour-block')) {
       closeMeeting();
@@ -1731,11 +1850,12 @@ function init() {
   document.getElementById('meetingCopy').addEventListener('click', copyMeetingTimes);
   document.getElementById('meetingShare').addEventListener('click', function() { shareLink(); closeMeeting(); });
 
-  // Escape key
   document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') { closeMeeting(); closeSearch(); }
   });
 
+  // Set up delegated listeners ONCE for vertical + horizontal containers
+  initDelegatedListeners();
   initScrubber();
   render();
 
@@ -1748,8 +1868,12 @@ function init() {
     }, 60000);
   }, msToNext);
 
-  // Responsive resize
-  window.addEventListener('resize', function() { render(); });
+  // Debounced resize (BUG-5)
+  var resizeTimer;
+  window.addEventListener('resize', function() {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(function() { render(); }, 150);
+  });
 
   // Dark mode change
   document.addEventListener('calcnova:darkchanged', function() { render(); });
