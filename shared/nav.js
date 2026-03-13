@@ -59,10 +59,10 @@
   ];
 
   var ARTICLES = [
-    { icon: '📈', label: 'How to Calculate Compound Interest',  href: '#' },
+    { icon: '📈', label: 'How to Calculate Compound Interest',  href: 'article-compound-interest.html' },
     { icon: '🏖️', label: 'What Is Coast FIRE?',                href: 'article-coast-fire.html' },
-    { icon: '💳', label: 'Debt Snowball vs Avalanche',          href: '#' },
-    { icon: '🛟', label: 'How Much Emergency Fund Do I Need?',  href: '#' },
+    { icon: '💳', label: 'Debt Snowball vs Avalanche',          href: 'article-debt-snowball-vs-avalanche.html' },
+    { icon: '🛟', label: 'How Much Emergency Fund Do I Need?',  href: 'article-emergency-fund.html' },
     { icon: '🌍', label: 'Time Zones for Remote Teams',         href: 'article-time-zones-remote-teams.html' },
     { icon: '🍅', label: 'The Pomodoro Technique Guide',        href: 'article-pomodoro-technique.html' },
   ];
