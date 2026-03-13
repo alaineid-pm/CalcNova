@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>What Is Coast FIRE? The Relaxed Path to Financial Independence | CalcNova</title>
+  <meta name="description" content="Understand Coast FIRE, how it differs from other FIRE strategies, the math behind it, and when it makes sense for your financial journey.">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="shared/nav.css">
+  <style>
+    /* ── Article Layout ── */
+    .app {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 0 24px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .article {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 20px 0 40px;
+    }
+
+    /* ── Hero ── */
+    .article-hero {
+      text-align: center;
+      padding: 40px 0 32px;
+    }
+
+    .article-category {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--purple);
+      margin-bottom: 16px;
+    }
+
+    .article-title {
+      font-size: clamp(28px, 5vw, 42px);
+      font-weight: 800;
+      line-height: 1.2;
+      letter-spacing: -0.5px;
+      background: linear-gradient(135deg, var(--green), var(--purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 16px;
+    }
+
+    .article-meta {
+      font-size: 14px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .article-meta span {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* ── Content Typography ── */
+    .article-content {
+      font-size: 17px;
+      line-height: 1.7;
+      color: var(--text-primary);
+    }
+
+    .article-content h2 {
+      font-size: 24px;
+      font-weight: 700;
+      margin: 40px 0 16px;
+      letter-spacing: -0.3px;
+      color: var(--text-primary);
+    }
+
+    .article-content h3 {
+      font-size: 20px;
+      font-weight: 600;
+      margin: 32px 0 12px;
+      color: var(--text-primary);
+    }
+
+    .article-content p {
+      margin-bottom: 16px;
+      color: var(--text-secondary);
+    }
+
+    .article-content ul, .article-content ol {
+      margin: 0 0 16px 24px;
+      color: var(--text-secondary);
+    }
+
+    .article-content li {
+      margin-bottom: 8px;
+    }
+
+    .article-content strong {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    .article-content a {
+      color: var(--purple);
+      text-decoration: underline;
+      text-underline-offset: 2px;
+      transition: color 0.15s;
+    }
+
+    .article-content a:hover {
+      color: var(--green);
+    }
+
+    /* ── Callout Card ── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      margin: 24px 0;
+    }
+
+    .card--highlight {
+      border-left: 4px solid var(--green);
+    }
+
+    .card--purple {
+      border-left: 4px solid var(--purple);
+    }
+
+    .card h4 {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .card p, .card li {
+      font-size: 15px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    .card ul {
+      margin: 8px 0 0 20px;
+    }
+
+    .card li {
+      margin-bottom: 6px;
+    }
+
+    /* ── Formula Box ── */
+    .formula-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      margin: 24px 0;
+      text-align: center;
+    }
+
+    .formula-box .formula {
+      font-family: var(--mono);
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin: 12px 0;
+      letter-spacing: 0.5px;
+    }
+
+    .formula-box .formula-label {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: 8px;
+    }
+
+    /* ── Comparison Table ── */
+    .comparison-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 24px 0;
+      font-size: 15px;
+    }
+
+    .comparison-table th {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 12px 16px;
+      text-align: left;
+      font-weight: 700;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+    }
+
+    .comparison-table td {
+      border: 1px solid var(--border);
+      padding: 12px 16px;
+      color: var(--text-secondary);
+    }
+
+    .comparison-table tr:nth-child(even) td {
+      background: rgba(0, 0, 0, 0.015);
+    }
+
+    body.dark .comparison-table tr:nth-child(even) td {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    /* ── CTA Section ── */
+    .cta-section {
+      text-align: center;
+      padding: 40px 24px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      margin: 40px 0;
+    }
+
+    .cta-section h3 {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .cta-section p {
+      color: var(--text-secondary);
+      margin-bottom: 20px;
+      font-size: 15px;
+    }
+
+    .cta-buttons {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .cta-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 24px;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 700;
+      text-decoration: none;
+      transition: all 0.15s;
+      font-family: var(--font);
+    }
+
+    .cta-btn--primary {
+      background: linear-gradient(135deg, var(--green), var(--purple));
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+    }
+
+    .cta-btn--primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+    }
+
+    /* ── Divider ── */
+    .article-divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 32px 0;
+    }
+
+    /* ── Print ── */
+    @media print {
+      body::before { display: none; }
+      header, .menu-overlay, .site-footer, .cta-section, .ad-slot { display: none !important; }
+      .app { max-width: 100%; padding: 0; }
+      .article { max-width: 100%; }
+      .article-title {
+        -webkit-text-fill-color: #0f1623;
+        color: #0f1623;
+      }
+      .card, .formula-box { break-inside: avoid; border: 1px solid #ccc; }
+    }
+
+    /* ── Mobile ── */
+    @media (max-width: 640px) {
+      .app { padding: 0 16px; }
+      .article-hero { padding: 24px 0 20px; }
+      .article-content { font-size: 16px; }
+      .article-content h2 { font-size: 21px; }
+      .comparison-table { font-size: 13px; }
+      .comparison-table th, .comparison-table td { padding: 8px 10px; }
+      .formula-box .formula { font-size: 15px; }
+      .cta-section { padding: 28px 16px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="article">
+      <div class="article-hero">
+        <div class="article-category">Finance</div>
+        <h1 class="article-title">What Is Coast FIRE? The Relaxed Path to Financial Independence</h1>
+        <div class="article-meta">
+          <span>9 min read</span>
+          <span>Updated Mar 2026</span>
+        </div>
+      </div>
+
+      <div class="article-content">
+        <p>
+          The Financial Independence, Retire Early (FIRE) movement has inspired millions of people to rethink their relationship with money. But for many, the traditional FIRE path &mdash; saving 50 to 70 percent of your income for a decade or more &mdash; feels extreme, even impossible. Enter Coast FIRE: a gentler variation that offers the psychological freedom of financial independence without requiring you to white-knuckle your way through years of aggressive saving.
+        </p>
+
+        <p>
+          If you have ever felt drawn to the idea of financial independence but overwhelmed by the numbers, Coast FIRE might be exactly the approach you need.
+        </p>
+
+        <h2>The Coast FIRE Concept, Explained</h2>
+
+        <p>
+          Coast FIRE is the point at which you have saved and invested enough money that, even if you never contribute another dollar, compound growth will carry your portfolio to your target retirement number by the time you reach your chosen retirement age.
+        </p>
+
+        <p>
+          Once you hit your Coast FIRE number, you still need to work &mdash; but only enough to cover your current living expenses. You no longer need to save for retirement. That is the "coasting" part: your investments are on autopilot, growing in the background, while you shift your focus from maximizing income to maximizing life.
+        </p>
+
+        <div class="card card--highlight">
+          <h4>Coast FIRE in One Sentence</h4>
+          <p>
+            You have enough invested that compound growth alone will fund your retirement &mdash; so you only need to earn enough to cover today's expenses, freeing you to work less, change careers, or pursue passion projects.
+          </p>
+        </div>
+
+        <h2>How Coast FIRE Differs from Other FIRE Strategies</h2>
+
+        <p>
+          The FIRE movement is not monolithic. There are several variations, each with different savings targets and lifestyle assumptions.
+        </p>
+
+        <table class="comparison-table">
+          <thead>
+            <tr>
+              <th>Strategy</th>
+              <th>Target</th>
+              <th>Lifestyle After</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Traditional FIRE</strong></td>
+              <td>25x annual expenses invested</td>
+              <td>Fully retire, live on withdrawals</td>
+            </tr>
+            <tr>
+              <td><strong>Lean FIRE</strong></td>
+              <td>25x lean annual expenses</td>
+              <td>Retire with minimal, frugal lifestyle</td>
+            </tr>
+            <tr>
+              <td><strong>Fat FIRE</strong></td>
+              <td>25x comfortable annual expenses</td>
+              <td>Retire with generous spending</td>
+            </tr>
+            <tr>
+              <td><strong>Barista FIRE</strong></td>
+              <td>Enough invested + part-time work</td>
+              <td>Work part-time for benefits and some income</td>
+            </tr>
+            <tr>
+              <td><strong>Coast FIRE</strong></td>
+              <td>Enough invested to grow to goal</td>
+              <td>Work only to cover current expenses</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p>
+          The key distinction is this: traditional FIRE requires you to accumulate your entire retirement fund before you stop saving. Coast FIRE asks you to accumulate a seed amount early, then let time and compound interest do the rest. The earlier you start, the less you need to save, because your money has more years to grow.
+        </p>
+
+        <h2>The Math Behind Coast FIRE</h2>
+
+        <p>
+          The Coast FIRE calculation works backward from your retirement goal. You need three inputs:
+        </p>
+
+        <ol>
+          <li><strong>Your target retirement number</strong> &mdash; typically 25 times your expected annual expenses in retirement (based on the 4% safe withdrawal rate).</li>
+          <li><strong>Your expected annual rate of return</strong> &mdash; a common assumption is 7% after inflation for a stock-heavy portfolio.</li>
+          <li><strong>Years until your target retirement age</strong> &mdash; the time you are giving your investments to grow.</li>
+        </ol>
+
+        <div class="formula-box">
+          <div style="font-size: 13px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; font-weight: 700;">Coast FIRE Formula</div>
+          <div class="formula">Coast FIRE Number = Target / (1 + r)^n</div>
+          <div class="formula-label">
+            Where <strong>Target</strong> = retirement goal, <strong>r</strong> = annual return rate, <strong>n</strong> = years until retirement
+          </div>
+        </div>
+
+        <h3>A Concrete Example</h3>
+
+        <p>
+          Suppose you want $1,500,000 by age 65 and you expect a 7% average annual return after inflation.
+        </p>
+
+        <ul>
+          <li><strong>At age 25</strong> (40 years to grow): you need about <strong>$100,000</strong> invested. Save that amount, and compound growth handles the rest.</li>
+          <li><strong>At age 30</strong> (35 years to grow): you need about <strong>$140,000</strong>.</li>
+          <li><strong>At age 35</strong> (30 years to grow): you need about <strong>$197,000</strong>.</li>
+          <li><strong>At age 40</strong> (25 years to grow): you need about <strong>$276,000</strong>.</li>
+        </ul>
+
+        <p>
+          The pattern is clear: the earlier you hit your Coast FIRE number, the smaller it is. A 25-year-old who invests $100,000 and then stops saving entirely will still reach $1.5 million by 65, assuming average market returns. That is the extraordinary power of compound growth over long time horizons.
+        </p>
+
+        <div class="card card--purple">
+          <h4>Why Starting Early Matters So Much</h4>
+          <p>
+            Every year you wait roughly doubles the amount you need to reach Coast FIRE. At 7% annual returns, money doubles approximately every 10 years. A 25-year-old needs to save about half of what a 35-year-old needs &mdash; for the exact same retirement outcome.
+          </p>
+        </div>
+
+        <h2>When Coast FIRE Makes Sense</h2>
+
+        <p>
+          Coast FIRE is not for everyone, but it is a powerful option in several situations.
+        </p>
+
+        <h3>Career changes and passion projects</h3>
+        <p>
+          Once you no longer need to save for retirement, your income requirements drop dramatically. This opens the door to pursuing work you love rather than work that pays the most. Want to teach, write, start a small business, or freelance? Coast FIRE makes that financially viable.
+        </p>
+
+        <h3>Reducing burnout and stress</h3>
+        <p>
+          High-income professionals often sacrifice their health and relationships for aggressive saving. Coast FIRE offers an off-ramp. You can downshift to a less demanding job, work fewer hours, or take extended breaks &mdash; all without jeopardizing your long-term financial security.
+        </p>
+
+        <h3>Parenting and caregiving</h3>
+        <p>
+          If you front-load your saving in your 20s and early 30s, you can reach Coast FIRE right around the time many people start families. Working part-time or taking years off to raise children becomes far less stressful when you know your retirement is already on track.
+        </p>
+
+        <h3>Geographic arbitrage</h3>
+        <p>
+          Reaching Coast FIRE in a high-cost city, then moving to a lower-cost area (or country), means your daily expenses drop while your investments continue growing. You might only need a modest income to cover day-to-day life &mdash; or even build up additional savings on top of your coasting portfolio.
+        </p>
+
+        <h2>The Honest Risks and Limitations</h2>
+
+        <p>
+          Coast FIRE relies on a few assumptions that are worth scrutinizing.
+        </p>
+
+        <ul>
+          <li><strong>Market returns are not guaranteed.</strong> The 7% assumption is a historical average, not a promise. A prolonged downturn early in your coasting phase could significantly delay your target.</li>
+          <li><strong>Inflation can erode your goal.</strong> If you calculated your retirement number in today's dollars but inflation runs higher than expected, you may fall short.</li>
+          <li><strong>Life changes.</strong> Your expenses in retirement might be higher than you planned &mdash; health care costs, family obligations, or simply a desire for a more comfortable lifestyle.</li>
+          <li><strong>No safety margin.</strong> Stopping contributions entirely leaves no buffer for sequence-of-returns risk. Even occasional small contributions during your coasting phase can meaningfully reduce this risk.</li>
+        </ul>
+
+        <p>
+          Coast FIRE works best as a framework, not a rigid rule. Many people who reach their Coast FIRE number continue saving something &mdash; just at a much lower rate. The psychological shift from "I must save aggressively" to "I am saving by choice" is liberating in itself.
+        </p>
+
+        <h2>Getting Started with Coast FIRE</h2>
+
+        <p>
+          If Coast FIRE appeals to you, here is a practical starting path:
+        </p>
+
+        <ol>
+          <li><strong>Estimate your retirement expenses.</strong> Be realistic about the lifestyle you want. Multiply by 25 to get your target retirement number.</li>
+          <li><strong>Choose your target retirement age.</strong> The further away it is, the less you need today.</li>
+          <li><strong>Calculate your Coast FIRE number</strong> using the formula above, or use a Coast FIRE calculator to do the math for you.</li>
+          <li><strong>Track your progress.</strong> Once your investments reach that number, you have options. You are not locked into anything &mdash; you simply have more freedom.</li>
+          <li><strong>Plan your coast.</strong> Decide what "coasting" looks like for you. A different career? Fewer hours? More travel? The whole point is that you get to choose.</li>
+        </ol>
+
+        <p>
+          Coast FIRE is not about giving up on ambition. It is about recognizing that once your future is secured, you are free to build a present that actually makes you happy.
+        </p>
+
+        <hr class="article-divider">
+
+        <div class="cta-section">
+          <h3>Calculate Your Coast FIRE Number</h3>
+          <p>Find out exactly how much you need invested to coast to financial independence. Free, instant, no sign-up.</p>
+          <div class="cta-buttons">
+            <a href="coast-fire-calculator.html" class="cta-btn cta-btn--primary">Open Coast FIRE Calculator</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    window.CALCNOVA_PAGE = { id: 'article-coast-fire' };
+  </script>
+  <script src="shared/nav.js"></script>
+</body>
+</html>

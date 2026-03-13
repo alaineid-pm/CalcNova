@@ -60,11 +60,11 @@
 
   var ARTICLES = [
     { icon: '📈', label: 'How to Calculate Compound Interest',  href: '#' },
-    { icon: '🏖️', label: 'What Is Coast FIRE?',                href: '#' },
+    { icon: '🏖️', label: 'What Is Coast FIRE?',                href: 'article-coast-fire.html' },
     { icon: '💳', label: 'Debt Snowball vs Avalanche',          href: '#' },
     { icon: '🛟', label: 'How Much Emergency Fund Do I Need?',  href: '#' },
-    { icon: '🌍', label: 'Time Zones for Remote Teams',         href: '#' },
-    { icon: '🍅', label: 'The Pomodoro Technique Guide',        href: '#' },
+    { icon: '🌍', label: 'Time Zones for Remote Teams',         href: 'article-time-zones-remote-teams.html' },
+    { icon: '🍅', label: 'The Pomodoro Technique Guide',        href: 'article-pomodoro-technique.html' },
   ];
 
   /* ── Page Config ─────────────────────────────────────────── */
