@@ -9,35 +9,16 @@
   <link rel="stylesheet" href="shared/nav.css" />
 
   <style>
-    .app { position: relative; z-index: 1; max-width: 980px; margin: 0 auto; padding: 0 16px 60px; }
+    .app { position: relative; z-index: 1; max-width: 860px; margin: 0 auto; padding: 0 16px 60px; }
 
+    /* ── Hero ── */
     .hero {
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: 18px;
       padding: 28px 28px 24px;
       margin-bottom: 20px;
-      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;
     }
-    .hero-title { font-size: 26px; font-weight: 800; letter-spacing: -.5px; }
-    .hero-title span {
-      background: linear-gradient(135deg, var(--green), var(--purple));
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-    }
-    .hero-desc { font-size: 14px; color: var(--text-secondary); margin-top: 6px; line-height: 1.5; }
-    .hero-formula {
-      font-family: var(--mono);
-      font-size: 13px;
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 12px 18px;
-      color: var(--text-secondary);
-      white-space: nowrap;
-    }
-    .hero-formula .hl { color: var(--green); font-weight: 700; }
-    .hero-formula .hlp { color: var(--purple); font-weight: 700; }
-
     .pill-badge {
       display: inline-flex; align-items: center; gap: 6px;
       background: linear-gradient(135deg, rgba(16,185,129,.1), rgba(99,102,241,.1));
@@ -45,27 +26,66 @@
       border-radius: 100px; padding: 6px 14px;
       font-size: 12px; font-weight: 700; color: var(--green);
     }
+    .hero-title { font-size: 26px; font-weight: 800; letter-spacing: -.5px; margin-top: 8px; }
+    .hero-title span {
+      background: linear-gradient(135deg, var(--green), var(--purple));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .hero-desc { font-size: 14px; color: var(--text-secondary); margin-top: 6px; line-height: 1.5; }
 
-    .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
-    @media (max-width: 760px){ .grid2 { grid-template-columns: 1fr; } .hero-formula{display:none;} .hero-title{font-size:20px;} }
+    /* ── Tabs ── */
+    .tab-bar {
+      display: flex; gap: 4px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 4px;
+      margin-bottom: 20px;
+    }
+    .tab-btn {
+      flex: 1;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      padding: 12px 16px;
+      border: none;
+      border-radius: 10px;
+      background: transparent;
+      color: var(--text-muted);
+      font-family: var(--font);
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all .2s;
+    }
+    .tab-btn:hover { color: var(--text-secondary); }
+    .tab-btn.active {
+      background: var(--surface);
+      color: var(--text-primary);
+      box-shadow: 0 2px 8px rgba(0,0,0,.06);
+    }
+    .tab-btn svg { width: 16px; height: 16px; flex-shrink: 0; }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
 
+    /* ── Cards ── */
     .card {
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: 18px;
-      padding: 22px 22px 18px;
+      padding: 24px;
+      margin-bottom: 16px;
     }
     .card-title {
       font-size: 11px; font-weight: 700; letter-spacing: .5px; text-transform: uppercase;
-      color: var(--text-muted); margin-bottom: 18px;
+      color: var(--text-muted); margin-bottom: 20px;
       display: flex; align-items: center; gap: 6px;
     }
     .card-title-dot { width: 6px; height: 6px; border-radius: 50%; }
 
+    /* ── Forms ── */
     .form-group { margin-bottom: 14px; }
     .form-label { font-size: 12px; font-weight: 600; color: var(--text-secondary); margin-bottom: 6px; display: block; }
 
-    input[type="date"], input[type="number"]{
+    input[type="date"], input[type="number"] {
       width: 100%;
       background: var(--bg);
       border: 1px solid var(--border);
@@ -74,97 +94,183 @@
       font-family: var(--font);
       font-size: 14px;
       font-weight: 600;
-      padding: 9px 12px;
+      padding: 10px 12px;
       outline: none;
       transition: border-color .2s, box-shadow .2s;
       appearance: none;
+      box-sizing: border-box;
     }
     input[type="date"]:focus, input[type="number"]:focus {
       border-color: var(--green);
       box-shadow: 0 0 0 3px rgba(16,185,129,.12);
     }
 
-    .inline-row{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+    .date-row {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 12px;
+      align-items: end;
+    }
+    @media (max-width: 580px) { .date-row { grid-template-columns: 1fr; } .date-row .swap-btn { justify-self: center; } }
+
+    .swap-btn {
+      display: flex; align-items: center; justify-content: center;
+      width: 40px; height: 40px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: var(--bg);
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all .15s;
+      margin-bottom: 0;
+    }
+    .swap-btn:hover { border-color: var(--green); color: var(--green); }
+    .swap-btn svg { width: 16px; height: 16px; }
+
     .toggle {
       display: inline-flex; align-items: center; gap: 8px;
       font-size: 12px; font-weight: 600; color: var(--text-secondary);
-      user-select: none;
+      user-select: none; margin-top: 4px;
     }
-    .toggle input { width: 18px; height: 18px; accent-color: var(--green); }
+    .toggle input { width: 16px; height: 16px; accent-color: var(--green); }
 
-    .action-row { display:flex; gap:8px; justify-content:flex-end; margin-bottom: 16px; flex-wrap:wrap; }
+    /* ── Duration fields ── */
+    .dur-grid {
+      display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;
+    }
+    @media (max-width: 480px) { .dur-grid { grid-template-columns: 1fr; } }
+
+    .op-row {
+      display: flex; gap: 8px; margin-top: 6px; flex-wrap: wrap;
+    }
+
+    /* ── Results ── */
+    .result-banner {
+      background: linear-gradient(135deg, rgba(16,185,129,.06), rgba(99,102,241,.06));
+      border: 1px solid rgba(16,185,129,.2);
+      border-radius: 14px;
+      padding: 20px 24px;
+      margin-bottom: 16px;
+      text-align: center;
+    }
+    .result-banner-label {
+      font-size: 11px; font-weight: 700; letter-spacing: .5px;
+      text-transform: uppercase; color: var(--text-muted); margin-bottom: 8px;
+    }
+    .result-banner-value {
+      font-family: var(--mono); font-size: 28px; font-weight: 900;
+      background: linear-gradient(135deg, var(--green), var(--purple));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+      line-height: 1.2;
+    }
+    .result-banner-sub {
+      font-size: 12px; color: var(--text-secondary); margin-top: 6px;
+      font-weight: 600;
+    }
+
+    .stats-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;
+      margin-bottom: 16px;
+    }
+    @media (max-width: 580px) { .stats-grid { grid-template-columns: 1fr; } }
+
+    .mini-stat {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px;
+      position: relative;
+      overflow: hidden;
+    }
+    .mini-stat::before {
+      content: '';
+      position: absolute; top: 0; right: 0;
+      width: 50px; height: 50px;
+      border-radius: 0 14px 0 50px;
+      opacity: .06;
+    }
+    .mini-stat.c-green::before { background: var(--green); }
+    .mini-stat.c-purple::before { background: var(--purple); }
+    .mini-stat.c-amber::before { background: var(--amber); }
+    .mini-stat-label { font-size: 10px; font-weight: 700; letter-spacing: .5px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 6px; }
+    .mini-stat-value { font-family: var(--mono); font-size: 20px; font-weight: 800; color: var(--text-primary); line-height: 1; }
+    .mini-stat-sub { font-size: 11px; color: var(--text-muted); margin-top: 5px; font-family: var(--mono); }
+
+    /* ── Breakdown table ── */
+    .breakdown {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+    .breakdown-head {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 18px; border-bottom: 1px solid var(--border);
+    }
+    .breakdown-title { font-size: 11px; font-weight: 700; letter-spacing: .5px; text-transform: uppercase; color: var(--text-muted); }
+    .breakdown table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .breakdown td { padding: 11px 18px; }
+    .breakdown td:first-child { color: var(--text-secondary); font-weight: 600; width: 45%; }
+    .breakdown td:last-child { font-family: var(--mono); font-weight: 700; color: var(--green); text-align: right; }
+    .breakdown tbody tr { border-bottom: 1px solid rgba(226,230,239,.4); }
+    body.dark .breakdown tbody tr { border-bottom-color: rgba(48,54,61,.4); }
+    .breakdown tbody tr:last-child { border-bottom: none; }
+
+    /* ── Add/Subtract result ── */
+    .add-result-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px 24px;
+      margin-top: 16px;
+    }
+    .add-result-title {
+      font-size: 11px; font-weight: 700; letter-spacing: .5px;
+      text-transform: uppercase; color: var(--text-muted); margin-bottom: 12px;
+    }
+    .add-result-date {
+      font-family: var(--mono); font-size: 22px; font-weight: 800;
+      color: var(--green); line-height: 1.2;
+    }
+    .add-result-day {
+      font-size: 13px; font-weight: 600; color: var(--text-secondary); margin-top: 4px;
+    }
+    .add-result-iso {
+      font-family: var(--mono); font-size: 12px; color: var(--text-muted); margin-top: 6px;
+    }
+
+    /* ── Toolbar ── */
+    .toolbar {
+      display: flex; gap: 8px; justify-content: flex-end; margin-bottom: 16px; flex-wrap: wrap;
+    }
     .action-btn {
       display: flex; align-items: center; gap: 6px;
       background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
       color: var(--text-secondary); font-family: var(--font); font-size: 13px; font-weight: 600;
-      padding: 8px 16px; cursor: pointer; transition: all .15s; text-decoration: none;
+      padding: 8px 14px; cursor: pointer; transition: all .15s; text-decoration: none;
     }
     .action-btn:hover { border-color: var(--green); color: var(--green); }
     .action-btn svg { width: 15px; height: 15px; flex-shrink: 0; }
 
-    .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 16px; }
-    @media (max-width: 580px) { .stats-row { grid-template-columns: 1fr; } }
-    .stat-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 18px 18px 16px;
-      position: relative;
-      overflow: hidden;
-      min-height: 108px;
+    .action-btn.primary-btn {
+      background: var(--green); border-color: var(--green); color: #fff;
     }
-    .stat-card.primary {
-      background: linear-gradient(135deg, rgba(16,185,129,.07), rgba(99,102,241,.07));
-      border-color: rgba(16,185,129,.3);
+    .action-btn.primary-btn:hover {
+      background: #0ea472; border-color: #0ea472;
     }
-    .stat-card::before {
-      content: '';
-      position: absolute;
-      top: 0; right: 0;
-      width: 60px; height: 60px;
-      border-radius: 0 16px 0 60px;
-      opacity: .06;
-    }
-    .stat-card.primary::before { background: var(--green); opacity: .3; }
-    .stat-card.green::before { background: var(--green); }
-    .stat-card.purple::before { background: var(--purple); }
 
-    .stat-icon { font-size: 18px; margin-bottom: 10px; }
-    .stat-label { font-size: 10px; font-weight: 700; letter-spacing: .5px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 4px; }
-    .stat-value { font-family: var(--mono); font-size: 22px; font-weight: 800; color: var(--text-primary); line-height: 1; }
-    .stat-card.primary .stat-value {
-      background: linear-gradient(135deg, var(--green), var(--purple));
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    /* ── Empty state ── */
+    .empty-state {
+      text-align: center;
+      padding: 32px 20px;
+      color: var(--text-muted);
+      font-size: 13px;
+      font-weight: 600;
     }
-    .stat-sub { font-size: 11px; color: var(--text-muted); margin-top: 6px; font-family: var(--mono); line-height: 1.45; }
+    .empty-state-icon { font-size: 28px; margin-bottom: 8px; }
 
-    .table-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      overflow: hidden;
-      margin-bottom: 16px;
-    }
-    .table-head-row {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 16px 20px; border-bottom: 1px solid var(--border);
-    }
-    .table-head-title { font-size: 11px; font-weight: 700; letter-spacing: .5px; text-transform: uppercase; color: var(--text-muted); }
-    .table-scroll { overflow-x: auto; }
-    table { width: 100%; border-collapse: collapse; font-size: 13px; }
-    tbody tr { border-bottom: 1px solid rgba(226,230,239,.5); }
-    body.dark tbody tr { border-bottom-color: rgba(48,54,61,.5); }
-    tbody tr:last-child { border-bottom: none; }
-    td { padding: 12px 18px; }
-    td:first-child { color: var(--text-secondary); font-weight: 700; width: 42%; }
-    td:last-child { font-family: var(--mono); font-weight: 700; }
-    .td-green { color: var(--green) !important; }
-
-    .split {
-      display:grid; grid-template-columns: 1fr 1fr 1fr; gap:10px;
-    }
-    @media (max-width: 760px){ .split { grid-template-columns: 1fr; } }
-
+    /* ── Toast ── */
     #toast {
       position: fixed; bottom: 24px; right: 24px; z-index: 200;
       background: #0f1623; color: white;
@@ -176,14 +282,31 @@
       transition: opacity .25s, transform .25s; pointer-events: none;
     }
 
+    /* ── Footer ── */
+    .footer-note {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 18px 20px;
+      color: var(--text-secondary);
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    @media (max-width: 580px) {
+      .hero-title { font-size: 20px; }
+      .result-banner-value { font-size: 22px; }
+    }
+
     @media print {
       body { background: white !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
       body::before { display: none; }
-      header, .action-row, #toast, .icon-btn, .pill-badge, .nav-tools-wrap, .donate-btn,
-      .mega-menu, .menu-overlay, .site-footer, .footer-disclaimer { display: none !important; }
+      header, .toolbar, #toast, .icon-btn, .pill-badge, .nav-tools-wrap, .donate-btn,
+      .mega-menu, .menu-overlay, .site-footer, .footer-disclaimer, .tab-bar { display: none !important; }
       .app { padding: 0; max-width: 100%; }
       .hero { border: none; padding: 12px 0 8px; margin-bottom: 10px; }
-      .stat-card, .table-card, .card { page-break-inside: avoid; }
+      .tab-panel { display: block !important; }
+      .card, .mini-stat, .breakdown, .result-banner, .add-result-card { page-break-inside: avoid; }
     }
   </style>
 </head>
@@ -193,161 +316,198 @@
     <!-- nav.js injects header here -->
 
     <div class="hero">
-      <div>
-        <div class="pill-badge">📅 Calendar-aware · Business days · Add/Subtract</div>
-        <div class="hero-title">Date <span>Duration</span></div>
-        <div class="hero-desc">Compute the duration between two dates (years, months, days) and useful totals.</div>
+      <div class="pill-badge">Calendar-aware &middot; Business days &middot; Add/Subtract</div>
+      <div class="hero-title">Date <span>Duration</span></div>
+      <div class="hero-desc">Calculate exact time between two dates, or add/subtract a duration from any date.</div>
+    </div>
+
+    <!-- Tab navigation -->
+    <div class="tab-bar">
+      <button class="tab-btn active" data-tab="between">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Between Dates
+      </button>
+      <button class="tab-btn" data-tab="addsubtract">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
+        Add / Subtract
+      </button>
+    </div>
+
+    <!-- ═══════ TAB 1: Between two dates ═══════ -->
+    <div class="tab-panel active" id="panel-between">
+
+      <div class="card">
+        <div class="card-title"><div class="card-title-dot" style="background:var(--green)"></div>Select dates</div>
+
+        <div class="date-row">
+          <div class="form-group" style="margin-bottom:0;">
+            <label class="form-label">Start date</label>
+            <input type="date" id="start" />
+          </div>
+          <button class="swap-btn" onclick="swapDates()" title="Swap dates">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+          </button>
+          <div class="form-group" style="margin-bottom:0;">
+            <label class="form-label">End date</label>
+            <input type="date" id="end" />
+          </div>
+        </div>
+
+        <label class="toggle"><input type="checkbox" id="includeStart" /> Include start day in business-day count</label>
       </div>
-      <div class="hero-formula">
-        Δ = <span class="hl">End</span> − <span class="hlp">Start</span>
+
+      <!-- Results -->
+      <div id="betweenResults" style="display:none;">
+        <div class="result-banner">
+          <div class="result-banner-label">Duration</div>
+          <div class="result-banner-value" id="ymd">--</div>
+          <div class="result-banner-sub" id="direction">--</div>
+        </div>
+
+        <div class="stats-grid">
+          <div class="mini-stat c-green">
+            <div class="mini-stat-label">Total days</div>
+            <div class="mini-stat-value" id="days">--</div>
+            <div class="mini-stat-sub" id="weeks">--</div>
+          </div>
+          <div class="mini-stat c-purple">
+            <div class="mini-stat-label">Business days</div>
+            <div class="mini-stat-value" id="biz">--</div>
+            <div class="mini-stat-sub" id="bizNote">--</div>
+          </div>
+          <div class="mini-stat c-amber">
+            <div class="mini-stat-label">Total months</div>
+            <div class="mini-stat-value" id="totalMonthsVal">--</div>
+            <div class="mini-stat-sub">calendar months</div>
+          </div>
+        </div>
+
+        <div class="breakdown">
+          <div class="breakdown-head">
+            <div class="breakdown-title">Detailed breakdown</div>
+          </div>
+          <table>
+            <tbody id="totalsBody">
+              <tr><td>Total weeks</td><td id="totalWeeks">--</td></tr>
+              <tr><td>Total hours</td><td id="totalHours">--</td></tr>
+              <tr><td>Total minutes</td><td id="totalMinutes">--</td></tr>
+              <tr><td>Total seconds</td><td id="totalSeconds">--</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div id="betweenEmpty">
+        <div class="empty-state">
+          <div class="empty-state-icon">&#x1F4C5;</div>
+          Pick a start and end date to see the duration.
+        </div>
+      </div>
+
+      <div class="toolbar">
+        <button class="action-btn" onclick="copySummary()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy
+        </button>
+        <button class="action-btn" onclick="printPage()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+          Print
+        </button>
       </div>
     </div>
 
-    <div class="grid2">
-      <div class="card">
-        <div class="card-title"><div class="card-title-dot" style="background:var(--green)"></div>Between two dates</div>
-
-        <div class="form-group">
-          <label class="form-label">Start date</label>
-          <input type="date" id="start" />
-        </div>
-        <div class="form-group">
-          <label class="form-label">End date</label>
-          <input type="date" id="end" />
-        </div>
-
-        <div class="inline-row" style="margin-top:6px; justify-content:space-between;">
-          <label class="toggle"><input type="checkbox" id="includeStart" /> Include start day in business-day count</label>
-          <button class="action-btn" onclick="swapDates()" style="padding:7px 12px;">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
-            Swap
-          </button>
-        </div>
-
-        <div class="form-group" style="margin-top:10px;">
-          <div class="table-card" style="margin-bottom:0;">
-            <div class="table-head-row"><div class="table-head-title">Notes</div></div>
-            <div class="table-scroll">
-              <table>
-                <tbody id="notesBody">
-                  <tr><td>Assumption</td><td class="td-green">Business days exclude weekends only (no holidays)</td></tr>
-                  <tr><td>Tip</td><td class="td-green">If end &lt; start, we show an absolute duration and indicate direction.</td></tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-
-      </div>
+    <!-- ═══════ TAB 2: Add / Subtract ═══════ -->
+    <div class="tab-panel" id="panel-addsubtract">
 
       <div class="card">
-        <div class="card-title"><div class="card-title-dot" style="background:var(--purple)"></div>Add / subtract duration</div>
+        <div class="card-title"><div class="card-title-dot" style="background:var(--purple)"></div>Base date</div>
 
         <div class="form-group">
-          <label class="form-label">Base date</label>
+          <label class="form-label">Start from</label>
           <input type="date" id="base" />
         </div>
 
-        <div class="split">
-          <div class="form-group">
+        <div class="card-title" style="margin-top:8px;"><div class="card-title-dot" style="background:var(--green)"></div>Duration to add or subtract</div>
+
+        <div class="dur-grid">
+          <div class="form-group" style="margin-bottom:0;">
             <label class="form-label">Years</label>
             <input type="number" id="addY" value="0" step="1" />
           </div>
-          <div class="form-group">
+          <div class="form-group" style="margin-bottom:0;">
             <label class="form-label">Months</label>
             <input type="number" id="addM" value="0" step="1" />
           </div>
-          <div class="form-group">
+          <div class="form-group" style="margin-bottom:0;">
             <label class="form-label">Days</label>
             <input type="number" id="addD" value="0" step="1" />
           </div>
         </div>
 
-        <div class="inline-row" style="justify-content:space-between; margin-top: 6px;">
-          <div class="inline-row">
-            <button class="action-btn" onclick="applyAdd(1)">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
-              Add
-            </button>
-            <button class="action-btn" onclick="applyAdd(-1)">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/></svg>
-              Subtract
-            </button>
-          </div>
-          <div class="pill-badge" id="resultBadge" style="color:var(--text-secondary); border-color: var(--border); background:var(--bg);">Result: —</div>
+        <div class="op-row">
+          <button class="action-btn primary-btn" onclick="applyAdd(1)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
+            Add Duration
+          </button>
+          <button class="action-btn" onclick="applyAdd(-1)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/></svg>
+            Subtract Duration
+          </button>
         </div>
+      </div>
 
-        <div class="table-card" style="margin-top:14px; margin-bottom:0;">
-          <div class="table-head-row"><div class="table-head-title">Result details</div></div>
-          <div class="table-scroll">
-            <table>
-              <tbody id="addBody">
-                <tr><td>Result date</td><td>—</td></tr>
-                <tr><td>Day of week</td><td>—</td></tr>
-                <tr><td>ISO</td><td>—</td></tr>
-              </tbody>
-            </table>
-          </div>
+      <!-- Add/Subtract result -->
+      <div id="addResultWrap" style="display:none;">
+        <div class="add-result-card">
+          <div class="add-result-title">Result</div>
+          <div class="add-result-date" id="addResultDate">--</div>
+          <div class="add-result-day" id="addResultDay">--</div>
+          <div class="add-result-iso" id="addResultISO">--</div>
         </div>
+      </div>
 
+      <div id="addEmpty">
+        <div class="empty-state">
+          <div class="empty-state-icon">&#x2795;</div>
+          Set a base date and duration, then click Add or Subtract.
+        </div>
+      </div>
+
+      <div class="toolbar">
+        <button class="action-btn" onclick="copySummary()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy
+        </button>
+        <button class="action-btn" onclick="printPage()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+          Print
+        </button>
       </div>
     </div>
 
-    <div class="action-row">
-      <button class="action-btn" onclick="copySummary()">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-        Copy
-      </button>
-      <button class="action-btn" onclick="printPage()">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
-        Print
-      </button>
-    </div>
-
-    <div class="stats-row">
-      <div class="stat-card primary">
-        <div class="stat-icon">🧩</div>
-        <div class="stat-label">Calendar duration</div>
-        <div class="stat-value" id="ymd">—</div>
-        <div class="stat-sub" id="direction">—</div>
-      </div>
-      <div class="stat-card green">
-        <div class="stat-icon">📌</div>
-        <div class="stat-label">Total days</div>
-        <div class="stat-value" id="days">—</div>
-        <div class="stat-sub" id="weeks">—</div>
-      </div>
-      <div class="stat-card purple">
-        <div class="stat-icon">🏢</div>
-        <div class="stat-label">Business days</div>
-        <div class="stat-value" id="biz">—</div>
-        <div class="stat-sub" id="bizNote">—</div>
-      </div>
-    </div>
-
-    <div class="table-card">
-      <div class="table-head-row">
-        <div class="table-head-title">Totals</div>
-      </div>
-      <div class="table-scroll">
-        <table>
-          <tbody id="totalsBody">
-            <tr><td>Total months</td><td>—</td></tr>
-            <tr><td>Total hours</td><td>—</td></tr>
-            <tr><td>Total minutes</td><td>—</td></tr>
-            <tr><td>Total seconds</td><td>—</td></tr>
-          </tbody>
-        </table>
-      </div>
+    <div class="footer-note">
+      <b>How it works:</b> Duration is computed using calendar-aware logic with day clamping (e.g. Jan 31 + 1 month = Feb 28/29). Business days exclude weekends only — no holiday calendar is applied.
     </div>
 
     <!-- nav.js injects footer here -->
   </div>
 
-  <div id="toast"><span style="color:var(--green);font-size:15px;">✓</span> <span id="toast-msg">Copied!</span></div>
+  <div id="toast"><span style="color:var(--green);font-size:15px;">&#x2713;</span> <span id="toast-msg">Copied!</span></div>
 
 <script>
+  // ── Tabs ──
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      this.classList.add('active');
+      document.getElementById('panel-' + this.dataset.tab).classList.add('active');
+    });
+  });
+
+  // ── Helpers ──
   function pad2(n){ return String(n).padStart(2,'0'); }
+
   function parseLocalDate(iso) {
     if (!iso) return null;
     const m = /^([0-9]{4})-([0-9]{2})-([0-9]{2})$/.exec(iso);
@@ -358,11 +518,13 @@
     dt.setHours(12,0,0,0);
     return dt;
   }
+
   function utcMiddayMs(d){ return Date.UTC(d.getFullYear(), d.getMonth(), d.getDate(), 12,0,0,0); }
   function daysBetween(start, end){ return Math.round((utcMiddayMs(end) - utcMiddayMs(start)) / 86400000); }
   function lastDayOfMonth(y, m){ return new Date(y, m+1, 0).getDate(); }
+  function fmtInt(n){ return n.toLocaleString('en-US'); }
+  function fmtISO(d){ return `${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())}`; }
 
-  // Add months with day clamping (e.g., Jan 31 + 1 month => Feb 28/29)
   function addMonthsClamped(d, months){
     const y = d.getFullYear();
     const m = d.getMonth();
@@ -377,9 +539,7 @@
     return out;
   }
 
-  // Robust calendar difference in Y/M/D using anchoring
   function diffYMD(start, end){
-    // assumes start <= end (by date)
     let years = end.getFullYear() - start.getFullYear();
     let anchor = addMonthsClamped(start, years * 12);
     if (utcMiddayMs(anchor) > utcMiddayMs(end)) {
@@ -398,11 +558,7 @@
     return {years, months, days};
   }
 
-  function fmtInt(n){ return n.toLocaleString('en-US'); }
-
   function businessDays(start, end, includeStart){
-    // Counts business days in interval where total day diff is end-start.
-    // Implementation: count weekdays for each day in (start, end] or [start, end] when includeStart.
     let s = new Date(start.getFullYear(), start.getMonth(), start.getDate());
     let e = new Date(end.getFullYear(), end.getMonth(), end.getDate());
     s.setHours(12,0,0,0); e.setHours(12,0,0,0);
@@ -411,8 +567,7 @@
     const total = daysBetween(s, e);
     if (total === 0) {
       const wd = s.getDay();
-      const isBiz = (wd !== 0 && wd !== 6);
-      return includeStart && isBiz ? 1 : 0;
+      return (includeStart && wd !== 0 && wd !== 6) ? 1 : 0;
     }
 
     let count = 0;
@@ -427,14 +582,12 @@
   }
 
   function addDuration(base, y, m, d){
-    // Add years & months with clamping (e.g., Jan 31 + 1 month -> Feb last day)
     const by = base.getFullYear();
     const bm = base.getMonth();
     const bd = base.getDate();
 
     let ny = by + y;
     let nm = bm + m;
-    // normalize months
     ny += Math.floor(nm / 12);
     nm = ((nm % 12) + 12) % 12;
 
@@ -442,19 +595,21 @@
     const nd = Math.min(bd, maxD);
     const out = new Date(ny, nm, nd);
     out.setHours(12,0,0,0);
-    // days add is safe
     out.setDate(out.getDate() + d);
     out.setHours(12,0,0,0);
     return out;
   }
 
+  // ── Between dates calculation ──
   function calcBetween(){
     const s = parseLocalDate(document.getElementById('start').value);
     const e = parseLocalDate(document.getElementById('end').value);
     const includeStart = document.getElementById('includeStart').checked;
 
     if (!s || !e){
-      setBetweenEmpty();
+      document.getElementById('betweenResults').style.display = 'none';
+      document.getElementById('betweenEmpty').style.display = 'block';
+      window.__between = null;
       return;
     }
 
@@ -468,94 +623,61 @@
     const totalMonthsRaw = (end.getFullYear() - start.getFullYear())*12 + (end.getMonth() - start.getMonth());
     const totalMonths = (end.getDate() < start.getDate()) ? totalMonthsRaw - 1 : totalMonthsRaw;
 
+    // Show results, hide empty state
+    document.getElementById('betweenResults').style.display = 'block';
+    document.getElementById('betweenEmpty').style.display = 'none';
+
+    // Banner
     document.getElementById('ymd').textContent = `${ymd.years}y ${ymd.months}m ${ymd.days}d`;
-    document.getElementById('direction').textContent = reversed ? 'End is before Start (showing absolute duration)' : 'End is after Start';
+    document.getElementById('direction').textContent = reversed
+      ? 'End is before start (showing absolute duration)'
+      : (dTotal === 0 ? 'Same date' : 'End is after start');
 
+    // Stats
     document.getElementById('days').textContent = fmtInt(dTotal);
-    document.getElementById('weeks').textContent = `${fmtInt(Math.floor(dTotal/7))} weeks + ${fmtInt(dTotal%7)} days`;
-
+    document.getElementById('weeks').textContent = `${fmtInt(Math.floor(dTotal/7))} wk + ${fmtInt(dTotal%7)} d`;
     document.getElementById('biz').textContent = fmtInt(bTotal);
-    document.getElementById('bizNote').textContent = includeStart ? 'Includes start day when it is a weekday' : 'Excludes start day';
+    document.getElementById('bizNote').textContent = includeStart ? 'incl. start day' : 'excl. start day';
+    document.getElementById('totalMonthsVal').textContent = fmtInt(Math.max(0, totalMonths));
 
-    const hours = dTotal*24;
-    const minutes = hours*60;
-    const seconds = minutes*60;
+    // Breakdown
+    const hours = dTotal * 24;
+    const minutes = hours * 60;
+    const seconds = minutes * 60;
 
-    document.getElementById('totalsBody').innerHTML = [
-      ['Total months', fmtInt(Math.max(0,totalMonths))],
-      ['Total hours', fmtInt(hours)],
-      ['Total minutes', fmtInt(minutes)],
-      ['Total seconds', fmtInt(seconds)]
-    ].map(r=>`<tr><td>${r[0]}</td><td class="td-green">${r[1]}</td></tr>`).join('');
+    document.getElementById('totalWeeks').textContent = fmtInt(Math.floor(dTotal/7));
+    document.getElementById('totalHours').textContent = fmtInt(hours);
+    document.getElementById('totalMinutes').textContent = fmtInt(minutes);
+    document.getElementById('totalSeconds').textContent = fmtInt(seconds);
 
     window.__between = { start, end, reversed, ymd, dTotal, bTotal, totalMonths: Math.max(0,totalMonths), includeStart };
   }
 
-  function setBetweenEmpty(){
-    document.getElementById('ymd').textContent = '—';
-    document.getElementById('direction').textContent = '—';
-    document.getElementById('days').textContent = '—';
-    document.getElementById('weeks').textContent = '—';
-    document.getElementById('biz').textContent = '—';
-    document.getElementById('bizNote').textContent = '—';
-    document.getElementById('totalsBody').innerHTML = `
-      <tr><td>Total months</td><td>—</td></tr>
-      <tr><td>Total hours</td><td>—</td></tr>
-      <tr><td>Total minutes</td><td>—</td></tr>
-      <tr><td>Total seconds</td><td>—</td></tr>`;
-    window.__between = null;
-  }
-
-  function calcAdd(){
-    const base = parseLocalDate(document.getElementById('base').value);
-    if (!base){
-      document.getElementById('resultBadge').textContent = 'Result: —';
-      document.getElementById('addBody').innerHTML = `
-        <tr><td>Result date</td><td>—</td></tr>
-        <tr><td>Day of week</td><td>—</td></tr>
-        <tr><td>ISO</td><td>—</td></tr>`;
-      window.__add = null;
-      return;
-    }
-    const y = parseInt(document.getElementById('addY').value||'0',10);
-    const m = parseInt(document.getElementById('addM').value||'0',10);
-    const d = parseInt(document.getElementById('addD').value||'0',10);
-
-    const res = addDuration(base, y, m, d);
-    const iso = `${res.getFullYear()}-${pad2(res.getMonth()+1)}-${pad2(res.getDate())}`;
-
-    const dayName = new Intl.DateTimeFormat('en-US', { weekday:'long' }).format(res);
-    const long = new Intl.DateTimeFormat('en-US', { dateStyle:'full' }).format(res);
-
-    document.getElementById('resultBadge').textContent = 'Result: ' + long;
-    document.getElementById('addBody').innerHTML = [
-      ['Result date', long],
-      ['Day of week', dayName],
-      ['ISO', iso]
-    ].map(r=>`<tr><td>${r[0]}</td><td class="td-green">${r[1]}</td></tr>`).join('');
-
-    window.__add = { base, y, m, d, res };
-  }
-
+  // ── Add / Subtract ──
   function applyAdd(sign){
     const base = parseLocalDate(document.getElementById('base').value);
-    if (!base) { showToast('Pick a base date'); return; }
+    if (!base) { showToast('Pick a base date first'); return; }
+
     const y = parseInt(document.getElementById('addY').value||'0',10) * sign;
     const m = parseInt(document.getElementById('addM').value||'0',10) * sign;
     const d = parseInt(document.getElementById('addD').value||'0',10) * sign;
 
     const res = addDuration(base, y, m, d);
-    const iso = `${res.getFullYear()}-${pad2(res.getMonth()+1)}-${pad2(res.getDate())}`;
-    document.getElementById('resultBadge').textContent = 'Result: ' + new Intl.DateTimeFormat('en-US', { dateStyle:'full' }).format(res);
-    document.getElementById('addBody').innerHTML = [
-      ['Result date', new Intl.DateTimeFormat('en-US', { dateStyle:'full' }).format(res)],
-      ['Day of week', new Intl.DateTimeFormat('en-US', { weekday:'long' }).format(res)],
-      ['ISO', iso]
-    ].map(r=>`<tr><td>${r[0]}</td><td class="td-green">${r[1]}</td></tr>`).join('');
+    const iso = fmtISO(res);
+    const long = new Intl.DateTimeFormat('en-US', { dateStyle:'full' }).format(res);
+    const dayName = new Intl.DateTimeFormat('en-US', { weekday:'long' }).format(res);
+
+    document.getElementById('addResultDate').textContent = long;
+    document.getElementById('addResultDay').textContent = dayName;
+    document.getElementById('addResultISO').textContent = 'ISO: ' + iso;
+
+    document.getElementById('addResultWrap').style.display = 'block';
+    document.getElementById('addEmpty').style.display = 'none';
 
     window.__add = { base, y, m, d, res };
   }
 
+  // ── Swap ──
   function swapDates(){
     const s = document.getElementById('start');
     const e = document.getElementById('end');
@@ -565,6 +687,7 @@
     calcBetween();
   }
 
+  // ── Toast ──
   function showToast(msg){
     const toast = document.getElementById('toast');
     document.getElementById('toast-msg').textContent = msg;
@@ -572,14 +695,13 @@
     setTimeout(() => { toast.style.opacity = '0'; toast.style.transform = 'translateY(8px)'; }, 2200);
   }
 
+  // ── Copy ──
   function copySummary(){
-    const lines = ['CalcNova · Date Duration'];
+    const lines = ['CalcNova - Date Duration'];
     if (window.__between){
       const b = window.__between;
-      const isoS = `${b.start.getFullYear()}-${pad2(b.start.getMonth()+1)}-${pad2(b.start.getDate())}`;
-      const isoE = `${b.end.getFullYear()}-${pad2(b.end.getMonth()+1)}-${pad2(b.end.getDate())}`;
-      lines.push(`Start: ${isoS}`);
-      lines.push(`End: ${isoE}`);
+      lines.push(`Start: ${fmtISO(b.start)}`);
+      lines.push(`End: ${fmtISO(b.end)}`);
       lines.push(`Calendar duration: ${b.ymd.years}y ${b.ymd.months}m ${b.ymd.days}d`);
       lines.push(`Total days: ${b.dTotal}`);
       lines.push(`Business days: ${b.bTotal} (${b.includeStart ? 'includes start day' : 'excludes start day'})`);
@@ -587,37 +709,34 @@
     }
     if (window.__add){
       const a = window.__add;
-      const isoB = `${a.base.getFullYear()}-${pad2(a.base.getMonth()+1)}-${pad2(a.base.getDate())}`;
-      const isoR = `${a.res.getFullYear()}-${pad2(a.res.getMonth()+1)}-${pad2(a.res.getDate())}`;
       lines.push('');
       lines.push('Add/Subtract');
-      lines.push(`Base: ${isoB}`);
+      lines.push(`Base: ${fmtISO(a.base)}`);
       lines.push(`Delta: ${a.y}y ${a.m}m ${a.d}d`);
-      lines.push(`Result: ${isoR}`);
+      lines.push(`Result: ${fmtISO(a.res)}`);
     }
-    navigator.clipboard.writeText(lines.join('\n')).then(()=>showToast('Copied summary!')).catch(()=>showToast('Copy failed'));
+    navigator.clipboard.writeText(lines.join('\n')).then(()=>showToast('Copied!')).catch(()=>showToast('Copy failed'));
   }
 
   function printPage(){ window.print(); }
 
-  // Wire inputs
+  // ── Wire inputs ──
   ['start','end','includeStart'].forEach(id => {
     document.getElementById(id).addEventListener('input', calcBetween);
     document.getElementById(id).addEventListener('change', calcBetween);
   });
-  ['base','addY','addM','addD'].forEach(id => {
-    document.getElementById(id).addEventListener('input', calcAdd);
-    document.getElementById(id).addEventListener('change', calcAdd);
-  });
 
+  // ── Init ──
   (function init(){
     const t = new Date();
-    const iso = `${t.getFullYear()}-${pad2(t.getMonth()+1)}-${pad2(t.getDate())}`;
+    const iso = fmtISO(t);
     document.getElementById('start').value = iso;
-    document.getElementById('end').value = iso;
+    // Set end to 30 days from now for a meaningful default
+    const end = new Date(t);
+    end.setDate(end.getDate() + 30);
+    document.getElementById('end').value = fmtISO(end);
     document.getElementById('base').value = iso;
     calcBetween();
-    calcAdd();
   })();
 </script>
 
