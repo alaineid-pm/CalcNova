@@ -1329,10 +1329,14 @@ function resetDefaults() {
 
 // ── Slider Sync ───────────────────────────────────────────────────────────
 function syncAllSliders() {
-  document.getElementById('home-price-slider').value    = document.getElementById('home-price').value;
-  document.getElementById('down-payment-slider').value  = document.getElementById('down-payment').value;
-  document.getElementById('interest-rate-slider').value = document.getElementById('interest-rate').value;
+  const hps = document.getElementById('home-price-slider');
+  const dps = document.getElementById('down-payment-slider');
+  const irs = document.getElementById('interest-rate-slider');
+  hps.value = document.getElementById('home-price').value;
+  dps.value = document.getElementById('down-payment').value;
+  irs.value = document.getElementById('interest-rate').value;
   updateDownSlider();
+  updateSliderFill(hps); updateSliderFill(dps); updateSliderFill(irs);
 }
 
 // ── Print Summary ─────────────────────────────────────────────────────────
@@ -1368,7 +1372,7 @@ document.addEventListener('calcnova:darkchanged', function () {
 // ── Wire Up Events ────────────────────────────────────────────────────────
 // Home price input + slider
 document.getElementById('home-price').addEventListener('input', function () {
-  document.getElementById('home-price-slider').value = this.value;
+  const s = document.getElementById('home-price-slider'); s.value = this.value; updateSliderFill(s);
   updateDownSlider();
   calculate();
 });
@@ -1380,7 +1384,7 @@ document.getElementById('home-price-slider').addEventListener('input', function 
 
 // Down payment input + slider
 document.getElementById('down-payment').addEventListener('input', function () {
-  document.getElementById('down-payment-slider').value = this.value;
+  const s = document.getElementById('down-payment-slider'); s.value = this.value; updateSliderFill(s);
   calculate();
 });
 document.getElementById('down-payment-slider').addEventListener('input', function () {
@@ -1390,7 +1394,7 @@ document.getElementById('down-payment-slider').addEventListener('input', functio
 
 // Interest rate input + slider
 document.getElementById('interest-rate').addEventListener('input', function () {
-  document.getElementById('interest-rate-slider').value = this.value;
+  const s = document.getElementById('interest-rate-slider'); s.value = this.value; updateSliderFill(s);
   calculate();
 });
 document.getElementById('interest-rate-slider').addEventListener('input', function () {
