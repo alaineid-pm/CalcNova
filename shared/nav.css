@@ -1,0 +1,242 @@
+/* ============================================================
+   CalcNova · Shared Navigation & Layout Styles
+   Edit this file to update the header, menu, and footer
+   across ALL pages at once.
+   ============================================================ */
+
+/* ── Reset ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ── Design Tokens ── */
+:root {
+  --bg: #f0f2f7;
+  --surface: #ffffff;
+  --border: #e2e6ef;
+  --text-primary: #0f1623;
+  --text-secondary: #5a6478;
+  --text-muted: #9ba3b5;
+  --font: 'Plus Jakarta Sans', sans-serif;
+  --mono: 'JetBrains Mono', monospace;
+  --green: #10b981;
+  --purple: #6366f1;
+  --amber: #f59e0b;
+  --red: #ef4444;
+}
+
+body.dark {
+  --bg: #0d1117;
+  --surface: #161b22;
+  --border: #30363d;
+  --text-primary: #e6edf3;
+  --text-secondary: #8b949e;
+  --text-muted: #484f58;
+}
+
+/* ── Base ── */
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  min-height: 100vh;
+  color: var(--text-primary);
+  transition: background .3s, color .3s;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(ellipse 800px 600px at 10% 0%, rgba(110,231,183,.12) 0%, transparent 60%),
+    radial-gradient(ellipse 600px 500px at 90% 100%, rgba(167,139,250,.12) 0%, transparent 60%);
+  transition: opacity .3s;
+}
+body.dark::before { opacity: .4; }
+
+/* ── HEADER ── */
+header {
+  padding: 16px 0 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+.logo-mark {
+  width: 38px; height: 38px;
+  background: linear-gradient(135deg, var(--green), var(--purple));
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px;
+  box-shadow: 0 4px 12px rgba(99,102,241,.3);
+  flex-shrink: 0;
+}
+.logo-text {
+  font-size: 22px; font-weight: 800; letter-spacing: -.5px;
+  background: linear-gradient(135deg, var(--green), var(--purple));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.logo-sub { font-size: 11px; color: var(--text-muted); letter-spacing: 2px; text-transform: uppercase; font-weight: 500; margin-top: 1px; }
+
+.header-right { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+
+.icon-btn {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+  color: var(--text-secondary); font-size: 16px; width: 38px; height: 38px;
+  min-height: 44px; min-width: 44px;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  transition: all .15s; text-decoration: none; font-family: var(--font);
+}
+.icon-btn:hover { border-color: var(--green); color: var(--green); }
+
+/* ── DONATE BUTTON ── */
+.donate-btn {
+  display: flex; align-items: center; gap: 6px;
+  background: linear-gradient(135deg, #fd7e14, #e85d04);
+  border: none;
+  border-radius: 100px; padding: 7px 16px;
+  font-size: 12px; font-weight: 700; color: #fff;
+  text-decoration: none; transition: all .15s; cursor: pointer;
+  font-family: var(--font);
+  box-shadow: 0 2px 8px rgba(232,93,4,.35);
+  min-height: 38px;
+  white-space: nowrap;
+}
+.donate-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 14px rgba(232,93,4,.45); }
+
+/* ── NAV MENU ── */
+.nav-tools-wrap { position: relative; }
+.nav-tools-btn {
+  display: flex; align-items: center; gap: 6px;
+  background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+  padding: 7px 14px; font-size: 13px; font-weight: 700; color: var(--text-primary);
+  cursor: pointer; transition: all .15s; font-family: var(--font);
+  min-height: 38px;
+}
+.nav-tools-btn:hover, .nav-tools-btn.active { border-color: var(--green); color: var(--green); }
+.nav-tools-btn svg { width: 16px; height: 16px; transition: transform .2s; flex-shrink: 0; }
+.nav-tools-btn.active .nav-chevron { transform: rotate(180deg); }
+
+/* ── MEGA MENU ── */
+.mega-menu {
+  display: none; position: absolute; top: calc(100% + 8px); right: 0;
+  width: min(720px, calc(100vw - 32px)); background: var(--surface);
+  border: 1px solid var(--border); border-radius: 16px;
+  box-shadow: 0 12px 40px rgba(0,0,0,.12), 0 2px 8px rgba(0,0,0,.06);
+  z-index: 100; padding: 20px;
+  animation: menuFadeIn .15s ease-out;
+}
+body.dark .mega-menu { box-shadow: 0 12px 40px rgba(0,0,0,.4), 0 2px 8px rgba(0,0,0,.2); }
+.mega-menu.open { display: block; }
+@keyframes menuFadeIn { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
+
+.mega-menu-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+
+.menu-cat-header { display: flex; align-items: center; gap: 8px; padding-bottom: 10px; margin-bottom: 8px; border-bottom: 1px solid var(--border); }
+.menu-cat-icon { width: 28px; height: 28px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; }
+.menu-cat-icon.finance    { background: linear-gradient(135deg, rgba(245,158,11,.15), rgba(245,158,11,.05)); }
+.menu-cat-icon.productivity { background: linear-gradient(135deg, rgba(99,102,241,.15), rgba(99,102,241,.05)); }
+.menu-cat-icon.utility    { background: linear-gradient(135deg, rgba(16,185,129,.15), rgba(16,185,129,.05)); }
+.menu-cat-icon.articles   { background: linear-gradient(135deg, rgba(239,68,68,.12), rgba(239,68,68,.04)); }
+.menu-cat-name { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .6px; color: var(--text-muted); }
+
+.menu-items { list-style: none; }
+.menu-item {
+  display: flex; align-items: center; gap: 8px; padding: 7px 8px;
+  border-radius: 8px; text-decoration: none; color: var(--text-secondary);
+  font-size: 13px; font-weight: 500; transition: all .12s; cursor: default;
+}
+a.menu-item { cursor: pointer; }
+a.menu-item:hover { background: var(--bg); color: var(--text-primary); }
+.menu-item.current {
+  background: linear-gradient(135deg, rgba(16,185,129,.08), rgba(99,102,241,.05));
+  color: var(--green); font-weight: 700; cursor: default;
+}
+.menu-item-icon { font-size: 15px; flex-shrink: 0; width: 20px; text-align: center; }
+.menu-item-text { flex: 1; }
+.menu-item-badge { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .3px; padding: 2px 6px; border-radius: 4px; flex-shrink: 0; }
+.badge-live { background: rgba(16,185,129,.1); color: var(--green); border: 1px solid rgba(16,185,129,.2); }
+.badge-soon { background: rgba(155,163,181,.08); color: var(--text-muted); border: 1px solid var(--border); }
+
+/* Articles section inside mega menu */
+.menu-articles { margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--border); }
+.menu-articles-header { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+.menu-articles-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px 16px; list-style: none; }
+.menu-articles-list a {
+  display: flex; align-items: center; gap: 6px; padding: 5px 8px; border-radius: 6px;
+  text-decoration: none; color: var(--text-secondary); font-size: 12px; font-weight: 500;
+  transition: all .12s;
+}
+.menu-articles-list a:hover { background: var(--bg); color: var(--text-primary); }
+.art-icon { font-size: 12px; flex-shrink: 0; }
+
+.mega-menu-footer { margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--border); text-align: center; }
+.mega-menu-footer a { font-size: 12px; font-weight: 600; color: var(--text-muted); text-decoration: none; transition: color .15s; }
+.mega-menu-footer a:hover { color: var(--green); }
+
+.menu-overlay { display: none; position: fixed; inset: 0; z-index: 99; }
+.menu-overlay.open { display: block; }
+
+/* ── FOOTER ── */
+.site-footer {
+  border-top: 1px solid var(--border); margin-top: 48px; padding: 28px 0 16px;
+  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;
+}
+.footer-brand { display: flex; align-items: center; gap: 8px; }
+.footer-brand-name {
+  font-size: 15px; font-weight: 800; letter-spacing: -.3px;
+  background: linear-gradient(135deg, var(--green), var(--purple));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.footer-copy { font-size: 12px; color: var(--text-muted); margin-top: 3px; }
+.footer-right { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.footer-links { display: flex; align-items: center; gap: 12px; }
+.footer-links a { font-size: 12px; color: var(--text-muted); text-decoration: none; transition: color .15s; }
+.footer-links a:hover { color: var(--green); }
+.footer-disclaimer {
+  font-size: 11px; color: var(--text-muted); text-align: center;
+  padding-bottom: 16px; line-height: 1.6;
+}
+
+/* ── AD SLOTS ──
+   To enable Google AdSense:
+   1. Add your AdSense <script> tag to <head> on each page
+   2. Replace the placeholder div inside .ad-slot with your <ins class="adsbygoogle"> code
+   3. Remove the [data-label] pseudo-element below in production
+   ── */
+.ad-slot {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface);
+  border: 1px dashed var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.ad-slot--leaderboard { min-height: 90px; margin: 12px 0 20px; }
+.ad-slot--rectangle  { min-height: 250px; margin: 20px 0; }
+/* Dev label — remove or hide in production */
+.ad-slot::before {
+  content: attr(data-label);
+  font-size: 10px; font-weight: 700; color: var(--text-muted);
+  letter-spacing: 1px; text-transform: uppercase; pointer-events: none;
+}
+
+/* ── MOBILE ── */
+@media (max-width: 640px) {
+  .mega-menu-grid { grid-template-columns: 1fr; }
+  .mega-menu { right: -16px; width: calc(100vw - 16px); }
+  .menu-articles-list { grid-template-columns: 1fr; }
+  .logo-sub { display: none; }
+  .nav-tools-btn span.nav-label { display: none; }  /* hide "Tools" text on tiny screens */
+  .site-footer { flex-direction: column; align-items: flex-start; gap: 12px; }
+  .footer-links { flex-wrap: wrap; gap: 8px; }
+}
+
+@media (max-width: 480px) {
+  .donate-btn { padding: 6px 10px; font-size: 11px; }
+}
