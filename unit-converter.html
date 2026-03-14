@@ -3,8 +3,94 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Unit Converter — Convert Any Unit | CalcNova</title>
-  <meta name="description" content="Convert between units of length, weight, temperature, volume, area, speed, time, digital storage, pressure, and energy — instantly in your browser.">
+  <title>Unit Converter — Convert Length, Weight, Temperature & More | CalcNova</title>
+  <meta name="description" content="Free unit converter: instantly convert between metric and imperial units of length, weight, temperature, volume, speed, area, and more. 100+ units — no sign-up needed.">
+
+  <!-- Canonical -->
+  <link rel="canonical" href="https://calcnova.co/unit-converter.html" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Unit Converter — Convert Length, Weight, Temperature & More | CalcNova" />
+  <meta property="og:description" content="Free unit converter: instantly convert between metric and imperial units of length, weight, temperature, volume, speed, area, and more. 100+ units." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://calcnova.co/unit-converter.html" />
+  <meta property="og:site_name" content="CalcNova" />
+
+  <!-- JSON-LD: WebPage + FAQPage -->
+  <script type="application/ld+json">
+  [
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": "Unit Converter — Convert Length, Weight, Temperature & More",
+      "url": "https://calcnova.co/unit-converter.html",
+      "description": "Free unit converter: instantly convert between metric and imperial units of length, weight, temperature, volume, speed, area, pressure, and energy.",
+      "isPartOf": { "@type": "WebSite", "name": "CalcNova", "url": "https://calcnova.co/" },
+      "breadcrumb": {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://calcnova.co/" },
+          { "@type": "ListItem", "position": 2, "name": "Unit Converter", "item": "https://calcnova.co/unit-converter.html" }
+        ]
+      }
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How do I convert centimetres to inches?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "To convert centimetres (cm) to inches, divide by 2.54. For example, 30 cm ÷ 2.54 = 11.81 inches. To go the other way, multiply inches by 2.54: 12 inches × 2.54 = 30.48 cm. One inch equals exactly 2.54 centimetres by international definition."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I convert kilograms to pounds?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "To convert kilograms (kg) to pounds (lbs), multiply by 2.20462. For example, 70 kg × 2.20462 = 154.32 lbs. To convert pounds to kilograms, divide by 2.20462: 150 lbs ÷ 2.20462 = 68.04 kg. A quick approximation: 1 kg ≈ 2.2 lbs."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I convert Celsius to Fahrenheit?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "To convert Celsius (°C) to Fahrenheit (°F), use the formula: °F = (°C × 9/5) + 32. For example, 25°C = (25 × 1.8) + 32 = 77°F. To convert Fahrenheit to Celsius: °C = (°F − 32) × 5/9. So 77°F = (77 − 32) × 5/9 = 25°C. Common references: 0°C = 32°F (freezing), 100°C = 212°F (boiling), 37°C = 98.6°F (body temperature)."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How many feet are in a metre?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "One metre equals approximately 3.28084 feet. Conversely, one foot equals 0.3048 metres exactly. To convert metres to feet, multiply by 3.28084. To convert feet to metres, multiply by 0.3048. For example, 5 metres = 16.4 feet; 6 feet = 1.83 metres."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I convert miles to kilometres?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "To convert miles to kilometres, multiply by 1.60934. For example, 10 miles × 1.60934 = 16.09 km. To convert kilometres to miles, divide by 1.60934 (or multiply by 0.62137). A quick approximation: 5 miles ≈ 8 km, which is useful for reading road signs when travelling between countries."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the difference between metric and imperial units?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The metric system (SI) uses base-10 units like metres, kilograms, and litres — used by most of the world. The imperial system uses units like feet, pounds, and gallons — still common in the United States, and partially in the UK. Scientific work worldwide uses metric. The US is one of only three countries that hasn't fully adopted the metric system (alongside Myanmar and Liberia)."
+          }
+        }
+      ]
+    }
+  ]
+  </script>
+
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="shared/nav.css">
   <style>
@@ -19,7 +105,7 @@
       margin-bottom: 28px;
       display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;
     }
-    .hero-title { font-size: 26px; font-weight: 800; letter-spacing: -.5px; }
+    .hero-title { font-size: 26px; font-weight: 800; letter-spacing: -.5px; margin: 0; padding: 0; }
     .hero-title span {
       background: linear-gradient(135deg, var(--green), var(--purple));
       -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
@@ -163,7 +249,7 @@
     /* Print */
     @media print {
       body::before, header, .menu-overlay, .site-footer, .footer-disclaimer,
-      .cat-pills, .swap-btn, .action-row, #toast, .ad-slot { display: none !important; }
+      .cat-pills, .swap-btn, .action-row, #toast, .ad-slot, .seo-section { display: none !important; }
       body, body.dark { background: #fff !important; color: #000 !important;
         --bg: #fff; --surface: #fff; --border: #ccc; --text-primary: #000;
         --text-secondary: #333; --text-muted: #666; }
@@ -172,6 +258,15 @@
       .formula-bar { border: 1px solid #ccc; }
       .unit-input, .unit-select { border: 1px solid #ccc; }
     }
+
+    /* ── SEO SECTION ── */
+    .seo-section {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 18px; padding: 28px 28px 24px; margin-top: 24px;
+    }
+    .seo-section h2 { font-size: 18px; font-weight: 700; color: var(--text-primary); margin-bottom: 10px; }
+    .seo-section h3 { font-size: 15px; font-weight: 600; color: var(--text-primary); margin-top: 20px; margin-bottom: 8px; }
+    .seo-section p  { font-size: 14px; color: var(--text-secondary); line-height: 1.7; }
   </style>
 </head>
 <body>
@@ -180,7 +275,7 @@
     <!-- Hero -->
     <div class="hero">
       <div>
-        <div class="hero-title">📏 <span>Unit Converter</span></div>
+        <h1 class="hero-title">📏 <span>Unit Converter</span></h1>
         <div class="hero-desc">Convert between units of length, weight, temperature, volume, area, speed, time, digital storage, pressure, and energy — instantly.</div>
       </div>
     </div>
@@ -244,6 +339,60 @@
 
     <!-- Ad slot -->
     <div class="ad-slot ad-slot--rectangle" data-label="Ad"></div>
+
+    <!-- SEO SECTION -->
+    <div class="seo-section">
+      <h2>How to Use This Unit Converter</h2>
+      <p>Select a category using the category pills (Length, Weight, Temperature, etc.), then choose your "From" and "To" units from the dropdowns. Type a value in either field and the converted result appears instantly. Use the swap button to reverse the direction. You can also use the formula bar to see the exact conversion formula being applied.</p>
+
+      <h3>How to Convert Centimetres to Inches</h3>
+      <p>Divide centimetres by <strong>2.54</strong> to get inches. For example: 30 cm ÷ 2.54 = 11.81 inches. To go the other way, multiply inches by 2.54: 12 inches × 2.54 = 30.48 cm. One inch equals exactly 2.54 centimetres by international definition since 1959. Common reference points: 1 cm ≈ 0.39 inches; 1 foot = 30.48 cm; 1 metre = 39.37 inches.</p>
+
+      <h3>How to Convert Kilograms to Pounds</h3>
+      <p>Multiply kilograms by <strong>2.20462</strong> to get pounds. For example: 70 kg × 2.20462 = 154.32 lbs. To convert pounds to kilograms, divide by 2.20462: 150 lbs ÷ 2.20462 = 68.04 kg. Quick approximation: 1 kg ≈ 2.2 lbs. For stone (used in the UK for body weight): 1 stone = 6.35 kg = 14 lbs.</p>
+
+      <h3>How to Convert Celsius to Fahrenheit</h3>
+      <p>Use the formula: <strong>°F = (°C × 9/5) + 32</strong>. For example: 25°C = (25 × 1.8) + 32 = 77°F. To reverse: <strong>°C = (°F − 32) × 5/9</strong>. Key reference points to memorise: 0°C = 32°F (water freezes), 20°C = 68°F (room temperature), 37°C = 98.6°F (body temperature), 100°C = 212°F (water boils). To convert Celsius to Kelvin, simply add 273.15.</p>
+
+      <h3>How to Convert Miles to Kilometres</h3>
+      <p>Multiply miles by <strong>1.60934</strong> to get kilometres. To convert km to miles, multiply by <strong>0.62137</strong>. Handy reference: 5 miles ≈ 8 km; 10 miles ≈ 16.1 km; 26.2 miles (marathon) = 42.2 km. Speed conversions follow the same ratio: 60 mph = 96.6 km/h; 100 km/h = 62.1 mph.</p>
+
+      <h3>Metric vs. Imperial: What's the Difference?</h3>
+      <p>The <strong>metric system (SI)</strong> uses base-10 units — metres, kilograms, litres, and Celsius — and is used by the vast majority of the world including all of Europe, Asia, Africa, and most of the Americas. The <strong>imperial system</strong> uses feet, pounds, gallons, and Fahrenheit — still common in the United States. The UK uses a mix: metric for most official purposes but miles for road distances and pints for beer. Scientific work worldwide uses metric exclusively.</p>
+
+      <h3>Common Unit Conversion Quick Reference</h3>
+      <p>
+        <strong>Length:</strong> 1 inch = 2.54 cm &nbsp;·&nbsp; 1 foot = 0.305 m &nbsp;·&nbsp; 1 mile = 1.609 km &nbsp;·&nbsp; 1 nautical mile = 1.852 km<br>
+        <strong>Weight:</strong> 1 lb = 453.6 g &nbsp;·&nbsp; 1 kg = 2.205 lbs &nbsp;·&nbsp; 1 stone = 6.35 kg &nbsp;·&nbsp; 1 oz = 28.35 g<br>
+        <strong>Volume:</strong> 1 US gallon = 3.785 L &nbsp;·&nbsp; 1 UK gallon = 4.546 L &nbsp;·&nbsp; 1 cup = 236.6 mL &nbsp;·&nbsp; 1 fl oz = 29.57 mL<br>
+        <strong>Area:</strong> 1 acre = 4047 m² &nbsp;·&nbsp; 1 sq mile = 2.59 km² &nbsp;·&nbsp; 1 hectare = 10,000 m²<br>
+        <strong>Speed:</strong> 1 mph = 1.609 km/h &nbsp;·&nbsp; 1 knot = 1.852 km/h<br>
+        <strong>Digital:</strong> 1 GB = 1024 MB &nbsp;·&nbsp; 1 TB = 1024 GB
+      </p>
+    </div>
+
+    <!-- RELATED CALCULATORS -->
+    <div class="seo-section" style="margin-top: 16px;">
+      <h2>Related Calculators</h2>
+      <p>Other free tools on CalcNova:</p>
+      <ul style="margin: 12px 0 0; padding-left: 20px; display: flex; flex-direction: column; gap: 8px;">
+        <li style="font-size: 14px; color: var(--text-secondary); line-height: 1.5;">
+          <a href="percentage-calculator.html" style="color: var(--green); font-weight: 600; text-decoration: none;">Percentage Calculator</a> — Find X% of a number, percentage change, and more.
+        </li>
+        <li style="font-size: 14px; color: var(--text-secondary); line-height: 1.5;">
+          <a href="age-calculator.html" style="color: var(--green); font-weight: 600; text-decoration: none;">Age Calculator</a> — Find your exact age in years, months, weeks, and days.
+        </li>
+        <li style="font-size: 14px; color: var(--text-secondary); line-height: 1.5;">
+          <a href="date-duration.html" style="color: var(--green); font-weight: 600; text-decoration: none;">Date Duration Calculator</a> — Calculate the exact number of days between any two dates.
+        </li>
+        <li style="font-size: 14px; color: var(--text-secondary); line-height: 1.5;">
+          <a href="random-number.html" style="color: var(--green); font-weight: 600; text-decoration: none;">Random Number Generator</a> — Generate random numbers within any range.
+        </li>
+        <li style="font-size: 14px; color: var(--text-secondary); line-height: 1.5;">
+          <a href="word-counter.html" style="color: var(--green); font-weight: 600; text-decoration: none;">Word Counter</a> — Count words, characters, sentences, and reading time instantly.
+        </li>
+      </ul>
+    </div>
 
   </div>
 

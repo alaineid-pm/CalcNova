@@ -3,25 +3,42 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>World Time Converter — Compare Times Across Cities | CalcNova</title>
-  <meta name="description" content="Free world time converter. Compare current times in multiple cities, find meeting overlap, and share timezone views.">
-  <meta property="og:type" content="website">
-  <meta property="og:title" content="World Time Converter | CalcNova">
-  <meta property="og:description" content="Compare times across cities, find meeting overlap, share timezone views.">
-  <meta property="og:url" content="https://alaineid-pm.github.io/CalcNova/TimeConvertor.html">
+  <title>Time Zone Converter — Compare Times Across Cities | CalcNova</title>
+  <meta name="description" content="Free time zone converter: compare current times across multiple cities, find team meeting overlap windows, and convert between any time zones instantly.">
+  <link rel="canonical" href="https://calcnova.co/TimeConvertor.html" />
+  <meta property="og:title" content="Time Zone Converter — Compare Times Across Cities | CalcNova" />
+  <meta property="og:description" content="Compare current times across multiple cities, find meeting overlap windows, and convert between any time zones instantly. Free, no sign-up needed." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://calcnova.co/TimeConvertor.html" />
+  <meta property="og:site_name" content="CalcNova" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
   <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "WebApplication",
-    "name": "CalcNova World Time Converter",
-    "url": "https://alaineid-pm.github.io/CalcNova/TimeConvertor.html",
-    "description": "Free world time converter. Compare current times in multiple cities, find meeting overlap, and share timezone views.",
-    "applicationCategory": "UtilityApplication",
-    "operatingSystem": "Any",
-    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
-  }
+  [
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": "Time Zone Converter — Compare Times Across Cities",
+      "url": "https://calcnova.co/TimeConvertor.html",
+      "description": "Free time zone converter: compare current times across multiple cities and find team meeting overlap windows.",
+      "isPartOf": { "@type": "WebSite", "name": "CalcNova", "url": "https://calcnova.co/" },
+      "breadcrumb": { "@type": "BreadcrumbList", "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://calcnova.co/" },
+        { "@type": "ListItem", "position": 2, "name": "Time Zone Converter", "item": "https://calcnova.co/TimeConvertor.html" }
+      ]}
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        { "@type": "Question", "name": "How do I convert between time zones?", "acceptedAnswer": { "@type": "Answer", "text": "To convert between time zones: find the UTC offset of both time zones, then add or subtract the difference. For example, converting 3 PM New York (UTC-5) to London (UTC+0): 3 PM + 5 hours = 8 PM London time. During daylight saving time, offsets shift by +1 hour. This tool handles DST automatically using IANA time zone data." }},
+        { "@type": "Question", "name": "What is the best time to schedule a meeting between New York and London?", "acceptedAnswer": { "@type": "Answer", "text": "New York (ET) is UTC-5 (UTC-4 during EDT). London (GMT/BST) is UTC+0 (UTC+1 during BST). Standard overlap: 9 AM–1 PM New York = 2–6 PM London. Best meeting window: 9–11 AM New York / 2–4 PM London, which is comfortable business hours for both. Note: the gap narrows when the UK observes BST but the US has not yet switched to EDT (late March)." }},
+        { "@type": "Question", "name": "How do I find a meeting time that works for New York, London, and Singapore?", "acceptedAnswer": { "@type": "Answer", "text": "New York to Singapore is a 13-hour gap (12 during EDT). A tri-continental meeting is challenging: 8 AM New York = 1 PM London = 9 PM Singapore. The best compromise is early morning New York (8–9 AM ET) which is afternoon London and late evening Singapore. Rotating meeting times is often the fairest approach so no single team always has the awkward slot." }},
+        { "@type": "Question", "name": "Does daylight saving time affect time zone conversions?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. DST shifts clocks forward by 1 hour, changing UTC offsets for affected regions. For example, New York is UTC-5 (EST) in winter and UTC-4 (EDT) in summer. The US and Europe switch on different dates (US: second Sunday March; EU: last Sunday March), creating a 1-week window each spring and fall where the gap between them is 1 hour off from normal. This tool accounts for DST automatically." }},
+        { "@type": "Question", "name": "What time zones do major global business hubs use?", "acceptedAnswer": { "@type": "Answer", "text": "Major business hub time zones: New York: UTC-5 (EST) / UTC-4 (EDT). London: UTC+0 (GMT) / UTC+1 (BST). Paris/Berlin/Amsterdam: UTC+1 (CET) / UTC+2 (CEST). Dubai: UTC+4 (no DST). Mumbai: UTC+5:30 (no DST). Singapore/Hong Kong: UTC+8 (no DST). Tokyo: UTC+9 (no DST). Sydney: UTC+10 (AEST) / UTC+11 (AEDT)." }}
+      ]
+    }
+  ]
   </script>
   <link rel="stylesheet" href="shared/nav.css">
   <style>
@@ -39,7 +56,24 @@
       font-size: 22px; flex-shrink: 0;
       background: linear-gradient(135deg, rgba(99,102,241,.15), rgba(99,102,241,.05));
     }
-    .section-title { font-size: 22px; font-weight: 800; letter-spacing: -.3px; }
+    .section-title { font-size: 22px; font-weight: 800; letter-spacing: -.3px; margin: 0; padding: 0; }
+    .seo-section {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 18px; padding: 28px 28px 24px; margin-top: 16px;
+    }
+    .seo-section h2 { font-size: 18px; font-weight: 700; color: var(--text-primary); margin-bottom: 10px; }
+    .seo-section h3 { font-size: 15px; font-weight: 600; color: var(--text-primary); margin-top: 20px; margin-bottom: 8px; }
+    .seo-section p  { font-size: 14px; color: var(--text-secondary); line-height: 1.7; }
+    .related-links { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+    .related-links a {
+      display: inline-flex; align-items: center;
+      padding: 7px 14px; border-radius: 10px;
+      border: 1px solid var(--border); background: var(--bg);
+      font-size: 13px; font-weight: 600; color: var(--text-secondary);
+      text-decoration: none; transition: all .15s;
+    }
+    .related-links a:hover { border-color: var(--green); color: var(--green); }
+    @media print { .seo-section { display: none !important; } }
     .section-title span {
       background: linear-gradient(135deg, var(--green), var(--purple));
       -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
@@ -420,7 +454,7 @@
   <div class="page-title-bar">
     <div class="page-title-left">
       <div class="page-title-icon">&#127757;</div>
-      <div class="section-title">World Time <span>Converter</span></div>
+      <h1 class="section-title">World Time <span>Converter</span></h1>
     </div>
     <div class="page-title-controls">
       <div class="seg-group" role="tablist" aria-label="Clock format">
@@ -518,6 +552,32 @@
 
 <!-- Screen reader live region -->
 <div aria-live="polite" id="srAnnounce"></div>
+
+<!-- SEO CONTENT -->
+<div class="seo-section" style="max-width:1060px;margin:16px auto;padding:28px 28px 24px;">
+  <h2>World Time Converter — Schedule Across Time Zones</h2>
+  <p>This time zone converter lets you compare current times across multiple cities simultaneously, scrub through a 24-hour timeline to find meeting overlap, and share time zone views with a link. All conversions use IANA time zone data with automatic daylight saving time handling, so offsets are always accurate regardless of the time of year.</p>
+
+  <h3>How to Convert Between Time Zones</h3>
+  <p>Find the UTC offset for both time zones, then add or subtract the difference. Example: 3 PM New York (UTC-5 EST) to London (UTC+0 GMT) = 3 PM + 5 hours = 8 PM London. During DST: New York becomes UTC-4 (EDT) and London becomes UTC+1 (BST), so the gap narrows to 5 hours. This tool handles all DST transitions automatically.</p>
+
+  <h3>Key International Meeting Windows</h3>
+  <p><strong>New York ↔ London:</strong> 9 AM–1 PM ET / 2–6 PM GMT. <strong>London ↔ Dubai:</strong> 9 AM–5 PM GMT / 1–9 PM GST. <strong>London ↔ Singapore:</strong> 9–10 AM GMT / 5–6 PM SGT (very narrow). <strong>New York ↔ Singapore:</strong> 8–9 AM ET / 9–10 PM SGT. <strong>New York ↔ Sydney:</strong> 7–8 PM ET / 9–10 AM AEST (next day). For three-continent meetings, consider rotating the inconvenient time slot.</p>
+
+  <h3>Major Time Zone Reference</h3>
+  <p>UTC-8 Los Angeles (PST) · UTC-5 New York (EST) · UTC+0 London (GMT) · UTC+1 Paris/Berlin (CET) · UTC+3 Moscow/Riyadh · UTC+4 Dubai (GST) · UTC+5:30 Mumbai (IST, no DST) · UTC+8 Singapore/HK/Beijing (no DST) · UTC+9 Tokyo (JST, no DST) · UTC+10 Sydney (AEST).</p>
+
+  <div style="margin-top: 22px;">
+    <strong style="font-size: 14px; color: var(--text-primary);">Related Tools</strong>
+    <div class="related-links">
+      <a href="world-clock.html">World Clock</a>
+      <a href="date-duration.html">Date Duration Calculator</a>
+      <a href="age-calculator.html">Age Calculator</a>
+      <a href="pomodoro.html">Pomodoro Timer</a>
+      <a href="unit-converter.html">Unit Converter</a>
+    </div>
+  </div>
+</div>
 
 <script>window.CALCNOVA_PAGE = { id: 'time-converter' };</script>
 <script src="shared/nav.js"></script>

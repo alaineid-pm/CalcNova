@@ -3,8 +3,41 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Word Counter — Text Analysis Tool | CalcNova</title>
-  <meta name="description" content="Count words, characters, sentences, paragraphs, and estimate reading & speaking time. Free, private, runs entirely in your browser.">
+  <title>Word Counter — Free Online Word &amp; Character Count Tool | CalcNova</title>
+  <meta name="description" content="Free word counter: count words, characters, sentences, paragraphs, and estimate reading and speaking time instantly. Private — runs in your browser, no data sent to servers.">
+  <link rel="canonical" href="https://calcnova.co/word-counter.html" />
+  <meta property="og:title" content="Word Counter — Free Online Word & Character Count Tool | CalcNova" />
+  <meta property="og:description" content="Count words, characters, sentences, and paragraphs instantly. Estimate reading and speaking time. Free, private, browser-only." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://calcnova.co/word-counter.html" />
+  <meta property="og:site_name" content="CalcNova" />
+  <script type="application/ld+json">
+  [
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": "Word Counter — Free Online Word & Character Count Tool",
+      "url": "https://calcnova.co/word-counter.html",
+      "description": "Free word counter: count words, characters, sentences, paragraphs, and estimate reading and speaking time instantly.",
+      "isPartOf": { "@type": "WebSite", "name": "CalcNova", "url": "https://calcnova.co/" },
+      "breadcrumb": { "@type": "BreadcrumbList", "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://calcnova.co/" },
+        { "@type": "ListItem", "position": 2, "name": "Word Counter", "item": "https://calcnova.co/word-counter.html" }
+      ]}
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        { "@type": "Question", "name": "How many words is a standard page of text?", "acceptedAnswer": { "@type": "Answer", "text": "A standard double-spaced page in 12pt Times New Roman (the academic standard) contains approximately 250–275 words. A single-spaced page holds about 500–550 words. A typical novel page is 250–300 words. Business documents average 300–400 words per page depending on font size and margins." }},
+        { "@type": "Question", "name": "How long does it take to read 1000 words?", "acceptedAnswer": { "@type": "Answer", "text": "The average adult reads at about 200–250 words per minute (wpm) for standard non-fiction text. At 200 wpm, 1000 words takes about 5 minutes to read. Faster readers at 300 wpm read 1000 words in about 3.5 minutes. Academic or technical text is typically read at 100–150 wpm due to complexity. Speed readers can reach 400–700 wpm but with reduced comprehension." }},
+        { "@type": "Question", "name": "What is the word count limit for Twitter/X, Instagram, and LinkedIn?", "acceptedAnswer": { "@type": "Answer", "text": "Character limits by platform: Twitter/X posts: 280 characters (standard), 4,000 for verified subscribers. Instagram captions: 2,200 characters. Instagram bio: 150 characters. LinkedIn posts: 3,000 characters. LinkedIn article: 125,000 characters. Facebook posts: 63,206 characters. Email subject lines: optimal is under 50 characters (9–60 allowed)." }},
+        { "@type": "Question", "name": "How many words should an essay, blog post, or article be?", "acceptedAnswer": { "@type": "Answer", "text": "Recommended word counts by content type: Short blog post / listicle: 500–800 words. Standard blog post: 1,000–1,500 words. Long-form SEO article: 1,500–2,500 words. High school essay: 500–1,500 words. College essay: 1,500–5,000 words. Research paper: 4,000–10,000 words. Short story: 1,000–7,500 words. Novella: 17,500–40,000 words. Novel: 70,000–120,000 words." }},
+        { "@type": "Question", "name": "How fast should I speak for a presentation?", "acceptedAnswer": { "@type": "Answer", "text": "The ideal speaking pace for presentations is 120–150 words per minute (wpm). Conversational speech averages 130–160 wpm. Public speaking coaches recommend 120–140 wpm for clarity — slower for complex topics, faster for energetic storytelling. At 130 wpm: a 5-minute speech needs ~650 words, a 10-minute speech needs ~1,300 words, and a 20-minute TEDx talk needs ~2,600 words." }}
+      ]
+    }
+  ]
+  </script>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="shared/nav.css">
   <style>
@@ -25,7 +58,23 @@
       padding: 38px 32px;
       margin-bottom: 28px;
     }
-    .hero-title { font-size: 26px; font-weight: 800; letter-spacing: -.5px; margin-top: 10px; }
+    .hero-title { font-size: 26px; font-weight: 800; letter-spacing: -.5px; margin: 0; padding: 0; }
+    .seo-section {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 18px; padding: 28px 28px 24px; margin-top: 0;
+    }
+    .seo-section h2 { font-size: 18px; font-weight: 700; color: var(--text-primary); margin-bottom: 10px; }
+    .seo-section h3 { font-size: 15px; font-weight: 600; color: var(--text-primary); margin-top: 20px; margin-bottom: 8px; }
+    .seo-section p  { font-size: 14px; color: var(--text-secondary); line-height: 1.7; }
+    .related-links { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+    .related-links a {
+      display: inline-flex; align-items: center;
+      padding: 7px 14px; border-radius: 10px;
+      border: 1px solid var(--border); background: var(--bg);
+      font-size: 13px; font-weight: 600; color: var(--text-secondary);
+      text-decoration: none; transition: all .15s;
+    }
+    .related-links a:hover { border-color: var(--green); color: var(--green); }
     .hero-title span {
       background: linear-gradient(135deg, var(--green), var(--purple));
       -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
@@ -249,6 +298,7 @@
     @media print {
       body { background: white !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
       body::before { display: none; }
+      .seo-section { display: none !important; }
       header, .action-row, #toast, .icon-btn, .pill-badge, .nav-tools-wrap, .donate-btn,
       .mega-menu, .menu-overlay, .site-footer, .footer-disclaimer,
       .textarea-toolbar, .clear-btn, .char-limit-wrap, .text-input { display: none !important; }
@@ -275,7 +325,7 @@
 
     <div class="hero">
       <div class="pill-badge">Live Analysis &middot; Private &middot; Free</div>
-      <div class="hero-title">Word <span>Counter</span></div>
+      <h1 class="hero-title">Word <span>Counter</span></h1>
       <div class="hero-desc">Analyze your text instantly — word count, characters, sentences, paragraphs, reading time, and more. Everything runs in your browser.</div>
     </div>
 
@@ -371,6 +421,32 @@
         <ul class="freq-list" id="freqList">
           <li class="freq-empty">Type some text to see frequent words.</li>
         </ul>
+      </div>
+    </div>
+
+    <!-- SEO CONTENT -->
+    <div class="seo-section">
+      <h2>Word Counter — Analyze Your Text Instantly</h2>
+      <p>This free word counter analyzes your text in real time, showing word count, character count (with and without spaces), sentence count, paragraph count, and estimated reading and speaking time. Everything runs in your browser — your text is never uploaded to any server, making it safe for confidential documents.</p>
+
+      <h3>Word Count Requirements for Common Writing Tasks</h3>
+      <p><strong>Tweet/X post:</strong> 280 characters · <strong>Instagram caption:</strong> 2,200 chars · <strong>LinkedIn post:</strong> 3,000 chars · <strong>Short blog post:</strong> 500–800 words · <strong>Standard blog post:</strong> 1,000–1,500 words · <strong>Long-form SEO article:</strong> 1,500–2,500 words · <strong>Academic essay:</strong> 500–5,000 words · <strong>Short story:</strong> 1,000–7,500 words · <strong>Novel:</strong> 70,000–120,000 words.</p>
+
+      <h3>Reading and Speaking Time Estimates</h3>
+      <p>Average adult reading speed is 200–250 words per minute (wpm) for standard prose. Academic or technical content slows to 100–150 wpm. For presentations, 120–140 wpm is recommended for clarity. At 130 wpm: a 5-min speech needs ~650 words, a 10-min presentation needs ~1,300 words, a 20-min TED talk needs ~2,600 words.</p>
+
+      <h3>Character Limits for Social Media Platforms</h3>
+      <p>Twitter/X: 280 characters (standard), 4,000 for Premium subscribers. Instagram caption: 2,200 characters. Instagram bio: 150 characters. LinkedIn post: 3,000 characters. Facebook: 63,206 characters. Email subject lines: optimal under 50 characters for best open rates on mobile.</p>
+
+      <div style="margin-top: 22px;">
+        <strong style="font-size: 14px; color: var(--text-primary);">Related Tools</strong>
+        <div class="related-links">
+          <a href="random-number.html">Random Number Generator</a>
+          <a href="percentage-calculator.html">Percentage Calculator</a>
+          <a href="unit-converter.html">Unit Converter</a>
+          <a href="age-calculator.html">Age Calculator</a>
+          <a href="date-duration.html">Date Duration</a>
+        </div>
       </div>
     </div>
 

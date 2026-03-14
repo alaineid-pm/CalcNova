@@ -3,22 +3,83 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>FIRE Calculator — Financial Independence Retire Early | CalcNova</title>
-  <meta name="description" content="Free FIRE calculator — find out how many years until you reach Financial Independence and can Retire Early. Includes inflation adjustment and milestone tracking.">
+  <title>FIRE Calculator — Financial Independence & Early Retirement Number | CalcNova</title>
+  <meta name="description" content="Free FIRE calculator: find your Financial Independence number, years to retirement, and how savings rate affects your timeline. Includes inflation adjustment and milestone tracking. No sign-up needed.">
 
-  <meta property="og:title" content="FIRE Calculator — Financial Independence Retire Early | CalcNova">
-  <meta property="og:description" content="Free FIRE calculator — find out how many years until you reach Financial Independence and can Retire Early.">
+  <!-- Canonical -->
+  <link rel="canonical" href="https://calcnova.co/fire-calculator.html" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="FIRE Calculator — Financial Independence & Early Retirement | CalcNova">
+  <meta property="og:description" content="Free FIRE calculator: find your FI number, years to retirement, and how savings rate affects your timeline. Includes inflation adjustment.">
   <meta property="og:type" content="website">
+  <meta property="og:url" content="https://calcnova.co/fire-calculator.html">
+  <meta property="og:site_name" content="CalcNova">
 
   <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "FinancialProduct",
-    "name": "FIRE Calculator",
-    "description": "Free FIRE calculator to determine your Financial Independence number and years to retire early.",
-    "provider": { "@type": "Organization", "name": "CalcNova" },
-    "feesAndCommissionsSpecification": "Free to use, no login required."
-  }
+  [
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": "FIRE Calculator — Financial Independence & Early Retirement Number",
+      "url": "https://calcnova.co/fire-calculator.html",
+      "description": "Free FIRE calculator to determine your Financial Independence number and years to retire early.",
+      "isPartOf": { "@type": "WebSite", "name": "CalcNova", "url": "https://calcnova.co/" },
+      "breadcrumb": {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://calcnova.co/" },
+          { "@type": "ListItem", "position": 2, "name": "FIRE Calculator", "item": "https://calcnova.co/fire-calculator.html" }
+        ]
+      }
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is FIRE (Financial Independence, Retire Early)?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "FIRE stands for Financial Independence, Retire Early. The movement involves aggressively saving and investing — typically 50–70% of income — to accumulate enough wealth that investment returns can cover living expenses indefinitely, allowing you to retire far earlier than the traditional age of 65. FIRE is built on two core principles: the 25x rule (your FI number = annual expenses × 25) and the 4% safe withdrawal rate."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I calculate my FIRE number?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Your FIRE number (the amount you need invested to retire) = annual expenses × 25. This is based on the 4% safe withdrawal rate — research shows a portfolio of index funds can sustain 4% annual withdrawals indefinitely with high probability. For example, if you spend $50,000/year, your FIRE number is $50,000 × 25 = $1,250,000. Use the calculator above to model your exact timeline based on current savings, contributions, and expected returns."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the 4% rule?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The 4% rule comes from the Trinity Study (1998), which analysed historical stock and bond returns. It found that withdrawing 4% of your portfolio in year one, then adjusting for inflation each year, had a very high success rate over 30-year retirement periods. Critics note it was based on US market data and 30-year windows — longer retirements (40–50 years for early retirees) may warrant a more conservative 3–3.5% rate."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What are the different types of FIRE?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Lean FIRE: retiring on a minimal budget (often under $40,000/year). Fat FIRE: retiring with a large portfolio supporting a comfortable lifestyle ($100,000+/year). Barista FIRE: semi-retiring with part-time work covering basic expenses while investments grow. Coast FIRE: saving enough early so your portfolio grows to your FI number by retirement age without additional contributions. The right type depends on your lifestyle goals and risk tolerance."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How does savings rate affect FIRE timeline?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Savings rate is the single biggest lever in your FIRE timeline. At a 10% savings rate, it takes roughly 40+ years to reach FI. At 25%, about 32 years. At 50%, around 17 years. At 70%, approximately 8.5 years. This is because a higher savings rate both grows your portfolio faster AND means you need a smaller portfolio (lower expenses = lower FI number). Use this calculator to see how even small increases in your savings rate dramatically shorten your timeline."
+          }
+        }
+      ]
+    }
+  ]
   </script>
 
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -43,7 +104,7 @@
       margin-bottom: 20px;
       display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;
     }
-    .hero-title { font-size: 26px; font-weight: 800; letter-spacing: -.5px; }
+    .hero-title { font-size: 26px; font-weight: 800; letter-spacing: -.5px; margin: 0; padding: 0; }
     .hero-title span {
       background: linear-gradient(135deg, var(--red), var(--amber));
       -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
@@ -220,10 +281,19 @@
     .fade-in { animation: fadeIn .4s ease-out both; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
 
+    /* ── SEO SECTION ── */
+    .seo-section {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 18px; padding: 28px 28px 24px; margin-top: 24px;
+    }
+    .seo-section h2 { font-size: 18px; font-weight: 700; color: var(--text-primary); margin-bottom: 10px; }
+    .seo-section h3 { font-size: 15px; font-weight: 600; color: var(--text-primary); margin-top: 20px; margin-bottom: 8px; }
+    .seo-section p  { font-size: 14px; color: var(--text-secondary); line-height: 1.7; }
+
     /* ── PRINT ── */
     @media print {
       body::before, header, .menu-overlay, .site-footer, .footer-disclaimer,
-      .btn-calc, .action-row, .ad-slot { display: none !important; }
+      .btn-calc, .action-row, .ad-slot, .seo-section { display: none !important; }
       .app { max-width: 100%; padding: 0; }
       .results-section { display: block !important; }
       .card, .stat-card, .chart-wrap, .hero { border: 1px solid #ddd; box-shadow: none; break-inside: avoid; }
@@ -258,7 +328,7 @@
         <div style="margin-bottom:10px">
           <span class="pill-badge">🔥 Financial Independence</span>
         </div>
-        <div class="hero-title">FIRE <span>Calculator</span></div>
+        <h1 class="hero-title">FIRE <span>Calculator</span></h1>
         <div class="hero-desc">Calculate your Financial Independence number and how many years until you can Retire Early.</div>
       </div>
       <div class="hero-formula">
@@ -430,6 +500,53 @@
 
       <!-- AD SLOT -->
       <div class="ad-slot ad-slot--rectangle" data-label="Ad"></div>
+    </div>
+
+    <!-- SEO SECTION -->
+    <div class="seo-section">
+      <h2>How to Use This FIRE Calculator</h2>
+      <p>Enter your current age, annual expenses, current savings, annual contribution, and expected return rate. The calculator finds your FIRE number (25× annual expenses), models portfolio growth year by year, and shows you exactly how many years until you reach financial independence. Toggle the inflation adjustment to see real vs. nominal projections.</p>
+
+      <h3>What Is FIRE (Financial Independence, Retire Early)?</h3>
+      <p>FIRE is a movement built on aggressively saving and investing — typically 40–70% of income — to accumulate enough wealth that portfolio returns can fund your lifestyle indefinitely, freeing you from the need to work. The two pillars are the <strong>25x rule</strong> (your FI number = annual expenses × 25) and the <strong>4% safe withdrawal rate</strong>, which research shows can sustain a portfolio through most 30-year periods. FIRE isn't just for the ultra-wealthy — it's achievable by anyone who dramatically increases their savings rate, regardless of income.</p>
+
+      <h3>How to Calculate Your FIRE Number</h3>
+      <p>Your FIRE number = <strong>annual expenses × 25</strong>. If you spend $40,000/year, your FI number is $1,000,000. If you spend $60,000/year, it's $1,500,000. This is derived from the 4% rule: 4% of $1,000,000 = $40,000/year. The key insight is that reducing expenses does double duty — it both lowers your FIRE number and frees up more money to invest. Someone spending $30,000/year needs only $750,000 and can invest far more aggressively than someone spending $80,000/year chasing $2,000,000.</p>
+
+      <h3>The 4% Rule — and Its Limits</h3>
+      <p>The 4% rule comes from the 1998 Trinity Study, which found that a portfolio of 50–75% stocks and 25–50% bonds could sustain 4% annual withdrawals (inflation-adjusted) through any historical 30-year period. For early retirees with 40–50-year horizons, a more conservative <strong>3–3.5% withdrawal rate</strong> reduces sequence-of-returns risk. Many FIRE practitioners build in flexibility: reduce spending in down markets, maintain some part-time income, or keep a cash buffer to avoid selling equities at a loss.</p>
+
+      <h3>How Savings Rate Drives Your Timeline</h3>
+      <p>Savings rate is the most powerful lever in your FIRE equation. At 10% savings rate, FI takes ~40 years. At 25%, ~32 years. At 50%, ~17 years. At 70%, ~8.5 years. This compresses dramatically because higher savings simultaneously grows your portfolio faster <em>and</em> lowers the target (lower expenses = smaller FIRE number). Increasing your savings rate by even 5–10 percentage points typically shaves 3–5 years off your timeline.</p>
+
+      <h3>Types of FIRE</h3>
+      <p><strong>Lean FIRE</strong>: retiring on a minimal budget ($25,000–$40,000/year), requiring a smaller portfolio but less lifestyle flexibility. <strong>Fat FIRE</strong>: retiring with a generous budget ($100,000+/year) for travel, family, and comfort. <strong>Barista FIRE</strong>: semi-retirement with part-time work covering basic costs while investments compound. <strong>Coast FIRE</strong>: saving enough early so compound growth reaches your FI number by traditional retirement age — no more contributions needed. Use the <a href="coast-fire-calculator.html" style="color: var(--green); font-weight: 600; text-decoration: none;">Coast FIRE Calculator</a> to find that milestone.</p>
+
+      <h3>FIRE and Inflation</h3>
+      <p>Inflation erodes purchasing power over time — $60,000 today will feel like significantly less in 20 years. This calculator lets you toggle real (inflation-adjusted) returns to see your timeline in today's dollars. Most practitioners use a real return of 5–7% (nominal ~8–10% minus ~3% inflation). Planning with real returns gives a more conservative and honest picture of when you can actually retire.</p>
+    </div>
+
+    <!-- RELATED CALCULATORS -->
+    <div class="seo-section" style="margin-top: 16px;">
+      <h2>Related Calculators</h2>
+      <p>Tools that complement your FIRE planning:</p>
+      <ul style="margin: 12px 0 0; padding-left: 20px; display: flex; flex-direction: column; gap: 8px;">
+        <li style="font-size: 14px; color: var(--text-secondary); line-height: 1.5;">
+          <a href="coast-fire-calculator.html" style="color: var(--green); font-weight: 600; text-decoration: none;">Coast FIRE Calculator</a> — Find how much you need saved today to stop contributing and let compounding finish the job.
+        </li>
+        <li style="font-size: 14px; color: var(--text-secondary); line-height: 1.5;">
+          <a href="compound-interest-calculator.html" style="color: var(--green); font-weight: 600; text-decoration: none;">Compound Interest Calculator</a> — Model your portfolio's growth in granular detail with contributions and withdrawals.
+        </li>
+        <li style="font-size: 14px; color: var(--text-secondary); line-height: 1.5;">
+          <a href="savings-goal.html" style="color: var(--green); font-weight: 600; text-decoration: none;">Savings Goal Calculator</a> — Work backwards from any savings target to find your required monthly contribution.
+        </li>
+        <li style="font-size: 14px; color: var(--text-secondary); line-height: 1.5;">
+          <a href="debt-payoff.html" style="color: var(--green); font-weight: 600; text-decoration: none;">Debt Payoff Planner</a> — Eliminate debt before investing to free up your full savings rate for wealth building.
+        </li>
+        <li style="font-size: 14px; color: var(--text-secondary); line-height: 1.5;">
+          <a href="net-worth-tracker.html" style="color: var(--green); font-weight: 600; text-decoration: none;">Net Worth Tracker</a> — Track your total assets and liabilities as you progress toward your FI number.
+        </li>
+      </ul>
     </div>
 
   </div>

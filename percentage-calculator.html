@@ -3,8 +3,98 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Percentage Calculator — Quick % Math | CalcNova</title>
-  <meta name="description" content="Instantly calculate percentages: find X% of Y, what percent X is of Y, or the percentage change between two numbers. Free, private, no sign-up.">
+  <title>Percentage Calculator — Find %, Percentage Change & More | CalcNova</title>
+  <meta name="description" content="Free percentage calculator: find X% of a number, calculate what percent one number is of another, or compute percentage increase and decrease. Instant results, no sign-up needed.">
+
+  <!-- Canonical -->
+  <link rel="canonical" href="https://calcnova.co/percentage-calculator.html" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Percentage Calculator — Find %, Percentage Change & More | CalcNova" />
+  <meta property="og:description" content="Free percentage calculator: find X% of a number, calculate percentage change, or work out what percent X is of Y. Instant results, no sign-up." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://calcnova.co/percentage-calculator.html" />
+  <meta property="og:site_name" content="CalcNova" />
+
+  <!-- JSON-LD: WebPage + FAQPage -->
+  <script type="application/ld+json">
+  [
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": "Percentage Calculator — Find %, Percentage Change & More",
+      "url": "https://calcnova.co/percentage-calculator.html",
+      "description": "Free percentage calculator: find X% of a number, calculate what percent one number is of another, or compute percentage increase and decrease.",
+      "isPartOf": {
+        "@type": "WebSite",
+        "name": "CalcNova",
+        "url": "https://calcnova.co/"
+      },
+      "breadcrumb": {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://calcnova.co/" },
+          { "@type": "ListItem", "position": 2, "name": "Percentage Calculator", "item": "https://calcnova.co/percentage-calculator.html" }
+        ]
+      }
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How do I calculate what percent of a number something is?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "To find what percent X is of Y, divide X by Y and multiply by 100. For example, to find what percent 25 is of 200: (25 ÷ 200) × 100 = 12.5%. So 25 is 12.5% of 200. You can use the 'What percent is X of Y?' mode in this calculator to get the answer instantly."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I calculate X percent of a number?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "To find X% of a number, multiply the number by X and divide by 100. For example, 15% of 80 = (80 × 15) ÷ 100 = 12. A quick shortcut: move the decimal point of the percentage two places left and multiply. So 15% = 0.15, and 0.15 × 80 = 12. Use the 'X% of Y' mode above for instant results."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I calculate percentage increase or decrease?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Percentage change = ((New Value − Old Value) ÷ Old Value) × 100. If the result is positive, it's an increase; if negative, it's a decrease. For example, a price that goes from $80 to $100: ((100 − 80) ÷ 80) × 100 = 25% increase. A price going from $100 to $80: ((80 − 100) ÷ 100) × 100 = −20% decrease."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I work backwards from a percentage to find the original number?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "To find the original value when you know the result and the percentage, divide the result by the percentage expressed as a decimal. For example, if $60 is 75% of some number, the original = 60 ÷ 0.75 = 80. This is useful when you know a discounted price and want to find the original price, or know a tip amount and want to find the bill total."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the difference between percentage and percentage points?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "These are often confused. A percentage point is an absolute difference between two percentages, while a percentage change is a relative change. For example, if an interest rate rises from 2% to 3%, that is an increase of 1 percentage point but a 50% increase in the rate itself. Politicians and journalists often misuse these terms — it's worth knowing the difference when reading financial or statistical news."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I calculate a tip as a percentage?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Multiply your bill by the tip percentage as a decimal. A 20% tip on a $65 bill = 65 × 0.20 = $13. For quick mental math: find 10% (move the decimal left one place) and double it for 20%, or find 10% and halve it for 5%. Use the 'X% of Y' calculator above — enter the tip percentage and bill total to get the exact tip amount instantly."
+          }
+        }
+      ]
+    }
+  ]
+  </script>
+
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="shared/nav.css">
   <style>
@@ -17,7 +107,7 @@
       padding: 38px 32px 32px;
       margin-bottom: 28px;
     }
-    .hero-title { font-size: 26px; font-weight: 800; letter-spacing: -.5px; }
+    .hero-title { font-size: 26px; font-weight: 800; letter-spacing: -.5px; margin: 0; padding: 0; }
     .hero-title span {
       background: linear-gradient(135deg, var(--green), var(--purple));
       -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
@@ -250,7 +340,17 @@
       .hero { border: none; padding: 12px 0 8px; margin-bottom: 10px; }
       .card, .result-card { page-break-inside: avoid; }
       .result-card.hidden { display: block !important; }
+      .seo-section { display: none; }
     }
+
+    /* ── SEO SECTION ── */
+    .seo-section {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 18px; padding: 28px 28px 24px; margin-top: 24px;
+    }
+    .seo-section h2 { font-size: 18px; font-weight: 700; color: var(--text-primary); margin-bottom: 10px; }
+    .seo-section h3 { font-size: 15px; font-weight: 600; color: var(--text-primary); margin-top: 20px; margin-bottom: 8px; }
+    .seo-section p  { font-size: 14px; color: var(--text-secondary); line-height: 1.7; }
   </style>
 </head>
 <body>
@@ -258,7 +358,7 @@
     <!-- nav.js injects header here -->
 
     <div class="hero">
-      <div class="hero-title">Percentage <span>Calculator</span></div>
+      <h1 class="hero-title">Percentage <span>Calculator</span></h1>
       <div class="hero-desc">Instantly calculate percentages — find X% of a number, what percent one number is of another, or the percentage change between two values.</div>
     </div>
 
@@ -342,6 +442,53 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
         <span>Print results</span>
       </button>
+    </div>
+
+    <!-- SEO SECTION -->
+    <div class="seo-section">
+      <h2>How to Use This Percentage Calculator</h2>
+      <p>Choose one of the three modes using the tabs at the top: find X% of a number, find what percent one number is of another, or calculate the percentage change between two values. Enter your numbers and the result updates instantly. Use the copy or print buttons to save your result.</p>
+
+      <h3>How to Calculate X% of a Number</h3>
+      <p>To find X% of Y, multiply Y by X and divide by 100. Equivalently, convert the percentage to a decimal (divide by 100) and multiply: <strong>Result = Y × (X ÷ 100)</strong>. For example, 15% of 80 = 80 × 0.15 = 12. A useful mental math trick: 10% of any number is found by moving the decimal one place left. Double it for 20%, halve it for 5%, add them for 15%, and so on.</p>
+
+      <h3>How to Calculate What Percent One Number Is of Another</h3>
+      <p>To find what percent X is of Y, use: <strong>Percentage = (X ÷ Y) × 100</strong>. For example, what percent is 30 of 120? (30 ÷ 120) × 100 = 25%. This is useful for test scores (you got 45 out of 60 — what percent?), discount amounts, or comparing any two numbers as a ratio.</p>
+
+      <h3>How to Calculate Percentage Increase or Decrease</h3>
+      <p>Percentage change = <strong>((New − Old) ÷ Old) × 100</strong>. A positive result is an increase; negative is a decrease. Examples: a salary rising from $60,000 to $66,000 is a 10% increase. A stock falling from $200 to $150 is a 25% decrease. Note: a 50% drop followed by a 50% gain does <em>not</em> return you to the starting point — you end up 25% below where you started, because the percentage is calculated on a different base each time.</p>
+
+      <h3>How to Work Backwards from a Percentage</h3>
+      <p>If you know the result and the percentage but need the original number, divide the result by the percentage as a decimal: <strong>Original = Result ÷ (Percentage ÷ 100)</strong>. For example, if $45 is 75% of some price, the original = 45 ÷ 0.75 = $60. This is handy for finding the original price of a discounted item, figuring out a pre-tax amount from a total with tax, or reversing any percentage calculation.</p>
+
+      <h3>Percentage vs. Percentage Points — What's the Difference?</h3>
+      <p>This distinction matters more than most people realize. A <strong>percentage point</strong> is an absolute difference between two percentages. A <strong>percentage change</strong> is a relative change. If an interest rate rises from 2% to 3%, that's a rise of 1 percentage point — but it's a 50% increase in the rate. News articles and politicians frequently conflate these, so it's worth being aware of the difference when reading about interest rates, poll results, or tax changes.</p>
+
+      <h3>Common Percentage Calculations</h3>
+      <p><strong>Tip:</strong> 20% tip on $75 = 75 × 0.20 = $15. &nbsp;|&nbsp; <strong>Discount:</strong> 30% off $120 = 120 × 0.70 = $84. &nbsp;|&nbsp; <strong>Tax:</strong> $200 plus 8% tax = 200 × 1.08 = $216. &nbsp;|&nbsp; <strong>Score:</strong> 38 out of 45 = (38 ÷ 45) × 100 = 84.4%. &nbsp;|&nbsp; <strong>Markup:</strong> $50 cost with 40% markup = 50 × 1.40 = $70 selling price.</p>
+    </div>
+
+    <!-- RELATED CALCULATORS -->
+    <div class="seo-section" style="margin-top: 16px;">
+      <h2>Related Calculators</h2>
+      <p>Other free tools on CalcNova you might find useful:</p>
+      <ul style="margin: 12px 0 0; padding-left: 20px; display: flex; flex-direction: column; gap: 8px;">
+        <li style="font-size: 14px; color: var(--text-secondary); line-height: 1.5;">
+          <a href="compound-interest-calculator.html" style="color: var(--green); font-weight: 600; text-decoration: none;">Compound Interest Calculator</a> — See how percentages compound over time to grow (or erode) your money.
+        </li>
+        <li style="font-size: 14px; color: var(--text-secondary); line-height: 1.5;">
+          <a href="mortgage-calculator.html" style="color: var(--green); font-weight: 600; text-decoration: none;">Mortgage Calculator</a> — Calculate monthly payments and total interest as a percentage of your loan.
+        </li>
+        <li style="font-size: 14px; color: var(--text-secondary); line-height: 1.5;">
+          <a href="debt-payoff.html" style="color: var(--green); font-weight: 600; text-decoration: none;">Debt Payoff Planner</a> — Compare how interest rate percentages affect your payoff timeline.
+        </li>
+        <li style="font-size: 14px; color: var(--text-secondary); line-height: 1.5;">
+          <a href="savings-goal.html" style="color: var(--green); font-weight: 600; text-decoration: none;">Savings Goal Calculator</a> — Figure out what percentage of your income to save each month to hit a target.
+        </li>
+        <li style="font-size: 14px; color: var(--text-secondary); line-height: 1.5;">
+          <a href="unit-converter.html" style="color: var(--green); font-weight: 600; text-decoration: none;">Unit Converter</a> — Convert between 100+ units of measurement instantly.
+        </li>
+      </ul>
     </div>
 
     <!-- nav.js injects footer here -->
