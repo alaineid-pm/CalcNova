@@ -453,63 +453,8 @@
   <div class="section-header" id="all-tools">
     <div class="section-title">All <span>Tools</span></div>
   </div>
-  <div class="tools-directory">
-    <!-- Finance -->
-    <div class="dir-category">
-      <div class="dir-cat-header">
-        <div class="dir-cat-icon finance" style="background:linear-gradient(135deg,rgba(245,158,11,.15),rgba(245,158,11,.05))">&#128176;</div>
-        <div>
-          <div class="dir-cat-name">Finance</div>
-          <div class="dir-cat-count">8 tools</div>
-        </div>
-      </div>
-      <ul class="dir-list">
-        <li><a href="compound-interest-calculator.html" class="dir-item"><span class="dir-item-icon">&#128200;</span><span class="dir-item-label">Compound Interest</span></a></li>
-        <li><a href="coast-fire-calculator.html" class="dir-item"><span class="dir-item-icon">&#127958;&#65039;</span><span class="dir-item-label">Coast FIRE</span></a></li>
-        <li><a href="mortgage-calculator.html" class="dir-item"><span class="dir-item-icon">&#127968;</span><span class="dir-item-label">Mortgage</span></a></li>
-        <li><a href="savings-goal.html" class="dir-item"><span class="dir-item-icon">&#127919;</span><span class="dir-item-label">Savings Goal</span></a></li>
-        <li><a href="debt-payoff.html" class="dir-item"><span class="dir-item-icon">&#128179;</span><span class="dir-item-label">Debt Payoff</span></a></li>
-        <li><a href="emergency-fund.html" class="dir-item"><span class="dir-item-icon">&#128735;</span><span class="dir-item-label">Emergency Fund</span></a></li>
-        <li><a href="fire-calculator.html" class="dir-item"><span class="dir-item-icon">&#128293;</span><span class="dir-item-label">FIRE Calculator</span></a></li>
-        <li><a href="net-worth-tracker.html" class="dir-item"><span class="dir-item-icon">&#128202;</span><span class="dir-item-label">Net Worth Tracker</span></a></li>
-      </ul>
-    </div>
-
-    <!-- Productivity -->
-    <div class="dir-category">
-      <div class="dir-cat-header">
-        <div class="dir-cat-icon productivity" style="background:linear-gradient(135deg,rgba(99,102,241,.15),rgba(99,102,241,.05))">&#9201;&#65039;</div>
-        <div>
-          <div class="dir-cat-name">Productivity</div>
-          <div class="dir-cat-count">5 tools</div>
-        </div>
-      </div>
-      <ul class="dir-list">
-        <li><a href="TimeConvertor.html" class="dir-item"><span class="dir-item-icon">&#127757;</span><span class="dir-item-label">Time Converter</span></a></li>
-        <li><a href="pomodoro.html" class="dir-item"><span class="dir-item-icon">&#127813;</span><span class="dir-item-label">Pomodoro Timer</span></a></li>
-        <li><a href="world-clock.html" class="dir-item"><span class="dir-item-icon">&#128336;</span><span class="dir-item-label">World Clock</span></a></li>
-        <li><a href="date-duration.html" class="dir-item"><span class="dir-item-icon">&#128197;</span><span class="dir-item-label">Date Duration</span></a></li>
-        <li><a href="age-calculator.html" class="dir-item"><span class="dir-item-icon">&#127874;</span><span class="dir-item-label">Age Calculator</span></a></li>
-      </ul>
-    </div>
-
-    <!-- Utility -->
-    <div class="dir-category">
-      <div class="dir-cat-header">
-        <div class="dir-cat-icon utility" style="background:linear-gradient(135deg,rgba(16,185,129,.15),rgba(16,185,129,.05))">&#128295;</div>
-        <div>
-          <div class="dir-cat-name">Utility</div>
-          <div class="dir-cat-count">4 tools</div>
-        </div>
-      </div>
-      <ul class="dir-list">
-        <li><a href="unit-converter.html" class="dir-item"><span class="dir-item-icon">&#128207;</span><span class="dir-item-label">Unit Converter</span></a></li>
-        <li><a href="percentage-calculator.html" class="dir-item"><span class="dir-item-icon">&#128290;</span><span class="dir-item-label">Percentage Calc</span></a></li>
-        <li><a href="random-number.html" class="dir-item"><span class="dir-item-icon">&#127922;</span><span class="dir-item-label">Random Number</span></a></li>
-        <li><a href="word-counter.html" class="dir-item"><span class="dir-item-icon">&#9997;&#65039;</span><span class="dir-item-label">Word Counter</span></a></li>
-      </ul>
-    </div>
-  </div>
+  <!-- Generated from shared/site-data.js — edit that file to update -->
+  <div class="tools-directory" id="cn-tools-directory"></div>
 
   <!-- ── CTA BANNER ── -->
   <div class="cta-banner">
@@ -525,6 +470,53 @@
 <script>
   window.CALCNOVA_PAGE = { id: '' };
 </script>
+<script src="shared/site-data.js"></script>
 <script src="shared/nav.js"></script>
+<script>
+/* Generate the "All Tools" directory from site-data.js */
+(function () {
+  var dir = document.getElementById('cn-tools-directory');
+  if (!dir || !window.CALCNOVA_TOOLS || !window.CALCNOVA_CATEGORIES) return;
+
+  var catBg = {
+    finance:      'linear-gradient(135deg,rgba(245,158,11,.15),rgba(245,158,11,.05))',
+    productivity: 'linear-gradient(135deg,rgba(99,102,241,.15),rgba(99,102,241,.05))',
+    utility:      'linear-gradient(135deg,rgba(16,185,129,.15),rgba(16,185,129,.05))'
+  };
+
+  var html = '';
+  CALCNOVA_CATEGORIES.filter(function (c) { return c.id !== 'guides'; }).forEach(function (cat) {
+    var tools = CALCNOVA_TOOLS.filter(function (t) { return t.category === cat.id; });
+    if (!tools.length) return;
+
+    var items = tools.map(function (tool) {
+      var badge = '';
+      if (tool.badge === 'popular') badge = '<span class="cn-badge cn-badge-popular">Popular</span>';
+      else if (tool.badge === 'new') badge = '<span class="cn-badge cn-badge-new">New</span>';
+      var tooltip = tool.description
+        ? '<span class="cn-tooltip">' + tool.description + '</span>'
+        : '';
+      return '<li>'
+        + '<a href="' + tool.url + '" class="dir-item cn-tooltip-wrap" title="' + tool.description + '">'
+        + '<span class="dir-item-icon">' + tool.emoji + '</span>'
+        + '<span class="dir-item-label">' + tool.name + badge + '</span>'
+        + tooltip
+        + '</a></li>';
+    }).join('');
+
+    html += '<div class="dir-category">'
+      + '<div class="dir-cat-header">'
+      + '<div class="dir-cat-icon" style="background:' + catBg[cat.id] + '">' + cat.emoji + '</div>'
+      + '<div>'
+      + '<div class="dir-cat-name">' + cat.name + '</div>'
+      + '<div class="dir-cat-count">' + tools.length + ' tools</div>'
+      + '</div></div>'
+      + '<ul class="dir-list">' + items + '</ul>'
+      + '</div>';
+  });
+
+  dir.innerHTML = html;
+})();
+</script>
 </body>
 </html>
