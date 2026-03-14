@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>How to Calculate Calories for Weight Loss (Without Starving) | CalcNova</title>
+  <meta name="description" content="Learn TDEE, the Mifflin-St Jeor BMR formula, activity multipliers, and how to set a sustainable calorie deficit that burns fat without wrecking your metabolism.">
+  <link rel="canonical" href="https://calcnova.co/article-calories.html">
+  <meta property="og:title" content="How to Calculate Calories for Weight Loss (Without Starving) | CalcNova">
+  <meta property="og:description" content="Learn TDEE, the Mifflin-St Jeor BMR formula, activity multipliers, and how to set a sustainable calorie deficit that burns fat without wrecking your metabolism.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://calcnova.co/article-calories.html">
+  <meta property="og:site_name" content="CalcNova">
+  <script type="application/ld+json">[{"@context":"https://schema.org","@type":"Article","headline":"How to Calculate Calories for Weight Loss (Without Starving)","description":"Learn TDEE, the Mifflin-St Jeor BMR formula, activity multipliers, and how to set a sustainable calorie deficit that burns fat without wrecking your metabolism.","url":"https://calcnova.co/article-calories.html","datePublished":"2026-03-14","dateModified":"2026-03-14","publisher":{"@type":"Organization","name":"CalcNova","url":"https://calcnova.co/"},"isPartOf":{"@type":"WebSite","name":"CalcNova","url":"https://calcnova.co/"}}]</script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="shared/nav.css">
+  <style>
+    .app{position:relative;z-index:1;max-width:960px;margin:0 auto;padding:0 16px 60px;}
+    .article-hero{padding:48px 0 36px;border-bottom:1px solid var(--border);margin-bottom:40px;max-width:720px;}
+    .article-badge{display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,rgba(16,185,129,.1),rgba(99,102,241,.1));border:1px solid rgba(16,185,129,.25);border-radius:100px;padding:5px 14px;font-size:11px;font-weight:700;color:var(--green);letter-spacing:.5px;text-transform:uppercase;margin-bottom:16px;}
+    .article-hero h1{font-size:38px;font-weight:800;letter-spacing:-.5px;line-height:1.15;margin-bottom:14px;}
+    .article-hero h1 span{background:linear-gradient(135deg,var(--green),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+    .article-hero .subtitle{font-size:16px;color:var(--text-secondary);line-height:1.6;max-width:600px;}
+    .article-meta{margin-top:16px;font-size:12px;color:var(--text-muted);font-weight:500;display:flex;align-items:center;gap:12px;}
+    .article-meta .dot{width:3px;height:3px;border-radius:50%;background:var(--text-muted);}
+    .article-body{max-width:720px;display:flex;flex-direction:column;gap:28px;}
+    .article-body h2{font-size:24px;font-weight:800;letter-spacing:-.3px;margin-bottom:12px;color:var(--text-primary);}
+    .article-body h3{font-size:18px;font-weight:700;letter-spacing:-.2px;margin-bottom:8px;color:var(--text-primary);}
+    .article-body p{font-size:16px;color:var(--text-secondary);line-height:1.75;margin-bottom:14px;}
+    .article-body p:last-child{margin-bottom:0;}
+    .article-body ul,.article-body ol{padding-left:0;list-style:none;display:flex;flex-direction:column;gap:8px;margin-bottom:14px;}
+    .article-body ul li,.article-body ol li{font-size:16px;color:var(--text-secondary);line-height:1.7;padding-left:22px;position:relative;}
+    .article-body ul li::before{content:'';position:absolute;left:0;top:10px;width:6px;height:6px;border-radius:50%;background:linear-gradient(135deg,var(--green),var(--purple));}
+    .article-body ol{counter-reset:ol-counter;}
+    .article-body ol li{counter-increment:ol-counter;}
+    .article-body ol li::before{content:counter(ol-counter);position:absolute;left:0;top:0;font-size:13px;font-weight:800;color:var(--green);font-family:var(--mono);}
+    .article-body a{color:var(--green);text-decoration:none;font-weight:600;}
+    .article-body a:hover{text-decoration:underline;}
+    .article-body strong{color:var(--text-primary);font-weight:700;}
+    .formula-box{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px 28px;text-align:center;}
+    .formula-box .formula{font-family:var(--mono);font-size:18px;font-weight:600;color:var(--text-primary);margin-bottom:16px;}
+    .formula-box .formula-line{font-family:var(--mono);font-size:15px;font-weight:600;color:var(--text-primary);margin-bottom:8px;}
+    .formula-box .formula .hl{color:var(--green);}
+    .formula-box .formula-line .hl{color:var(--green);}
+    .formula-box .legend{display:flex;flex-wrap:wrap;gap:8px 20px;justify-content:center;font-size:13px;color:var(--text-secondary);}
+    .formula-box .legend code{font-family:var(--mono);font-weight:600;font-size:12px;background:var(--bg);border:1px solid var(--border);border-radius:4px;padding:1px 5px;}
+    .formula-box .divider{border:none;border-top:1px solid var(--border);margin:14px 0;}
+    .card{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:24px 26px;}
+    .card-label{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--green);margin-bottom:12px;}
+    .example-box{background:linear-gradient(135deg,rgba(16,185,129,.05),rgba(99,102,241,.03));border:1px solid rgba(16,185,129,.18);border-radius:16px;padding:24px 26px;}
+    .example-box .example-title{font-size:14px;font-weight:800;color:var(--green);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;}
+    .example-box .result{font-family:var(--mono);font-size:15px;font-weight:600;color:var(--text-primary);background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 16px;margin-top:12px;}
+    .example-box .result .hl{color:var(--green);font-weight:700;}
+    .comparison-table{width:100%;border-collapse:collapse;font-size:14px;margin:12px 0;}
+    .comparison-table th{text-align:left;font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.5px;color:var(--text-muted);padding:10px 14px;border-bottom:2px solid var(--border);}
+    .comparison-table td{padding:10px 14px;color:var(--text-secondary);border-bottom:1px solid var(--border);}
+    .comparison-table tr:last-child td{border-bottom:none;}
+    .comparison-table .num{font-family:var(--mono);font-weight:600;}
+    .comparison-table .hl{color:var(--green);font-weight:700;}
+    .cta-section{background:linear-gradient(135deg,rgba(16,185,129,.08),rgba(99,102,241,.06));border:1px solid rgba(16,185,129,.2);border-radius:18px;padding:32px;text-align:center;margin-top:8px;}
+    .cta-section h2{font-size:22px;margin-bottom:10px;}
+    .cta-section p{max-width:500px;margin:0 auto 20px;}
+    .cta-btn{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,var(--green),#059669);color:#fff !important;border-radius:100px;padding:12px 28px;font-size:14px;font-weight:700;text-decoration:none !important;font-family:var(--font);transition:all .15s;box-shadow:0 4px 14px rgba(16,185,129,.3);}
+    .cta-btn:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(16,185,129,.4);}
+    .cta-btn-secondary{display:inline-flex;align-items:center;gap:8px;background:transparent;color:var(--green) !important;border:2px solid var(--green);border-radius:100px;padding:10px 24px;font-size:14px;font-weight:700;text-decoration:none !important;font-family:var(--font);transition:all .15s;margin-left:12px;}
+    .cta-btn-secondary:hover{background:rgba(16,185,129,.08);}
+    @media print{.cn-nav,.cn-footer,.ad-slot,.cta-section{display:none !important;}.app{max-width:100%;padding:0;}}
+    @media(max-width:640px){.article-hero h1{font-size:28px;}.formula-box .formula{font-size:14px;}.cta-btn-secondary{margin-left:0;margin-top:10px;}}
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="article-hero">
+      <div class="article-badge">🔥 Health Guide</div>
+      <h1>How to Calculate Calories for <span>Weight Loss</span> (Without Starving)</h1>
+      <p class="subtitle">Forget crash diets. Understanding your Total Daily Energy Expenditure is the foundation of sustainable fat loss — here's exactly how to calculate it and set a deficit that works long-term.</p>
+      <div class="article-meta"><span>7 min read</span><span class="dot"></span><span>Updated March 2026</span></div>
+    </div>
+    <div class="article-body">
+
+      <section>
+        <h2>The Foundation: TDEE and BMR</h2>
+        <p>Before you can manage your weight, you need to know how many calories your body actually uses each day. That number is your <strong>Total Daily Energy Expenditure (TDEE)</strong> — the sum of every calorie your body burns from waking up to going to sleep, including exercise.</p>
+        <p>TDEE is built on a foundation called your <strong>Basal Metabolic Rate (BMR)</strong>: the calories your body needs just to stay alive at complete rest. BMR accounts for breathing, circulation, cell repair, and maintaining body temperature. For most people it represents 60–75% of total daily calories burned.</p>
+        <p>The formula researchers currently consider most accurate for estimating BMR is the <strong>Mifflin-St Jeor equation</strong>, developed in 1990 from a study of 498 adults. It consistently outperforms older formulas like Harris-Benedict in prediction accuracy.</p>
+        <div class="formula-box">
+          <div class="formula-line"><span class="hl">Men:</span> BMR = (10 × weight kg) + (6.25 × height cm) − (5 × age) + 5</div>
+          <hr class="divider">
+          <div class="formula-line"><span class="hl">Women:</span> BMR = (10 × weight kg) + (6.25 × height cm) − (5 × age) − 161</div>
+          <hr class="divider">
+          <div class="formula" style="margin-bottom:8px;"><span class="hl">TDEE</span> = BMR × Activity Multiplier</div>
+          <div class="legend">
+            <span><code>weight kg</code> body weight in kilograms</span>
+            <span><code>height cm</code> height in centimetres</span>
+            <span><code>age</code> age in years</span>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Activity Multipliers: Finding Your Real TDEE</h2>
+        <p>Your BMR is only the starting point. To get your actual TDEE, multiply your BMR by the activity factor that best describes your typical week. Be honest here — overestimating your activity level is one of the most common reasons people calculate a TDEE and then wonder why they're not losing weight.</p>
+        <div class="card">
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th>Activity Level</th>
+                <th>Multiplier</th>
+                <th>What It Looks Like</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Sedentary</td>
+                <td class="num">× 1.2</td>
+                <td>Desk job, little to no exercise, mostly sitting</td>
+              </tr>
+              <tr>
+                <td>Lightly active</td>
+                <td class="num">× 1.375</td>
+                <td>Light exercise 1–3 days/week, occasional walks</td>
+              </tr>
+              <tr>
+                <td class="hl">Moderately active</td>
+                <td class="num hl">× 1.55</td>
+                <td>Moderate exercise 3–5 days/week; most active people</td>
+              </tr>
+              <tr>
+                <td>Very active</td>
+                <td class="num">× 1.725</td>
+                <td>Hard training 6–7 days/week or physical job</td>
+              </tr>
+              <tr>
+                <td>Extra active</td>
+                <td class="num">× 1.9</td>
+                <td>Twice-daily training, elite athletes, very heavy labor</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="example-box" style="margin-top:16px;">
+          <div class="example-title">Full TDEE Example</div>
+          <p style="font-size:15px;color:var(--text-secondary);margin-bottom:8px;">Woman, 32 years old, 68 kg, 165 cm, moderately active (gym 4×/week):</p>
+          <div class="result">BMR = (10 × 68) + (6.25 × 165) − (5 × 32) − 161<br>= 680 + 1031.25 − 160 − 161 = <span class="hl">1,390 kcal</span><br><br>TDEE = 1,390 × 1.55 = <span class="hl">2,155 kcal/day</span></div>
+        </div>
+      </section>
+
+      <section>
+        <h2>The Calorie Deficit: How Fat Loss Actually Works</h2>
+        <p>Body fat is stored energy. One pound of fat contains approximately <strong>3,500 calories</strong> of stored energy. To lose that pound, you need to consume 3,500 fewer calories than you burn — either by eating less, moving more, or both. This isn't perfectly linear in practice (metabolism adapts, water weight fluctuates), but it's the correct mental model.</p>
+        <p>A daily deficit of <strong>500 calories</strong> produces roughly one pound of fat loss per week. A 750-calorie deficit yields about 1.5 lbs per week. These are widely considered the upper bounds of sustainable loss for most people.</p>
+        <div class="example-box">
+          <div class="example-title">Setting a Deficit</div>
+          <p style="font-size:15px;color:var(--text-secondary);margin-bottom:8px;">Using the same woman from the example above (TDEE: 2,155 kcal):</p>
+          <div class="result">Target: ~1 lb/week loss<br>Deficit: 500 kcal/day<br>Daily calorie target: 2,155 − 500 = <span class="hl">1,655 kcal/day</span><br><br>Expected loss: ~4 lbs/month (sustainable, not crash-diet territory)</div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Why Crash Diets Fail (The Science)</h2>
+        <p>Aggressive calorie restriction — often defined as eating below 1,200 kcal/day for women or 1,500 kcal/day for men — reliably produces fast initial weight loss. It also reliably sets up longer-term failure through three mechanisms:</p>
+
+        <h3>Muscle Loss</h3>
+        <p>When you cut calories too aggressively without adequate protein, your body catabolizes muscle tissue for energy. Muscle is metabolically expensive to maintain; in a severe deficit, it's one of the first things your body sacrifices. You lose weight, but a significant portion of it is muscle, not fat. This lowers your BMR — meaning you burn fewer calories at rest, permanently making future weight management harder.</p>
+
+        <h3>Metabolic Adaptation</h3>
+        <p>The body responds to prolonged caloric restriction by becoming more efficient. Your TDEE drops beyond what weight loss alone would predict — sometimes by 200–400 kcal/day in severe cases. This phenomenon, sometimes called "adaptive thermogenesis," means the same deficit produces less and less results over time. After a crash diet, even eating at your supposed maintenance level can cause weight gain because your metabolism has recalibrated downward.</p>
+
+        <h3>Hunger Hormones</h3>
+        <p>Aggressive restriction triggers hormonal responses that powerfully drive overeating. Ghrelin (the hunger hormone) surges, while leptin (the satiety hormone) crashes. These changes persist for months or even years after the diet ends, which is why crash dieters frequently regain all lost weight plus more. Your biology is fighting back — and it usually wins.</p>
+      </section>
+
+      <section>
+        <h2>The Right Deficit: 500–750 Calories Maximum</h2>
+        <p>The sweet spot for sustainable fat loss is a deficit of <strong>500 to 750 calories per day</strong>, producing 1 to 1.5 lbs of fat loss per week. This range is slow enough to preserve muscle mass and avoid major metabolic adaptation, but fast enough to produce meaningful progress that keeps you motivated.</p>
+        <p>There is one hard floor you should never go below: <strong>your BMR</strong>. Eating below your BMR is eating below the bare minimum your organs need to function. It's reliably associated with muscle loss, nutrient deficiencies, hormonal disruption, and impaired cognitive function. No legitimate fat loss goal justifies it.</p>
+        <ul>
+          <li><strong>Maximum recommended deficit:</strong> 750 kcal/day (1.5 lbs/week)</li>
+          <li><strong>Hard floor:</strong> Your calculated BMR — do not eat below this number</li>
+          <li><strong>Practical minimum for most women:</strong> 1,200 kcal/day</li>
+          <li><strong>Practical minimum for most men:</strong> 1,500 kcal/day</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Protein: The Most Important Variable During Fat Loss</h2>
+        <p>When you're in a calorie deficit, protein intake determines how much of your weight loss comes from fat versus muscle. High protein intake during a cut:</p>
+        <ul>
+          <li>Preserves lean muscle mass even in a significant deficit</li>
+          <li>Has the highest thermic effect of any macronutrient (20–30% of its calories are used just to digest it)</li>
+          <li>Produces greater satiety than carbohydrates or fat, helping you stay full on fewer calories</li>
+          <li>Prevents the drop in resting metabolic rate that accompanies fat loss</li>
+        </ul>
+        <p>For most people in a fat loss phase, aim for a minimum of <strong>0.7–1.0 grams of protein per pound of body weight</strong> per day. This is higher than general recommendations, but the research on muscle preservation during deficits consistently supports this range.</p>
+        <p>To understand how protein fits into your complete macronutrient plan, see <a href="article-macros.html">our guide to macros</a>. You can also check your <a href="article-bmi.html">BMI and body composition context</a> for fuller picture.</p>
+      </section>
+
+      <section>
+        <h2>Reverse Dieting: Recovering After a Cut</h2>
+        <p>After an extended period of caloric restriction, your metabolism has adapted. Jumping straight back to your pre-diet TDEE often causes rapid fat gain because your actual maintenance is now lower than your estimated maintenance. <strong>Reverse dieting</strong> is the practice of gradually increasing calories — typically by 50–100 kcal per week — over several weeks or months after a cut, giving your metabolism time to readjust upward before you reach a true maintenance level.</p>
+        <p>It's not a required step, but it's particularly useful for people who have dieted aggressively for extended periods or who have plateaued despite a seemingly reasonable deficit. The goal is to bring your maintenance calories back up to where they should be before attempting another cutting phase.</p>
+      </section>
+
+      <div class="cta-section">
+        <h2>Calculate Your TDEE and Calorie Target</h2>
+        <p>Get your personalized BMR, TDEE, and calorie targets for weight loss, maintenance, or gain — instantly.</p>
+        <a href="calorie-calculator.html" class="cta-btn">Open Calorie Calculator →</a>
+        <a href="macro-calculator.html" class="cta-btn-secondary">Macro Calculator →</a>
+      </div>
+
+    </div>
+  </div>
+  <script>window.CALCNOVA_PAGE = { id: 'article-calories', disclaimer: 'This article is for educational purposes only. Consult a registered dietitian for personalized nutrition advice.' };</script>
+  <script src="shared/site-data.js"></script>
+  <script src="shared/nav.js"></script>
+</body>
+</html>
