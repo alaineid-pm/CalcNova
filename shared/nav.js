@@ -232,6 +232,13 @@
       menu.classList.toggle('open', !open);
       btn.classList.toggle('active', !open);
       overlay.classList.toggle('open', !open);
+      // On mobile, position menu below the header
+      if (!open && window.innerWidth <= 640) {
+        var header = document.getElementById('cn-header');
+        if (header) {
+          menu.style.top = (header.getBoundingClientRect().bottom + 6) + 'px';
+        }
+      }
     });
     overlay.addEventListener('click', closeMenu);
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeMenu(); });
