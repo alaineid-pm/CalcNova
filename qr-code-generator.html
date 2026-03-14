@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QR Code Generator — Free Online QR Maker | CalcNova</title>
+  <meta name="description" content="Free QR code generator. Create QR codes for URLs, text, email, phone, WiFi, and vCards. Customize colors and size, then download as PNG or SVG." />
+  <link rel="canonical" href="https://calcnova.co/qr-code-generator.html" />
+  <meta property="og:title" content="QR Code Generator — Free Online QR Maker | CalcNova" />
+  <meta property="og:description" content="Generate QR codes for URLs, text, email, phone numbers, WiFi networks, and vCards. Customize size and colors. Download PNG or SVG — no sign-up required." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://calcnova.co/qr-code-generator.html" />
+  <meta property="og:site_name" content="CalcNova" />
+  <script type="application/ld+json">[{"@context":"https://schema.org","@type":"WebApplication","name":"QR Code Generator","url":"https://calcnova.co/qr-code-generator.html","description":"Free QR code generator for URLs, text, email, phone, WiFi, and vCards with color customization and PNG/SVG download.","applicationCategory":"UtilityApplication","operatingSystem":"Any","isPartOf":{"@type":"WebSite","name":"CalcNova","url":"https://calcnova.co/"}}]</script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="shared/nav.css" />
+  <style>
+    .app { position:relative; z-index:1; max-width:960px; margin:0 auto; padding:0 16px 60px; }
+
+    .page-hero { text-align:center; padding:36px 0 28px; }
+    .page-hero h1 { font-size:clamp(1.6rem,4vw,2.4rem); font-weight:800; margin-bottom:10px; }
+    .page-hero p { color:var(--text-secondary); font-size:1rem; max-width:560px; margin:0 auto; }
+
+    .tool-grid {
+      display:grid;
+      grid-template-columns:1fr 320px;
+      gap:20px;
+      align-items:start;
+    }
+    @media(max-width:720px){ .tool-grid{ grid-template-columns:1fr; } }
+
+    .card {
+      background:var(--surface);
+      border:1px solid var(--border);
+      border-radius:20px;
+      padding:24px;
+    }
+    .card-title {
+      font-size:.75rem; font-weight:700; letter-spacing:.08em;
+      text-transform:uppercase; color:var(--text-muted); margin-bottom:16px;
+    }
+
+    /* Type Tabs */
+    .type-tabs {
+      display:flex; flex-wrap:wrap; gap:4px;
+      background:var(--bg); border-radius:12px; padding:4px; margin-bottom:20px;
+    }
+    .type-tab {
+      padding:7px 14px; border-radius:9px; border:none; cursor:pointer;
+      font-family:var(--font); font-size:.78rem; font-weight:700;
+      color:var(--text-secondary); background:transparent; transition:all .15s;
+    }
+    .type-tab.active {
+      background:var(--surface); color:var(--text-primary);
+      box-shadow:0 1px 4px rgba(0,0,0,.1);
+    }
+
+    .tab-panel { display:none; }
+    .tab-panel.active { display:block; }
+
+    /* Inputs */
+    .field { margin-bottom:14px; }
+    .field:last-child { margin-bottom:0; }
+    .field label {
+      display:block; font-size:.75rem; font-weight:700;
+      color:var(--text-muted); text-transform:uppercase; letter-spacing:.05em; margin-bottom:6px;
+    }
+    .input-base {
+      width:100%; padding:10px 14px; border-radius:11px;
+      border:1.5px solid var(--border); background:var(--bg);
+      font-family:var(--font); font-size:.875rem; color:var(--text-primary);
+      outline:none; transition:border-color .2s;
+    }
+    .input-base:focus { border-color:var(--purple); }
+    .input-base::placeholder { color:var(--text-muted); }
+    textarea.input-base { resize:vertical; min-height:90px; }
+    select.input-base { cursor:pointer; }
+
+    /* QR Preview */
+    .qr-panel { display:flex; flex-direction:column; align-items:center; gap:20px; }
+    .qr-wrap {
+      background:var(--surface); border:1.5px solid var(--border);
+      border-radius:16px; padding:20px;
+      display:flex; align-items:center; justify-content:center;
+      min-height:200px; width:100%;
+    }
+    #qrDiv { display:flex; align-items:center; justify-content:center; }
+    #qrDiv canvas, #qrDiv img { border-radius:8px; max-width:100%; }
+
+    .qr-placeholder {
+      text-align:center; color:var(--text-muted); font-size:.85rem;
+      display:flex; flex-direction:column; align-items:center; gap:10px;
+    }
+    .qr-placeholder svg { opacity:.3; }
+
+    .setting-row { margin-bottom:16px; }
+    .setting-label {
+      display:flex; justify-content:space-between; align-items:center;
+      font-size:.75rem; font-weight:700; text-transform:uppercase;
+      letter-spacing:.05em; color:var(--text-muted); margin-bottom:8px;
+    }
+    .setting-val {
+      font-family:var(--mono); font-size:.78rem; font-weight:700;
+      color:var(--text-primary); background:var(--bg); border-radius:6px; padding:2px 8px;
+    }
+    input[type=range] {
+      -webkit-appearance:none; width:100%; height:6px;
+      background:var(--border); border-radius:4px; outline:none;
+    }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance:none; width:18px; height:18px; border-radius:50%;
+      background:var(--purple); cursor:pointer; box-shadow:0 2px 6px rgba(99,102,241,.4);
+    }
+    input[type=range]::-moz-range-thumb {
+      width:18px; height:18px; border-radius:50%;
+      background:var(--purple); cursor:pointer; border:none;
+    }
+
+    .color-row { display:flex; gap:12px; }
+    .color-field { flex:1; }
+    .color-field label {
+      font-size:.75rem; font-weight:700; color:var(--text-muted);
+      text-transform:uppercase; letter-spacing:.05em; display:block; margin-bottom:6px;
+    }
+    .color-pick-wrap {
+      display:flex; gap:8px; align-items:center;
+      padding:6px 10px; background:var(--bg); border:1.5px solid var(--border);
+      border-radius:10px;
+    }
+    input[type=color] {
+      width:28px; height:28px; border:none; background:none;
+      cursor:pointer; padding:0; border-radius:4px;
+    }
+    .color-hex {
+      font-family:var(--mono); font-size:.8rem; color:var(--text-primary);
+      flex:1; background:none; border:none; outline:none; font-weight:600;
+    }
+
+    .dl-row { display:flex; gap:10px; width:100%; }
+    .btn {
+      flex:1; padding:11px; border-radius:12px; border:none; cursor:pointer;
+      font-family:var(--font); font-size:.875rem; font-weight:700;
+      transition:all .18s; display:flex; align-items:center; justify-content:center; gap:6px;
+    }
+    .btn-purple { background:var(--purple); color:#fff; box-shadow:0 4px 14px rgba(99,102,241,.3); }
+    .btn-purple:hover { filter:brightness(1.1); transform:translateY(-1px); }
+    .btn-ghost  { background:var(--bg); color:var(--text-secondary); border:1.5px solid var(--border); }
+    .btn-ghost:hover { color:var(--text-primary); background:var(--border); }
+
+    .qr-size-note { font-size:.72rem; color:var(--text-muted); text-align:center; }
+
+    /* Educational */
+    .edu-section { margin-top:48px; }
+    .edu-section h2 { font-size:1.5rem; font-weight:800; margin-bottom:16px; }
+    .edu-section h3 { font-size:1.1rem; font-weight:700; margin:28px 0 10px; }
+    .edu-section p  { color:var(--text-secondary); line-height:1.75; margin-bottom:14px; font-size:.95rem; }
+    .edu-section ul { color:var(--text-secondary); line-height:1.75; padding-left:20px; margin-bottom:14px; font-size:.95rem; }
+    .edu-section ul li { margin-bottom:6px; }
+    .faq-list { margin-top:24px; display:flex; flex-direction:column; gap:12px; }
+    .faq-item { background:var(--surface); border:1px solid var(--border); border-radius:14px; overflow:hidden; }
+    .faq-q {
+      padding:16px 20px; font-weight:700; font-size:.95rem; cursor:pointer;
+      display:flex; justify-content:space-between; align-items:center; gap:12px; user-select:none;
+    }
+    .faq-q::after { content:'＋'; font-size:1.1rem; color:var(--text-muted); flex-shrink:0; }
+    .faq-item.open .faq-q::after { content:'－'; }
+    .faq-a { display:none; padding:0 20px 16px; color:var(--text-secondary); font-size:.9rem; line-height:1.75; }
+    .faq-item.open .faq-a { display:block; }
+
+    .ec-grid {
+      display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:14px; margin-top:16px;
+    }
+    .ec-card {
+      background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:16px;
+    }
+    .ec-level { font-size:1.1rem; font-weight:800; color:var(--purple); margin-bottom:4px; }
+    .ec-name  { font-weight:700; font-size:.85rem; margin-bottom:6px; }
+    .ec-desc  { font-size:.78rem; color:var(--text-secondary); line-height:1.55; }
+  </style>
+</head>
+<body>
+<div class="app">
+
+  <div class="page-hero">
+    <h1>QR Code Generator</h1>
+    <p>Create QR codes for URLs, text, email, phone numbers, WiFi, and contact cards. Customize and download instantly.</p>
+  </div>
+
+  <div class="tool-grid">
+
+    <!-- Input Panel -->
+    <div class="card">
+      <div class="card-title">Content</div>
+
+      <div class="type-tabs">
+        <button class="type-tab active" onclick="setType('url')">URL</button>
+        <button class="type-tab" onclick="setType('text')">Text</button>
+        <button class="type-tab" onclick="setType('email')">Email</button>
+        <button class="type-tab" onclick="setType('phone')">Phone</button>
+        <button class="type-tab" onclick="setType('wifi')">WiFi</button>
+        <button class="type-tab" onclick="setType('vcard')">vCard</button>
+      </div>
+
+      <!-- URL -->
+      <div class="tab-panel active" id="paneUrl">
+        <div class="field">
+          <label>URL</label>
+          <input class="input-base" id="urlInput" type="url" placeholder="https://example.com" oninput="scheduleUpdate()" />
+        </div>
+      </div>
+
+      <!-- Text -->
+      <div class="tab-panel" id="paneText">
+        <div class="field">
+          <label>Text</label>
+          <textarea class="input-base" id="textInput" placeholder="Enter any text…" oninput="scheduleUpdate()"></textarea>
+        </div>
+      </div>
+
+      <!-- Email -->
+      <div class="tab-panel" id="paneEmail">
+        <div class="field">
+          <label>To</label>
+          <input class="input-base" id="emailTo" type="email" placeholder="name@example.com" oninput="scheduleUpdate()" />
+        </div>
+        <div class="field">
+          <label>Subject</label>
+          <input class="input-base" id="emailSubject" placeholder="Optional subject" oninput="scheduleUpdate()" />
+        </div>
+        <div class="field">
+          <label>Body</label>
+          <textarea class="input-base" id="emailBody" placeholder="Optional message…" style="min-height:70px;" oninput="scheduleUpdate()"></textarea>
+        </div>
+      </div>
+
+      <!-- Phone -->
+      <div class="tab-panel" id="panePhone">
+        <div class="field">
+          <label>Phone Number</label>
+          <input class="input-base" id="phoneInput" type="tel" placeholder="+1 555 123 4567" oninput="scheduleUpdate()" />
+        </div>
+      </div>
+
+      <!-- WiFi -->
+      <div class="tab-panel" id="paneWifi">
+        <div class="field">
+          <label>Network Name (SSID)</label>
+          <input class="input-base" id="wifiSsid" placeholder="MyNetwork" oninput="scheduleUpdate()" />
+        </div>
+        <div class="field">
+          <label>Password</label>
+          <input class="input-base" id="wifiPass" type="password" placeholder="Leave blank for open networks" oninput="scheduleUpdate()" />
+        </div>
+        <div class="field">
+          <label>Encryption</label>
+          <select class="input-base" id="wifiEnc" onchange="scheduleUpdate()">
+            <option value="WPA">WPA / WPA2</option>
+            <option value="WEP">WEP</option>
+            <option value="nopass">None (open)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- vCard -->
+      <div class="tab-panel" id="paneVcard">
+        <div class="field">
+          <label>Full Name</label>
+          <input class="input-base" id="vcName" placeholder="Jane Smith" oninput="scheduleUpdate()" />
+        </div>
+        <div class="field">
+          <label>Phone</label>
+          <input class="input-base" id="vcPhone" placeholder="+1 555 123 4567" oninput="scheduleUpdate()" />
+        </div>
+        <div class="field">
+          <label>Email</label>
+          <input class="input-base" id="vcEmail" placeholder="jane@example.com" oninput="scheduleUpdate()" />
+        </div>
+        <div class="field">
+          <label>Company</label>
+          <input class="input-base" id="vcCompany" placeholder="Acme Inc." oninput="scheduleUpdate()" />
+        </div>
+        <div class="field">
+          <label>Title</label>
+          <input class="input-base" id="vcTitle" placeholder="Product Manager" oninput="scheduleUpdate()" />
+        </div>
+      </div>
+    </div>
+
+    <!-- QR Preview + Settings -->
+    <div class="qr-panel">
+
+      <div class="card" style="width:100%;">
+        <div class="card-title">Preview</div>
+        <div class="qr-wrap">
+          <div id="qrDiv">
+            <div class="qr-placeholder">
+              <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
+                <rect x="2" y="2" width="26" height="26" rx="4" stroke="currentColor" stroke-width="3"/>
+                <rect x="8" y="8" width="14" height="14" rx="2" fill="currentColor"/>
+                <rect x="36" y="2" width="26" height="26" rx="4" stroke="currentColor" stroke-width="3"/>
+                <rect x="42" y="8" width="14" height="14" rx="2" fill="currentColor"/>
+                <rect x="2" y="36" width="26" height="26" rx="4" stroke="currentColor" stroke-width="3"/>
+                <rect x="8" y="42" width="14" height="14" rx="2" fill="currentColor"/>
+                <rect x="38" y="38" width="4" height="4" fill="currentColor"/>
+                <rect x="46" y="38" width="4" height="4" fill="currentColor"/>
+                <rect x="54" y="38" width="4" height="4" fill="currentColor"/>
+                <rect x="38" y="46" width="4" height="4" fill="currentColor"/>
+                <rect x="50" y="50" width="4" height="4" fill="currentColor"/>
+                <rect x="58" y="46" width="4" height="4" fill="currentColor"/>
+              </svg>
+              <span>Enter content to generate</span>
+            </div>
+          </div>
+        </div>
+        <div class="qr-size-note" id="qrSizeNote" style="margin-top:10px;"></div>
+      </div>
+
+      <div class="card" style="width:100%;">
+        <div class="card-title">Settings</div>
+
+        <div class="setting-row">
+          <div class="setting-label">Size <span class="setting-val" id="sizeVal">400 px</span></div>
+          <input type="range" id="sizeSlider" min="200" max="1000" step="50" value="400" oninput="onSizeChange()" />
+        </div>
+
+        <div class="color-row" style="margin-top:4px;">
+          <div class="color-field">
+            <label>Foreground</label>
+            <div class="color-pick-wrap">
+              <input type="color" id="fgColor" value="#000000" oninput="scheduleUpdate()" />
+              <input class="color-hex" id="fgHex" value="#000000" maxlength="7" oninput="onHexInput('fg')" />
+            </div>
+          </div>
+          <div class="color-field">
+            <label>Background</label>
+            <div class="color-pick-wrap">
+              <input type="color" id="bgColor" value="#ffffff" oninput="scheduleUpdate()" />
+              <input class="color-hex" id="bgHex" value="#ffffff" maxlength="7" oninput="onHexInput('bg')" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dl-row" style="width:100%;">
+        <button class="btn btn-purple" onclick="downloadPng()">Download PNG</button>
+        <button class="btn btn-ghost"  onclick="downloadSvg()">Download SVG</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Educational -->
+  <div class="edu-section">
+    <h2>What Are QR Codes and How Do They Work?</h2>
+    <p>QR code stands for Quick Response code. Invented in 1994 by Masahiro Hara at Denso Wave, a Toyota subsidiary, QR codes were originally designed to track automotive parts on assembly lines. They replaced the linear barcode (which could store roughly 20 characters) with a two-dimensional matrix that can encode thousands of characters while still being readable at high speed, even when partially damaged or printed at an angle.</p>
+    <p>A QR code stores data as a pattern of dark and light squares arranged in a grid. A smartphone camera (or any QR scanner) captures an image of the code, identifies the three distinctive finder patterns in the corners, and uses them to determine the code's orientation and size. It then reads the module pattern, applies error correction to recover any missing data, and decodes the binary data back into text, a URL, or other content types.</p>
+
+    <h3>The Structure of a QR Code</h3>
+    <p>Every QR code contains several functional regions:</p>
+    <ul>
+      <li><strong>Finder patterns:</strong> The three square markers in the top-left, top-right, and bottom-left corners. These allow scanners to locate and orient the code regardless of how it is positioned or tilted.</li>
+      <li><strong>Alignment patterns:</strong> Smaller squares that appear in larger QR codes to help correct for image distortion (e.g., if the code is on a curved surface).</li>
+      <li><strong>Timing patterns:</strong> Alternating black and white modules along the edges that help determine the coordinate system within the code.</li>
+      <li><strong>Format information:</strong> Encodes the error correction level and mask pattern used, repeated twice for redundancy.</li>
+      <li><strong>Data and error correction modules:</strong> The bulk of the code. Data is encoded in binary, interleaved with error correction codewords that allow the code to be read even if damaged.</li>
+      <li><strong>Quiet zone:</strong> A white margin around the entire code that helps scanners distinguish the code from surrounding content. Minimum four modules wide.</li>
+    </ul>
+
+    <h3>Error Correction Levels</h3>
+    <p>One of QR code's most powerful features is built-in error correction. Even if part of the code is damaged, obscured, or dirty, the scanner can still reconstruct the full data. There are four error correction levels, each providing a different trade-off between data capacity and damage tolerance:</p>
+
+    <div class="ec-grid">
+      <div class="ec-card">
+        <div class="ec-level">L</div>
+        <div class="ec-name">Low (~7% recovery)</div>
+        <div class="ec-desc">Maximum data capacity. Use when the code will always be printed cleanly and never damaged or obscured.</div>
+      </div>
+      <div class="ec-card">
+        <div class="ec-level">M</div>
+        <div class="ec-name">Medium (~15% recovery)</div>
+        <div class="ec-desc">Good balance for most use cases. The default for most QR generators. Handles minor scratches or printing imperfections.</div>
+      </div>
+      <div class="ec-card">
+        <div class="ec-level">Q</div>
+        <div class="ec-name">Quartile (~25% recovery)</div>
+        <div class="ec-desc">Used in industrial environments where codes may get dirty. Also allows adding a logo or image over up to 25% of the code.</div>
+      </div>
+      <div class="ec-card">
+        <div class="ec-level">H</div>
+        <div class="ec-name">High (~30% recovery)</div>
+        <div class="ec-desc">Maximum redundancy. Required when embedding logos. Produces a denser, more complex pattern that requires careful printing at small sizes.</div>
+      </div>
+    </div>
+
+    <h3>Content Types and When to Use Each</h3>
+    <p>QR codes can encode any text, but certain conventions make the content machine-actionable rather than just human-readable. Smartphones recognize these formats and offer contextual actions:</p>
+    <ul>
+      <li><strong>URL:</strong> The most common type. Prefix with https:// to ensure phones open a browser automatically rather than treating it as a search query. Use a URL shortener if your URL is very long — shorter URLs mean less complex QR codes and easier scanning.</li>
+      <li><strong>Email (mailto:):</strong> Encodes as mailto:address?subject=...&body=... The phone's mail app opens pre-filled. Useful on business cards, event materials, or support pages to pre-populate a support request form.</li>
+      <li><strong>Phone (tel:):</strong> Opens the phone dialer pre-filled with the number. Uses the tel: URI scheme. Strip all formatting characters — just use + and digits.</li>
+      <li><strong>WiFi (WIFI:):</strong> Allows guests to connect to a network without seeing or typing the password. Format: WIFI:T:WPA;S:NetworkName;P:password;; The double semicolon is required as a terminator. SSID and password values containing special characters (semicolons, backslashes, or quotes) must be escaped with a backslash.</li>
+      <li><strong>vCard:</strong> Encodes a digital business card in the vCard 3.0 format. When scanned, the phone offers to add the contact to the address book. Ideal for physical business cards, conference badges, or email signatures.</li>
+    </ul>
+
+    <h3>Best Practices for QR Code Design and Deployment</h3>
+    <p>A QR code that cannot be scanned is useless, and there are many ways to inadvertently create unreadable codes:</p>
+    <ul>
+      <li><strong>Minimum print size:</strong> At least 2cm × 2cm (about 0.8 inches) for short-range scanning (phone held 10–20cm away). For large-format printing viewed from a distance (posters, billboards), scale proportionally — a code on a billboard 5 meters away needs to be at least 40cm × 40cm.</li>
+      <li><strong>Contrast is critical:</strong> The scanner relies on high contrast between dark and light modules. Black on white is optimal. Dark blue on white also works well. Avoid light colors on white or patterned backgrounds behind the code.</li>
+      <li><strong>Don't invert colors unless you test it:</strong> Some decoders handle light-on-dark codes, but many do not. If you use a white foreground on a dark background, test thoroughly on multiple devices.</li>
+      <li><strong>Test before printing at scale:</strong> Always scan your generated code with at least two different smartphones before committing to a print run. The Android camera app, iOS camera app, and dedicated QR apps all use slightly different decoders.</li>
+      <li><strong>Use static codes for permanent use:</strong> The code generated here encodes the content directly and permanently. If you need to change the destination without reprinting (e.g., for marketing campaigns), use a QR redirector service that encodes a short URL which you can retarget at any time.</li>
+      <li><strong>Add a call to action:</strong> QR codes are not yet universally understood by all demographics. Adding text below the code like "Scan to visit our menu" or "Scan to connect" increases scan rates significantly.</li>
+    </ul>
+
+    <h3>PNG vs. SVG: Which Format to Use</h3>
+    <p>This generator offers two download formats. Choosing the right one matters for your use case:</p>
+    <p><strong>PNG</strong> is a raster format — the image is made of pixels. It is immediately usable in any context: web pages, email, Word documents, PowerPoint, and most design tools. The limitation is that enlarging a PNG beyond its original resolution makes it blurry. Download at the highest size you need (use the size slider) and never upscale afterward. For digital-only use (websites, apps, emails), PNG is almost always the right choice.</p>
+    <p><strong>SVG</strong> is a vector format — the image is defined mathematically and can be scaled to any size without quality loss. This makes it the correct choice for any print use case: business cards, brochures, packaging, signage. Hand the SVG to a printer or paste it into Illustrator, Figma, or Inkscape. SVG files are also smaller in file size for complex graphics and can be styled with CSS.</p>
+
+    <div class="faq-list">
+      <div class="faq-item">
+        <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">Can I add a logo to the center of my QR code?</div>
+        <div class="faq-a">Yes, but with important caveats. A logo placed in the center of a QR code intentionally covers part of the data region. This works because QR codes include error correction that allows up to 30% of modules to be obscured (at the H error correction level) without losing decodability. To add a logo safely: download the SVG or PNG from this tool, then overlay a logo in a design application like Figma, Illustrator, or Canva over the center. Keep the logo under 25–30% of the total code area. Always re-test the code with a scanner after adding the logo — an oversized logo will prevent scanning.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">Do QR codes expire?</div>
+        <div class="faq-a">A static QR code (like the ones generated here) encodes content directly and never expires — it will work as long as the destination still exists. If you encode a URL that later returns a 404 error, the QR code still scans but leads to a dead page. If you encode contact information or WiFi credentials that change, the code becomes outdated. Some commercial QR code services offer "dynamic" codes that encode a short tracking URL redirecting to a destination you can change at any time. These are useful for marketing materials but require an ongoing subscription to the service to remain active.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">How much text can a QR code hold?</div>
+        <div class="faq-a">Capacity depends on the QR version (1–40, where higher versions have more modules) and error correction level. At the highest version and lowest error correction (L): up to 7,089 numeric characters, 4,296 alphanumeric characters, or 2,953 bytes of binary data. At medium error correction (M, the default here): up to 4,296 numeric, 2,953 alphanumeric, or 1,817 binary characters. In practice, longer content produces larger, denser QR codes with more modules — which require higher-resolution printing and closer scanning distances. For URLs, keep them under 100 characters when possible. Use a URL shortener for long links.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">Is it safe to scan a QR code?</div>
+        <div class="faq-a">The QR code itself is just data — scanning one does not directly harm your device. The risk comes from the content it encodes. A malicious QR code can point to a phishing website, trigger an automatic app download, send a pre-written text message, or initiate a phone call. To stay safe: be suspicious of QR codes in unexpected places (stickers placed over legitimate codes, codes in unsolicited emails, or codes on parking meters). Before tapping a scanned URL, check your phone's preview of the URL for obvious red flags like unusual domains or long obfuscated strings. In high-risk environments (financial, healthcare), avoid scanning codes from untrusted sources.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">Why won't my QR code scan?</div>
+        <div class="faq-a">Common causes: (1) Low contrast — the foreground and background colors are too similar; restore to black on white and test again. (2) Too small — the code is printed below the minimum readable size; increase the print size. (3) Damaged or distorted — part of the code is obscured, the paper is crumpled, or the printed image is blurry; reprint at higher resolution. (4) Missing quiet zone — the white border around the code has been cropped; ensure at least 4 modules of white space on all sides. (5) Color inversion — some decoders cannot read light-on-dark codes. (6) The encoded URL no longer works — the code scans successfully but the phone shows an error because the website is down or the URL changed.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>window.CALCNOVA_PAGE = { id: 'qr-code-generator' };</script>
+<script src="shared/site-data.js"></script>
+<script src="shared/nav.js"></script>
+<script>
+(function() {
+  var currentType = 'url';
+  var qrInstance  = null;
+  var updateTimer = null;
+
+  var TYPES = ['url','text','email','phone','wifi','vcard'];
+
+  function setType(t) {
+    currentType = t;
+    TYPES.forEach(function(id) {
+      var pane = document.getElementById('pane' + id.charAt(0).toUpperCase() + id.slice(1));
+      if (pane) pane.classList.toggle('active', id === t);
+    });
+    document.querySelectorAll('.type-tab').forEach(function(btn, i) {
+      btn.classList.toggle('active', TYPES[i] === t);
+    });
+    scheduleUpdate();
+  }
+  window.setType = setType;
+
+  function getContent() {
+    switch (currentType) {
+      case 'url': {
+        var u = document.getElementById('urlInput').value.trim();
+        return u;
+      }
+      case 'text': {
+        return document.getElementById('textInput').value.trim();
+      }
+      case 'email': {
+        var to   = document.getElementById('emailTo').value.trim();
+        if (!to) return '';
+        var subj = document.getElementById('emailSubject').value.trim();
+        var body = document.getElementById('emailBody').value.trim();
+        var q = 'mailto:' + encodeURIComponent(to);
+        var params = [];
+        if (subj) params.push('subject=' + encodeURIComponent(subj));
+        if (body) params.push('body='    + encodeURIComponent(body));
+        if (params.length) q += '?' + params.join('&');
+        return q;
+      }
+      case 'phone': {
+        var p = document.getElementById('phoneInput').value.trim().replace(/[\s\-\(\)]/g,'');
+        if (!p) return '';
+        if (!p.startsWith('+')) p = '+' + p;
+        return 'tel:' + p;
+      }
+      case 'wifi': {
+        var ssid = document.getElementById('wifiSsid').value.trim();
+        if (!ssid) return '';
+        var pass = document.getElementById('wifiPass').value;
+        var enc  = document.getElementById('wifiEnc').value;
+        var escFn = function(s) { return s.replace(/([\\;,":"])/g, '\\$1'); };
+        return 'WIFI:T:' + enc + ';S:' + escFn(ssid) + ';P:' + escFn(pass) + ';;';
+      }
+      case 'vcard': {
+        var name    = document.getElementById('vcName').value.trim();
+        if (!name) return '';
+        var phone   = document.getElementById('vcPhone').value.trim();
+        var email   = document.getElementById('vcEmail').value.trim();
+        var company = document.getElementById('vcCompany').value.trim();
+        var title   = document.getElementById('vcTitle').value.trim();
+        var lines = ['BEGIN:VCARD','VERSION:3.0','FN:' + name,'N:' + name + ';;;;'];
+        if (phone)   lines.push('TEL:' + phone);
+        if (email)   lines.push('EMAIL:' + email);
+        if (company) lines.push('ORG:' + company);
+        if (title)   lines.push('TITLE:' + title);
+        lines.push('END:VCARD');
+        return lines.join('\n');
+      }
+    }
+    return '';
+  }
+
+  function getSize() {
+    return parseInt(document.getElementById('sizeSlider').value);
+  }
+  function getFg() {
+    return document.getElementById('fgColor').value;
+  }
+  function getBg() {
+    return document.getElementById('bgColor').value;
+  }
+
+  function scheduleUpdate() {
+    clearTimeout(updateTimer);
+    updateTimer = setTimeout(generateQR, 120);
+  }
+  window.scheduleUpdate = scheduleUpdate;
+
+  function generateQR() {
+    var content = getContent();
+    var size    = getSize();
+    var fg      = getFg();
+    var bg      = getBg();
+    var div     = document.getElementById('qrDiv');
+
+    if (!content) {
+      div.innerHTML = '<div class="qr-placeholder">'
+        + '<svg width="64" height="64" viewBox="0 0 64 64" fill="none">'
+        + '<rect x="2" y="2" width="26" height="26" rx="4" stroke="currentColor" stroke-width="3"/>'
+        + '<rect x="8" y="8" width="14" height="14" rx="2" fill="currentColor"/>'
+        + '<rect x="36" y="2" width="26" height="26" rx="4" stroke="currentColor" stroke-width="3"/>'
+        + '<rect x="42" y="8" width="14" height="14" rx="2" fill="currentColor"/>'
+        + '<rect x="2" y="36" width="26" height="26" rx="4" stroke="currentColor" stroke-width="3"/>'
+        + '<rect x="8" y="42" width="14" height="14" rx="2" fill="currentColor"/>'
+        + '<rect x="38" y="38" width="4" height="4" fill="currentColor"/>'
+        + '<rect x="46" y="38" width="4" height="4" fill="currentColor"/>'
+        + '<rect x="54" y="38" width="4" height="4" fill="currentColor"/>'
+        + '<rect x="38" y="46" width="4" height="4" fill="currentColor"/>'
+        + '<rect x="50" y="50" width="4" height="4" fill="currentColor"/>'
+        + '<rect x="58" y="46" width="4" height="4" fill="currentColor"/>'
+        + '</svg><span>Enter content to generate</span></div>';
+      document.getElementById('qrSizeNote').textContent = '';
+      qrInstance = null;
+      return;
+    }
+
+    div.innerHTML = '';
+    try {
+      qrInstance = new QRCode(div, {
+        text: content,
+        width:  size,
+        height: size,
+        colorDark:  fg,
+        colorLight: bg,
+        correctLevel: QRCode.CorrectLevel.M
+      });
+      // Scale canvas display to fit panel
+      setTimeout(function() {
+        var canvas = div.querySelector('canvas');
+        if (canvas) {
+          canvas.style.maxWidth  = '100%';
+          canvas.style.height    = 'auto';
+          canvas.style.borderRadius = '8px';
+        }
+      }, 50);
+      document.getElementById('qrSizeNote').textContent = size + ' × ' + size + ' px canvas';
+    } catch(e) {
+      div.innerHTML = '<div style="color:var(--red);font-size:.85rem;text-align:center;">Could not generate QR code. Content may be too long.</div>';
+    }
+  }
+
+  function onSizeChange() {
+    var s = document.getElementById('sizeSlider').value;
+    document.getElementById('sizeVal').textContent = s + ' px';
+    scheduleUpdate();
+  }
+  window.onSizeChange = onSizeChange;
+
+  function onHexInput(which) {
+    var hex = document.getElementById(which === 'fg' ? 'fgHex' : 'bgHex').value.trim();
+    if (/^#[0-9a-fA-F]{6}$/.test(hex)) {
+      document.getElementById(which === 'fg' ? 'fgColor' : 'bgColor').value = hex;
+      scheduleUpdate();
+    }
+  }
+  window.onHexInput = onHexInput;
+
+  // Sync hex input when color picker changes
+  document.getElementById('fgColor').addEventListener('input', function() {
+    document.getElementById('fgHex').value = this.value;
+    scheduleUpdate();
+  });
+  document.getElementById('bgColor').addEventListener('input', function() {
+    document.getElementById('bgHex').value = this.value;
+    scheduleUpdate();
+  });
+
+  function downloadPng() {
+    var canvas = document.querySelector('#qrDiv canvas');
+    if (!canvas) { alert('Generate a QR code first.'); return; }
+    var a = document.createElement('a');
+    a.download = 'qrcode.png';
+    a.href = canvas.toDataURL('image/png');
+    a.click();
+  }
+  window.downloadPng = downloadPng;
+
+  function downloadSvg() {
+    var content = getContent();
+    if (!content) { alert('Generate a QR code first.'); return; }
+    // Use a temporary div to grab the QR matrix from the library
+    var canvas = document.querySelector('#qrDiv canvas');
+    if (!canvas) { alert('Generate a QR code first.'); return; }
+    var size = getSize();
+    var fg   = getFg();
+    var bg   = getBg();
+    // Build SVG from canvas pixel data
+    var ctx  = canvas.getContext('2d');
+    var w    = canvas.width;
+    var h    = canvas.height;
+    var imgData = ctx.getImageData(0, 0, w, h);
+    var modules = w; // square
+    var cellSize = 1;
+    var rects = [];
+    // Detect module grid by sampling
+    // We'll render each pixel as a rect (for simplicity at QR scale, this is fine)
+    var svgParts = [
+      '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ' + w + ' ' + h + '" width="' + size + '" height="' + size + '">',
+      '<rect width="' + w + '" height="' + h + '" fill="' + bg + '"/>',
+    ];
+    // Scan rows and build horizontal runs for compact SVG
+    for (var y = 0; y < h; y++) {
+      var runStart = -1;
+      for (var x = 0; x <= w; x++) {
+        var dark = false;
+        if (x < w) {
+          var i = (y * w + x) * 4;
+          var r = imgData.data[i], g = imgData.data[i+1], b = imgData.data[i+2];
+          // Pixel is "dark" if closer to foreground color than white
+          var brightness = (r + g + b) / 3;
+          dark = brightness < 128;
+        }
+        if (dark && runStart < 0) { runStart = x; }
+        else if (!dark && runStart >= 0) {
+          svgParts.push('<rect x="' + runStart + '" y="' + y + '" width="' + (x - runStart) + '" height="1" fill="' + fg + '"/>');
+          runStart = -1;
+        }
+      }
+    }
+    svgParts.push('</svg>');
+    var svgStr = svgParts.join('');
+    var blob = new Blob([svgStr], { type: 'image/svg+xml' });
+    var url  = URL.createObjectURL(blob);
+    var a    = document.createElement('a');
+    a.download = 'qrcode.svg';
+    a.href = url;
+    a.click();
+    setTimeout(function() { URL.revokeObjectURL(url); }, 5000);
+  }
+  window.downloadSvg = downloadSvg;
+
+  // Init
+  document.getElementById('urlInput').value = '';
+  generateQR();
+})();
+</script>
+</body>
+</html>

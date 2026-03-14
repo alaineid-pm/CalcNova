@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Meeting Time Zone Planner | CalcNova</title>
+  <meta name="description" content="Find the best meeting time across multiple time zones. Add participants with their local time zones and working hours to see availability overlap at a glance." />
+  <link rel="canonical" href="https://calcnova.co/meeting-planner.html" />
+  <meta property="og:title" content="Meeting Time Zone Planner | CalcNova" /><meta property="og:description" content="Find the best time to meet across multiple time zones. Visual availability heatmap for up to 8 participants worldwide." /><meta property="og:type" content="website" /><meta property="og:url" content="https://calcnova.co/meeting-planner.html" /><meta property="og:site_name" content="CalcNova" />
+  <script type="application/ld+json">[{"@context":"https://schema.org","@type":"WebApplication","name":"Meeting Time Zone Planner","url":"https://calcnova.co/meeting-planner.html","description":"Find the best meeting time across multiple time zones with a visual heatmap showing participant availability overlap.","applicationCategory":"UtilityApplication","operatingSystem":"Any","isPartOf":{"@type":"WebSite","name":"CalcNova","url":"https://calcnova.co/"}}]</script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="shared/nav.css" />
+  <style>
+    .app { max-width: 960px; margin: 0 auto; padding: 0 16px 60px; }
+
+    .page-header { text-align: center; padding: 40px 0 32px; }
+    .page-header h1 { font-size: clamp(1.6rem, 4vw, 2.4rem); font-weight: 800; color: var(--text-primary); margin: 0 0 10px; }
+    .page-header p { color: var(--text-secondary); font-size: 1rem; margin: 0 auto; max-width: 560px; }
+
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 28px; margin-bottom: 20px; }
+    .card h2 { font-size: 1.1rem; font-weight: 700; color: var(--text-primary); margin: 0 0 20px; }
+
+    /* Participants */
+    .participants-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; }
+    .participant-row {
+      display: grid;
+      grid-template-columns: 1fr 1.5fr 80px 80px 36px;
+      gap: 10px;
+      align-items: center;
+      padding: 12px 14px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+    }
+    @media (max-width: 680px) {
+      .participant-row { grid-template-columns: 1fr 1fr; grid-template-rows: auto auto; }
+      .participant-row .p-times { grid-column: 1 / 3; display: flex; gap: 10px; }
+      .participant-row .p-remove { grid-column: 2; justify-self: end; }
+    }
+
+    .p-input {
+      padding: 8px 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--surface);
+      color: var(--text-primary);
+      font-family: var(--font);
+      font-size: 0.875rem;
+      outline: none;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    .p-input:focus { border-color: var(--green); }
+
+    .p-time-group { display: flex; flex-direction: column; gap: 3px; }
+    .p-time-group label { font-size: 0.7rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; }
+
+    .p-remove-btn {
+      width: 32px; height: 32px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--surface);
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 1rem;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.15s;
+      flex-shrink: 0;
+    }
+    .p-remove-btn:hover { border-color: var(--red); color: var(--red); background: rgba(239,68,68,0.08); }
+
+    .add-btn {
+      padding: 10px 20px;
+      border: 1px dashed var(--border);
+      border-radius: 10px;
+      background: transparent;
+      color: var(--text-secondary);
+      font-family: var(--font);
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .add-btn:hover { border-color: var(--green); color: var(--green); background: rgba(16,185,129,0.05); }
+
+    /* Duration buttons */
+    .duration-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px; }
+    .dur-btn {
+      padding: 9px 18px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: var(--bg);
+      color: var(--text-secondary);
+      font-family: var(--font);
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .dur-btn:hover { border-color: var(--purple); color: var(--purple); }
+    .dur-btn.active { border-color: var(--purple); background: rgba(99,102,241,0.1); color: var(--purple); }
+
+    .find-btn {
+      width: 100%;
+      padding: 14px;
+      background: var(--purple);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      font-family: var(--font);
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: opacity 0.15s;
+    }
+    .find-btn:hover { opacity: 0.9; }
+
+    /* Heatmap */
+    .heatmap-wrap { overflow-x: auto; margin-bottom: 24px; }
+    .heatmap-table { border-collapse: separate; border-spacing: 2px; min-width: 900px; width: 100%; }
+    .heatmap-table th { font-size: 0.7rem; font-weight: 600; color: var(--text-muted); text-align: center; padding: 4px 2px; white-space: nowrap; }
+    .heatmap-table td.p-name-cell { font-size: 0.8rem; font-weight: 600; color: var(--text-primary); padding: 4px 10px 4px 0; white-space: nowrap; min-width: 80px; }
+
+    .slot {
+      width: 18px; height: 28px; border-radius: 3px;
+      position: relative; cursor: default;
+      transition: transform 0.1s;
+    }
+    .slot:hover { transform: scale(1.3); z-index: 10; }
+    .slot-available { background: rgba(16,185,129,0.75); }
+    .slot-unavailable { background: rgba(107,114,128,0.2); }
+
+    /* Legend */
+    .legend { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 20px; align-items: center; }
+    .legend-item { display: flex; align-items: center; gap: 6px; font-size: 0.8rem; color: var(--text-secondary); }
+    .legend-dot { width: 14px; height: 14px; border-radius: 3px; }
+
+    /* Best times */
+    .best-times { display: flex; flex-direction: column; gap: 12px; }
+    .best-slot-card {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      padding: 16px 18px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: var(--bg);
+    }
+    .best-slot-card .rank { font-size: 1.3rem; font-weight: 800; color: var(--text-muted); min-width: 28px; }
+    .best-slot-card.rank-1 { border-color: var(--green); background: rgba(16,185,129,0.05); }
+    .best-slot-card.rank-1 .rank { color: var(--green); }
+    .best-slot-card.rank-2 { border-color: var(--purple); }
+    .best-slot-card.rank-2 .rank { color: var(--purple); }
+    .bsc-info { flex: 1; }
+    .bsc-utc { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 4px; }
+    .bsc-participants { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+    .bsc-part { font-size: 0.8rem; padding: 4px 10px; border-radius: 20px; font-weight: 600; }
+    .bsc-part.avail { background: rgba(16,185,129,0.12); color: var(--green); }
+    .bsc-part.unavail { background: rgba(107,114,128,0.1); color: var(--text-muted); text-decoration: line-through; }
+
+    .no-results { text-align: center; padding: 32px; color: var(--text-muted); font-size: 0.95rem; }
+
+    /* Educational */
+    .edu-section { margin-top: 40px; }
+    .edu-section h2 { font-size: 1.4rem; font-weight: 800; color: var(--text-primary); margin: 0 0 16px; }
+    .edu-section h3 { font-size: 1.05rem; font-weight: 700; color: var(--text-primary); margin: 28px 0 10px; }
+    .edu-section p { color: var(--text-secondary); line-height: 1.75; margin: 0 0 14px; font-size: 0.95rem; }
+    .edu-section ul { color: var(--text-secondary); line-height: 1.8; margin: 0 0 14px; padding-left: 20px; font-size: 0.95rem; }
+    .edu-section li { margin-bottom: 6px; }
+
+    .faq-item { border: 1px solid var(--border); border-radius: 12px; margin-bottom: 10px; overflow: hidden; }
+    .faq-q { padding: 16px 20px; font-weight: 600; font-size: 0.95rem; color: var(--text-primary); cursor: pointer; display: flex; justify-content: space-between; align-items: center; background: var(--surface); user-select: none; }
+    .faq-q:hover { background: var(--bg); }
+    .faq-q .arrow { transition: transform 0.2s; font-size: 0.8rem; color: var(--text-muted); }
+    .faq-q.open .arrow { transform: rotate(180deg); }
+    .faq-a { display: none; padding: 0 20px 16px; color: var(--text-secondary); font-size: 0.9rem; line-height: 1.75; background: var(--surface); }
+    .faq-a.open { display: block; }
+
+    #resultsSection { display: none; }
+  </style>
+</head>
+<body>
+<div class="app">
+
+  <div class="page-header">
+    <h1>Meeting Time Zone Planner</h1>
+    <p>Find the best time to meet across multiple time zones. Add up to 8 participants, set their working hours, and instantly see when everyone is available.</p>
+  </div>
+
+  <div class="card">
+    <h2>Participants</h2>
+    <div class="participants-list" id="participantsList"></div>
+    <button class="add-btn" id="addBtn" onclick="addParticipant()">+ Add Participant</button>
+  </div>
+
+  <div class="card">
+    <h2>Meeting Duration</h2>
+    <div class="duration-row">
+      <button class="dur-btn" onclick="setDuration(30, this)">30 min</button>
+      <button class="dur-btn active" onclick="setDuration(60, this)">1 hour</button>
+      <button class="dur-btn" onclick="setDuration(90, this)">1.5 hours</button>
+      <button class="dur-btn" onclick="setDuration(120, this)">2 hours</button>
+    </div>
+    <button class="find-btn" onclick="findTimes()">Find Best Meeting Times</button>
+  </div>
+
+  <div id="resultsSection">
+    <div class="card">
+      <h2>Availability Heatmap</h2>
+      <p style="font-size:0.85rem;color:var(--text-muted);margin:0 0 16px;">Each column is a 30-minute slot across 24 hours (UTC). Green = within working hours, gray = outside working hours.</p>
+      <div class="heatmap-wrap">
+        <table class="heatmap-table" id="heatmapTable"></table>
+      </div>
+      <div class="legend">
+        <div class="legend-item"><div class="legend-dot" style="background:rgba(16,185,129,0.75)"></div> Within working hours</div>
+        <div class="legend-item"><div class="legend-dot" style="background:rgba(16,185,129,0.35)"></div> Partial overlap</div>
+        <div class="legend-item"><div class="legend-dot" style="background:rgba(107,114,128,0.2)"></div> Outside working hours</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Top 3 Best Meeting Times</h2>
+      <div class="best-times" id="bestTimes"></div>
+    </div>
+  </div>
+
+  <!-- Educational -->
+  <div class="edu-section">
+    <h2>Scheduling Meetings Across Time Zones</h2>
+
+    <h3>The Challenge of Global Teams</h3>
+    <p>Scheduling a meeting when your team spans multiple continents is one of the most persistent friction points in remote and distributed work. When it is 9 am in London, it is 10 am in Paris, 2 pm in Dubai, 4:30 pm in Mumbai, and 5 pm in Bangkok — and simultaneously 4 am in Los Angeles. There is rarely a time that is perfectly convenient for everyone, but there are almost always windows that are merely inconvenient for the fewest people.</p>
+    <p>The goal of a meeting planner is to surface those windows objectively, without relying on mental arithmetic or the person who always ends up sacrificing their lunch break because they happen to be in the middle timezone.</p>
+
+    <h3>Understanding UTC and Time Zone Offsets</h3>
+    <p>Coordinated Universal Time (UTC) is the primary time standard by which the world regulates clocks and time. It has no daylight saving time adjustments — it remains constant year-round. Every time zone is defined as an offset from UTC: New York is UTC-5 in winter (UTC-4 in summer), London is UTC+0 in winter (UTC+1 in summer), Tokyo is always UTC+9.</p>
+    <p>When thinking about scheduling, UTC is your neutral reference point. If you say "let's meet at 14:00 UTC," there is no ambiguity — everyone can convert that to their local time. Many international teams adopt the convention of scheduling in UTC to avoid errors, especially around daylight saving transitions when offsets shift and previously agreed times can suddenly conflict.</p>
+
+    <h3>Daylight Saving Time: The Hidden Complicator</h3>
+    <p>Daylight Saving Time (DST) is observed in roughly 70 countries, but not all of them — and crucially, those that do observe it change their clocks on different dates. The United States and Canada change in early November and mid-March. The European Union changes in late October and late March. Australia changes in early April and early October (and some states don't observe it at all). India, China, Japan, and most of Africa and Asia do not observe DST.</p>
+    <p>The practical consequence is that for several weeks each year, the time difference between, say, New York and London changes from 5 hours to 4 hours because one side has changed clocks and the other hasn't yet. This is the source of countless missed calls. Modern tools that use IANA time zone identifiers (like "America/New_York" rather than "EST") automatically handle these transitions, which is why this planner uses those identifiers.</p>
+
+    <h3>Finding Overlap Windows</h3>
+    <p>The heatmap produced by this tool works by taking a reference day (today) and checking, for each 30-minute slot in the 24-hour UTC clock, whether that slot falls within each participant's stated working hours in their local time zone. A slot where all participants are available is shown in solid green. Slots with partial availability are shown in lighter green. Slots where nobody is available are gray.</p>
+    <p>The "best time" recommendation factors in meeting duration — if your meeting is 1 hour, the tool looks for a block of two consecutive 30-minute slots where the overlap score is highest, not just a single slot.</p>
+
+    <h3>Async-First Culture: When No Time Works</h3>
+    <p>Sometimes there genuinely is no overlap window. A team with members in Auckland, London, and San Francisco faces a 12–13 hour span between the two extremes — it is practically impossible to find a time that falls within business hours for all three. In these cases, the recommended approach is to adopt an async-first culture:</p>
+    <ul>
+      <li><strong>Record meetings</strong> so those who cannot attend can watch on their own schedule.</li>
+      <li><strong>Write detailed agendas</strong> before meetings and send them out at least 24 hours in advance, allowing async input.</li>
+      <li><strong>Use asynchronous tools</strong> (Loom for video updates, Notion or Confluence for documentation, Slack or Teams for threaded discussion) as the primary communication channel, with meetings reserved for decisions that genuinely require real-time discussion.</li>
+      <li><strong>Rotate meeting times</strong> so the same person is not always the one joining at midnight or 5 am.</li>
+      <li><strong>Acknowledge the burden</strong> — if someone regularly takes calls outside their working hours, compensate with flexible time off or adjusted core hours.</li>
+    </ul>
+
+    <h3>Best Practices for Cross-Timezone Meetings</h3>
+    <ul>
+      <li><strong>Send calendar invites with timezone context.</strong> Always include the UTC time in the meeting title or description: "Weekly Sync 14:00 UTC." Calendar applications will convert to local time, but a UTC reference prevents confusion if someone's calendar app has the wrong timezone set.</li>
+      <li><strong>Keep it short.</strong> Meetings are more tolerable at inconvenient hours when they are brief and focused. A 30-minute stand-up at 7 am is far less disruptive than a 90-minute workshop.</li>
+      <li><strong>Use a world clock widget.</strong> Browser extensions and apps like World Time Buddy, Clockwise, or simply pinning multiple clocks in your phone's Clock app help build an intuitive sense of where your colleagues are in their day.</li>
+      <li><strong>Start and end on time, always.</strong> When someone is attending from 6 am or 10 pm, running over is a serious inconvenience. Rigid time discipline is a sign of respect in distributed teams.</li>
+      <li><strong>Designate a clear facilitator.</strong> Remote meetings drift more than in-person ones. Assign someone to keep the agenda moving, draw out quieter participants, and ensure decisions are captured and actioned.</li>
+    </ul>
+
+    <h2 style="margin-top:40px;">Frequently Asked Questions</h2>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">Does this tool account for daylight saving time? <span class="arrow">▼</span></div>
+      <div class="faq-a">Yes. The tool uses the JavaScript Intl.DateTimeFormat API with IANA time zone identifiers (e.g., "America/New_York"), which automatically applies the correct UTC offset for today's date, including any daylight saving time adjustments. If you run the planner on a day when clocks have recently changed, the results will reflect the current offsets, not the standard-time offsets.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">The heatmap shows no green slots — what does that mean? <span class="arrow">▼</span></div>
+      <div class="faq-a">This means there are no 30-minute windows in the day when all participants fall within their stated working hours simultaneously. This is common when teams span more than about 10–12 hours of timezone difference. Consider: reducing the number of required participants, adjusting one or more participant's working hours, scheduling the meeting outside normal hours for one person (and compensating them), or switching to an async format where no real-time meeting is needed.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">What does "working hours" mean in this context? <span class="arrow">▼</span></div>
+      <div class="faq-a">Working hours here means the window during which a participant is available to attend a meeting, in their local time. The default is 9:00–17:00. You can adjust this per participant — for example, if someone works 7:00–15:00 or has a standing commitment from 12:00–13:00 that you want to exclude, you can narrow their window. The tool considers a slot available if the entire meeting duration fits within the participant's working hours window.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">What is the difference between UTC and GMT? <span class="arrow">▼</span></div>
+      <div class="faq-a">For practical purposes, UTC and GMT (Greenwich Mean Time) are the same. Both refer to time at zero degrees longitude with no DST offset. The technical difference is that GMT is a time zone (used in the UK in winter), while UTC is a time standard. When people say "GMT" informally, they usually mean UTC. UTC is the preferred designation in computing and international standards.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">Why are some time zones listed with city names instead of abbreviations? <span class="arrow">▼</span></div>
+      <div class="faq-a">Time zone abbreviations like "EST" or "IST" are ambiguous — "IST" could mean India Standard Time, Irish Standard Time, or Israel Standard Time. IANA time zone identifiers (like "Asia/Kolkata" or "Europe/Dublin") are unambiguous and map to exact historical offset rules including all DST transitions. This planner uses IANA identifiers to ensure accurate conversions regardless of the time of year.</div>
+    </div>
+
+  </div>
+
+</div>
+
+<script>window.CALCNOVA_PAGE = { id: 'meeting-planner' };</script>
+<script src="shared/site-data.js"></script>
+<script src="shared/nav.js"></script>
+<script>
+
+const TIMEZONES = [
+  { label: 'UTC', value: 'UTC' },
+  { label: 'New York (ET)', value: 'America/New_York' },
+  { label: 'Chicago (CT)', value: 'America/Chicago' },
+  { label: 'Denver (MT)', value: 'America/Denver' },
+  { label: 'Los Angeles (PT)', value: 'America/Los_Angeles' },
+  { label: 'Toronto (ET)', value: 'America/Toronto' },
+  { label: 'Vancouver (PT)', value: 'America/Vancouver' },
+  { label: 'Anchorage (AKT)', value: 'America/Anchorage' },
+  { label: 'Honolulu (HT)', value: 'Pacific/Honolulu' },
+  { label: 'Sao Paulo (BRT)', value: 'America/Sao_Paulo' },
+  { label: 'London (GMT/BST)', value: 'Europe/London' },
+  { label: 'Paris (CET)', value: 'Europe/Paris' },
+  { label: 'Berlin (CET)', value: 'Europe/Berlin' },
+  { label: 'Madrid (CET)', value: 'Europe/Madrid' },
+  { label: 'Rome (CET)', value: 'Europe/Rome' },
+  { label: 'Amsterdam (CET)', value: 'Europe/Amsterdam' },
+  { label: 'Stockholm (CET)', value: 'Europe/Stockholm' },
+  { label: 'Moscow (MSK)', value: 'Europe/Moscow' },
+  { label: 'Cairo (EET)', value: 'Africa/Cairo' },
+  { label: 'Johannesburg (SAST)', value: 'Africa/Johannesburg' },
+  { label: 'Dubai (GST)', value: 'Asia/Dubai' },
+  { label: 'Kolkata (IST)', value: 'Asia/Kolkata' },
+  { label: 'Bangkok (ICT)', value: 'Asia/Bangkok' },
+  { label: 'Singapore (SGT)', value: 'Asia/Singapore' },
+  { label: 'Shanghai (CST)', value: 'Asia/Shanghai' },
+  { label: 'Tokyo (JST)', value: 'Asia/Tokyo' },
+  { label: 'Seoul (KST)', value: 'Asia/Seoul' },
+  { label: 'Sydney (AEDT)', value: 'Australia/Sydney' },
+  { label: 'Melbourne (AEDT)', value: 'Australia/Melbourne' },
+  { label: 'Auckland (NZST)', value: 'Pacific/Auckland' },
+];
+
+const COLORS_ALL = 'rgba(16,185,129,0.85)';
+const COLORS_MOST = 'rgba(16,185,129,0.55)';
+const COLORS_FEW = 'rgba(245,158,11,0.5)';
+const COLORS_NONE = 'rgba(107,114,128,0.15)';
+
+let participants = [];
+let meetingDuration = 60; // minutes
+let pidCounter = 0;
+
+function tzOptionsHTML(selected) {
+  return TIMEZONES.map(tz =>
+    `<option value="${tz.value}"${tz.value === selected ? ' selected' : ''}>${tz.label}</option>`
+  ).join('');
+}
+
+function addParticipant(name = '', tz = 'America/New_York', start = '09:00', end = '17:00') {
+  if (participants.length >= 8) return;
+  const id = ++pidCounter;
+  participants.push({ id, name, tz, start, end });
+  renderParticipants();
+  if (participants.length >= 8) {
+    document.getElementById('addBtn').style.display = 'none';
+  }
+}
+
+function removeParticipant(id) {
+  participants = participants.filter(p => p.id !== id);
+  renderParticipants();
+  document.getElementById('addBtn').style.display = '';
+}
+
+function updateParticipant(id, field, value) {
+  const p = participants.find(p => p.id === id);
+  if (p) p[field] = value;
+}
+
+function renderParticipants() {
+  const list = document.getElementById('participantsList');
+  list.innerHTML = participants.map((p, i) => `
+    <div class="participant-row">
+      <input class="p-input" type="text" placeholder="Name (e.g. Alice)" value="${p.name}"
+        oninput="updateParticipant(${p.id}, 'name', this.value)" />
+      <select class="p-input" onchange="updateParticipant(${p.id}, 'tz', this.value)">
+        ${tzOptionsHTML(p.tz)}
+      </select>
+      <div class="p-time-group">
+        <label>Start</label>
+        <input class="p-input" type="time" value="${p.start}"
+          onchange="updateParticipant(${p.id}, 'start', this.value)" />
+      </div>
+      <div class="p-time-group">
+        <label>End</label>
+        <input class="p-input" type="time" value="${p.end}"
+          onchange="updateParticipant(${p.id}, 'end', this.value)" />
+      </div>
+      ${participants.length > 1
+        ? `<button class="p-remove-btn" onclick="removeParticipant(${p.id})" title="Remove">✕</button>`
+        : '<div></div>'}
+    </div>
+  `).join('');
+}
+
+function setDuration(mins, btn) {
+  meetingDuration = mins;
+  document.querySelectorAll('.dur-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+// Convert "HH:MM" to minutes since midnight
+function timeToMins(t) {
+  const [h, m] = t.split(':').map(Number);
+  return h * 60 + m;
+}
+
+// Given a UTC date and a timezone, return the local hour+minutes as decimal hours
+function utcSlotToLocalMins(utcDate, tz) {
+  const fmt = new Intl.DateTimeFormat('en-US', {
+    timeZone: tz,
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false
+  });
+  const parts = fmt.formatToParts(utcDate);
+  const h = parseInt(parts.find(p => p.type === 'hour').value);
+  const m = parseInt(parts.find(p => p.type === 'minute').value);
+  return h * 60 + m;
+}
+
+function findTimes() {
+  if (participants.length < 1) { alert('Please add at least one participant.'); return; }
+
+  // Snap participant data from DOM (in case user hasn't triggered oninput)
+  const rows = document.querySelectorAll('.participant-row');
+  rows.forEach((row, i) => {
+    const inputs = row.querySelectorAll('input, select');
+    // name, tz select, start, end
+  });
+
+  // Build a reference date (today, midnight UTC)
+  const today = new Date();
+  today.setUTCHours(0, 0, 0, 0);
+
+  const SLOTS = 48; // 30-min slots in 24 hours
+  const slotScores = []; // score = number of available participants
+  const slotDetails = []; // per participant
+
+  for (let s = 0; s < SLOTS; s++) {
+    const slotStart = new Date(today.getTime() + s * 30 * 60000);
+    const slotEnd = new Date(slotStart.getTime() + meetingDuration * 60000);
+    const durSlots = meetingDuration / 30;
+
+    // For scoring, check each participant against all slots needed for this duration
+    let available = 0;
+    const partAvail = [];
+
+    participants.forEach(p => {
+      const workStart = timeToMins(p.start || '09:00');
+      const workEnd = timeToMins(p.end || '17:00');
+
+      // Check all sub-slots needed for meeting duration
+      let allFit = true;
+      for (let ds = 0; ds < durSlots; ds++) {
+        const checkTime = new Date(slotStart.getTime() + ds * 30 * 60000);
+        const localMins = utcSlotToLocalMins(checkTime, p.tz);
+        const localEndMins = utcSlotToLocalMins(new Date(checkTime.getTime() + 30 * 60000), p.tz);
+        if (localMins < workStart || localEndMins > workEnd) {
+          allFit = false; break;
+        }
+      }
+      partAvail.push(allFit);
+      if (allFit) available++;
+    });
+
+    slotScores.push(available);
+    slotDetails.push(partAvail);
+  }
+
+  renderHeatmap(slotScores, slotDetails, today);
+  renderBestTimes(slotScores, slotDetails, today);
+
+  document.getElementById('resultsSection').style.display = 'block';
+  document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function slotColor(score, total) {
+  if (total === 0) return COLORS_NONE;
+  const ratio = score / total;
+  if (ratio === 1) return COLORS_ALL;
+  if (ratio >= 0.6) return COLORS_MOST;
+  if (ratio >= 0.3) return COLORS_FEW;
+  return COLORS_NONE;
+}
+
+function renderHeatmap(scores, details, baseDate) {
+  const table = document.getElementById('heatmapTable');
+  const total = participants.length;
+
+  // Header row with hour labels
+  let header = '<tr><th style="text-align:left;min-width:80px;"></th>';
+  for (let s = 0; s < 48; s++) {
+    if (s % 2 === 0) {
+      const h = Math.floor(s / 2);
+      header += `<th colspan="1" style="min-width:18px;">${String(h).padStart(2,'0')}</th>`;
+    } else {
+      header += '<th></th>';
+    }
+  }
+  header += '</tr>';
+
+  let rows = '';
+  participants.forEach((p, pi) => {
+    const name = p.name || `P${pi + 1}`;
+    let row = `<tr><td class="p-name-cell">${name}</td>`;
+    for (let s = 0; s < 48; s++) {
+      const avail = details[s][pi];
+      const bg = avail ? COLORS_ALL : COLORS_NONE;
+      const slotTime = new Date(baseDate.getTime() + s * 30 * 60000);
+      const localMins = utcSlotToLocalMins(slotTime, p.tz);
+      const lh = Math.floor(localMins / 60);
+      const lm = localMins % 60;
+      const localStr = `${String(lh).padStart(2,'0')}:${String(lm).padStart(2,'0')}`;
+      row += `<td><div class="slot" style="background:${bg}" title="${localStr} local time"></div></td>`;
+    }
+    row += '</tr>';
+    rows += row;
+  });
+
+  // Overlap row
+  let overlapRow = '<tr><td class="p-name-cell" style="color:var(--text-muted);font-size:0.75rem;">overlap</td>';
+  for (let s = 0; s < 48; s++) {
+    const bg = slotColor(scores[s], total);
+    overlapRow += `<td><div class="slot" style="background:${bg};height:8px;border-radius:2px;" title="${scores[s]}/${total} available"></div></td>`;
+  }
+  overlapRow += '</tr>';
+
+  table.innerHTML = header + rows + overlapRow;
+}
+
+function renderBestTimes(scores, details, baseDate) {
+  const total = participants.length;
+  const durSlots = Math.max(1, meetingDuration / 30);
+
+  // Find best contiguous blocks
+  const blockScores = [];
+  for (let s = 0; s <= 48 - durSlots; s++) {
+    const minScore = Math.min(...scores.slice(s, s + durSlots));
+    blockScores.push({ slot: s, score: minScore });
+  }
+  blockScores.sort((a, b) => b.score - a.score);
+
+  // Deduplicate overlapping slots (keep top non-overlapping)
+  const best = [];
+  const used = new Set();
+  for (const b of blockScores) {
+    if (best.length >= 3) break;
+    let overlap = false;
+    for (let ds = 0; ds < durSlots; ds++) {
+      if (used.has(b.slot + ds)) { overlap = true; break; }
+    }
+    if (!overlap) {
+      best.push(b);
+      for (let ds = 0; ds < durSlots; ds++) used.add(b.slot + ds);
+    }
+  }
+
+  const container = document.getElementById('bestTimes');
+
+  if (best.length === 0 || best[0].score === 0) {
+    container.innerHTML = '<div class="no-results">No slots found where any participant is available. Try adjusting working hours or reducing the meeting duration.</div>';
+    return;
+  }
+
+  container.innerHTML = best.map((b, i) => {
+    const slotStart = new Date(baseDate.getTime() + b.slot * 30 * 60000);
+    const slotEnd = new Date(slotStart.getTime() + meetingDuration * 60000);
+    const fmtUTC = t => `${String(t.getUTCHours()).padStart(2,'0')}:${String(t.getUTCMinutes()).padStart(2,'0')}`;
+    const utcRange = `${fmtUTC(slotStart)} – ${fmtUTC(slotEnd)} UTC`;
+
+    const partHTML = participants.map((p, pi) => {
+      const avail = details[b.slot][pi];
+      const localMins = utcSlotToLocalMins(slotStart, p.tz);
+      const lh = Math.floor(localMins / 60);
+      const lm = localMins % 60;
+      const localStr = `${String(lh).padStart(2,'0')}:${String(lm).padStart(2,'0')}`;
+      const name = p.name || `Participant ${pi + 1}`;
+      const tzShort = TIMEZONES.find(t => t.value === p.tz)?.label.match(/\(([^)]+)\)/)?.[1] || '';
+      return `<span class="bsc-part ${avail ? 'avail' : 'unavail'}">${name}: ${localStr}${tzShort ? ' ' + tzShort : ''}</span>`;
+    }).join('');
+
+    const rankClass = i === 0 ? 'rank-1' : i === 1 ? 'rank-2' : '';
+    return `
+      <div class="best-slot-card ${rankClass}">
+        <div class="rank">#${i + 1}</div>
+        <div class="bsc-info">
+          <div class="bsc-utc">${utcRange} &mdash; ${b.score}/${total} available</div>
+          <div class="bsc-participants">${partHTML}</div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function toggleFaq(el) {
+  el.classList.toggle('open');
+  el.nextElementSibling.classList.toggle('open');
+}
+
+// Init
+addParticipant('Alice', 'America/New_York', '09:00', '17:00');
+addParticipant('Bob', 'Europe/London', '09:00', '17:00');
+</script>
+</body>
+</html>

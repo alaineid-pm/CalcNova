@@ -30,6 +30,7 @@ var CALCNOVA_CATEGORIES = [
   { id: 'math',         name: 'Math',              emoji: '🧮', cssClass: 'math'         },
   { id: 'productivity', name: 'Productivity',      emoji: '⏱️', cssClass: 'productivity' },
   { id: 'utility',      name: 'Utility',           emoji: '🔧', cssClass: 'utility'      },
+  { id: 'education',    name: 'Education',         emoji: '🎓', cssClass: 'education'    },
   { id: 'guides',       name: 'Guides',            emoji: '📝', cssClass: 'articles'     }
 ];
 
@@ -151,6 +152,36 @@ var CALCNOVA_TOOLS = [
     related:     ['compound-interest', 'fire-calculator', 'savings-goal'],
     badge:       'new'
   },
+  {
+    id:          'auto-loan',
+    name:        'Auto Loan Calculator',
+    emoji:       '🚗',
+    category:    'finance',
+    url:         'auto-loan-calculator.html',
+    description: 'Calculate monthly car payments, total interest, and see a full amortization schedule.',
+    related:     ['mortgage', 'debt-payoff', 'compound-interest'],
+    badge:       'new'
+  },
+  {
+    id:          'currency-converter',
+    name:        'Currency Converter',
+    emoji:       '💱',
+    category:    'finance',
+    url:         'currency-converter.html',
+    description: 'Convert between 30+ currencies with live exchange rates from the European Central Bank.',
+    related:     ['unit-converter', 'inflation-calculator', 'salary-calculator'],
+    badge:       'new'
+  },
+  {
+    id:          'investment-return',
+    name:        'Investment Return Calculator',
+    emoji:       '📊',
+    category:    'finance',
+    url:         'investment-return-calculator.html',
+    description: 'Project your investment growth with contributions, fees, and inflation adjustment.',
+    related:     ['compound-interest', 'fire-calculator', 'savings-goal'],
+    badge:       'new'
+  },
 
   /* ── Health & Fitness ─────────────────────────────── */
   {
@@ -213,6 +244,36 @@ var CALCNOVA_TOOLS = [
     related:     ['calorie-calculator', 'macro-calculator', 'bmi-calculator'],
     badge:       'new'
   },
+  {
+    id:          'due-date',
+    name:        'Pregnancy Due Date Calculator',
+    emoji:       '🤰',
+    category:    'health',
+    url:         'due-date-calculator.html',
+    description: 'Estimate your due date, current week, and key pregnancy milestones.',
+    related:     ['age-calculator', 'bmi-calculator', 'water-intake-calculator'],
+    badge:       'new'
+  },
+  {
+    id:          'sleep-calculator',
+    name:        'Sleep Calculator',
+    emoji:       '😴',
+    category:    'health',
+    url:         'sleep-calculator.html',
+    description: 'Find the best bedtime or wake-up time based on 90-minute sleep cycles.',
+    related:     ['water-intake-calculator', 'calorie-calculator', 'pomodoro'],
+    badge:       'new'
+  },
+  {
+    id:          'pace-calculator',
+    name:        'Pace Calculator',
+    emoji:       '🏃',
+    category:    'health',
+    url:         'pace-calculator.html',
+    description: 'Calculate running pace, finish time, or distance for any race from 5K to marathon.',
+    related:     ['calorie-calculator', 'bmi-calculator', 'water-intake-calculator'],
+    badge:       'new'
+  },
 
   /* ── Math ────────────────────────────────────────── */
   {
@@ -247,6 +308,26 @@ var CALCNOVA_TOOLS = [
   },
 
   /* ── Productivity ────────────────────────────────────── */
+  {
+    id:          'meeting-planner',
+    name:        'Meeting Planner',
+    emoji:       '🤝',
+    category:    'productivity',
+    url:         'meeting-planner.html',
+    description: 'Find the best meeting times across multiple time zones for remote teams.',
+    related:     ['time-converter', 'world-clock', 'pomodoro'],
+    badge:       'new'
+  },
+  {
+    id:          'invoice-generator',
+    name:        'Invoice Generator',
+    emoji:       '🧾',
+    category:    'productivity',
+    url:         'invoice-generator.html',
+    description: 'Create professional invoices and download as PDF. Free, no sign-up.',
+    related:     ['salary-calculator', 'percentage-calculator', 'word-counter'],
+    badge:       'new'
+  },
   {
     id:          'time-converter',
     name:        'Time Converter',
@@ -300,6 +381,26 @@ var CALCNOVA_TOOLS = [
 
   /* ── Utility ─────────────────────────────────────────── */
   {
+    id:          'password-generator',
+    name:        'Password Generator',
+    emoji:       '🔐',
+    category:    'utility',
+    url:         'password-generator.html',
+    description: 'Generate strong, random passwords with customizable length and character sets.',
+    related:     ['random-number', 'qr-code-generator', 'word-counter'],
+    badge:       'new'
+  },
+  {
+    id:          'qr-code-generator',
+    name:        'QR Code Generator',
+    emoji:       '📲',
+    category:    'utility',
+    url:         'qr-code-generator.html',
+    description: 'Create QR codes for URLs, text, WiFi, email, and vCards. Download as PNG or SVG.',
+    related:     ['password-generator', 'word-counter', 'unit-converter'],
+    badge:       'new'
+  },
+  {
     id:          'unit-converter',
     name:        'Unit Converter',
     emoji:       '📏',
@@ -338,6 +439,38 @@ var CALCNOVA_TOOLS = [
     description: 'Count words, characters, sentences, and reading time as you type.',
     related:     ['random-number', 'percentage-calculator', 'unit-converter'],
     badge:       null
+  },
+
+  /* ── Education ───────────────────────────────────────── */
+  {
+    id:          'grade-calculator',
+    name:        'Grade Calculator',
+    emoji:       '📝',
+    category:    'education',
+    url:         'grade-calculator.html',
+    description: 'Find out what grade you need on your final exam to hit your target course grade.',
+    related:     ['gpa-calculator', 'study-timer', 'flashcard-maker'],
+    badge:       'new'
+  },
+  {
+    id:          'study-timer',
+    name:        'Study Timer',
+    emoji:       '📚',
+    category:    'education',
+    url:         'study-timer.html',
+    description: 'Focused study sessions with subject tagging, daily tracking, and break reminders.',
+    related:     ['pomodoro', 'flashcard-maker', 'grade-calculator'],
+    badge:       'new'
+  },
+  {
+    id:          'flashcard-maker',
+    name:        'Flashcard Maker',
+    emoji:       '🗂️',
+    category:    'education',
+    url:         'flashcard-maker.html',
+    description: 'Create, study, and save flashcard decks right in your browser. No account needed.',
+    related:     ['study-timer', 'grade-calculator', 'gpa-calculator'],
+    badge:       'new'
   }
 
 ];
@@ -419,5 +552,149 @@ var CALCNOVA_ARTICLES = [
     subcategory:   'Productivity',
     relatedTool:   'pomodoro',
     datePublished: '2024-03-25'
+  },
+  {
+    id:            'article-rent-vs-buy',
+    name:          'Rent vs. Buy: How to Decide',
+    emoji:         '🏠',
+    url:           'article-rent-vs-buy.html',
+    description:   'A practical framework for the biggest financial decision most people face.',
+    readTime:      '7 min',
+    category:      'Finance',
+    subcategory:   'Housing',
+    relatedTool:   'rent-vs-buy',
+    datePublished: '2026-03-14'
+  },
+  {
+    id:            'article-auto-loan',
+    name:          'How to Pay Off Your Car Loan Faster',
+    emoji:         '🚗',
+    url:           'article-auto-loan.html',
+    description:   'Strategies to reduce interest and shorten your auto loan payoff timeline.',
+    readTime:      '5 min',
+    category:      'Finance',
+    subcategory:   'Debt',
+    relatedTool:   'auto-loan',
+    datePublished: '2026-03-14'
+  },
+  {
+    id:            'article-rule-of-72',
+    name:          'The Rule of 72: Estimate Doubling Time',
+    emoji:         '📐',
+    url:           'article-rule-of-72.html',
+    description:   'The simplest shortcut for estimating how long it takes your money to double.',
+    readTime:      '5 min',
+    category:      'Finance',
+    subcategory:   'Investing',
+    relatedTool:   'compound-interest',
+    datePublished: '2026-03-14'
+  },
+  {
+    id:            'article-inflation',
+    name:          'How Inflation Erodes Your Savings',
+    emoji:         '📉',
+    url:           'article-inflation.html',
+    description:   'Why your money loses value over time and what you can do to protect it.',
+    readTime:      '6 min',
+    category:      'Finance',
+    subcategory:   'Investing',
+    relatedTool:   'inflation-calculator',
+    datePublished: '2026-03-14'
+  },
+  {
+    id:            'article-bmi',
+    name:          'BMI Explained: What It Tells You (And Doesn\'t)',
+    emoji:         '⚖️',
+    url:           'article-bmi.html',
+    description:   'What BMI actually measures, its limitations, and when it\'s still useful.',
+    readTime:      '5 min',
+    category:      'Health',
+    subcategory:   'Body Composition',
+    relatedTool:   'bmi-calculator',
+    datePublished: '2026-03-14'
+  },
+  {
+    id:            'article-calories',
+    name:          'How to Calculate Calories for Weight Loss',
+    emoji:         '🔥',
+    url:           'article-calories.html',
+    description:   'Understand TDEE, set a sustainable deficit, and avoid crash dieting.',
+    readTime:      '7 min',
+    category:      'Health',
+    subcategory:   'Nutrition',
+    relatedTool:   'calorie-calculator',
+    datePublished: '2026-03-14'
+  },
+  {
+    id:            'article-macros',
+    name:          'Understanding Macros: Protein, Carbs & Fat',
+    emoji:         '🥗',
+    url:           'article-macros.html',
+    description:   'What each macronutrient does and how to set the right ratio for your goals.',
+    readTime:      '6 min',
+    category:      'Health',
+    subcategory:   'Nutrition',
+    relatedTool:   'macro-calculator',
+    datePublished: '2026-03-14'
+  },
+  {
+    id:            'article-meetings-timezones',
+    name:          'Running Meetings Across Time Zones',
+    emoji:         '🌍',
+    url:           'article-meetings-timezones.html',
+    description:   'Practical strategies for scheduling when your team spans the globe.',
+    readTime:      '5 min',
+    category:      'Productivity',
+    subcategory:   'Remote Work',
+    relatedTool:   'meeting-planner',
+    datePublished: '2026-03-14'
+  },
+  {
+    id:            'article-invoicing',
+    name:          'Freelancer\'s Guide to Invoicing',
+    emoji:         '🧾',
+    url:           'article-invoicing.html',
+    description:   'Invoice essentials, payment terms, and how to get paid faster.',
+    readTime:      '6 min',
+    category:      'Productivity',
+    subcategory:   'Freelancing',
+    relatedTool:   'invoice-generator',
+    datePublished: '2026-03-14'
+  },
+  {
+    id:            'article-study-techniques',
+    name:          'Science-Backed Study Techniques',
+    emoji:         '🧠',
+    url:           'article-study-techniques.html',
+    description:   'Spaced repetition, active recall, and other proven methods to study smarter.',
+    readTime:      '7 min',
+    category:      'Education',
+    subcategory:   'Study Skills',
+    relatedTool:   'study-timer',
+    datePublished: '2026-03-14'
+  },
+  {
+    id:            'article-raise-gpa',
+    name:          'How to Raise Your GPA: A Practical Plan',
+    emoji:         '📈',
+    url:           'article-raise-gpa.html',
+    description:   'Calculate what you need and build a semester strategy to hit your target GPA.',
+    readTime:      '5 min',
+    category:      'Education',
+    subcategory:   'Academics',
+    relatedTool:   'gpa-calculator',
+    datePublished: '2026-03-14'
+  },
+  {
+    id:            'article-passwords',
+    name:          'How to Create a Strong Password',
+    emoji:         '🔐',
+    url:           'article-passwords.html',
+    description:   'Password entropy, passphrases, and why password managers matter.',
+    readTime:      '5 min',
+    category:      'Security',
+    subcategory:   'Online Safety',
+    relatedTool:   'password-generator',
+    datePublished: '2026-03-14'
   }
 ];

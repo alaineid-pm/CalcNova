@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Grade Calculator — What Do I Need on My Final Exam? | CalcNova</title>
+  <meta name="description" content="Free final exam grade calculator: enter your current grade, exam weight, and target grade to instantly see what score you need. Includes what-if table for all letter grades." />
+  <link rel="canonical" href="https://calcnova.co/grade-calculator.html" />
+  <meta property="og:title" content="Grade Calculator — What Do I Need on My Final Exam? | CalcNova" />
+  <meta property="og:description" content="Calculate the exact final exam score you need to reach your target grade. Free, instant, no sign-up needed." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://calcnova.co/grade-calculator.html" />
+  <meta property="og:site_name" content="CalcNova" />
+  <script type="application/ld+json">
+  [
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Grade Calculator",
+      "url": "https://calcnova.co/grade-calculator.html",
+      "description": "Calculate what score you need on your final exam to achieve your desired course grade.",
+      "applicationCategory": "EducationApplication",
+      "operatingSystem": "Any",
+      "isPartOf": { "@type": "WebSite", "name": "CalcNova", "url": "https://calcnova.co/" }
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How do I calculate what I need on my final exam?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The formula is: Required score = (Target grade − Current grade × (1 − Exam weight%/100)) ÷ (Exam weight%/100). For example, if you have a 78% currently, want a 85% final grade, and the final is worth 30%: Required = (85 − 78 × 0.70) ÷ 0.30 = (85 − 54.6) ÷ 0.30 = 30.4 ÷ 0.30 = 101.3%. This tells you it is mathematically impossible to reach 85% — you would need to adjust your target."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What does it mean if I need over 100% on the final?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "A required score above 100% means the target grade is mathematically impossible given your current grade and the exam's weight. You need to lower your target grade expectation. The what-if table in this calculator shows you all achievable grades and what exact score each would require."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How does a weighted final exam affect my grade?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "A weighted final is worth a fixed percentage of your total course grade. If the final is 40% of the grade, the other work (homework, quizzes, midterms) counts for 60%. Your final course grade = current grade × 0.60 + final exam score × 0.40. The heavier the final exam weight, the more a good or bad performance can move your final grade."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is a weighted average in grading?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "A weighted average assigns different importance (weight) to different components of your grade. A 20% homework, 30% midterm, and 50% final exam means homework counts for 1/5 of your grade, the midterm for 3/10, and the final for 1/2. Your grade = (homework score × 0.20) + (midterm score × 0.30) + (final score × 0.50). This calculator focuses on the final exam component specifically."
+          }
+        }
+      ]
+    }
+  ]
+  </script>
+
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="shared/nav.css" />
+  <style>
+    .app { position: relative; z-index: 1; max-width: 960px; margin: 0 auto; padding: 0 16px 60px; }
+
+    .pill-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: linear-gradient(135deg, rgba(99,102,241,.1), rgba(139,92,246,.1));
+      border: 1px solid rgba(99,102,241,.25);
+      border-radius: 100px; padding: 6px 14px;
+      font-size: 12px; font-weight: 700; color: var(--purple);
+    }
+
+    .hero {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 28px 28px 24px;
+      margin-bottom: 20px;
+    }
+    .hero-title { font-size: 26px; font-weight: 800; letter-spacing: -.5px; margin: 8px 0 0; }
+    .hero-title span {
+      background: linear-gradient(135deg, var(--purple), #a78bfa);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .hero-desc { font-size: 14px; color: var(--text-secondary); margin-top: 8px; line-height: 1.55; max-width: 620px; }
+
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+    @media (max-width: 640px) { .two-col { grid-template-columns: 1fr; } }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 22px 22px 18px;
+    }
+    .card-title {
+      font-size: 11px; font-weight: 700; letter-spacing: .5px; text-transform: uppercase;
+      color: var(--text-muted); margin-bottom: 18px;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .card-title-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--purple); }
+
+    .form-group { margin-bottom: 14px; }
+    .form-label { font-size: 12px; font-weight: 600; color: var(--text-secondary); margin-bottom: 6px; display: block; }
+
+    .input-row { position: relative; }
+    .input-suffix {
+      position: absolute; top: 50%; transform: translateY(-50%);
+      right: 12px; font-family: var(--mono); font-size: 13px; font-weight: 700;
+      color: var(--text-muted); pointer-events: none;
+    }
+
+    input[type="number"] {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text-primary);
+      font-family: var(--font);
+      font-size: 14px;
+      font-weight: 600;
+      padding: 9px 36px 9px 12px;
+      outline: none;
+      transition: border-color .2s, box-shadow .2s;
+      -moz-appearance: textfield;
+      box-sizing: border-box;
+    }
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+    input[type="number"]:focus {
+      border-color: var(--purple);
+      box-shadow: 0 0 0 3px rgba(99,102,241,.12);
+    }
+
+    /* Result hero */
+    .result-hero {
+      border-radius: 18px;
+      padding: 28px;
+      text-align: center;
+      margin-bottom: 16px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      transition: background .3s, border-color .3s;
+    }
+    .result-hero.green {
+      background: linear-gradient(135deg, rgba(16,185,129,.07), rgba(99,102,241,.07));
+      border-color: rgba(16,185,129,.3);
+    }
+    .result-hero.yellow {
+      background: linear-gradient(135deg, rgba(245,158,11,.07), rgba(251,191,36,.07));
+      border-color: rgba(245,158,11,.35);
+    }
+    .result-hero.red {
+      background: linear-gradient(135deg, rgba(239,68,68,.07), rgba(220,38,38,.07));
+      border-color: rgba(239,68,68,.35);
+    }
+    .result-hero-label { font-size: 12px; font-weight: 700; letter-spacing: .5px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 8px; }
+    .result-hero-value {
+      font-family: var(--mono); font-size: 64px; font-weight: 800; line-height: 1;
+      transition: color .3s;
+    }
+    .result-hero.green .result-hero-value {
+      background: linear-gradient(135deg, var(--green), var(--purple));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .result-hero.yellow .result-hero-value { color: var(--amber); }
+    .result-hero.red .result-hero-value { color: var(--red); }
+    .result-hero-sub { font-size: 14px; color: var(--text-muted); margin-top: 10px; line-height: 1.5; }
+
+    /* Gauge bar */
+    .gauge-wrap { margin-top: 18px; }
+    .gauge-track {
+      height: 10px; border-radius: 6px; background: var(--border);
+      overflow: hidden; position: relative;
+    }
+    .gauge-fill {
+      height: 100%; border-radius: 6px;
+      transition: width .5s ease, background .3s;
+    }
+    .gauge-labels { display: flex; justify-content: space-between; margin-top: 6px; }
+    .gauge-label { font-size: 10px; color: var(--text-muted); font-family: var(--mono); }
+
+    /* What-if table */
+    .table-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+    .table-head-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 20px; border-bottom: 1px solid var(--border);
+    }
+    .table-head-title { font-size: 11px; font-weight: 700; letter-spacing: .5px; text-transform: uppercase; color: var(--text-muted); }
+    table { width: 100%; border-collapse: collapse; }
+    th {
+      background: var(--bg); padding: 10px 20px;
+      text-align: left; font-size: 10px; font-weight: 700;
+      letter-spacing: .5px; text-transform: uppercase; color: var(--text-muted);
+      border-bottom: 1px solid var(--border);
+    }
+    td { padding: 11px 20px; border-bottom: 1px solid var(--border); font-size: 13px; }
+    tr:last-child td { border-bottom: none; }
+    .td-grade { font-weight: 800; font-size: 14px; }
+    .td-target { font-family: var(--mono); font-weight: 600; color: var(--text-secondary); }
+    .td-required { font-family: var(--mono); font-weight: 700; }
+    .td-required.ok { color: var(--green); }
+    .td-required.warn { color: var(--amber); }
+    .td-required.bad { color: var(--red); }
+    .td-feasibility { font-size: 12px; }
+    tr:hover td { background: rgba(99,102,241,.03); }
+    tr.current-row td { background: rgba(99,102,241,.05); }
+
+    /* Progress bar in table */
+    .mini-bar { height: 6px; border-radius: 4px; background: var(--border); width: 100%; min-width: 80px; overflow: hidden; }
+    .mini-bar-fill { height: 100%; border-radius: 4px; }
+
+    /* Educational */
+    .edu-section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 32px 32px 28px;
+      margin-bottom: 16px;
+    }
+    .edu-section h2 { font-size: 20px; font-weight: 800; margin: 0 0 14px; }
+    .edu-section h3 { font-size: 15px; font-weight: 700; margin: 22px 0 10px; }
+    .edu-section p { font-size: 14px; line-height: 1.7; color: var(--text-secondary); margin: 0 0 12px; }
+    .edu-section ul, .edu-section ol { padding-left: 20px; margin: 0 0 12px; }
+    .edu-section li { font-size: 14px; line-height: 1.7; color: var(--text-secondary); margin-bottom: 4px; }
+    .formula-box {
+      background: var(--bg); border: 1px solid var(--border); border-radius: 12px;
+      padding: 16px 20px; font-family: var(--mono); font-size: 13px;
+      color: var(--text-secondary); margin: 12px 0; line-height: 1.9;
+    }
+    .formula-box .hl { color: var(--purple); font-weight: 700; }
+
+    .tip-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; margin: 14px 0; }
+    .tip-card {
+      background: var(--bg); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px;
+    }
+    .tip-title { font-size: 12px; font-weight: 700; color: var(--purple); margin-bottom: 6px; }
+    .tip-desc { font-size: 12px; color: var(--text-secondary); line-height: 1.6; }
+
+    .faq-item { border-bottom: 1px solid var(--border); padding: 16px 0; }
+    .faq-item:last-child { border-bottom: none; }
+    .faq-q { font-size: 14px; font-weight: 700; color: var(--text-primary); cursor: pointer; display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 0; }
+    .faq-q::after { content: '+'; font-size: 18px; color: var(--text-muted); flex-shrink: 0; }
+    .faq-item.open .faq-q::after { content: '−'; }
+    .faq-a { font-size: 14px; line-height: 1.7; color: var(--text-secondary); display: none; margin-top: 10px; }
+    .faq-item.open .faq-a { display: block; }
+
+    @media (max-width: 768px) {
+      .edu-section { padding: 24px 20px 20px; }
+      .result-hero-value { font-size: 48px; }
+    }
+    @media (max-width: 480px) {
+      .hero { padding: 20px; }
+      .hero-title { font-size: 22px; }
+    }
+    @media print {
+      nav, footer, .ad-slot { display: none !important; }
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="pill-badge">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      Education
+    </div>
+    <h1 class="hero-title">Grade <span>Calculator</span></h1>
+    <p class="hero-desc">Find out exactly what score you need on your final exam to reach your target course grade. Enter your current grade, exam weight, and desired outcome to get your answer instantly.</p>
+  </div>
+
+  <!-- FORM + RESULT -->
+  <div class="two-col">
+    <!-- INPUTS -->
+    <div class="card">
+      <div class="card-title"><span class="card-title-dot"></span>Grade Inputs</div>
+
+      <div class="form-group">
+        <label class="form-label" for="currentGrade">Current Grade</label>
+        <div class="input-row">
+          <input type="number" id="currentGrade" value="78" min="0" max="100" step="0.5" oninput="calculate()" />
+          <span class="input-suffix">%</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="examWeight">Weight of Final Exam</label>
+        <div class="input-row">
+          <input type="number" id="examWeight" value="30" min="1" max="100" step="1" oninput="calculate()" />
+          <span class="input-suffix">%</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="targetGrade">Target Final Grade</label>
+        <div class="input-row">
+          <input type="number" id="targetGrade" value="85" min="0" max="100" step="0.5" oninput="calculate()" />
+          <span class="input-suffix">%</span>
+        </div>
+      </div>
+
+      <div style="margin-top: 18px; padding: 14px; background: var(--bg); border-radius: 12px; border: 1px solid var(--border);">
+        <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; color: var(--text-muted); margin-bottom: 10px;">Grade Scale</div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 4px; font-size: 12px; font-family: var(--mono);">
+          <span style="color: var(--green);">A: 90–100%</span>
+          <span style="color: #10b981aa;">A−: 90%</span>
+          <span style="color: var(--purple);">B: 80–89%</span>
+          <span style="color: var(--amber);">C: 70–79%</span>
+          <span style="color: #f97316;">D: 60–69%</span>
+          <span style="color: var(--red);">F: below 60%</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- RESULT -->
+    <div>
+      <div class="result-hero" id="resultHero">
+        <div class="result-hero-label">Required Final Exam Score</div>
+        <div class="result-hero-value" id="requiredScore">—</div>
+        <div class="result-hero-sub" id="resultSub">Enter your grades above to calculate</div>
+        <div class="gauge-wrap" id="gaugeWrap" style="display:none;">
+          <div class="gauge-track">
+            <div class="gauge-fill" id="gaugeFill"></div>
+          </div>
+          <div class="gauge-labels">
+            <span class="gauge-label">0%</span>
+            <span class="gauge-label">50%</span>
+            <span class="gauge-label">100%</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="padding: 18px 20px;">
+        <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; color: var(--text-muted); margin-bottom: 14px;">How it breaks down</div>
+        <div style="display: flex; flex-direction: column; gap: 10px;" id="breakdown">
+          <div style="font-size: 13px; color: var(--text-muted);">Enter grades above to see the breakdown.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- WHAT-IF TABLE -->
+  <div class="table-card">
+    <div class="table-head-row">
+      <div class="table-head-title">What-If Table — All Letter Grades</div>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Letter</th>
+          <th>Target %</th>
+          <th>Required Score</th>
+          <th>Feasibility</th>
+          <th style="min-width:100px;">Difficulty</th>
+        </tr>
+      </thead>
+      <tbody id="whatIfBody"></tbody>
+    </table>
+  </div>
+
+  <!-- EDUCATIONAL CONTENT -->
+  <div class="edu-section">
+    <h2>How Final Exam Grade Calculations Work</h2>
+    <p>Most courses use a weighted average system where different assessments contribute different proportions to your final grade. Your final exam might be worth 20%, 30%, 40%, or even 50% of your total course grade depending on the instructor and institution. The rest — homework, quizzes, midterms, participation — makes up the remaining percentage.</p>
+    <p>The key insight is that your current grade already reflects all the work you've done this semester. It represents the weighted average of everything except the final exam. The calculator uses that information to determine exactly what final exam score you need to hit your target course grade.</p>
+
+    <h2>The Formula</h2>
+    <p>The required final exam score formula is a rearrangement of the weighted average equation:</p>
+    <div class="formula-box">
+      Final Course Grade = Current Grade × (1 − w) + Final Exam Score × w<br><br>
+      Solving for Final Exam Score:<br><br>
+      <span class="hl">Required Score</span> = (Target Grade − Current Grade × (1 − w)) ÷ w<br><br>
+      Where w = Final Exam Weight ÷ 100
+    </div>
+    <p>For example: You have a 78% currently, want 85% total, and the final is worth 30% (w = 0.30):</p>
+    <div class="formula-box">
+      Required = (85 − 78 × 0.70) ÷ 0.30<br>
+      Required = (85 − 54.6) ÷ 0.30<br>
+      Required = 30.4 ÷ 0.30<br>
+      <span class="hl">Required = 101.3%</span> — mathematically impossible, target grade needs adjustment
+    </div>
+    <p>Changing the target to 83% instead: Required = (83 − 54.6) ÷ 0.30 = 28.4 ÷ 0.30 = 94.7% — very challenging but possible with a perfect exam.</p>
+
+    <h2>Understanding Weighted Averages in Grading</h2>
+    <p>A weighted average multiplies each component score by its weight, then sums them. If your course has:</p>
+    <ul>
+      <li>Homework (20%): You scored 90% → contributes 90 × 0.20 = 18 points</li>
+      <li>Midterm (30%): You scored 75% → contributes 75 × 0.30 = 22.5 points</li>
+      <li>Final Exam (50%): You need X → contributes X × 0.50 points</li>
+    </ul>
+    <p>Your current grade (before the final) = (18 + 22.5) ÷ (0.20 + 0.30) = 40.5 ÷ 0.50 = 81%. The final is worth 50%, so the non-final portion accounts for 50% of your course grade. To reach 85% total: Required = (85 − 81 × 0.50) ÷ 0.50 = (85 − 40.5) ÷ 0.50 = 89%.</p>
+
+    <h2>What to Do When the Required Score Exceeds 100%</h2>
+    <p>When this calculator shows a required score above 100%, it means your target grade is mathematically impossible given where you currently stand. This is not a failing of the calculator — it is useful information. Your options are:</p>
+    <ul>
+      <li><strong>Lower your target grade:</strong> Use the what-if table to find the highest achievable grade with a realistic final exam score.</li>
+      <li><strong>Talk to your professor:</strong> Extra credit opportunities, grade curves, or dropped lowest scores may change the calculus.</li>
+      <li><strong>Check your grade components:</strong> Are all your grades entered correctly? A hidden assignment still showing zero could be pulling your current grade down artificially.</li>
+      <li><strong>Plan for next semester:</strong> Use this information early in the semester — not the night before finals — to course-correct while you still can.</li>
+    </ul>
+
+    <h2>Study Strategies for Final Exams</h2>
+    <div class="tip-grid">
+      <div class="tip-card">
+        <div class="tip-title">Spaced Repetition</div>
+        <div class="tip-desc">Review material in spaced intervals (today, tomorrow, in 3 days, in a week) rather than cramming. Research shows 2–3x better retention compared to mass studying.</div>
+      </div>
+      <div class="tip-card">
+        <div class="tip-title">Active Recall</div>
+        <div class="tip-desc">Close your notes and try to recall concepts from memory before reviewing. Flashcards, practice tests, and teaching the material to someone else are the most effective study methods.</div>
+      </div>
+      <div class="tip-card">
+        <div class="tip-title">Past Exams</div>
+        <div class="tip-desc">If past exams are available, work through them completely under timed conditions. Professors often reuse question formats and similar problem types. This is the single highest-ROI study activity.</div>
+      </div>
+      <div class="tip-card">
+        <div class="tip-title">Prioritize High-Weight Topics</div>
+        <div class="tip-desc">Not all exam topics are equal. Focus 60–70% of study time on topics the professor emphasized repeatedly, topics that appeared on previous exams, and material you are weakest on.</div>
+      </div>
+      <div class="tip-card">
+        <div class="tip-title">Sleep Before the Exam</div>
+        <div class="tip-desc">Sleep consolidates memory. Pulling an all-nighter before an exam impairs recall by up to 40% compared to sleeping normally. Study earlier, then sleep 7–8 hours the night before.</div>
+      </div>
+      <div class="tip-card">
+        <div class="tip-title">The Feynman Technique</div>
+        <div class="tip-desc">Explain a concept in simple language as if teaching it to a 12-year-old. Where you get stuck or use jargon you can't explain, that is exactly what you need to study more.</div>
+      </div>
+    </div>
+
+    <h2>Frequently Asked Questions</h2>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">How do I calculate what I need on my final exam?</div>
+      <div class="faq-a">Use the formula: Required Score = (Target − Current × (1 − w)) ÷ w, where w is the exam weight as a decimal. For example, with a 72% current grade, a 25% final exam weight, and a target of 80%: Required = (80 − 72 × 0.75) ÷ 0.25 = (80 − 54) ÷ 0.25 = 26 ÷ 0.25 = 104%. That target is not achievable — the what-if table will show you the highest grade you can realistically earn.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">What does it mean if I need over 100%?</div>
+      <div class="faq-a">It means your target grade is mathematically impossible given your current standing. No exam score can bridge the gap. You should lower your target grade using the what-if table, or speak with your professor about extra credit opportunities or grade curves. This information is most useful when discovered early in the semester, not the week of finals.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">How does a heavily weighted final affect my grade?</div>
+      <div class="faq-a">A heavily weighted final (40–50%) means your final exam performance can dramatically move your course grade in either direction. A student with a 70% course grade and a 50% final can still reach an A with a perfect exam score: Required = (90 − 70 × 0.50) ÷ 0.50 = (90 − 35) ÷ 0.50 = 110% — not possible. But they can reach a B (80%): Required = (80 − 35) ÷ 0.50 = 90%. High-weight finals create high stakes in both directions.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">What is the difference between a weighted and unweighted GPA?</div>
+      <div class="faq-a">An unweighted GPA uses a 4.0 scale where an A is always 4.0, regardless of course difficulty. A weighted GPA gives extra points for Advanced Placement (AP), International Baccalaureate (IB), or honors courses — an A in AP Calculus might be worth 5.0, not 4.0. College admissions offices typically recalculate GPA using their own systems, so the distinction matters mainly for high school class rank calculations.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">Can I use this calculator for midterms or other exams?</div>
+      <div class="faq-a">Yes. This calculator works for any weighted exam — midterm, quiz, paper, or project — not just final exams. Enter your current grade excluding the component in question, set the weight to that component's weight, and enter your desired course grade. The required score you get is what you need on that specific component.</div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+window.CALCNOVA_PAGE = { id: 'grade-calculator' };
+</script>
+<script src="shared/site-data.js"></script>
+<script src="shared/nav.js"></script>
+<script>
+const GRADE_SCALE = [
+  { letter: 'A+', min: 97, color: '#10b981' },
+  { letter: 'A',  min: 93, color: '#10b981' },
+  { letter: 'A−', min: 90, color: '#10b981' },
+  { letter: 'B+', min: 87, color: '#6366f1' },
+  { letter: 'B',  min: 83, color: '#6366f1' },
+  { letter: 'B−', min: 80, color: '#6366f1' },
+  { letter: 'C+', min: 77, color: '#f59e0b' },
+  { letter: 'C',  min: 73, color: '#f59e0b' },
+  { letter: 'C−', min: 70, color: '#f59e0b' },
+  { letter: 'D',  min: 60, color: '#f97316' },
+  { letter: 'F',  min: 0,  color: '#ef4444' },
+];
+
+function getLetter(pct) {
+  for (const g of GRADE_SCALE) {
+    if (pct >= g.min) return g;
+  }
+  return GRADE_SCALE[GRADE_SCALE.length - 1];
+}
+
+function calculate() {
+  const current = parseFloat(document.getElementById('currentGrade').value) || 0;
+  const weight = parseFloat(document.getElementById('examWeight').value) || 30;
+  const target = parseFloat(document.getElementById('targetGrade').value) || 80;
+
+  const w = weight / 100;
+  const required = (target - current * (1 - w)) / w;
+
+  const hero = document.getElementById('resultHero');
+  const scoreEl = document.getElementById('requiredScore');
+  const subEl = document.getElementById('resultSub');
+  const gaugeWrap = document.getElementById('gaugeWrap');
+  const gaugeFill = document.getElementById('gaugeFill');
+
+  scoreEl.textContent = required.toFixed(1) + '%';
+
+  hero.classList.remove('green', 'yellow', 'red');
+  gaugeWrap.style.display = 'block';
+
+  if (required > 100) {
+    hero.classList.add('red');
+    subEl.textContent = 'Not achievable — lower your target grade. See the what-if table below.';
+    gaugeFill.style.width = '100%';
+    gaugeFill.style.background = '#ef4444';
+  } else if (required > 90) {
+    hero.classList.add('yellow');
+    subEl.textContent = 'Very challenging — you will need a near-perfect final exam performance.';
+    gaugeFill.style.width = Math.min(required, 100) + '%';
+    gaugeFill.style.background = '#f59e0b';
+  } else {
+    hero.classList.add('green');
+    const letter = getLetter(required);
+    subEl.textContent = `That is ${required <= 0 ? "already achieved regardless of exam score!" : `a ${letter.letter} on your final exam.`}`;
+    gaugeFill.style.width = Math.max(0, Math.min(required, 100)) + '%';
+    gaugeFill.style.background = 'linear-gradient(90deg, #10b981, #6366f1)';
+  }
+
+  // Breakdown
+  const breakdownEl = document.getElementById('breakdown');
+  const nonFinalContrib = (current * (1 - w)).toFixed(1);
+  const finalContrib = required <= 100 ? (required * w).toFixed(1) : '—';
+  const preFinalWeight = ((1 - w) * 100).toFixed(0);
+
+  breakdownEl.innerHTML = `
+    <div style="display:flex;justify-content:space-between;font-size:13px;">
+      <span style="color:var(--text-muted);">Pre-exam work (${preFinalWeight}%)</span>
+      <span style="font-family:var(--mono);font-weight:700;color:var(--text-primary);">${current}% → ${nonFinalContrib} pts</span>
+    </div>
+    <div style="display:flex;justify-content:space-between;font-size:13px;">
+      <span style="color:var(--text-muted);">Final exam (${weight}%)</span>
+      <span style="font-family:var(--mono);font-weight:700;color:var(--purple);">${required > 100 ? 'Impossible' : required.toFixed(1) + '%'} → ${finalContrib !== '—' ? finalContrib + ' pts' : '—'}</span>
+    </div>
+    <div style="height:1px;background:var(--border);margin:4px 0;"></div>
+    <div style="display:flex;justify-content:space-between;font-size:13px;">
+      <span style="color:var(--text-muted);">Target course grade</span>
+      <span style="font-family:var(--mono);font-weight:800;color:var(--text-primary);">${target}% (${getLetter(target).letter})</span>
+    </div>
+  `;
+
+  // What-if table
+  const targets = [
+    { label: 'A', min: 93 },
+    { label: 'A−', min: 90 },
+    { label: 'B+', min: 87 },
+    { label: 'B',  min: 83 },
+    { label: 'B−', min: 80 },
+    { label: 'C+', min: 77 },
+    { label: 'C',  min: 73 },
+    { label: 'C−', min: 70 },
+    { label: 'D',  min: 60 },
+  ];
+
+  const body = document.getElementById('whatIfBody');
+  body.innerHTML = targets.map(t => {
+    const req = (t.min - current * (1 - w)) / w;
+    const g = getLetter(t.min);
+    let reqClass, feasText;
+    if (req > 100) {
+      reqClass = 'bad'; feasText = 'Not possible';
+    } else if (req > 90) {
+      reqClass = 'warn'; feasText = 'Very hard';
+    } else if (req > 75) {
+      reqClass = 'warn'; feasText = 'Challenging';
+    } else if (req >= 0) {
+      reqClass = 'ok'; feasText = req < 50 ? 'Very easy' : 'Achievable';
+    } else {
+      reqClass = 'ok'; feasText = 'Already achieved';
+    }
+    const barWidth = Math.max(0, Math.min(100, req));
+    const barColor = req > 100 ? '#ef4444' : req > 90 ? '#f59e0b' : '#10b981';
+    const isCurrentTarget = Math.abs(target - t.min) < 0.5;
+    return `
+      <tr ${isCurrentTarget ? 'class="current-row"' : ''}>
+        <td class="td-grade" style="color:${g.color};">${t.label}</td>
+        <td class="td-target">${t.min}%</td>
+        <td class="td-required ${reqClass}">${req > 100 ? req.toFixed(1) + '%' : req < 0 ? '0% (any score)' : req.toFixed(1) + '%'}</td>
+        <td class="td-feasibility" style="color:${barColor};">${feasText}</td>
+        <td>
+          <div class="mini-bar">
+            <div class="mini-bar-fill" style="width:${barWidth}%;background:${barColor};"></div>
+          </div>
+        </td>
+      </tr>
+    `;
+  }).join('');
+}
+
+function toggleFaq(el) {
+  el.parentElement.classList.toggle('open');
+}
+
+calculate();
+</script>
+</body>
+</html>
