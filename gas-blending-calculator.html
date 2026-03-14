@@ -321,18 +321,45 @@
 
     <div class="form-grid">
 
-      <!-- Target O2 -->
-      <div class="form-group">
-        <label class="form-label" for="target-o2">Target O₂ <span class="label-hint">(%)</span></label>
+      <!-- Preset mix selector -->
+      <div class="form-group full">
+        <label class="form-label" for="mix-preset">Target Mix</label>
+        <select id="mix-preset" onchange="onPresetChange()">
+          <optgroup label="Nitrox" id="preset-nitrox-group">
+            <option value="32|0">EAN32 — 32% O₂ (standard)</option>
+            <option value="36|0">EAN36 — 36% O₂</option>
+            <option value="28|0">EAN28 — 28% O₂</option>
+            <option value="40|0">EAN40 — 40% O₂</option>
+            <option value="50|0">EAN50 — 50% O₂ (deco gas)</option>
+            <option value="100|0">Pure O₂ — 100% (deco gas)</option>
+          </optgroup>
+          <optgroup label="Trimix — Bottom Gas" id="preset-trimix-group">
+            <option value="21|35">TX 21/35 — normoxic</option>
+            <option value="18|45">TX 18/45 — hypoxic</option>
+            <option value="15|55">TX 15/55 — hypoxic</option>
+            <option value="12|65">TX 12/65 — hypoxic</option>
+            <option value="10|70">TX 10/70 — hypoxic</option>
+          </optgroup>
+          <optgroup label="Trimix — Deco Gas" id="preset-trimix-deco-group">
+            <option value="50|25">TX 50/25 — deco</option>
+            <option value="35|25">TX 35/25 — deco</option>
+          </optgroup>
+          <option value="custom">Custom mix</option>
+        </select>
+      </div>
+
+      <!-- Target O2 (visible when custom) -->
+      <div class="form-group" id="group-custom-o2" style="display:none;">
+        <label class="form-label" for="target-o2">O₂ <span class="label-hint">(%)</span></label>
         <div class="input-with-unit">
-          <input type="number" id="target-o2" value="32" min="1" max="100" step="1" oninput="autoCalc()">
+          <input type="number" id="target-o2" value="32" min="4" max="100" step="1" oninput="autoCalc()">
           <span class="input-suffix">%</span>
         </div>
       </div>
 
-      <!-- Target He (trimix only) -->
-      <div class="form-group" id="group-target-he" style="display:none;">
-        <label class="form-label" for="target-he">Target He <span class="label-hint">(%)</span></label>
+      <!-- Target He (visible when custom + trimix) -->
+      <div class="form-group" id="group-custom-he" style="display:none;">
+        <label class="form-label" for="target-he">He <span class="label-hint">(%)</span></label>
         <div class="input-with-unit">
           <input type="number" id="target-he" value="35" min="0" max="99" step="1" oninput="autoCalc()">
           <span class="input-suffix">%</span>
@@ -362,6 +389,15 @@
         <label class="form-label" for="current-o2">Current O₂ <span class="label-hint">(%)</span></label>
         <div class="input-with-unit">
           <input type="number" id="current-o2" value="21" min="1" max="100" step="1" oninput="autoCalc()">
+          <span class="input-suffix">%</span>
+        </div>
+      </div>
+
+      <!-- Current He (top-up trimix only) -->
+      <div class="form-group section-topup-he" style="display:none;">
+        <label class="form-label" for="current-he">Current He <span class="label-hint">(%)</span></label>
+        <div class="input-with-unit">
+          <input type="number" id="current-he" value="0" min="0" max="99" step="1" oninput="autoCalc()">
           <span class="input-suffix">%</span>
         </div>
       </div>
@@ -520,29 +556,94 @@
     gas = g;
     document.getElementById('btn-nitrox').classList.toggle('active', g === 'nitrox');
     document.getElementById('btn-trimix').classList.toggle('active', g === 'trimix');
-    document.getElementById('group-target-he').style.display = g === 'trimix' ? '' : 'none';
-    // Trimix top-up not supported — force empty fill for trimix
-    if (g === 'trimix' && fill === 'topup') setFill('empty');
-    document.getElementById('fill-method-group').style.opacity = g === 'trimix' ? '.5' : '1';
-    document.getElementById('btn-topup').disabled = g === 'trimix';
-    // Set sensible defaults for trimix
-    if (g === 'trimix') {
-      document.getElementById('target-o2').value = 21;
-      document.getElementById('target-he').value = 35;
+    // Show/hide trimix preset groups
+    var nitroxGroup = document.getElementById('preset-nitrox-group');
+    var trimixGroup = document.getElementById('preset-trimix-group');
+    var trimixDecoGroup = document.getElementById('preset-trimix-deco-group');
+    if (g === 'nitrox') {
+      nitroxGroup.style.display = '';
+      trimixGroup.style.display = 'none';
+      trimixDecoGroup.style.display = 'none';
+      // If current selection is a trimix preset or custom-trimix, switch to EAN32
+      var sel = document.getElementById('mix-preset');
+      var curVal = sel.value;
+      if (curVal !== 'custom') {
+        var parts = curVal.split('|');
+        if (parseFloat(parts[1]) > 0) {
+          sel.value = '32|0'; // default nitrox
+          onPresetChange();
+          return;
+        }
+      }
     } else {
-      document.getElementById('target-o2').value = 32;
+      nitroxGroup.style.display = '';
+      trimixGroup.style.display = '';
+      trimixDecoGroup.style.display = '';
+      // If current selection is nitrox preset, switch to TX 21/35
+      var sel = document.getElementById('mix-preset');
+      var curVal = sel.value;
+      if (curVal !== 'custom') {
+        var parts = curVal.split('|');
+        if (parseFloat(parts[1]) === 0 && parseFloat(parts[0]) < 100) {
+          sel.value = '21|35'; // default trimix
+          onPresetChange();
+          return;
+        }
+      }
     }
+    // Show/hide custom He field
+    var isCustom = document.getElementById('mix-preset').value === 'custom';
+    document.getElementById('group-custom-he').style.display = (isCustom && g === 'trimix') ? '' : 'none';
+    // Show/hide current He field for trimix top-up
+    updateTopupFields();
     autoCalc();
   }
 
   function setFill(f) {
-    if (gas === 'trimix' && f === 'topup') return;
     fill = f;
     document.getElementById('btn-empty').classList.toggle('active', f === 'empty');
     document.getElementById('btn-topup').classList.toggle('active', f === 'topup');
     var topupEls = document.querySelectorAll('.section-topup');
     topupEls.forEach(function(el) { el.style.display = f === 'topup' ? '' : 'none'; });
+    updateTopupFields();
     document.getElementById('card-title-text').textContent = f === 'topup' ? 'Current Tank + Target Mix' : 'Target Mix';
+    autoCalc();
+  }
+
+  function updateTopupFields() {
+    var showHeTopup = gas === 'trimix' && fill === 'topup';
+    var heFields = document.querySelectorAll('.section-topup-he');
+    heFields.forEach(function(el) { el.style.display = showHeTopup ? '' : 'none'; });
+  }
+
+  /* ── Preset change handler ── */
+  function onPresetChange() {
+    var sel = document.getElementById('mix-preset');
+    var val = sel.value;
+    var customO2 = document.getElementById('group-custom-o2');
+    var customHe = document.getElementById('group-custom-he');
+
+    if (val === 'custom') {
+      customO2.style.display = '';
+      customHe.style.display = gas === 'trimix' ? '' : 'none';
+    } else {
+      customO2.style.display = 'none';
+      customHe.style.display = 'none';
+      // Parse preset and populate hidden inputs (for calculate to read)
+      var parts = val.split('|');
+      document.getElementById('target-o2').value = parts[0];
+      document.getElementById('target-he').value = parts[1];
+      // Auto-switch to trimix mode if He > 0
+      var he = parseFloat(parts[1]);
+      if (he > 0 && gas !== 'trimix') {
+        setGas('trimix');
+        return; // setGas will call autoCalc
+      }
+      if (he === 0 && gas !== 'nitrox') {
+        setGas('nitrox');
+        return;
+      }
+    }
     autoCalc();
   }
 
@@ -566,6 +667,7 @@
     var pFill     = parseFloat(document.getElementById('fill-pressure').value);
     var pCurrent  = fill === 'topup' ? parseFloat(document.getElementById('current-pressure').value) : 0;
     var fo2Current = fill === 'topup' ? parseFloat(document.getElementById('current-o2').value) / 100 : 0.21;
+    var fheCurrent = (fill === 'topup' && gas === 'trimix') ? parseFloat(document.getElementById('current-he').value) / 100 : 0;
 
     /* Validation */
     if (isNaN(fo2Target) || fo2Target <= 0 || fo2Target > 1) {
@@ -583,12 +685,17 @@
     if (fill === 'topup') {
       if (isNaN(pCurrent) || pCurrent < 0) return showError('Enter a valid current tank pressure.');
       if (pCurrent >= pFill) return showError('Current pressure must be less than target fill pressure.');
+      if (gas === 'trimix' && (isNaN(fheCurrent) || fheCurrent < 0 || fheCurrent >= 1)) return showError('Enter a valid current helium percentage.');
+      if (fo2Current + fheCurrent >= 1) return showError('Current O₂ + He cannot equal or exceed 100%.');
     }
-    if (fo2Target < 0.21) {
-      return showError('O₂ below 21% (hypoxic mixes) requires specialist technical training and is not supported here.');
-    }
-
     var isM = (unit === 'metric');
+
+    /* Hypoxic warning */
+    if (fo2Target < 0.18) {
+      showWarning('Hypoxic mix (O₂ < 18%): NOT breathable at the surface. This mix requires technical training, travel gas, and a team protocol. Ensure your cylinder is clearly labelled.');
+    } else if (fo2Target < 0.21) {
+      showWarning('Hypoxic mix (O₂ < 21%): may not be suitable for surface breathing. Ensure you have appropriate travel/deco gases and technical training.');
+    }
 
     /* Perform calculation */
     var pO2Add, pHeAdd, pAirAdd;
@@ -606,15 +713,20 @@
         pAirAdd = pFill - pO2Add - pHeAdd;
       }
     } else {
-      // Top-up nitrox
-      pHeAdd = 0;
-      pO2Add = ((fo2Target - 0.21) * pFill - (fo2Current - 0.21) * pCurrent) / 0.79;
-      pAirAdd = pFill - pCurrent - pO2Add;
+      // Top-up (nitrox or trimix)
+      pHeAdd = fheTarget * pFill - fheCurrent * pCurrent;
+      if (pHeAdd < 0) pHeAdd = 0;
+      pO2Add = ((fo2Target - 0.21) * pFill - (fo2Current - 0.21) * pCurrent + 0.21 * pHeAdd) / 0.79;
+      pAirAdd = pFill - pCurrent - pO2Add - pHeAdd;
     }
 
     /* Feasibility checks */
     if (pO2Add < -0.5) {
-      return showError('Cannot achieve target mix by adding O₂ and air. The existing gas has too high an O₂ fraction — bleed gas from the cylinder first or start from empty.');
+      if (fill === 'topup') {
+        return showError('Cannot achieve target mix — the existing gas has too much O₂. Bleed gas from the cylinder first or start from empty.');
+      } else {
+        return showError('Cannot achieve this O₂ level using air as a top-up gas. The air component alone provides more O₂ than your target. You would need a nitrogen or trimix top-up source instead.');
+      }
     }
     if (pO2Add < 0) pO2Add = 0; // negligible rounding
     if (pAirAdd < -0.5) {
@@ -786,6 +898,10 @@
     toast.classList.add('show');
     setTimeout(function() { toast.classList.remove('show'); }, 2000);
   }
+
+  /* ── Init: hide trimix presets since we start in nitrox mode ── */
+  document.getElementById('preset-trimix-group').style.display = 'none';
+  document.getElementById('preset-trimix-deco-group').style.display = 'none';
 </script>
 </body>
 </html>
