@@ -962,12 +962,7 @@
     document.getElementById('badge-breastfeeding').textContent = bfLabel;
   }
 
-  /* Auto-detect locale — en-US uses lbs */
-  (function detectLocale() {
-    var lang = (navigator.language || '').toLowerCase();
-    var useLbs = lang === 'en-us' || lang.startsWith('en-us');
-    setUnit(useLbs ? 'lbs' : 'kg');
-  })();
+  /* detectLocale moved below — needs RESULT_IDS and calculate() to be ready */
 
   /* ─────────────────────────────────────────
      Input helpers
@@ -1267,6 +1262,15 @@
     if (!el) return;
     el.addEventListener('change', calculate);
   });
+
+  /* ─────────────────────────────────────────
+     Auto-detect locale (must run after all vars/functions are ready)
+  ───────────────────────────────────────── */
+  (function detectLocale() {
+    var lang = (navigator.language || '').toLowerCase();
+    var useLbs = lang === 'en-us' || lang.startsWith('en-us');
+    setUnit(useLbs ? 'lbs' : 'kg');
+  })();
 
   /* ─────────────────────────────────────────
      Initial render

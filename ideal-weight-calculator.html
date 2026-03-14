@@ -694,12 +694,7 @@
     calculate();
   }
 
-  /* ── Auto-detect locale ── */
-  (function detectLocale() {
-    var lang = (navigator.language || '').toLowerCase();
-    var useImperial = lang === 'en-us' || lang.startsWith('en-us');
-    setUnit(useImperial ? 'imperial' : 'metric');
-  })();
+  /* detectLocale moved below — needs RESULT_IDS and calculate() to be ready */
 
   /* ── Input helpers ── */
   function numVal(id) {
@@ -1047,6 +1042,13 @@
       el.addEventListener('change', calculate);
     }
   });
+
+  /* ── Auto-detect locale (must run after all vars/functions are ready) ── */
+  (function detectLocale() {
+    var lang = (navigator.language || '').toLowerCase();
+    var useImperial = lang === 'en-us' || lang.startsWith('en-us');
+    setUnit(useImperial ? 'imperial' : 'metric');
+  })();
 
   /* ── Init ── */
   calculate();
