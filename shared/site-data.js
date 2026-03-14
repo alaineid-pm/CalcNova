@@ -481,7 +481,7 @@ var CALCNOVA_TOOLS = [
     emoji:       '🫧',
     category:    'scuba',
     url:         'nitrox-calculator.html',
-    description: 'Calculate Maximum Operating Depth, PO₂ at depth, Best Mix, and Equivalent Air Depth for nitrox diving.',
+    description: 'Calculate Maximum Operating Depth and PO₂ at any depth for nitrox diving. Essential for enriched air divers.',
     related:     ['gas-blending', 'trimix-calculator', 'sac-rate'],
     badge:       'new'
   },

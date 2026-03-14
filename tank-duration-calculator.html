@@ -281,6 +281,9 @@
       border: none;
       background: none;
       border-radius: 50%;
+      appearance: auto;
+      -webkit-appearance: radio;
+      flex-shrink: 0;
     }
 
     /* ── Calculate Button ── */
@@ -678,8 +681,8 @@
 
       <!-- SAC / RMV -->
       <div class="form-group">
-        <label for="rate" id="labelRate">SAC Rate <span class="label-hint" id="hintRate">(bar/min)</span></label>
-        <input type="number" id="rate" placeholder="e.g. 18" min="0.1" max="500" step="0.1" oninput="autoCalc()">
+        <label for="rate" id="labelRate">SAC Rate <span class="label-hint" id="hintRate">(L/min)</span></label>
+        <input type="number" id="rate" placeholder="e.g. 15" min="0.1" max="200" step="0.1" oninput="autoCalc()">
       </div>
 
       <!-- Water Type -->
@@ -935,7 +938,7 @@
     document.getElementById('thDepth').textContent = 'Depth (' + (isM ? 'm' : 'ft') + ')';
 
     if (mode === 'sac') {
-      document.getElementById('labelRate').innerHTML = 'SAC Rate <span class="label-hint" id="hintRate">(' + (isM ? 'bar/min' : 'psi/min') + ')</span>';
+      document.getElementById('labelRate').innerHTML = 'SAC Rate <span class="label-hint" id="hintRate">(' + (isM ? 'L/min' : 'cu ft/min') + ')</span>';
     } else {
       document.getElementById('labelRate').innerHTML = 'RMV <span class="label-hint" id="hintRate">(' + (isM ? 'L/min' : 'cu ft/min') + ')</span>';
     }
@@ -1018,26 +1021,16 @@
     var ata = getATA(depth, waterType);
     var duration, consumptionAtDepth, usableVol;
 
-    if (mode === 'sac') {
-      consumptionAtDepth = rate * ata; // bar/min or psi/min
-      duration = usableGas / consumptionAtDepth;
-      if (isM) {
-        usableVol = usableGas * tankParams.vol; // liters
-      } else {
-        usableVol = usableGas * (tankParams.vol / tankParams.workingPres); // cu ft
-      }
+    // Both SAC and RMV use volume-based calculation (L/min or cu ft/min)
+    if (isM) {
+      usableVol = usableGas * tankParams.vol; // liters
+      consumptionAtDepth = rate * ata; // L/min at depth
     } else {
-      // RMV mode
-      if (isM) {
-        usableVol = usableGas * tankParams.vol; // liters
-        consumptionAtDepth = rate * ata; // L/min
-      } else {
-        var tankFactor = tankParams.vol / tankParams.workingPres;
-        usableVol = usableGas * tankFactor; // cu ft
-        consumptionAtDepth = rate * ata; // cu ft/min
-      }
-      duration = usableVol / consumptionAtDepth;
+      var tankFactor = tankParams.vol / tankParams.workingPres;
+      usableVol = usableGas * tankFactor; // cu ft
+      consumptionAtDepth = rate * ata; // cu ft/min
     }
+    duration = usableVol / consumptionAtDepth;
 
     var turnPres = fillPres - (usableGas / 3);
 

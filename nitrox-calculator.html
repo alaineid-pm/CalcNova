@@ -4,14 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Nitrox / MOD Calculator — Maximum Operating Depth &amp; PO₂ | CalcNova</title>
-  <meta name="description" content="Free nitrox calculator: find Maximum Operating Depth, PO₂ at depth, Best Mix for a planned depth, and Equivalent Air Depth. Essential for enriched air divers.">
+  <meta name="description" content="Free nitrox calculator: find Maximum Operating Depth and PO₂ at any depth for enriched air diving. Essential for recreational nitrox divers.">
 
   <!-- Canonical -->
   <link rel="canonical" href="https://calcnova.co/nitrox-calculator.html">
 
   <!-- Open Graph -->
   <meta property="og:title" content="Nitrox / MOD Calculator — Maximum Operating Depth &amp; PO₂ | CalcNova">
-  <meta property="og:description" content="Free nitrox calculator: find Maximum Operating Depth, PO₂ at depth, Best Mix for a planned depth, and Equivalent Air Depth. Essential for enriched air divers.">
+  <meta property="og:description" content="Free nitrox calculator: find Maximum Operating Depth and PO₂ at any depth for enriched air diving. Essential for recreational nitrox divers.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://calcnova.co/nitrox-calculator.html">
   <meta property="og:site_name" content="CalcNova">
@@ -25,7 +25,7 @@
         "@type": "WebApplication",
         "name": "Nitrox / MOD Calculator",
         "url": "https://calcnova.co/nitrox-calculator.html",
-        "description": "Calculate Maximum Operating Depth, PO₂ at depth, Best Mix for your dive, and Equivalent Air Depth for nitrox planning.",
+        "description": "Calculate Maximum Operating Depth and PO₂ at depth for nitrox diving planning.",
         "applicationCategory": "UtilityApplication",
         "provider": { "@type": "Organization", "name": "CalcNova", "url": "https://calcnova.co" },
         "offers": { "@type": "Offer", "price": "0" }
@@ -57,14 +57,6 @@
               "text": "For recreational diving, use a PO₂ limit of 1.4 ATA. A limit of 1.6 ATA is used by technical divers during decompression stops only. Most training agencies recommend 1.4 ATA as the working limit for bottom gas."
             }
           },
-          {
-            "@type": "Question",
-            "name": "What is Equivalent Air Depth (EAD)?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "EAD is the depth on air that produces the same nitrogen partial pressure as diving nitrox at your actual depth. Use your EAD (rather than actual depth) when consulting air dive tables to calculate no-decompression limits, giving you credit for the reduced nitrogen in your nitrox mix."
-            }
-          }
         ]
       }
     ]
@@ -402,7 +394,7 @@
   <div class="hero">
     <div class="hero-badge">Scuba Tool</div>
     <h1 class="hero-title">Nitrox / MOD <span>Calculator</span></h1>
-    <p class="hero-desc">Calculate Maximum Operating Depth, PO₂ at depth, Best Mix for your dive, and Equivalent Air Depth for nitrox planning.</p>
+    <p class="hero-desc">Calculate Maximum Operating Depth and PO₂ at any depth for nitrox diving planning.</p>
   </div>
 
   <!-- Unit toggle -->
@@ -415,8 +407,6 @@
   <div class="seg-control" role="tablist" aria-label="Calculator mode">
     <button class="seg-btn active" id="tab-mod" role="tab" aria-selected="true" onclick="setMode('mod')">MOD</button>
     <button class="seg-btn" id="tab-po2" role="tab" aria-selected="false" onclick="setMode('po2')">PO₂ at Depth</button>
-    <button class="seg-btn" id="tab-bestmix" role="tab" aria-selected="false" onclick="setMode('bestmix')">Best Mix</button>
-    <button class="seg-btn" id="tab-ead" role="tab" aria-selected="false" onclick="setMode('ead')">EAD</button>
   </div>
 
   <!-- Input Card -->
@@ -458,42 +448,6 @@
         <div class="input-with-unit">
           <input type="number" id="po2-depth" value="20" min="0" max="500" step="1" aria-label="Depth" oninput="calculate()">
           <span class="input-suffix" id="po2-depth-unit">m</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Best Mix Inputs -->
-    <div id="inputs-bestmix" style="display:none;">
-      <div class="form-group">
-        <label class="form-label" for="bm-depth">Planned Maximum Depth</label>
-        <div class="input-with-unit">
-          <input type="number" id="bm-depth" value="30" min="1" max="500" step="1" aria-label="Planned maximum depth" oninput="calculate()">
-          <span class="input-suffix" id="bm-depth-unit">m</span>
-        </div>
-      </div>
-      <div class="form-group">
-        <label class="form-label" for="bm-po2limit">PO₂ Limit</label>
-        <select id="bm-po2limit" aria-label="PO2 limit" onchange="calculate()">
-          <option value="1.4" selected>1.4 ATA — Recreational (recommended)</option>
-          <option value="1.6">1.6 ATA — Deco / contingency only</option>
-        </select>
-      </div>
-    </div>
-
-    <!-- EAD Inputs -->
-    <div id="inputs-ead" style="display:none;">
-      <div class="form-group">
-        <label class="form-label" for="ead-o2">O₂ Fraction (%)</label>
-        <div class="input-with-unit">
-          <input type="number" id="ead-o2" value="32" min="1" max="100" step="1" aria-label="Oxygen percentage" oninput="calculate()">
-          <span class="input-suffix">%</span>
-        </div>
-      </div>
-      <div class="form-group">
-        <label class="form-label" for="ead-depth">Actual Depth</label>
-        <div class="input-with-unit">
-          <input type="number" id="ead-depth" value="30" min="0" max="500" step="1" aria-label="Actual depth" oninput="calculate()">
-          <span class="input-suffix" id="ead-depth-unit">m</span>
         </div>
       </div>
     </div>
@@ -556,68 +510,6 @@
           <div class="result-stat-value" id="po2-fo2-display">—</div>
           <div class="result-stat-sub">FO₂</div>
         </div>
-      </div>
-    </div>
-
-    <!-- Best Mix Result -->
-    <div id="result-bestmix" style="display:none;">
-      <div class="result-label">Best Nitrox Mix</div>
-      <div>
-        <span class="result-primary" id="bm-result-pct">—</span>
-        <span class="result-unit">% O₂</span>
-      </div>
-      <div class="result-secondary" id="bm-mix-name">EANxx</div>
-      <div class="result-row">
-        <div class="result-stat">
-          <div class="result-stat-label">Planned Depth</div>
-          <div class="result-stat-value" id="bm-depth-display">—</div>
-          <div class="result-stat-sub" id="bm-depth-unit-display">metres</div>
-        </div>
-        <div class="result-stat">
-          <div class="result-stat-label">ATA at Depth</div>
-          <div class="result-stat-value" id="bm-ata-display">—</div>
-          <div class="result-stat-sub">absolute pressure</div>
-        </div>
-        <div class="result-stat">
-          <div class="result-stat-label">PO₂ at MOD</div>
-          <div class="result-stat-value" id="bm-po2-check">—</div>
-          <div class="result-stat-sub">ATA (verify)</div>
-        </div>
-      </div>
-      <div class="info-note" style="margin-top:14px;">
-        <span class="info-note-icon">&#9660;</span>
-        <span><strong>Round DOWN for safety</strong> — never round up on oxygen. This mix is floored to the nearest whole percent so you stay within your PO₂ limit.</span>
-      </div>
-    </div>
-
-    <!-- EAD Result -->
-    <div id="result-ead" style="display:none;">
-      <div class="result-label">Equivalent Air Depth</div>
-      <div>
-        <span class="result-primary" id="ead-result-m">—</span>
-        <span class="result-unit">m</span>
-      </div>
-      <div class="result-secondary" id="ead-result-ft">— ft</div>
-      <div class="result-row">
-        <div class="result-stat">
-          <div class="result-stat-label">Actual Depth</div>
-          <div class="result-stat-value" id="ead-actual-display">—</div>
-          <div class="result-stat-sub" id="ead-actual-unit-display">metres</div>
-        </div>
-        <div class="result-stat">
-          <div class="result-stat-label">FN₂ (nitrogen)</div>
-          <div class="result-stat-value" id="ead-fn2-display">—</div>
-          <div class="result-stat-sub">nitrogen fraction</div>
-        </div>
-        <div class="result-stat">
-          <div class="result-stat-label">N₂ savings</div>
-          <div class="result-stat-value" id="ead-savings-display">—</div>
-          <div class="result-stat-sub" id="ead-savings-unit">metres shallower</div>
-        </div>
-      </div>
-      <div class="info-note" style="margin-top:14px;">
-        <span class="info-note-icon">&#8505;&#65039;</span>
-        <span>Use your <strong>EAD</strong> (not actual depth) when looking up no-decompression limits in air dive tables to get credit for the reduced nitrogen in your nitrox mix.</span>
       </div>
     </div>
 
@@ -694,12 +586,10 @@
     <p>Most recreational nitrox courses are offered by PADI, SSI, NAUI, and other agencies and can be completed in a day. A nitrox certification qualifies you to plan and execute dives using enriched air up to 40% oxygen.</p>
 
     <h2>How to Use This Calculator</h2>
-    <p>This nitrox calculator has four modes, all accessible via the tabs above. Select your unit system (metric or imperial) with the toggle, then choose the appropriate mode:</p>
+    <p>This nitrox calculator has two modes, accessible via the tabs above. Select your unit system (metric or imperial) with the toggle, then choose the appropriate mode:</p>
     <ul>
       <li><strong>MOD (Maximum Operating Depth):</strong> Enter your O₂ percentage and your PO₂ limit to find the deepest depth you can safely dive that mix.</li>
       <li><strong>PO₂ at Depth:</strong> Enter your O₂ percentage and the depth you plan to dive to find the resulting partial pressure of oxygen. The result is colour-coded green (safe), amber (deco range), or red (danger).</li>
-      <li><strong>Best Mix:</strong> Enter your planned maximum depth and desired PO₂ limit to find the optimal oxygen percentage for that dive — always floored down for safety.</li>
-      <li><strong>EAD (Equivalent Air Depth):</strong> Enter your O₂ percentage and actual depth to find the equivalent air depth for dive table planning.</li>
     </ul>
 
     <h2>Understanding Maximum Operating Depth (MOD)</h2>
@@ -723,25 +613,6 @@
     </div>
     <p>At the surface, ATA = 1.0. At 10 m (33 ft) ATA = 2.0; at 20 m (66 ft) ATA = 3.0. Breathing EAN32 at 20 m gives PO₂ = 0.32 × 3.0 = 0.96 ATA — well within safe limits. At 34 m (112 ft), ATA = 4.4, so PO₂ = 0.32 × 4.4 = 1.408 — right at the recreational limit.</p>
     <p>CNS oxygen toxicity risk rises steeply above 1.4 ATA and becomes severe above 1.6 ATA. Symptoms include visual disturbances, ringing in the ears, nausea, and convulsions. Because convulsions underwater are almost always fatal (the regulator is expelled), divers must never exceed their MOD.</p>
-
-    <h2>Best Mix for Your Dive</h2>
-    <p>The "Best Mix" concept lets you maximise the oxygen percentage (and thus minimise nitrogen absorption) while keeping PO₂ at the maximum depth within the safe limit. The formula is:</p>
-    <div class="formula-block">
-      Best FO₂ = PO₂ limit ÷ ATA at planned maximum depth<br>
-      Best O₂% = floor(Best FO₂ × 100)  ← always round DOWN
-    </div>
-    <p>Rounding down is critical for safety. If the ideal mix works out to 35.8%, you must analyse and label a 35% mix, not 36%. Rounding up even by 1% shifts your actual MOD shallower than you planned, potentially causing you to exceed your PO₂ limit at depth without realising it.</p>
-    <p>In practice, the Best Mix is limited by what your dive centre can blend. Most facilities offer standard mixes at 32% and 36% increments. Choose the highest standard mix whose MOD is deeper than your planned maximum depth.</p>
-
-    <h2>Equivalent Air Depth (EAD)</h2>
-    <p>Equivalent Air Depth lets you use standard air dive tables with a nitrox mix by converting your actual depth to the air depth that produces the same nitrogen partial pressure. This allows you to read the corresponding no-decompression limit from an air table.</p>
-    <div class="formula-block">
-      FN₂ = 1 − FO₂  (nitrogen fraction)<br>
-      EAD (m)  = ((FN₂ × ATA) ÷ 0.79 − 1) × 10<br>
-      EAD (ft) = ((FN₂ × ATA) ÷ 0.79 − 1) × 33
-    </div>
-    <p>The constant 0.79 is the nitrogen fraction of air. For EAN32 at 30 m: FN₂ = 0.68, ATA = 4.0, EAD = ((0.68 × 4.0) ÷ 0.79 − 1) × 10 = 24.4 m. You would use 24 m on your air table to find the NDL, giving you a longer bottom time than if you were diving air at 30 m.</p>
-    <p>Note that modern dive computers typically calculate EAD and NDL automatically when programmed with your nitrox mix. However, understanding EAD is important for pre-dive planning, gas management, and dive table exercises on certification courses.</p>
 
     <h2>Frequently Asked Questions</h2>
 
@@ -787,7 +658,7 @@
 <script>
   /* ── State ── */
   var unit = 'metric';   // 'metric' | 'imperial'
-  var mode = 'mod';      // 'mod' | 'po2' | 'bestmix' | 'ead'
+  var mode = 'mod';      // 'mod' | 'po2'
 
   /* ── Unit toggle ── */
   function setUnit(u) {
@@ -798,37 +669,33 @@
     // Update depth unit labels
     var depthUnit = u === 'metric' ? 'm' : 'ft';
     document.getElementById('po2-depth-unit').textContent = depthUnit;
-    document.getElementById('bm-depth-unit').textContent = depthUnit;
-    document.getElementById('ead-depth-unit').textContent = depthUnit;
 
     calculate();
   }
 
   /* ── Mode toggle ── */
   var modeLabels = {
-    mod:     'Maximum Operating Depth',
-    po2:     'PO\u2082 at Depth',
-    bestmix: 'Best Mix for Your Dive',
-    ead:     'Equivalent Air Depth (EAD)'
+    mod: 'Maximum Operating Depth',
+    po2: 'PO\u2082 at Depth'
   };
 
   function setMode(m) {
     mode = m;
 
     // Tab buttons
-    ['mod','po2','bestmix','ead'].forEach(function(id) {
+    ['mod','po2'].forEach(function(id) {
       var btn = document.getElementById('tab-' + id);
       btn.classList.toggle('active', id === m);
       btn.setAttribute('aria-selected', id === m ? 'true' : 'false');
     });
 
     // Input sections
-    ['mod','po2','bestmix','ead'].forEach(function(id) {
+    ['mod','po2'].forEach(function(id) {
       document.getElementById('inputs-' + id).style.display = id === m ? '' : 'none';
     });
 
     // Result sections
-    ['mod','po2','bestmix','ead'].forEach(function(id) {
+    ['mod','po2'].forEach(function(id) {
       document.getElementById('result-' + id).style.display = id === m ? '' : 'none';
     });
 
@@ -877,10 +744,8 @@
     clearError();
     clearWarning();
 
-    if (mode === 'mod')     calcMod();
-    else if (mode === 'po2')     calcPo2();
-    else if (mode === 'bestmix') calcBestMix();
-    else if (mode === 'ead')     calcEad();
+    if (mode === 'mod') calcMod();
+    else if (mode === 'po2') calcPo2();
 
     // Trigger fade-in on reference table / seo
     document.querySelectorAll('.fade-in').forEach(function(el) {
@@ -989,98 +854,6 @@
     showResult();
   }
 
-  /* ── Best Mix ── */
-  function calcBestMix() {
-    var depth    = parseFloat(document.getElementById('bm-depth').value);
-    var po2limit = parseFloat(document.getElementById('bm-po2limit').value);
-
-    if (isNaN(depth) || depth <= 0) {
-      showError('Please enter a valid planned maximum depth.');
-      return;
-    }
-
-    var ata       = depthToAta(depth, unit);
-    var idealFo2  = po2limit / ata;
-    var bestPct   = Math.floor(idealFo2 * 100); // floor for safety
-
-    if (bestPct < 1) {
-      showError('The planned depth is too deep for any nitrox mix at this PO\u2082 limit. Consider a shallower dive or a different gas.');
-      return;
-    }
-    if (bestPct > 100) bestPct = 100;
-
-    var bestFo2   = bestPct / 100;
-    var po2Check  = bestFo2 * ata;
-
-    document.getElementById('bm-result-pct').textContent = bestPct;
-    document.getElementById('bm-mix-name').textContent   = bestPct === 21 ? 'Air' : 'EAN' + bestPct;
-
-    var depthUnitLabel = unit === 'metric' ? 'metres' : 'feet';
-    document.getElementById('bm-depth-display').textContent      = fmt(depth, 0);
-    document.getElementById('bm-depth-unit-display').textContent = depthUnitLabel;
-    document.getElementById('bm-ata-display').textContent        = fmt(ata, 3);
-    document.getElementById('bm-po2-check').textContent          = fmt(po2Check, 3);
-
-    if (bestPct <= 21) {
-      showWarning('&#9888;&#65039; Best mix is 21% or less — standard air or a hypoxic mix. Ensure hypoxic mixes are only used with proper technical training.');
-    } else if (bestPct > 40) {
-      showWarning('&#9888;&#65039; Best mix exceeds 40%. High-oxygen mixes require specialist technical training and dedicated equipment analysis.');
-    }
-
-    document.getElementById('result-bestmix').style.display = '';
-    showResult();
-  }
-
-  /* ── EAD ── */
-  function calcEad() {
-    var o2    = parseFloat(document.getElementById('ead-o2').value);
-    var depth = parseFloat(document.getElementById('ead-depth').value);
-
-    if (isNaN(o2) || o2 <= 0 || o2 > 100) {
-      showError('Please enter a valid O\u2082 fraction between 1 and 100.');
-      return;
-    }
-    if (isNaN(depth) || depth < 0) {
-      showError('Please enter a valid depth.');
-      return;
-    }
-
-    var fo2 = o2 / 100;
-    var fn2 = 1 - fo2;
-    var ata = depthToAta(depth, unit);
-
-    var eadM  = (fn2 * ata / 0.79 - 1) * 10;
-    var eadFt = (fn2 * ata / 0.79 - 1) * 33;
-
-    // Can be negative for very shallow dives with high O2 — clamp to 0 with note
-    if (eadM < 0) {
-      eadM  = 0;
-      eadFt = 0;
-    }
-
-    var savingsM  = depth - eadM;
-    var savingsFt = (unit === 'metric' ? depth * 3.28084 : depth) - eadFt;
-
-    document.getElementById('ead-result-m').textContent  = fmt(eadM, 1);
-    document.getElementById('ead-result-ft').textContent = fmt(eadFt, 0) + ' ft';
-
-    var depthUnitLabel = unit === 'metric' ? 'metres' : 'feet';
-    document.getElementById('ead-actual-display').textContent       = fmt(depth, 0);
-    document.getElementById('ead-actual-unit-display').textContent  = depthUnitLabel;
-    document.getElementById('ead-fn2-display').textContent          = fmt(fn2, 3);
-
-    if (unit === 'metric') {
-      document.getElementById('ead-savings-display').textContent = fmt(savingsM, 1);
-      document.getElementById('ead-savings-unit').textContent    = 'metres shallower';
-    } else {
-      document.getElementById('ead-savings-display').textContent = fmt(savingsFt, 0);
-      document.getElementById('ead-savings-unit').textContent    = 'feet shallower';
-    }
-
-    document.getElementById('result-ead').style.display = '';
-    showResult();
-  }
-
   /* ── Copy Summary ── */
   function copySummary() {
     var lines = ['CalcNova Nitrox Calculator — ' + new Date().toLocaleDateString()];
@@ -1103,21 +876,6 @@
       lines.push('O\u2082 Fraction: ' + o2 + '%');
       lines.push('Depth: ' + depth + ' ' + (unit === 'metric' ? 'm' : 'ft'));
       lines.push('PO\u2082: ' + res + ' ATA');
-    } else if (mode === 'bestmix') {
-      var depth = document.getElementById('bm-depth').value;
-      var po2l  = document.getElementById('bm-po2limit').value;
-      var res   = document.getElementById('bm-result-pct').textContent;
-      lines.push('Planned Depth: ' + depth + ' ' + (unit === 'metric' ? 'm' : 'ft'));
-      lines.push('PO\u2082 Limit: ' + po2l + ' ATA');
-      lines.push('Best Mix: ' + res + '% O\u2082 (EAN' + res + ')');
-    } else if (mode === 'ead') {
-      var o2    = document.getElementById('ead-o2').value;
-      var depth = document.getElementById('ead-depth').value;
-      var resM  = document.getElementById('ead-result-m').textContent;
-      var resFt = document.getElementById('ead-result-ft').textContent;
-      lines.push('O\u2082 Fraction: ' + o2 + '%');
-      lines.push('Actual Depth: ' + depth + ' ' + (unit === 'metric' ? 'm' : 'ft'));
-      lines.push('EAD: ' + resM + ' m / ' + resFt);
     }
 
     lines.push('');
