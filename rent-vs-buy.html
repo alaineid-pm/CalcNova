@@ -1588,8 +1588,8 @@ function runSimulation(p) {
       // Portfolio growth
       portfolio *= (1 + netInvestReturn);
 
-      if (portfolio < 0 && renterOutOfMoney < 0) {
-        renterOutOfMoney = year;
+      if (portfolio < 0) {
+        if (renterOutOfMoney < 0) renterOutOfMoney = year;
         portfolio = 0;
       }
     }
