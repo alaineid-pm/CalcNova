@@ -20,6 +20,22 @@
 
 (function () {
 
+  /* ── Google Analytics ────────────────────────────────────── */
+  /* To change the GA property, update GA_MEASUREMENT_ID here. */
+  var GA_MEASUREMENT_ID = 'G-2HPZZPQCWD';
+
+  (function loadGA(id) {
+    var s = document.createElement('script');
+    s.async = true;
+    s.src = 'https://www.googletagmanager.com/gtag/js?id=' + id;
+    document.head.appendChild(s);
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    window.gtag = window.gtag || gtag;
+    gtag('js', new Date());
+    gtag('config', id);
+  })(GA_MEASUREMENT_ID);
+
   /* ── Menu Data ───────────────────────────────────────────── */
   /* Edit here to update nav across ALL pages */
 
