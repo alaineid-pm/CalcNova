@@ -701,7 +701,7 @@
       <div class="error-box" id="error-box" role="alert"></div>
       <div class="warning-box" id="warning-box" role="alert"></div>
 
-      <button class="calc-btn" id="calc-btn" onclick="calculate()">Calculate Water Intake</button>
+      <button class="calc-btn" id="calc-btn" type="button">Calculate Water Intake</button>
     </div>
 
     <!-- Reference card -->
@@ -1115,8 +1115,12 @@
       glasses: glasses
     };
 
-    renderResults(lastResult);
-    showResults();
+    try {
+      renderResults(lastResult);
+      showResults();
+    } catch (e) {
+      console.error('Water Intake Calculator render error:', e);
+    }
   }
 
   /* ─────────────────────────────────────────
@@ -1240,12 +1244,14 @@
   window.copyResults = copyResults;
 
   /* ─────────────────────────────────────────
-     Wire unit toggle buttons
+     Wire all buttons via addEventListener
   ───────────────────────────────────────── */
-  var btnLbs = document.getElementById('btn-lbs');
-  var btnKg  = document.getElementById('btn-kg');
-  if (btnLbs) btnLbs.addEventListener('click', function () { setUnit('lbs'); });
-  if (btnKg)  btnKg.addEventListener('click',  function () { setUnit('kg'); });
+  var btnLbs  = document.getElementById('btn-lbs');
+  var btnKg   = document.getElementById('btn-kg');
+  var calcBtn = document.getElementById('calc-btn');
+  if (btnLbs)  btnLbs.addEventListener('click',  function () { setUnit('lbs'); });
+  if (btnKg)   btnKg.addEventListener('click',   function () { setUnit('kg'); });
+  if (calcBtn) calcBtn.addEventListener('click',  calculate);
 
   /* ─────────────────────────────────────────
      Wire all inputs
