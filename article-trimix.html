@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Introduction to Trimix: Why Helium and When You Need It | CalcNova</title>
+  <meta name="description" content="Learn what trimix is, how narcosis works and why helium counters it, how to interpret Equivalent Narcotic Depth, and the training pathway to trimix diving.">
+  <link rel="canonical" href="https://calcnova.co/article-trimix.html">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Introduction to Trimix: Why Helium and When You Need It | CalcNova">
+  <meta property="og:description" content="Learn what trimix is, how narcosis works and why helium counters it, how to interpret Equivalent Narcotic Depth, and the training pathway to trimix diving.">
+  <meta property="og:url" content="https://calcnova.co/article-trimix.html">
+  <meta property="og:site_name" content="CalcNova">
+  <meta property="article:published_time" content="2026-03-14">
+
+  <!-- JSON-LD Article Schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Introduction to Trimix: Why Helium and When You Need It",
+    "description": "Learn what trimix is, how narcosis works and why helium counters it, how to interpret Equivalent Narcotic Depth, and the training pathway to trimix diving.",
+    "url": "https://calcnova.co/article-trimix.html",
+    "datePublished": "2026-03-14",
+    "dateModified": "2026-03-14",
+    "publisher": {
+      "@type": "Organization",
+      "name": "CalcNova",
+      "url": "https://calcnova.co"
+    },
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "https://calcnova.co/article-trimix.html"
+    }
+  }
+  </script>
+
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="shared/nav.css">
+  <style>
+    .app { position: relative; z-index: 1; max-width: 960px; margin: 0 auto; padding: 0 16px 60px; }
+
+    /* ── Article Hero ── */
+    .article-hero {
+      padding: 48px 0 36px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 40px;
+      max-width: 720px;
+    }
+    .article-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: linear-gradient(135deg, rgba(16,185,129,.1), rgba(99,102,241,.1));
+      border: 1px solid rgba(16,185,129,.25);
+      border-radius: 100px; padding: 5px 14px;
+      font-size: 11px; font-weight: 700; color: var(--green);
+      letter-spacing: .5px; text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+    .article-hero h1 {
+      font-size: 38px; font-weight: 800; letter-spacing: -.5px;
+      line-height: 1.15; margin-bottom: 14px;
+    }
+    .article-hero h1 span {
+      background: linear-gradient(135deg, var(--green), var(--purple));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .article-hero .subtitle {
+      font-size: 16px; color: var(--text-secondary); line-height: 1.6; max-width: 600px;
+    }
+    .article-meta {
+      margin-top: 16px; font-size: 12px; color: var(--text-muted); font-weight: 500;
+      display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+    }
+    .article-meta .dot { width: 3px; height: 3px; border-radius: 50%; background: var(--text-muted); }
+
+    /* ── Article Body ── */
+    .article-body {
+      max-width: 720px;
+      display: flex; flex-direction: column; gap: 28px;
+    }
+    .article-body h2 {
+      font-size: 24px; font-weight: 800; letter-spacing: -.3px;
+      margin-bottom: 12px; color: var(--text-primary);
+    }
+    .article-body h3 {
+      font-size: 18px; font-weight: 700; letter-spacing: -.2px;
+      margin-bottom: 8px; color: var(--text-primary);
+    }
+    .article-body p {
+      font-size: 16px; color: var(--text-secondary); line-height: 1.75;
+      margin-bottom: 14px;
+    }
+    .article-body p:last-child { margin-bottom: 0; }
+    .article-body ul, .article-body ol {
+      padding-left: 0; list-style: none;
+      display: flex; flex-direction: column; gap: 8px;
+      margin-bottom: 14px;
+    }
+    .article-body ul li, .article-body ol li {
+      font-size: 16px; color: var(--text-secondary); line-height: 1.7;
+      padding-left: 22px; position: relative;
+    }
+    .article-body ul li::before {
+      content: ''; position: absolute; left: 0; top: 10px;
+      width: 6px; height: 6px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--green), var(--purple));
+    }
+    .article-body ol { counter-reset: ol-counter; }
+    .article-body ol li { counter-increment: ol-counter; }
+    .article-body ol li::before {
+      content: counter(ol-counter); position: absolute; left: 0; top: 0;
+      font-size: 13px; font-weight: 800; color: var(--green);
+      font-family: var(--mono);
+    }
+    .article-body a { color: var(--green); text-decoration: none; font-weight: 600; }
+    .article-body a:hover { text-decoration: underline; }
+    .article-body strong { color: var(--text-primary); font-weight: 700; }
+
+    /* ── Formula Box ── */
+    .formula-box {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 16px; padding: 24px 28px;
+    }
+    .formula-box .formula-title {
+      font-size: 11px; font-weight: 800; text-transform: uppercase;
+      letter-spacing: .5px; color: var(--purple); margin-bottom: 14px;
+    }
+    .formula-box .formula {
+      font-family: var(--mono); font-size: 18px; font-weight: 600;
+      color: var(--text-primary); margin-bottom: 16px; letter-spacing: .3px;
+      line-height: 1.6;
+    }
+    .formula-box .formula .hl { color: var(--green); }
+    .formula-box .formula .hlp { color: var(--purple); }
+    .formula-box .legend {
+      display: flex; flex-wrap: wrap; gap: 8px 20px;
+      font-size: 13px; color: var(--text-secondary);
+      border-top: 1px solid var(--border); padding-top: 14px;
+    }
+    .formula-box .legend code {
+      font-family: var(--mono); font-weight: 600; font-size: 12px;
+      background: var(--bg); border: 1px solid var(--border);
+      border-radius: 4px; padding: 1px 5px;
+    }
+
+    /* ── Callout Card ── */
+    .card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 18px; padding: 24px 26px;
+    }
+    .card-label {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 11px; font-weight: 800; text-transform: uppercase;
+      letter-spacing: .5px; color: var(--green); margin-bottom: 12px;
+    }
+    .card h3 { margin-top: 0; }
+    .card p:last-child { margin-bottom: 0; }
+
+    /* ── Warning Card ── */
+    .card-warning {
+      background: rgba(239,68,68,.05);
+      border: 1px solid rgba(239,68,68,.2);
+      border-radius: 18px; padding: 20px 24px;
+    }
+    .card-warning .card-label { color: var(--red); }
+    .card-warning p { margin-bottom: 0; }
+
+    /* ── Example Box ── */
+    .example-box {
+      background: linear-gradient(135deg, rgba(16,185,129,.05), rgba(99,102,241,.03));
+      border: 1px solid rgba(16,185,129,.18);
+      border-radius: 16px; padding: 24px 26px;
+    }
+    .example-box .example-title {
+      font-size: 14px; font-weight: 800; color: var(--green);
+      text-transform: uppercase; letter-spacing: .5px;
+      margin-bottom: 10px;
+    }
+    .example-box p { margin-bottom: 10px; }
+    .example-box .result {
+      font-family: var(--mono); font-size: 14px; font-weight: 600;
+      color: var(--text-primary); background: var(--surface);
+      border: 1px solid var(--border); border-radius: 10px;
+      padding: 14px 16px; margin-top: 12px; line-height: 1.8;
+    }
+    .example-box .result .hl { color: var(--green); font-weight: 700; }
+
+    /* ── Comparison Table ── */
+    .comparison-table {
+      width: 100%; border-collapse: collapse;
+      font-size: 14px; margin: 12px 0;
+    }
+    .comparison-table th {
+      text-align: left; font-weight: 700; font-size: 12px;
+      text-transform: uppercase; letter-spacing: .5px;
+      color: var(--text-muted); padding: 10px 14px;
+      border-bottom: 2px solid var(--border);
+    }
+    .comparison-table td {
+      padding: 10px 14px; color: var(--text-secondary);
+      border-bottom: 1px solid var(--border);
+      line-height: 1.5;
+    }
+    .comparison-table tr:last-child td { border-bottom: none; }
+    .comparison-table .num { font-family: var(--mono); font-weight: 600; }
+    .comparison-table .hl { color: var(--green); font-weight: 700; }
+    .comparison-table .hlr { color: var(--red); font-weight: 700; }
+
+    /* ── Trade-off Grid ── */
+    .tradeoff-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
+    }
+    .tradeoff-item {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 14px; padding: 18px 20px;
+    }
+    .tradeoff-item .tradeoff-icon {
+      font-size: 24px; margin-bottom: 10px; display: block;
+    }
+    .tradeoff-item h4 {
+      font-size: 14px; font-weight: 800; color: var(--text-primary);
+      margin-bottom: 6px; letter-spacing: -.1px;
+    }
+    .tradeoff-item p {
+      font-size: 13px; color: var(--text-secondary);
+      line-height: 1.6; margin-bottom: 0 !important;
+    }
+
+    /* ── Training Pathway ── */
+    .pathway-list {
+      display: flex; flex-direction: column; gap: 0;
+      padding-left: 0 !important; list-style: none !important;
+      margin-bottom: 0 !important;
+    }
+    .pathway-list li {
+      padding-left: 0 !important; position: relative;
+      display: flex; align-items: flex-start; gap: 16px;
+      padding-bottom: 20px;
+    }
+    .pathway-list li::before {
+      display: none !important;
+    }
+    .pathway-list li:last-child { padding-bottom: 0; }
+    .pathway-step {
+      flex-shrink: 0; width: 32px; height: 32px;
+      border-radius: 50%; background: linear-gradient(135deg, var(--green), var(--purple));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 800; color: #fff;
+      font-family: var(--mono); position: relative; z-index: 1;
+    }
+    .pathway-connector {
+      position: absolute; left: 15px; top: 32px;
+      width: 2px; height: calc(100% - 32px);
+      background: linear-gradient(to bottom, rgba(16,185,129,.3), rgba(99,102,241,.1));
+    }
+    .pathway-list li:last-child .pathway-connector { display: none; }
+    .pathway-content { padding-top: 4px; }
+    .pathway-content strong { color: var(--text-primary); font-weight: 700; font-size: 15px; }
+    .pathway-content span { font-size: 14px; color: var(--text-secondary); display: block; margin-top: 2px; }
+
+    /* ── FAQ ── */
+    .faq-list {
+      display: flex; flex-direction: column; gap: 12px;
+    }
+    .faq-item {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 14px; overflow: hidden;
+    }
+    .faq-item details { margin: 0; }
+    .faq-item summary {
+      font-size: 15px; font-weight: 700; color: var(--text-primary);
+      padding: 18px 20px; cursor: pointer; list-style: none;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 12px;
+    }
+    .faq-item summary::-webkit-details-marker { display: none; }
+    .faq-item summary::after {
+      content: '+'; font-size: 20px; font-weight: 400;
+      color: var(--text-muted); flex-shrink: 0; transition: transform .2s;
+    }
+    .faq-item details[open] summary::after {
+      content: '−';
+    }
+    .faq-item .faq-answer {
+      padding: 0 20px 18px; font-size: 15px; color: var(--text-secondary);
+      line-height: 1.7; border-top: 1px solid var(--border);
+      padding-top: 14px;
+    }
+
+    /* ── Related Articles ── */
+    .related-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+    }
+    .related-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 14px; padding: 18px 20px;
+      text-decoration: none !important; transition: border-color .15s;
+      display: block;
+    }
+    .related-card:hover {
+      border-color: rgba(16,185,129,.4); text-decoration: none !important;
+    }
+    .related-card .related-tag {
+      font-size: 11px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .5px; color: var(--text-muted); margin-bottom: 6px;
+    }
+    .related-card .related-title {
+      font-size: 14px; font-weight: 700; color: var(--text-primary);
+      line-height: 1.4;
+    }
+
+    /* ── CTA Section ── */
+    .cta-section {
+      background: linear-gradient(135deg, rgba(16,185,129,.08), rgba(99,102,241,.06));
+      border: 1px solid rgba(16,185,129,.2);
+      border-radius: 18px; padding: 32px; text-align: center;
+      margin-top: 8px;
+    }
+    .cta-section h2 { font-size: 22px; margin-bottom: 10px; }
+    .cta-section p { max-width: 520px; margin: 0 auto 20px; }
+    .cta-btn-group {
+      display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;
+    }
+    .cta-btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: linear-gradient(135deg, var(--green), #059669);
+      color: #fff !important; border-radius: 100px; padding: 12px 28px;
+      font-size: 14px; font-weight: 700; text-decoration: none !important;
+      font-family: var(--font); transition: all .15s;
+      box-shadow: 0 4px 14px rgba(16,185,129,.3);
+    }
+    .cta-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(16,185,129,.4); }
+    .cta-btn-secondary {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: transparent;
+      color: var(--text-primary) !important; border-radius: 100px; padding: 11px 26px;
+      font-size: 14px; font-weight: 700; text-decoration: none !important;
+      font-family: var(--font); transition: all .15s;
+      border: 1px solid var(--border);
+    }
+    .cta-btn-secondary:hover { border-color: rgba(16,185,129,.4); text-decoration: none !important; }
+
+    /* ── Gas blend chips ── */
+    .blend-chips {
+      display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px;
+    }
+    .blend-chip {
+      font-family: var(--mono); font-size: 13px; font-weight: 600;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 8px; padding: 6px 12px; color: var(--text-primary);
+    }
+    .blend-chip .chip-label {
+      font-size: 10px; font-weight: 700; color: var(--text-muted);
+      text-transform: uppercase; letter-spacing: .3px;
+      display: block; margin-bottom: 2px;
+    }
+
+    /* ── Print ── */
+    @media print {
+      body::before, header, .menu-overlay, .site-footer, .ad-slot, .cta-section { display: none !important; }
+      .app { max-width: 100%; padding: 0; }
+      .article-hero { padding-top: 0; }
+      .article-body p, .article-body li { color: #222; }
+      .card, .example-box, .formula-box, .tradeoff-item { break-inside: avoid; border: 1px solid #ccc; }
+    }
+
+    /* ── Mobile ── */
+    @media (max-width: 640px) {
+      .article-hero h1 { font-size: 28px; }
+      .formula-box .formula { font-size: 14px; }
+      .formula-box .legend { flex-direction: column; }
+      .comparison-table { font-size: 12px; }
+      .comparison-table th, .comparison-table td { padding: 8px 10px; }
+      .tradeoff-grid { grid-template-columns: 1fr; }
+      .related-grid { grid-template-columns: 1fr; }
+      .cta-btn-group { flex-direction: column; align-items: center; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+
+    <!-- Hero -->
+    <div class="article-hero">
+      <div class="article-badge">🧪 Scuba Diving Guide</div>
+      <h1>Introduction to <span>Trimix</span></h1>
+      <p class="subtitle">Why helium matters for deep diving, how nitrogen narcosis works, and when you need to go beyond recreational limits.</p>
+      <div class="article-meta">
+        <span>8 min read</span>
+        <span class="dot"></span>
+        <span>Scuba Diving</span>
+        <span class="dot"></span>
+        <span>Technical Diving</span>
+      </div>
+    </div>
+
+    <!-- Article Body -->
+    <div class="article-body">
+
+      <!-- 1. What Is Trimix? -->
+      <section>
+        <h2>What Is Trimix?</h2>
+        <p>Trimix is a breathing gas containing three components: oxygen, nitrogen, and helium. While standard air is 21% oxygen and 79% nitrogen, and nitrox adds more oxygen to reduce bottom time nitrogen loading, trimix adds helium to reduce both the nitrogen fraction and the overall narcotic load on the diver's nervous system.</p>
+        <p>The naming convention follows a straightforward pattern: <strong>TMx FO₂/FHe</strong>, where FO₂ is the oxygen fraction and FHe is the helium fraction. The remainder is nitrogen. For example, "TMx 18/45" contains 18% oxygen, 45% helium, and 37% nitrogen.</p>
+        <p>Common trimix blends used in technical diving:</p>
+        <div class="blend-chips">
+          <div class="blend-chip">
+            <span class="chip-label">Normoxic — ~40–60m</span>
+            TMx 21/35
+          </div>
+          <div class="blend-chip">
+            <span class="chip-label">Normoxic — ~50–70m</span>
+            TMx 18/45
+          </div>
+          <div class="blend-chip">
+            <span class="chip-label">Hypoxic — ~70–90m</span>
+            TMx 15/55
+          </div>
+          <div class="blend-chip">
+            <span class="chip-label">Hypoxic — ~90m+</span>
+            TMx 12/60
+          </div>
+        </div>
+        <p style="margin-top: 14px;">The deeper you go, the more helium you typically need — both to manage narcosis and, in very deep dives, to keep breathing resistance manageable at high ambient pressures.</p>
+      </section>
+
+      <!-- 2. Understanding Nitrogen Narcosis -->
+      <section>
+        <h2>Understanding Nitrogen Narcosis</h2>
+        <p>At depth, elevated partial pressures cause nitrogen to dissolve into body tissues, including nervous tissue. This produces <strong>nitrogen narcosis</strong> — an impairment that resembles alcohol intoxication. The widely cited rule of thumb is <strong>Martini's Law</strong>: every 10 metres below 20m is roughly equivalent to drinking one martini on an empty stomach.</p>
+
+        <div class="card">
+          <div class="card-label">⚠ Martini's Law</div>
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th>Depth (air)</th>
+                <th>Equivalent Effect</th>
+                <th>Typical Impairment</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>20m</td><td class="num">0 martinis</td><td>Minimal</td></tr>
+              <tr><td>30m</td><td class="num">1 martini</td><td>Mild euphoria, minor judgment reduction</td></tr>
+              <tr><td>40m</td><td class="num">2 martinis</td><td class="hlr">Noticeable impairment — recreational limit</td></tr>
+              <tr><td>50m</td><td class="num">3 martinis</td><td class="hlr">Significant impairment for most divers</td></tr>
+              <tr><td>60m</td><td class="num">4 martinis</td><td class="hlr">Severe narcotization — dangerous on air</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>Common signs of narcosis include euphoria and overconfidence, poor decision-making, task fixation, slowed reaction times, and a visual tunnel effect. The condition is fully reversible — ascend a few metres and it clears rapidly. The danger is that it degrades performance exactly when performance matters most: at maximum depth, managing complex decompression or unexpected situations.</p>
+        <p>Individual susceptibility varies considerably. Some divers feel comfortable at 40m on air; others are significantly impaired at 30m. Fatigue, cold, stress, and CO₂ buildup all worsen narcosis. This variability is itself a hazard — you cannot reliably predict how impaired you will be on a given day.</p>
+      </section>
+
+      <!-- 3. Why Helium Solves the Problem -->
+      <section>
+        <h2>Why Helium Solves the Problem</h2>
+        <p>Helium is a noble gas with a much smaller atomic radius and significantly lower narcotic potential than nitrogen. By replacing a large fraction of the nitrogen with helium, a diver can reach the same physical depth while experiencing far less narcotic impairment. The metric used to quantify this benefit is <strong>Equivalent Narcotic Depth (END)</strong>.</p>
+
+        <div class="formula-box">
+          <div class="formula-title">END Formula</div>
+          <div class="formula">
+            <span class="hl">END</span><sub>m</sub> = (<span class="hlp">narcotic_fraction</span> &times; <span class="hlp">ATA</span> &minus; 1) &times; 10<br>
+            <span style="font-size: 13px; color: var(--text-muted);">Where:</span>
+          </div>
+          <div class="legend">
+            <span><code>narcotic_fraction</code> = 1 &minus; FHe / 100 &nbsp;(treat only helium as non-narcotic)</span>
+            <span><code>ATA</code> = absolute pressure = (depth<sub>m</sub> / 10) + 1</span>
+            <span><code>END</code> = the air depth that produces equivalent narcosis</span>
+          </div>
+        </div>
+
+        <div class="example-box" style="margin-top: 16px;">
+          <div class="example-title">Example — TMx 18/45 at 60m</div>
+          <p>A diver is breathing TMx 18/45 (18% O₂, 45% He, 37% N₂) at a depth of 60m. What is the END?</p>
+          <div class="result">
+            FHe = 45%<br>
+            narcotic_fraction = 1 &minus; 0.45 = <span class="hl">0.55</span><br>
+            ATA = (60 / 10) + 1 = <span class="hl">7.0</span><br>
+            END = (0.55 &times; 7.0 &minus; 1) &times; 10 = (3.85 &minus; 1) &times; 10 = <span class="hl">28.5m</span>
+          </div>
+          <p style="margin-top: 12px; margin-bottom: 0;">This mix at 60m feels narcotically equivalent to breathing air at 28.5m — well within a comfortable range for most trained divers.</p>
+        </div>
+
+        <p>Technical agencies commonly target an END of no more than 30–35m for deep trimix dives. This drives the helium fraction selection: deeper depths require higher helium percentages to keep the END within that target window.</p>
+      </section>
+
+      <!-- 4. Trade-Offs of Helium -->
+      <section>
+        <h2>The Trade-Offs of Helium</h2>
+        <p>Helium solves narcosis, but it introduces its own considerations. Understanding these trade-offs is central to technical diving planning.</p>
+
+        <div class="tradeoff-grid">
+          <div class="tradeoff-item">
+            <span class="tradeoff-icon">💰</span>
+            <h4>Cost</h4>
+            <p>Helium is expensive — a helium-heavy blend can cost 10&times; more than a standard air fill. This makes trimix diving significantly more costly per dive than recreational diving.</p>
+          </div>
+          <div class="tradeoff-item">
+            <span class="tradeoff-icon">🌡️</span>
+            <h4>Thermal Conductivity</h4>
+            <p>Helium conducts heat approximately 6&times; faster than nitrogen, accelerating heat loss from the body. Drysuits are effectively mandatory when using high helium fractions at depth.</p>
+          </div>
+          <div class="tradeoff-item">
+            <span class="tradeoff-icon">📉</span>
+            <h4>Decompression Kinetics</h4>
+            <p>Helium on-gases and off-gases faster than nitrogen in fast tissues, but differently across tissue compartments. Trimix dives require carefully planned decompression schedules specific to helium-containing mixes.</p>
+          </div>
+          <div class="tradeoff-item">
+            <span class="tradeoff-icon">⚡</span>
+            <h4>HPNS at Extreme Depth</h4>
+            <p>At depths beyond ~150m, High Pressure Nervous Syndrome (HPNS) can develop — a neurological condition distinct from narcosis. This is a concern for extreme technical and trimix rebreather dives.</p>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top: 14px;">
+          <div class="card-label">✅ Advantage: Gas Density</div>
+          <p>One significant benefit of helium beyond narcosis reduction is its low molecular weight. Dense gas at depth increases breathing resistance and CO₂ retention risk. Helium's low density substantially reduces work of breathing, improving gas exchange efficiency — a meaningful safety margin at 70m+ where dense air or nitrox can strain respiratory muscles.</p>
+        </div>
+      </section>
+
+      <!-- 5. When Do You Need Trimix? -->
+      <section>
+        <h2>When Do You Need Trimix?</h2>
+        <p>The recreational diving limit is 40m (130ft). Below this depth, nitrogen narcosis becomes a serious impairment risk for most divers. Technical agencies broadly use the following depth guidelines:</p>
+
+        <table class="comparison-table">
+          <thead>
+            <tr>
+              <th>Depth Range</th>
+              <th>Recommended Mix</th>
+              <th>He Range</th>
+              <th>Notes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>0 – 40m</td>
+              <td>Air / Nitrox</td>
+              <td class="num">0%</td>
+              <td>Recreational range</td>
+            </tr>
+            <tr>
+              <td>40 – 50m</td>
+              <td>Air or light trimix</td>
+              <td class="num">10 – 20%</td>
+              <td>Optional; beneficial for comfort</td>
+            </tr>
+            <tr>
+              <td>50 – 70m</td>
+              <td class="hl">Normoxic trimix</td>
+              <td class="num hl">21/30 – 21/35</td>
+              <td>O₂ &ge; 21%; breathable at surface</td>
+            </tr>
+            <tr>
+              <td>70 – 90m</td>
+              <td class="hl">Normoxic / hypoxic</td>
+              <td class="num hl">18/45 – 21/45</td>
+              <td>Travel mix required for descent</td>
+            </tr>
+            <tr>
+              <td>90 – 120m</td>
+              <td class="hl">Hypoxic trimix</td>
+              <td class="num hl">15/55 – 18/55</td>
+              <td>Full bailout planning required</td>
+            </tr>
+            <tr>
+              <td>120m+</td>
+              <td class="hlr">Hypoxic trimix</td>
+              <td class="num hlr">10/70 – 15/60</td>
+              <td>Extreme technical diving; CCR typical</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p>These are guidelines, not rigid rules. Actual mix selection depends on your planned END target, oxygen partial pressure limits (typically 1.2–1.4 bar ppO₂ for bottom mixes), cylinder configuration, and dive objectives.</p>
+      </section>
+
+      <!-- 6. Hypoxic Trimix -->
+      <section>
+        <h2>Hypoxic Trimix and the Oxygen Problem</h2>
+        <p>When using high helium fractions, the oxygen percentage sometimes drops below 21% — producing <strong>hypoxic trimix</strong>. These mixes cannot be breathed at the surface: the partial pressure of oxygen would be too low to sustain consciousness, causing hypoxia within minutes.</p>
+
+        <div class="card-warning card">
+          <div class="card-label" style="color: var(--red);">⚠ Critical Safety Requirement</div>
+          <p>Hypoxic trimix bottom mixes are breathed <strong>only below the hypoxic threshold</strong> — typically below 6m, where the increased ambient pressure raises the ppO₂ to a safe level. Breathing a 15% or 12% O₂ mix at the surface or on a shallow ascent is potentially fatal.</p>
+        </div>
+
+        <p>Diving with hypoxic mixes requires carrying a separate <strong>travel mix</strong> — typically containing 21–30% oxygen — for the descent and the initial shallow portion of the ascent. Decompression gases (with high oxygen fractions such as 50% or 100% O₂) are then used for the decompression stops. Managing three or more different gas cylinders in the water is a core skill of advanced trimix diving.</p>
+      </section>
+
+      <!-- 7. Training Pathway -->
+      <section>
+        <h2>The Technical Diving Training Pathway</h2>
+        <p>Trimix is not a shortcut to depth — it is the culmination of a progressive skills ladder. Each level builds the gas theory, decompression knowledge, and in-water competency needed to safely handle the next step.</p>
+
+        <ol class="pathway-list">
+          <li>
+            <div class="pathway-step">1<div class="pathway-connector"></div></div>
+            <div class="pathway-content">
+              <strong>Open Water Diver</strong>
+              <span>Foundation certification. Dive to 18m with a buddy in recreational conditions.</span>
+            </div>
+          </li>
+          <li>
+            <div class="pathway-step">2<div class="pathway-connector"></div></div>
+            <div class="pathway-content">
+              <strong>Advanced Open Water</strong>
+              <span>Supervised dives to 30m. Introduction to deep diving with an instructor.</span>
+            </div>
+          </li>
+          <li>
+            <div class="pathway-step">3<div class="pathway-connector"></div></div>
+            <div class="pathway-content">
+              <strong>Deep Specialty</strong>
+              <span>Recreational deep diving to 40m. Narcosis awareness and pre-dive planning.</span>
+            </div>
+          </li>
+          <li>
+            <div class="pathway-step">4<div class="pathway-connector"></div></div>
+            <div class="pathway-content">
+              <strong>Enriched Air (Nitrox)</strong>
+              <span>Essential foundation for gas theory, partial pressure calculations, and oxygen exposure management.</span>
+            </div>
+          </li>
+          <li>
+            <div class="pathway-step">5<div class="pathway-connector"></div></div>
+            <div class="pathway-content">
+              <strong>Advanced Nitrox + Deco Procedures</strong>
+              <span>Planned decompression diving on nitrox. Use of deco gases, dive computers, and staged ascents.</span>
+            </div>
+          </li>
+          <li>
+            <div class="pathway-step">6<div class="pathway-connector"></div></div>
+            <div class="pathway-content">
+              <strong>Trimix</strong>
+              <span>Normoxic trimix to 60–70m. Gas blending, END calculations, trimix-specific decompression planning.</span>
+            </div>
+          </li>
+          <li>
+            <div class="pathway-step">7<div class="pathway-connector"></div></div>
+            <div class="pathway-content">
+              <strong>Advanced Trimix</strong>
+              <span>Hypoxic trimix to 100m+. Multi-gas management, bailout planning, and extended decompression procedures.</span>
+            </div>
+          </li>
+        </ol>
+
+        <p style="margin-top: 16px;">Major training agencies offering this pathway include PADI, TDI, IANTD, GUE, and SSI. Requirements differ in detail but the conceptual progression is consistent across agencies. Most trimix courses require a documented log of decompression dives, a minimum age (typically 18), and a medical clearance.</p>
+      </section>
+
+      <!-- CTA -->
+      <div class="cta-section">
+        <h2>Plan Your Trimix Dive</h2>
+        <p>Use CalcNova's free technical diving calculators to determine the right helium fraction for your target depth, calculate END, and verify your blend before diving.</p>
+        <div class="cta-btn-group">
+          <a href="trimix-calculator.html" class="cta-btn">Trimix Calculator →</a>
+          <a href="gas-blending-calculator.html" class="cta-btn-secondary">Gas Blending Calculator</a>
+        </div>
+      </div>
+
+      <!-- FAQ -->
+      <section>
+        <h2>Frequently Asked Questions</h2>
+        <div class="faq-list">
+
+          <div class="faq-item">
+            <details>
+              <summary>Do I need trimix for a 40m dive?</summary>
+              <div class="faq-answer">
+                <p>Not necessarily. Many experienced recreational divers complete 40m dives on air without significant impairment. The recreational limit of 40m reflects the depth at which narcosis becomes a meaningful safety concern for the average diver — not a hard threshold where all divers become incapacitated.</p>
+                <p>That said, if you are regularly diving to 40m and plan to go deeper, light trimix (even 10–20% helium) meaningfully reduces narcosis, costs relatively little extra, and provides a useful buffer against bad days. Some technical agencies recommend considering trimix from 40m onwards precisely because narcosis compounds with cold, exertion, and stress.</p>
+              </div>
+            </details>
+          </div>
+
+          <div class="faq-item">
+            <details>
+              <summary>How is trimix decompression different from air decompression?</summary>
+              <div class="faq-answer">
+                <p>Trimix decompression differs in two key ways. First, the tissue compartment loading is different: helium on-gasses faster than nitrogen in fast tissues, which affects the shape and timing of required decompression stops. Standard air or nitrox dive tables cannot be applied to trimix dives.</p>
+                <p>Second, trimix dives are typically deeper and longer than recreational dives, meaning decompression obligations are far more substantial — often requiring multiple stops over 30–90+ minutes using dedicated decompression gases. Dive computers used for trimix must support multi-gas, multi-mix helium algorithms (such as Bühlmann ZHL-16 with gradient factors or VPM-B).</p>
+              </div>
+            </details>
+          </div>
+
+          <div class="faq-item">
+            <details>
+              <summary>What does "normoxic" and "hypoxic" trimix mean?</summary>
+              <div class="faq-answer">
+                <p><strong>Normoxic trimix</strong> contains at least 21% oxygen — the same fraction as air. This means the mix is safe to breathe at the surface and throughout the dive. Normoxic mixes are used for dives in the 40–70m range.</p>
+                <p><strong>Hypoxic trimix</strong> contains less than 21% oxygen, often 15–18% or even as low as 10–12% for extreme dives. These mixes produce an insufficient partial pressure of oxygen at surface pressure, making them dangerous to breathe in shallow water. They are only breathed below approximately 6m, where the ambient pressure raises the partial pressure of oxygen into the safe range. Separate travel and decompression gases are mandatory when using hypoxic mixes.</p>
+              </div>
+            </details>
+          </div>
+
+          <div class="faq-item">
+            <details>
+              <summary>Is trimix diving safe?</summary>
+              <div class="faq-answer">
+                <p>Trimix, properly trained and properly planned, is significantly <em>safer</em> than diving air at the same depths — primarily because it removes the severe narcosis that makes air-diving at 60m+ so hazardous. The gas itself is not inherently more dangerous than air.</p>
+                <p>The risks in trimix diving come from the environment (deep water, limited light, overhead environments), the complexity of multi-gas management, and the consequences of decompression obligation — a missed stop at 80m has far greater consequence than a missed stop at 20m. This is why progressive, thorough training is non-negotiable. Attempting trimix depths without proper instruction eliminates the safety margin that the training and gas selection were designed to create.</p>
+              </div>
+            </details>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- Related Articles -->
+      <section>
+        <h2>Related Calculators &amp; Guides</h2>
+        <div class="related-grid">
+          <a href="trimix-calculator.html" class="related-card">
+            <div class="related-tag">Calculator</div>
+            <div class="related-title">Trimix Calculator — END, ppO₂ &amp; mix planning</div>
+          </a>
+          <a href="gas-blending-calculator.html" class="related-card">
+            <div class="related-tag">Calculator</div>
+            <div class="related-title">Gas Blending Calculator — partial pressure fills</div>
+          </a>
+          <a href="nitrox-calculator.html" class="related-card">
+            <div class="related-tag">Calculator</div>
+            <div class="related-title">Nitrox Calculator — MOD &amp; oxygen exposure</div>
+          </a>
+          <a href="article-nitrox.html" class="related-card">
+            <div class="related-tag">Guide</div>
+            <div class="related-title">Introduction to Nitrox — the foundation for gas diving</div>
+          </a>
+        </div>
+      </section>
+
+    </div><!-- /article-body -->
+  </div><!-- /app -->
+
+  <script>
+    window.CALCNOVA_PAGE = { id: 'article-trimix' };
+  </script>
+  <script src="shared/site-data.js"></script>
+  <script src="shared/nav.js"></script>
+</body>
+</html>

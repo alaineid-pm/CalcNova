@@ -1,0 +1,1161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Nitrox / MOD Calculator — Maximum Operating Depth &amp; PO₂ | CalcNova</title>
+  <meta name="description" content="Free nitrox calculator: find Maximum Operating Depth, PO₂ at depth, Best Mix for a planned depth, and Equivalent Air Depth. Essential for enriched air divers.">
+
+  <!-- Canonical -->
+  <link rel="canonical" href="https://calcnova.co/nitrox-calculator.html">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Nitrox / MOD Calculator — Maximum Operating Depth &amp; PO₂ | CalcNova">
+  <meta property="og:description" content="Free nitrox calculator: find Maximum Operating Depth, PO₂ at depth, Best Mix for a planned depth, and Equivalent Air Depth. Essential for enriched air divers.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://calcnova.co/nitrox-calculator.html">
+  <meta property="og:site_name" content="CalcNova">
+
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebApplication",
+        "name": "Nitrox / MOD Calculator",
+        "url": "https://calcnova.co/nitrox-calculator.html",
+        "description": "Calculate Maximum Operating Depth, PO₂ at depth, Best Mix for your dive, and Equivalent Air Depth for nitrox planning.",
+        "applicationCategory": "UtilityApplication",
+        "provider": { "@type": "Organization", "name": "CalcNova", "url": "https://calcnova.co" },
+        "offers": { "@type": "Offer", "price": "0" }
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "What is nitrox?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Nitrox, also called Enriched Air Nitrox (EANx), is a breathing gas mixture containing a higher percentage of oxygen than normal air (21%). Common mixes are EAN32 (32% O₂) and EAN36 (36% O₂). More oxygen means less nitrogen, which reduces narcosis risk and extends no-decompression limits — but also means shallower maximum operating depths due to oxygen toxicity risk."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "What is Maximum Operating Depth (MOD)?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "MOD is the deepest depth at which a given nitrox mix can be safely breathed without exceeding a set partial pressure of oxygen (PO₂). The recreational limit is 1.4 ATA; the deco/contingency limit is 1.6 ATA. Exceeding MOD risks central nervous system (CNS) oxygen toxicity, which can cause convulsions underwater."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "What PO₂ limit should I use?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "For recreational diving, use a PO₂ limit of 1.4 ATA. A limit of 1.6 ATA is used by technical divers during decompression stops only. Most training agencies recommend 1.4 ATA as the working limit for bottom gas."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "What is Equivalent Air Depth (EAD)?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "EAD is the depth on air that produces the same nitrogen partial pressure as diving nitrox at your actual depth. Use your EAD (rather than actual depth) when consulting air dive tables to calculate no-decompression limits, giving you credit for the reduced nitrogen in your nitrox mix."
+            }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="shared/nav.css">
+  <style>
+    /* ── Layout ── */
+    .app { position:relative; z-index:1; max-width:960px; margin:0 auto; padding:0 16px 60px; }
+
+    /* ── Hero ── */
+    .hero-badge {
+      display:inline-flex; align-items:center; gap:6px;
+      background:linear-gradient(135deg,rgba(16,185,129,.1),rgba(99,102,241,.1));
+      border:1px solid rgba(16,185,129,.25);
+      border-radius:100px; padding:6px 14px;
+      font-size:12px; font-weight:700; color:var(--green);
+      margin-bottom:12px;
+    }
+    .hero {
+      background:var(--surface); border:1px solid var(--border);
+      border-radius:18px; padding:32px 28px 26px; margin-bottom:28px;
+    }
+    .hero-title { font-size:26px; font-weight:800; letter-spacing:-.5px; margin-bottom:0; }
+    .hero-title span {
+      background:linear-gradient(135deg,var(--green),var(--purple));
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+    }
+    .hero-desc { font-size:14px; color:var(--text-secondary); margin-top:8px; line-height:1.6; max-width:640px; }
+
+    /* ── Unit Toggle ── */
+    .unit-toggle {
+      display:inline-flex; background:var(--bg); border:1px solid var(--border);
+      border-radius:10px; padding:3px; margin-bottom:20px;
+    }
+    .unit-btn {
+      padding:7px 20px; border:none; border-radius:8px;
+      font-family:var(--font); font-size:13px; font-weight:600;
+      color:var(--text-secondary); background:none; cursor:pointer;
+      transition:all .15s;
+    }
+    .unit-btn.active {
+      background:var(--surface); color:var(--text-primary);
+      box-shadow:0 1px 4px rgba(0,0,0,.08);
+    }
+
+    /* ── Segmented Tab Control ── */
+    .seg-control {
+      display:flex; background:var(--bg); border:1px solid var(--border);
+      border-radius:12px; padding:4px; margin-bottom:24px; gap:2px; flex-wrap:wrap;
+    }
+    .seg-btn {
+      flex:1; padding:8px 12px; border:none; border-radius:9px;
+      font-family:var(--font); font-size:13px; font-weight:600;
+      color:var(--text-secondary); background:none; cursor:pointer;
+      transition:all .15s; white-space:nowrap; text-align:center; min-width:80px;
+    }
+    .seg-btn.active {
+      background:var(--surface); color:var(--text-primary);
+      box-shadow:0 1px 6px rgba(0,0,0,.1);
+    }
+    .seg-btn:hover:not(.active) { color:var(--text-primary); }
+
+    /* ── Cards ── */
+    .card {
+      background:var(--surface); border:1px solid var(--border);
+      border-radius:18px; padding:22px; margin-bottom:20px;
+    }
+    .card-title {
+      font-family:var(--mono); font-size:10px; font-weight:700;
+      letter-spacing:1.5px; text-transform:uppercase; color:var(--text-muted);
+      margin-bottom:18px; display:flex; align-items:center; gap:8px;
+    }
+    .card-title-dot { width:6px; height:6px; border-radius:50%; flex-shrink:0; }
+
+    /* ── Inputs ── */
+    .form-group { margin-bottom:14px; }
+    .form-group:last-child { margin-bottom:0; }
+    .form-label {
+      font-size:12px; font-weight:600; color:var(--text-secondary);
+      margin-bottom:6px; display:block;
+    }
+    .input-with-unit { position:relative; }
+    .input-with-unit input { padding-right:44px; }
+    .input-suffix {
+      position:absolute; right:12px; top:50%; transform:translateY(-50%);
+      font-family:var(--mono); font-size:11px; font-weight:600; color:var(--text-muted);
+      pointer-events:none;
+    }
+
+    input[type="number"], select {
+      width:100%; background:var(--bg); border:1px solid var(--border);
+      border-radius:10px; color:var(--text-primary); font-family:var(--font);
+      font-size:14px; font-weight:600; padding:9px 12px; outline:none;
+      transition:border-color .2s,box-shadow .2s; box-sizing:border-box;
+    }
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button { -webkit-appearance:none; margin:0; }
+    input[type="number"]:focus {
+      border-color:var(--green);
+      box-shadow:0 0 0 3px rgba(16,185,129,.12);
+    }
+    select:focus {
+      border-color:var(--green);
+      box-shadow:0 0 0 3px rgba(16,185,129,.12);
+    }
+
+    /* ── Result Card ── */
+    .result-card {
+      background:linear-gradient(135deg,rgba(16,185,129,.07),rgba(99,102,241,.07));
+      border:1.5px solid rgba(16,185,129,.28); border-radius:20px;
+      padding:28px 24px; margin-bottom:24px; position:relative; overflow:hidden;
+    }
+    .result-card::before {
+      content:''; position:absolute; top:-50px; right:-50px;
+      width:130px; height:130px; border-radius:50%;
+      background:linear-gradient(135deg,var(--green),var(--purple)); opacity:.06;
+    }
+    .result-card::after {
+      content:''; position:absolute; bottom:-35px; left:-35px;
+      width:90px; height:90px; border-radius:50%;
+      background:var(--purple); opacity:.05;
+    }
+    .result-card.hidden { display:none; }
+
+    .result-label {
+      font-family:var(--mono); font-size:10px; font-weight:700;
+      letter-spacing:1.5px; text-transform:uppercase;
+      color:var(--text-muted); margin-bottom:8px;
+    }
+    .result-primary {
+      font-family:var(--mono); font-size:56px; font-weight:800;
+      line-height:1; margin-bottom:4px; transition:color .3s;
+      color:var(--green);
+    }
+    .result-unit {
+      font-family:var(--mono); font-size:18px; font-weight:600;
+      color:var(--text-secondary); margin-left:4px;
+    }
+    .result-secondary {
+      font-family:var(--mono); font-size:22px; font-weight:700;
+      color:var(--text-secondary); margin-bottom:12px;
+    }
+    .result-row {
+      display:flex; flex-wrap:wrap; gap:16px; margin-top:12px; position:relative; z-index:1;
+    }
+    .result-stat {
+      background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.1);
+      border-radius:12px; padding:12px 16px; flex:1; min-width:120px;
+    }
+    .result-stat-label {
+      font-family:var(--mono); font-size:9px; font-weight:700;
+      letter-spacing:1.2px; text-transform:uppercase; color:var(--text-muted);
+      margin-bottom:4px;
+    }
+    .result-stat-value {
+      font-family:var(--mono); font-size:20px; font-weight:800; color:var(--text-primary);
+    }
+    .result-stat-sub {
+      font-size:11px; color:var(--text-muted); margin-top:2px;
+    }
+
+    /* PO2 color states */
+    .po2-safe { color:var(--green); }
+    .po2-warn { color:#f59e0b; }
+    .po2-danger { color:var(--red); }
+    .po2-badge {
+      display:inline-flex; align-items:center; gap:6px;
+      padding:5px 14px; border-radius:100px; font-size:12px; font-weight:700;
+      border:1.5px solid; margin-top:8px; position:relative; z-index:1;
+    }
+    .po2-badge-dot { width:7px; height:7px; border-radius:50%; }
+
+    /* ── Warning / Error / Info ── */
+    .warning-box {
+      background:rgba(245,158,11,.08); border:1px solid rgba(245,158,11,.3);
+      border-radius:10px; padding:10px 14px; font-size:13px; font-weight:600;
+      color:#f59e0b; margin-top:14px; display:none; line-height:1.5;
+    }
+    .warning-box.show { display:block; }
+    .error-box {
+      background:rgba(239,68,68,.08); border:1px solid rgba(239,68,68,.25);
+      border-radius:10px; padding:10px 14px; font-size:13px; font-weight:600;
+      color:var(--red); margin-top:14px; display:none; line-height:1.5;
+    }
+    .error-box.show { display:block; }
+    .info-note {
+      display:flex; align-items:flex-start; gap:10px;
+      background:rgba(99,102,241,.06); border:1px solid rgba(99,102,241,.2);
+      border-radius:12px; padding:14px 16px; margin-top:14px;
+      font-size:13px; color:var(--text-secondary); line-height:1.6;
+    }
+    .info-note-icon { font-size:16px; flex-shrink:0; margin-top:1px; }
+
+    /* ── Action Row ── */
+    .action-row { display:flex; gap:10px; margin-bottom:28px; flex-wrap:wrap; }
+    .action-btn {
+      display:flex; align-items:center; gap:7px; padding:10px 18px;
+      background:var(--surface); border:1px solid var(--border); border-radius:10px;
+      font-family:var(--font); font-size:13px; font-weight:600;
+      color:var(--text-secondary); cursor:pointer; transition:all .15s;
+    }
+    .action-btn:hover { border-color:var(--green); color:var(--green); }
+    .action-btn svg { width:15px; height:15px; flex-shrink:0; }
+
+    /* ── Toast ── */
+    #toast {
+      position:fixed; bottom:28px; right:24px;
+      background:var(--surface); border:1px solid var(--border);
+      border-radius:12px; padding:12px 18px; font-size:13px; font-weight:600;
+      color:var(--text-primary); box-shadow:0 8px 28px rgba(0,0,0,.12);
+      opacity:0; transition:opacity .25s; pointer-events:none; z-index:9999;
+      display:flex; align-items:center; gap:8px;
+    }
+    #toast.show { opacity:1; }
+
+    /* ── Quick Reference Table ── */
+    .table-section {
+      background:var(--surface); border:1px solid var(--border);
+      border-radius:18px; padding:22px; margin-bottom:28px; overflow-x:auto;
+    }
+    .table-title {
+      font-family:var(--mono); font-size:10px; font-weight:700;
+      letter-spacing:1.5px; text-transform:uppercase; color:var(--text-muted);
+      margin-bottom:16px; display:flex; align-items:center; gap:8px;
+    }
+    .ref-table {
+      width:100%; border-collapse:collapse; font-size:13px;
+    }
+    .ref-table th {
+      text-align:left; padding:8px 12px;
+      font-family:var(--mono); font-size:10px; font-weight:700;
+      letter-spacing:1px; text-transform:uppercase;
+      color:var(--text-muted); border-bottom:1px solid var(--border);
+    }
+    .ref-table td {
+      padding:10px 12px; border-bottom:1px solid rgba(var(--border-rgb,90,100,120),.3);
+      font-family:var(--mono); font-size:13px; color:var(--text-primary); font-weight:600;
+    }
+    .ref-table tr:last-child td { border-bottom:none; }
+    .ref-table tr:hover td { background:rgba(16,185,129,.04); }
+    .ref-table .mix-label {
+      color:var(--green); font-weight:700;
+    }
+    .ref-table .warn-val { color:#f59e0b; }
+
+    /* ── Safety Disclaimer ── */
+    .safety-disclaimer {
+      background:rgba(239,68,68,.06); border:1px solid rgba(239,68,68,.2);
+      border-radius:14px; padding:16px 18px; margin-bottom:28px;
+      font-size:13px; color:var(--text-secondary); line-height:1.6;
+    }
+    .safety-disclaimer strong { color:var(--red); }
+
+    /* ── SEO Content ── */
+    .seo-content {
+      background:var(--surface); border:1px solid var(--border);
+      border-radius:18px; padding:28px; margin-bottom:28px;
+    }
+    .seo-content h2 {
+      font-size:18px; font-weight:800; color:var(--text-primary);
+      margin:28px 0 10px; letter-spacing:-.3px;
+    }
+    .seo-content h2:first-child { margin-top:0; }
+    .seo-content h3 {
+      font-size:15px; font-weight:700; color:var(--text-primary);
+      margin:20px 0 8px;
+    }
+    .seo-content p {
+      font-size:14px; color:var(--text-secondary); line-height:1.7;
+      margin-bottom:12px;
+    }
+    .seo-content ul {
+      font-size:14px; color:var(--text-secondary); line-height:1.7;
+      padding-left:20px; margin-bottom:12px;
+    }
+    .seo-content li { margin-bottom:4px; }
+    .seo-content a { color:var(--green); text-decoration:none; font-weight:600; }
+    .seo-content a:hover { text-decoration:underline; }
+    .formula-block {
+      background:var(--bg); border:1px solid var(--border); border-radius:10px;
+      padding:12px 16px; font-family:var(--mono); font-size:13px;
+      color:var(--text-primary); margin:12px 0; line-height:1.7;
+    }
+    .faq-item { margin-bottom:20px; }
+    .faq-q {
+      font-size:15px; font-weight:700; color:var(--text-primary);
+      margin-bottom:6px;
+    }
+    .faq-a {
+      font-size:14px; color:var(--text-secondary); line-height:1.7;
+    }
+
+    /* ── Fade-in ── */
+    .fade-in {
+      opacity:0; transform:translateY(14px);
+      transition:opacity .4s ease, transform .4s ease;
+    }
+    .fade-in.visible { opacity:1; transform:translateY(0); }
+
+    /* ── Print ── */
+    @media print {
+      #cn-header, .action-row, #toast, .hero-badge, .nav-tools-wrap,
+      .donate-btn, .mega-menu, .menu-overlay, .site-footer,
+      .footer-disclaimer, .unit-toggle, .seg-control { display:none !important; }
+      .app { padding:0; max-width:100%; }
+      .hero { border:none; padding:10px 0 8px; margin-bottom:10px; }
+      .result-card, .card, .table-section { page-break-inside:avoid; }
+      .fade-in { opacity:1 !important; transform:none !important; }
+    }
+
+    /* ── Responsive ── */
+    @media (max-width:640px) {
+      .hero { padding:22px 18px 20px; }
+      .card { padding:16px; }
+      .result-card { padding:20px 16px; }
+      .result-primary { font-size:44px; }
+      .seg-btn { font-size:12px; padding:7px 8px; min-width:60px; }
+      .table-section { padding:16px; }
+    }
+    @media (max-width:420px) {
+      .result-primary { font-size:36px; }
+      .result-unit { font-size:15px; }
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+
+  <!-- nav.js injects header + breadcrumbs here -->
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="hero-badge">Scuba Tool</div>
+    <h1 class="hero-title">Nitrox / MOD <span>Calculator</span></h1>
+    <p class="hero-desc">Calculate Maximum Operating Depth, PO₂ at depth, Best Mix for your dive, and Equivalent Air Depth for nitrox planning.</p>
+  </div>
+
+  <!-- Unit toggle -->
+  <div class="unit-toggle" role="group" aria-label="Unit system">
+    <button class="unit-btn active" id="btn-metric" onclick="setUnit('metric')">Metric (m)</button>
+    <button class="unit-btn" id="btn-imperial" onclick="setUnit('imperial')">Imperial (ft)</button>
+  </div>
+
+  <!-- Mode tabs -->
+  <div class="seg-control" role="tablist" aria-label="Calculator mode">
+    <button class="seg-btn active" id="tab-mod" role="tab" aria-selected="true" onclick="setMode('mod')">MOD</button>
+    <button class="seg-btn" id="tab-po2" role="tab" aria-selected="false" onclick="setMode('po2')">PO₂ at Depth</button>
+    <button class="seg-btn" id="tab-bestmix" role="tab" aria-selected="false" onclick="setMode('bestmix')">Best Mix</button>
+    <button class="seg-btn" id="tab-ead" role="tab" aria-selected="false" onclick="setMode('ead')">EAD</button>
+  </div>
+
+  <!-- Input Card -->
+  <div class="card" id="input-card">
+    <div class="card-title">
+      <div class="card-title-dot" style="background:var(--green)"></div>
+      <span id="mode-title">Maximum Operating Depth</span>
+    </div>
+
+    <!-- MOD Inputs -->
+    <div id="inputs-mod">
+      <div class="form-group">
+        <label class="form-label" for="mod-o2">O₂ Fraction (%)</label>
+        <div class="input-with-unit">
+          <input type="number" id="mod-o2" value="32" min="1" max="100" step="1" aria-label="Oxygen percentage" oninput="calculate()">
+          <span class="input-suffix">%</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="mod-po2limit">PO₂ Limit</label>
+        <select id="mod-po2limit" aria-label="PO2 limit" onchange="calculate()">
+          <option value="1.4" selected>1.4 ATA — Recreational (recommended)</option>
+          <option value="1.6">1.6 ATA — Deco / contingency only</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- PO2 at Depth Inputs -->
+    <div id="inputs-po2" style="display:none;">
+      <div class="form-group">
+        <label class="form-label" for="po2-o2">O₂ Fraction (%)</label>
+        <div class="input-with-unit">
+          <input type="number" id="po2-o2" value="32" min="1" max="100" step="1" aria-label="Oxygen percentage" oninput="calculate()">
+          <span class="input-suffix">%</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="po2-depth">Depth</label>
+        <div class="input-with-unit">
+          <input type="number" id="po2-depth" value="20" min="0" max="500" step="1" aria-label="Depth" oninput="calculate()">
+          <span class="input-suffix" id="po2-depth-unit">m</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Best Mix Inputs -->
+    <div id="inputs-bestmix" style="display:none;">
+      <div class="form-group">
+        <label class="form-label" for="bm-depth">Planned Maximum Depth</label>
+        <div class="input-with-unit">
+          <input type="number" id="bm-depth" value="30" min="1" max="500" step="1" aria-label="Planned maximum depth" oninput="calculate()">
+          <span class="input-suffix" id="bm-depth-unit">m</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="bm-po2limit">PO₂ Limit</label>
+        <select id="bm-po2limit" aria-label="PO2 limit" onchange="calculate()">
+          <option value="1.4" selected>1.4 ATA — Recreational (recommended)</option>
+          <option value="1.6">1.6 ATA — Deco / contingency only</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- EAD Inputs -->
+    <div id="inputs-ead" style="display:none;">
+      <div class="form-group">
+        <label class="form-label" for="ead-o2">O₂ Fraction (%)</label>
+        <div class="input-with-unit">
+          <input type="number" id="ead-o2" value="32" min="1" max="100" step="1" aria-label="Oxygen percentage" oninput="calculate()">
+          <span class="input-suffix">%</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="ead-depth">Actual Depth</label>
+        <div class="input-with-unit">
+          <input type="number" id="ead-depth" value="30" min="0" max="500" step="1" aria-label="Actual depth" oninput="calculate()">
+          <span class="input-suffix" id="ead-depth-unit">m</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="error-box" id="error-box" role="alert"></div>
+    <div class="warning-box" id="warning-box" role="alert"></div>
+  </div>
+
+  <!-- Result display -->
+  <div class="result-card hidden fade-in" id="result-card">
+
+    <!-- MOD Result -->
+    <div id="result-mod" style="display:none;">
+      <div class="result-label">Maximum Operating Depth</div>
+      <div>
+        <span class="result-primary" id="mod-result-m">—</span>
+        <span class="result-unit">m</span>
+      </div>
+      <div class="result-secondary" id="mod-result-ft">— ft</div>
+      <div class="result-row">
+        <div class="result-stat">
+          <div class="result-stat-label">O₂ Fraction</div>
+          <div class="result-stat-value" id="mod-fo2-display">—</div>
+          <div class="result-stat-sub">FO₂</div>
+        </div>
+        <div class="result-stat">
+          <div class="result-stat-label">PO₂ Limit</div>
+          <div class="result-stat-value" id="mod-po2-display">—</div>
+          <div class="result-stat-sub">ATA</div>
+        </div>
+        <div class="result-stat">
+          <div class="result-stat-label">ATA at MOD</div>
+          <div class="result-stat-value" id="mod-ata-display">—</div>
+          <div class="result-stat-sub">absolute pressure</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PO2 Result -->
+    <div id="result-po2" style="display:none;">
+      <div class="result-label">Partial Pressure of Oxygen</div>
+      <div>
+        <span class="result-primary" id="po2-result-val">—</span>
+        <span class="result-unit">ATA</span>
+      </div>
+      <div id="po2-badge-wrap" style="position:relative;z-index:1;"></div>
+      <div class="result-row">
+        <div class="result-stat">
+          <div class="result-stat-label">Depth</div>
+          <div class="result-stat-value" id="po2-depth-display">—</div>
+          <div class="result-stat-sub" id="po2-depth-unit-display">metres</div>
+        </div>
+        <div class="result-stat">
+          <div class="result-stat-label">ATA at Depth</div>
+          <div class="result-stat-value" id="po2-ata-display">—</div>
+          <div class="result-stat-sub">absolute pressure</div>
+        </div>
+        <div class="result-stat">
+          <div class="result-stat-label">O₂ Fraction</div>
+          <div class="result-stat-value" id="po2-fo2-display">—</div>
+          <div class="result-stat-sub">FO₂</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Best Mix Result -->
+    <div id="result-bestmix" style="display:none;">
+      <div class="result-label">Best Nitrox Mix</div>
+      <div>
+        <span class="result-primary" id="bm-result-pct">—</span>
+        <span class="result-unit">% O₂</span>
+      </div>
+      <div class="result-secondary" id="bm-mix-name">EANxx</div>
+      <div class="result-row">
+        <div class="result-stat">
+          <div class="result-stat-label">Planned Depth</div>
+          <div class="result-stat-value" id="bm-depth-display">—</div>
+          <div class="result-stat-sub" id="bm-depth-unit-display">metres</div>
+        </div>
+        <div class="result-stat">
+          <div class="result-stat-label">ATA at Depth</div>
+          <div class="result-stat-value" id="bm-ata-display">—</div>
+          <div class="result-stat-sub">absolute pressure</div>
+        </div>
+        <div class="result-stat">
+          <div class="result-stat-label">PO₂ at MOD</div>
+          <div class="result-stat-value" id="bm-po2-check">—</div>
+          <div class="result-stat-sub">ATA (verify)</div>
+        </div>
+      </div>
+      <div class="info-note" style="margin-top:14px;">
+        <span class="info-note-icon">&#9660;</span>
+        <span><strong>Round DOWN for safety</strong> — never round up on oxygen. This mix is floored to the nearest whole percent so you stay within your PO₂ limit.</span>
+      </div>
+    </div>
+
+    <!-- EAD Result -->
+    <div id="result-ead" style="display:none;">
+      <div class="result-label">Equivalent Air Depth</div>
+      <div>
+        <span class="result-primary" id="ead-result-m">—</span>
+        <span class="result-unit">m</span>
+      </div>
+      <div class="result-secondary" id="ead-result-ft">— ft</div>
+      <div class="result-row">
+        <div class="result-stat">
+          <div class="result-stat-label">Actual Depth</div>
+          <div class="result-stat-value" id="ead-actual-display">—</div>
+          <div class="result-stat-sub" id="ead-actual-unit-display">metres</div>
+        </div>
+        <div class="result-stat">
+          <div class="result-stat-label">FN₂ (nitrogen)</div>
+          <div class="result-stat-value" id="ead-fn2-display">—</div>
+          <div class="result-stat-sub">nitrogen fraction</div>
+        </div>
+        <div class="result-stat">
+          <div class="result-stat-label">N₂ savings</div>
+          <div class="result-stat-value" id="ead-savings-display">—</div>
+          <div class="result-stat-sub" id="ead-savings-unit">metres shallower</div>
+        </div>
+      </div>
+      <div class="info-note" style="margin-top:14px;">
+        <span class="info-note-icon">&#8505;&#65039;</span>
+        <span>Use your <strong>EAD</strong> (not actual depth) when looking up no-decompression limits in air dive tables to get credit for the reduced nitrogen in your nitrox mix.</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Action buttons -->
+  <div class="action-row">
+    <button class="action-btn" onclick="copySummary()" aria-label="Copy results summary">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+      Copy Summary
+    </button>
+    <button class="action-btn" onclick="window.print()" aria-label="Print results">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+      Print Results
+    </button>
+  </div>
+
+  <!-- Safety Disclaimer -->
+  <div class="safety-disclaimer">
+    &#129686; <strong>Safety Notice:</strong> This calculator is a planning aid only and is NOT a substitute for proper dive training, certification, and planning with qualified instructors. Always verify calculations with your dive computer, buddy, and instructor before any dive. Never exceed your training level.
+  </div>
+
+  <!-- Quick Reference Table -->
+  <div class="table-section fade-in">
+    <div class="table-title">
+      <div class="card-title-dot" style="background:var(--purple)"></div>
+      MOD Quick Reference Table
+    </div>
+    <table class="ref-table" aria-label="MOD quick reference for common nitrox mixes">
+      <thead>
+        <tr>
+          <th>Mix (O₂%)</th>
+          <th>MOD at PO₂ 1.4</th>
+          <th>MOD at PO₂ 1.6</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="mix-label">21% (Air)</td>
+          <td>56.7 m / 186 ft</td>
+          <td class="warn-val">66.3 m / 218 ft</td>
+        </tr>
+        <tr>
+          <td class="mix-label">28% (EAN28)</td>
+          <td>40.0 m / 132 ft</td>
+          <td class="warn-val">47.1 m / 155 ft</td>
+        </tr>
+        <tr>
+          <td class="mix-label">32% (EAN32)</td>
+          <td>33.8 m / 111 ft</td>
+          <td class="warn-val">40.0 m / 132 ft</td>
+        </tr>
+        <tr>
+          <td class="mix-label">36% (EAN36)</td>
+          <td>28.9 m / 95 ft</td>
+          <td class="warn-val">34.4 m / 113 ft</td>
+        </tr>
+        <tr>
+          <td class="mix-label">40% (EAN40)</td>
+          <td>25.0 m / 82 ft</td>
+          <td class="warn-val">30.0 m / 99 ft</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- SEO Educational Content -->
+  <div class="seo-content fade-in">
+
+    <h2>What is Nitrox?</h2>
+    <p>Nitrox — formally called Enriched Air Nitrox (EANx) — is a breathing gas mixture that contains a higher percentage of oxygen than normal air. Standard air is approximately 21% oxygen and 79% nitrogen. Common recreational nitrox mixes are EAN32 (32% O₂) and EAN36 (36% O₂), though mixes from 22% up to 40% are widely used.</p>
+    <p>The main benefit of nitrox is the reduced nitrogen fraction: because you are breathing less nitrogen at any given depth, your body absorbs nitrogen more slowly, which extends your no-decompression limit (NDL) compared to diving the same profile on air. For recreational divers, this translates to longer bottom times on repetitive dives and reduced post-dive fatigue.</p>
+    <p>The trade-off is oxygen toxicity. More oxygen means a higher partial pressure of oxygen (PO₂) at depth, and PO₂ above 1.4–1.6 ATA can trigger central nervous system (CNS) oxygen toxicity, potentially causing convulsions with little or no warning. This is why nitrox divers must understand and respect the Maximum Operating Depth of their specific mix.</p>
+    <p>Most recreational nitrox courses are offered by PADI, SSI, NAUI, and other agencies and can be completed in a day. A nitrox certification qualifies you to plan and execute dives using enriched air up to 40% oxygen.</p>
+
+    <h2>How to Use This Calculator</h2>
+    <p>This nitrox calculator has four modes, all accessible via the tabs above. Select your unit system (metric or imperial) with the toggle, then choose the appropriate mode:</p>
+    <ul>
+      <li><strong>MOD (Maximum Operating Depth):</strong> Enter your O₂ percentage and your PO₂ limit to find the deepest depth you can safely dive that mix.</li>
+      <li><strong>PO₂ at Depth:</strong> Enter your O₂ percentage and the depth you plan to dive to find the resulting partial pressure of oxygen. The result is colour-coded green (safe), amber (deco range), or red (danger).</li>
+      <li><strong>Best Mix:</strong> Enter your planned maximum depth and desired PO₂ limit to find the optimal oxygen percentage for that dive — always floored down for safety.</li>
+      <li><strong>EAD (Equivalent Air Depth):</strong> Enter your O₂ percentage and actual depth to find the equivalent air depth for dive table planning.</li>
+    </ul>
+
+    <h2>Understanding Maximum Operating Depth (MOD)</h2>
+    <p>The Maximum Operating Depth is the deepest point at which a specific nitrox mix can be safely breathed without the partial pressure of oxygen exceeding a predetermined limit. The formulas used are:</p>
+    <div class="formula-block">
+      MOD (metres) = ((PO₂ limit ÷ FO₂) − 1) × 10<br>
+      MOD (feet)   = ((PO₂ limit ÷ FO₂) − 1) × 33<br>
+      <br>
+      where FO₂ = O₂% ÷ 100
+    </div>
+    <p>For example, EAN32 (FO₂ = 0.32) with a PO₂ limit of 1.4 gives a MOD of ((1.4 ÷ 0.32) − 1) × 10 = 33.75 m, rounded to 33.8 m. This means you must ascend above 33.8 m if breathing EAN32 with a 1.4 ATA limit.</p>
+    <p>The 1.4 ATA limit is the standard recreational working limit recommended by virtually all training agencies. The 1.6 ATA limit may be used only during decompression stops, when the diver is stationary and closely monitored — it should never be used as a bottom gas limit.</p>
+
+    <h2>Partial Pressure of Oxygen (PO₂) Explained</h2>
+    <p>According to Dalton's Law of Partial Pressures, the total pressure of a gas mixture equals the sum of the partial pressures of its component gases. As you descend, the absolute pressure of the water column increases, and so does the partial pressure of each gas in your breathing mix.</p>
+    <div class="formula-block">
+      Absolute pressure (ATA) = (depth in metres ÷ 10) + 1<br>
+      Absolute pressure (ATA) = (depth in feet ÷ 33) + 1<br>
+      <br>
+      PO₂ = FO₂ × ATA
+    </div>
+    <p>At the surface, ATA = 1.0. At 10 m (33 ft) ATA = 2.0; at 20 m (66 ft) ATA = 3.0. Breathing EAN32 at 20 m gives PO₂ = 0.32 × 3.0 = 0.96 ATA — well within safe limits. At 34 m (112 ft), ATA = 4.4, so PO₂ = 0.32 × 4.4 = 1.408 — right at the recreational limit.</p>
+    <p>CNS oxygen toxicity risk rises steeply above 1.4 ATA and becomes severe above 1.6 ATA. Symptoms include visual disturbances, ringing in the ears, nausea, and convulsions. Because convulsions underwater are almost always fatal (the regulator is expelled), divers must never exceed their MOD.</p>
+
+    <h2>Best Mix for Your Dive</h2>
+    <p>The "Best Mix" concept lets you maximise the oxygen percentage (and thus minimise nitrogen absorption) while keeping PO₂ at the maximum depth within the safe limit. The formula is:</p>
+    <div class="formula-block">
+      Best FO₂ = PO₂ limit ÷ ATA at planned maximum depth<br>
+      Best O₂% = floor(Best FO₂ × 100)  ← always round DOWN
+    </div>
+    <p>Rounding down is critical for safety. If the ideal mix works out to 35.8%, you must analyse and label a 35% mix, not 36%. Rounding up even by 1% shifts your actual MOD shallower than you planned, potentially causing you to exceed your PO₂ limit at depth without realising it.</p>
+    <p>In practice, the Best Mix is limited by what your dive centre can blend. Most facilities offer standard mixes at 32% and 36% increments. Choose the highest standard mix whose MOD is deeper than your planned maximum depth.</p>
+
+    <h2>Equivalent Air Depth (EAD)</h2>
+    <p>Equivalent Air Depth lets you use standard air dive tables with a nitrox mix by converting your actual depth to the air depth that produces the same nitrogen partial pressure. This allows you to read the corresponding no-decompression limit from an air table.</p>
+    <div class="formula-block">
+      FN₂ = 1 − FO₂  (nitrogen fraction)<br>
+      EAD (m)  = ((FN₂ × ATA) ÷ 0.79 − 1) × 10<br>
+      EAD (ft) = ((FN₂ × ATA) ÷ 0.79 − 1) × 33
+    </div>
+    <p>The constant 0.79 is the nitrogen fraction of air. For EAN32 at 30 m: FN₂ = 0.68, ATA = 4.0, EAD = ((0.68 × 4.0) ÷ 0.79 − 1) × 10 = 24.4 m. You would use 24 m on your air table to find the NDL, giving you a longer bottom time than if you were diving air at 30 m.</p>
+    <p>Note that modern dive computers typically calculate EAD and NDL automatically when programmed with your nitrox mix. However, understanding EAD is important for pre-dive planning, gas management, and dive table exercises on certification courses.</p>
+
+    <h2>Frequently Asked Questions</h2>
+
+    <div class="faq-item">
+      <div class="faq-q">What is the most common nitrox mix for recreational diving?</div>
+      <div class="faq-a">EAN32 (32% oxygen) is the most widely used recreational nitrox mix. It provides a modest but meaningful extension of no-decompression limits compared to air, with a MOD of 33.8 m (111 ft) at PO₂ 1.4. EAN36 (36% oxygen) is also popular for shallower reef dives, offering an even greater NDL extension but a shallower MOD of 28.9 m (95 ft).</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">Do I need a special certification to dive nitrox?</div>
+      <div class="faq-a">Yes. You need an Enriched Air Diver certification (or equivalent) from a recognised agency such as PADI, SSI, NAUI, or BSAC before diving nitrox. The course covers oxygen physiology, MOD calculations, analysing tanks, and dive planning with nitrox. Most courses can be completed in one day, often online combined with a practical component at the dive centre.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">Why does my dive computer need to know my nitrox mix?</div>
+      <div class="faq-a">Your dive computer uses your O₂ percentage to calculate two things: the current PO₂ (and alert you if it approaches your set limit), and the equivalent nitrogen loading for decompression calculations. If you enter the wrong mix, your computer's NDL and decompression calculations will be incorrect. Always analyse your actual tank with an oxygen analyser and enter that value into your computer before diving — never assume the mix matches what is written on the tank without verification.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">Can I use this calculator for technical diving with high-oxygen mixes?</div>
+      <div class="faq-a">This calculator correctly handles all oxygen percentages from 21% to 100%, including pure oxygen and technical deco mixes. However, technical diving with oxygen-enriched gases above 40% requires specialist training well beyond recreational nitrox. Pure oxygen (100%) has a MOD of only 6 m (20 ft) at PO₂ 1.6 and is used exclusively for in-water decompression stops. Always seek proper technical dive training before using high-oxygen mixes. See our <a href="article-nitrox.html">nitrox guide</a> for more information.</div>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- Toast -->
+<div id="toast" role="status" aria-live="polite">
+  <span>&#10003;</span>
+  <span id="toast-msg">Copied to clipboard</span>
+</div>
+
+<script>
+  window.CALCNOVA_PAGE = {
+    id: 'nitrox-calculator',
+    disclaimer: 'This calculator is a planning aid only and is NOT a substitute for proper dive training, certification, and planning with qualified instructors. Always verify calculations with your dive computer, buddy, and instructor before any dive.'
+  };
+</script>
+<script src="shared/site-data.js"></script>
+<script src="shared/nav.js"></script>
+
+<script>
+  /* ── State ── */
+  var unit = 'metric';   // 'metric' | 'imperial'
+  var mode = 'mod';      // 'mod' | 'po2' | 'bestmix' | 'ead'
+
+  /* ── Unit toggle ── */
+  function setUnit(u) {
+    unit = u;
+    document.getElementById('btn-metric').classList.toggle('active', u === 'metric');
+    document.getElementById('btn-imperial').classList.toggle('active', u === 'imperial');
+
+    // Update depth unit labels
+    var depthUnit = u === 'metric' ? 'm' : 'ft';
+    document.getElementById('po2-depth-unit').textContent = depthUnit;
+    document.getElementById('bm-depth-unit').textContent = depthUnit;
+    document.getElementById('ead-depth-unit').textContent = depthUnit;
+
+    calculate();
+  }
+
+  /* ── Mode toggle ── */
+  var modeLabels = {
+    mod:     'Maximum Operating Depth',
+    po2:     'PO\u2082 at Depth',
+    bestmix: 'Best Mix for Your Dive',
+    ead:     'Equivalent Air Depth (EAD)'
+  };
+
+  function setMode(m) {
+    mode = m;
+
+    // Tab buttons
+    ['mod','po2','bestmix','ead'].forEach(function(id) {
+      var btn = document.getElementById('tab-' + id);
+      btn.classList.toggle('active', id === m);
+      btn.setAttribute('aria-selected', id === m ? 'true' : 'false');
+    });
+
+    // Input sections
+    ['mod','po2','bestmix','ead'].forEach(function(id) {
+      document.getElementById('inputs-' + id).style.display = id === m ? '' : 'none';
+    });
+
+    // Result sections
+    ['mod','po2','bestmix','ead'].forEach(function(id) {
+      document.getElementById('result-' + id).style.display = id === m ? '' : 'none';
+    });
+
+    document.getElementById('mode-title').textContent = modeLabels[m];
+    calculate();
+  }
+
+  /* ── Helpers ── */
+  function depthToAta(depth, u) {
+    if (u === 'metric') return depth / 10 + 1;
+    return depth / 33 + 1;
+  }
+
+  function fmt(n, dec) {
+    return n.toFixed(dec !== undefined ? dec : 1);
+  }
+
+  function showError(msg) {
+    var el = document.getElementById('error-box');
+    el.textContent = msg;
+    el.classList.add('show');
+  }
+  function clearError() {
+    document.getElementById('error-box').classList.remove('show');
+  }
+  function showWarning(msg) {
+    var el = document.getElementById('warning-box');
+    el.innerHTML = msg;
+    el.classList.add('show');
+  }
+  function clearWarning() {
+    document.getElementById('warning-box').classList.remove('show');
+  }
+
+  function showResult() {
+    var card = document.getElementById('result-card');
+    card.classList.remove('hidden');
+    // Trigger fade-in
+    requestAnimationFrame(function() {
+      card.classList.add('visible');
+    });
+  }
+
+  /* ── Main calculate ── */
+  function calculate() {
+    clearError();
+    clearWarning();
+
+    if (mode === 'mod')     calcMod();
+    else if (mode === 'po2')     calcPo2();
+    else if (mode === 'bestmix') calcBestMix();
+    else if (mode === 'ead')     calcEad();
+
+    // Trigger fade-in on reference table / seo
+    document.querySelectorAll('.fade-in').forEach(function(el) {
+      el.classList.add('visible');
+    });
+  }
+
+  /* ── MOD ── */
+  function calcMod() {
+    var o2 = parseFloat(document.getElementById('mod-o2').value);
+    var po2limit = parseFloat(document.getElementById('mod-po2limit').value);
+
+    if (isNaN(o2) || o2 <= 0 || o2 > 100) {
+      showError('Please enter a valid O\u2082 fraction between 1 and 100.');
+      return;
+    }
+
+    var fo2 = o2 / 100;
+    var modM  = (po2limit / fo2 - 1) * 10;
+    var modFt = (po2limit / fo2 - 1) * 33;
+    var ataAtMod = po2limit / fo2;
+
+    document.getElementById('mod-result-m').textContent  = fmt(modM, 1);
+    document.getElementById('mod-result-ft').textContent = fmt(modFt, 0) + ' ft';
+    document.getElementById('mod-fo2-display').textContent  = fmt(fo2, 3);
+    document.getElementById('mod-po2-display').textContent  = po2limit.toFixed(1);
+    document.getElementById('mod-ata-display').textContent  = fmt(ataAtMod, 3);
+
+    // Depth limit warning
+    var recLimitM  = 40;
+    var recLimitFt = 130;
+    if (modM > recLimitM) {
+      showWarning('&#9888;&#65039; Exceeds recreational depth limit (40 m / 130 ft). This MOD applies to technical or cave diving only.');
+    }
+
+    document.getElementById('result-mod').style.display = '';
+    showResult();
+  }
+
+  /* ── PO2 at Depth ── */
+  function calcPo2() {
+    var o2    = parseFloat(document.getElementById('po2-o2').value);
+    var depth = parseFloat(document.getElementById('po2-depth').value);
+
+    if (isNaN(o2) || o2 <= 0 || o2 > 100) {
+      showError('Please enter a valid O\u2082 fraction between 1 and 100.');
+      return;
+    }
+    if (isNaN(depth) || depth < 0) {
+      showError('Please enter a valid depth.');
+      return;
+    }
+
+    var fo2 = o2 / 100;
+    var ata = depthToAta(depth, unit);
+    var po2 = fo2 * ata;
+
+    // Color coding
+    var colorClass, statusText, statusColor, dotColor;
+    if (po2 <= 1.4) {
+      colorClass  = 'po2-safe';
+      statusText  = 'Safe — Recreational range (\u22641.4 ATA)';
+      statusColor = 'rgba(16,185,129,.15)';
+      dotColor    = '#10b981';
+      borderColor = 'rgba(16,185,129,.4)';
+      textColor   = '#10b981';
+    } else if (po2 <= 1.6) {
+      colorClass  = 'po2-warn';
+      statusText  = 'Caution — Deco range only (1.4\u20131.6 ATA)';
+      statusColor = 'rgba(245,158,11,.12)';
+      dotColor    = '#f59e0b';
+      borderColor = 'rgba(245,158,11,.4)';
+      textColor   = '#f59e0b';
+    } else {
+      colorClass  = 'po2-danger';
+      statusText  = 'DANGER — Exceeds 1.6 ATA limit!';
+      statusColor = 'rgba(239,68,68,.12)';
+      dotColor    = '#ef4444';
+      borderColor = 'rgba(239,68,68,.4)';
+      textColor   = '#ef4444';
+    }
+
+    var resultEl = document.getElementById('po2-result-val');
+    resultEl.className = 'result-primary ' + colorClass;
+    resultEl.textContent = fmt(po2, 3);
+
+    // Badge
+    var badgeWrap = document.getElementById('po2-badge-wrap');
+    badgeWrap.innerHTML = '<div class="po2-badge" style="background:' + statusColor + ';border-color:' + borderColor + ';color:' + textColor + ';">' +
+      '<div class="po2-badge-dot" style="background:' + dotColor + ';"></div>' +
+      statusText + '</div>';
+
+    var depthUnitLabel = unit === 'metric' ? 'metres' : 'feet';
+    document.getElementById('po2-depth-display').textContent = fmt(depth, 0);
+    document.getElementById('po2-depth-unit-display').textContent = depthUnitLabel;
+    document.getElementById('po2-ata-display').textContent  = fmt(ata, 3);
+    document.getElementById('po2-fo2-display').textContent  = fmt(fo2, 3);
+
+    if (po2 > 1.6) {
+      showWarning('&#9888;&#65039; PO\u2082 exceeds 1.6 ATA. Do not dive this mix at this depth. Ascend immediately or switch to a more appropriate gas.');
+    } else if (po2 > 1.4) {
+      showWarning('&#9888;&#65039; PO\u2082 is in the deco range (1.4\u20131.6 ATA). Use only during decompression stops, not as a bottom gas.');
+    }
+
+    document.getElementById('result-po2').style.display = '';
+    showResult();
+  }
+
+  /* ── Best Mix ── */
+  function calcBestMix() {
+    var depth    = parseFloat(document.getElementById('bm-depth').value);
+    var po2limit = parseFloat(document.getElementById('bm-po2limit').value);
+
+    if (isNaN(depth) || depth <= 0) {
+      showError('Please enter a valid planned maximum depth.');
+      return;
+    }
+
+    var ata       = depthToAta(depth, unit);
+    var idealFo2  = po2limit / ata;
+    var bestPct   = Math.floor(idealFo2 * 100); // floor for safety
+
+    if (bestPct < 1) {
+      showError('The planned depth is too deep for any nitrox mix at this PO\u2082 limit. Consider a shallower dive or a different gas.');
+      return;
+    }
+    if (bestPct > 100) bestPct = 100;
+
+    var bestFo2   = bestPct / 100;
+    var po2Check  = bestFo2 * ata;
+
+    document.getElementById('bm-result-pct').textContent = bestPct;
+    document.getElementById('bm-mix-name').textContent   = bestPct === 21 ? 'Air' : 'EAN' + bestPct;
+
+    var depthUnitLabel = unit === 'metric' ? 'metres' : 'feet';
+    document.getElementById('bm-depth-display').textContent      = fmt(depth, 0);
+    document.getElementById('bm-depth-unit-display').textContent = depthUnitLabel;
+    document.getElementById('bm-ata-display').textContent        = fmt(ata, 3);
+    document.getElementById('bm-po2-check').textContent          = fmt(po2Check, 3);
+
+    if (bestPct <= 21) {
+      showWarning('&#9888;&#65039; Best mix is 21% or less — standard air or a hypoxic mix. Ensure hypoxic mixes are only used with proper technical training.');
+    } else if (bestPct > 40) {
+      showWarning('&#9888;&#65039; Best mix exceeds 40%. High-oxygen mixes require specialist technical training and dedicated equipment analysis.');
+    }
+
+    document.getElementById('result-bestmix').style.display = '';
+    showResult();
+  }
+
+  /* ── EAD ── */
+  function calcEad() {
+    var o2    = parseFloat(document.getElementById('ead-o2').value);
+    var depth = parseFloat(document.getElementById('ead-depth').value);
+
+    if (isNaN(o2) || o2 <= 0 || o2 > 100) {
+      showError('Please enter a valid O\u2082 fraction between 1 and 100.');
+      return;
+    }
+    if (isNaN(depth) || depth < 0) {
+      showError('Please enter a valid depth.');
+      return;
+    }
+
+    var fo2 = o2 / 100;
+    var fn2 = 1 - fo2;
+    var ata = depthToAta(depth, unit);
+
+    var eadM  = (fn2 * ata / 0.79 - 1) * 10;
+    var eadFt = (fn2 * ata / 0.79 - 1) * 33;
+
+    // Can be negative for very shallow dives with high O2 — clamp to 0 with note
+    if (eadM < 0) {
+      eadM  = 0;
+      eadFt = 0;
+    }
+
+    var savingsM  = depth - eadM;
+    var savingsFt = (unit === 'metric' ? depth * 3.28084 : depth) - eadFt;
+
+    document.getElementById('ead-result-m').textContent  = fmt(eadM, 1);
+    document.getElementById('ead-result-ft').textContent = fmt(eadFt, 0) + ' ft';
+
+    var depthUnitLabel = unit === 'metric' ? 'metres' : 'feet';
+    document.getElementById('ead-actual-display').textContent       = fmt(depth, 0);
+    document.getElementById('ead-actual-unit-display').textContent  = depthUnitLabel;
+    document.getElementById('ead-fn2-display').textContent          = fmt(fn2, 3);
+
+    if (unit === 'metric') {
+      document.getElementById('ead-savings-display').textContent = fmt(savingsM, 1);
+      document.getElementById('ead-savings-unit').textContent    = 'metres shallower';
+    } else {
+      document.getElementById('ead-savings-display').textContent = fmt(savingsFt, 0);
+      document.getElementById('ead-savings-unit').textContent    = 'feet shallower';
+    }
+
+    document.getElementById('result-ead').style.display = '';
+    showResult();
+  }
+
+  /* ── Copy Summary ── */
+  function copySummary() {
+    var lines = ['CalcNova Nitrox Calculator — ' + new Date().toLocaleDateString()];
+    lines.push('Mode: ' + modeLabels[mode]);
+    lines.push('Units: ' + (unit === 'metric' ? 'Metric' : 'Imperial'));
+    lines.push('');
+
+    if (mode === 'mod') {
+      var o2 = document.getElementById('mod-o2').value;
+      var po2l = document.getElementById('mod-po2limit').value;
+      var resM  = document.getElementById('mod-result-m').textContent;
+      var resFt = document.getElementById('mod-result-ft').textContent;
+      lines.push('O\u2082 Fraction: ' + o2 + '%');
+      lines.push('PO\u2082 Limit: ' + po2l + ' ATA');
+      lines.push('MOD: ' + resM + ' m / ' + resFt);
+    } else if (mode === 'po2') {
+      var o2 = document.getElementById('po2-o2').value;
+      var depth = document.getElementById('po2-depth').value;
+      var res = document.getElementById('po2-result-val').textContent;
+      lines.push('O\u2082 Fraction: ' + o2 + '%');
+      lines.push('Depth: ' + depth + ' ' + (unit === 'metric' ? 'm' : 'ft'));
+      lines.push('PO\u2082: ' + res + ' ATA');
+    } else if (mode === 'bestmix') {
+      var depth = document.getElementById('bm-depth').value;
+      var po2l  = document.getElementById('bm-po2limit').value;
+      var res   = document.getElementById('bm-result-pct').textContent;
+      lines.push('Planned Depth: ' + depth + ' ' + (unit === 'metric' ? 'm' : 'ft'));
+      lines.push('PO\u2082 Limit: ' + po2l + ' ATA');
+      lines.push('Best Mix: ' + res + '% O\u2082 (EAN' + res + ')');
+    } else if (mode === 'ead') {
+      var o2    = document.getElementById('ead-o2').value;
+      var depth = document.getElementById('ead-depth').value;
+      var resM  = document.getElementById('ead-result-m').textContent;
+      var resFt = document.getElementById('ead-result-ft').textContent;
+      lines.push('O\u2082 Fraction: ' + o2 + '%');
+      lines.push('Actual Depth: ' + depth + ' ' + (unit === 'metric' ? 'm' : 'ft'));
+      lines.push('EAD: ' + resM + ' m / ' + resFt);
+    }
+
+    lines.push('');
+    lines.push('SAFETY: Verify all calculations with your dive computer, buddy, and instructor before any dive.');
+    lines.push('https://calcnova.co/nitrox-calculator.html');
+
+    var text = lines.join('\n');
+
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(function() { showToast('Copied to clipboard'); });
+    } else {
+      // Fallback
+      var ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.top = '-9999px';
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand('copy'); showToast('Copied to clipboard'); } catch(e) { showToast('Copy not supported'); }
+      document.body.removeChild(ta);
+    }
+  }
+
+  function showToast(msg) {
+    var toast = document.getElementById('toast');
+    document.getElementById('toast-msg').textContent = msg;
+    toast.classList.add('show');
+    setTimeout(function() { toast.classList.remove('show'); }, 2400);
+  }
+
+  /* ── Init ── */
+  (function() {
+    // Show correct result sections for initial mode
+    ['mod','po2','bestmix','ead'].forEach(function(id) {
+      document.getElementById('result-' + id).style.display = id === mode ? '' : 'none';
+    });
+    calculate();
+  })();
+</script>
+</body>
+</html>

@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Free Scuba Diving Calculators — Nitrox, Gas Blending, Buoyancy &amp; More | CalcNova</title>
+  <meta name="description" content="Plan safer, smarter dives with free scuba diving calculators for nitrox, gas blending, buoyancy, air consumption, and trimix — all running in your browser.">
+
+  <!-- Canonical -->
+  <link rel="canonical" href="https://calcnova.co/scuba-diving-calculators.html">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Free Scuba Diving Calculators — Nitrox, Gas Blending, Buoyancy &amp; More | CalcNova">
+  <meta property="og:description" content="Plan safer, smarter dives with free scuba diving calculators for nitrox, gas blending, buoyancy, air consumption, and trimix — all running in your browser.">
+  <meta property="og:url" content="https://calcnova.co/scuba-diving-calculators.html">
+  <meta property="og:site_name" content="CalcNova">
+
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "Free Scuba Diving Calculators — Nitrox, Gas Blending, Buoyancy & More",
+    "url": "https://calcnova.co/scuba-diving-calculators.html",
+    "description": "Plan safer, smarter dives with free scuba diving calculators for nitrox, gas blending, buoyancy, air consumption, and trimix — all running in your browser.",
+    "publisher": {
+      "@type": "Organization",
+      "name": "CalcNova",
+      "url": "https://calcnova.co"
+    },
+    "breadcrumb": {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://calcnova.co/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Scuba Diving",
+          "item": "https://calcnova.co/scuba-diving-calculators.html"
+        }
+      ]
+    }
+  }
+  </script>
+
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="shared/nav.css">
+  <style>
+    .app {
+      position: relative;
+      z-index: 1;
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 0 16px 60px;
+    }
+
+    /* ── HERO ── */
+    .landing-hero {
+      text-align: center;
+      padding: 40px 20px 36px;
+    }
+    .landing-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: linear-gradient(135deg, rgba(16,185,129,.1), rgba(99,102,241,.1));
+      border: 1px solid rgba(16,185,129,.25);
+      border-radius: 100px;
+      padding: 6px 16px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--green);
+      letter-spacing: .4px;
+      text-transform: uppercase;
+      margin-bottom: 18px;
+    }
+    .landing-hero h1 {
+      font-size: 42px;
+      font-weight: 800;
+      letter-spacing: -1px;
+      line-height: 1.15;
+      margin-bottom: 16px;
+    }
+    .landing-hero h1 span {
+      background: linear-gradient(135deg, var(--green), var(--purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .landing-desc {
+      font-size: 17px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      max-width: 580px;
+      margin: 0 auto;
+    }
+
+    /* ── SAFETY DISCLAIMER ── */
+    .safety-disclaimer {
+      background: linear-gradient(135deg, rgba(245,158,11,.08), rgba(245,158,11,.04));
+      border: 1.5px solid rgba(245,158,11,.35);
+      border-radius: 14px;
+      padding: 16px 20px;
+      font-size: 13.5px;
+      color: var(--text-secondary);
+      line-height: 1.55;
+      margin-bottom: 40px;
+    }
+    .safety-disclaimer strong {
+      color: #d97706;
+    }
+    body.dark .safety-disclaimer {
+      background: linear-gradient(135deg, rgba(245,158,11,.1), rgba(245,158,11,.05));
+      border-color: rgba(245,158,11,.3);
+    }
+    body.dark .safety-disclaimer strong {
+      color: #fbbf24;
+    }
+
+    /* ── SECTION HEADER ── */
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      padding-top: 4px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .section-header h2 {
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -.3px;
+    }
+    .section-count {
+      display: inline-flex;
+      align-items: center;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-muted);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      padding: 4px 12px;
+    }
+
+    /* ── TOOLS GRID ── */
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 48px;
+    }
+    .tool-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 24px 22px 20px;
+      text-decoration: none;
+      color: inherit;
+      transition: all .2s;
+      display: flex;
+      flex-direction: column;
+    }
+    .tool-card:hover {
+      border-color: var(--green);
+      transform: translateY(-3px);
+      box-shadow: 0 12px 32px rgba(16,185,129,.12);
+    }
+    .tool-card-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      margin-bottom: 16px;
+      background: linear-gradient(135deg, rgba(16,185,129,.12), rgba(99,102,241,.08));
+      flex-shrink: 0;
+    }
+    .tool-card-title {
+      font-size: 16px;
+      font-weight: 800;
+      margin-bottom: 8px;
+      line-height: 1.3;
+    }
+    .tool-card-desc {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.55;
+      flex: 1;
+    }
+    .tool-card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 16px;
+    }
+    .tool-card-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--green);
+    }
+    .tool-card-badge .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: currentColor;
+    }
+    .tool-card-arrow {
+      font-size: 16px;
+      color: var(--text-muted);
+      transition: color .15s, transform .15s;
+    }
+    .tool-card:hover .tool-card-arrow {
+      color: var(--green);
+      transform: translateX(3px);
+    }
+
+    /* ── ARTICLES GRID ── */
+    .articles-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      margin-bottom: 40px;
+    }
+    .article-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 22px 20px 18px;
+      text-decoration: none;
+      color: inherit;
+      transition: all .2s;
+      display: flex;
+      flex-direction: column;
+    }
+    .article-card:hover {
+      border-color: var(--purple);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(99,102,241,.1);
+    }
+    .article-card-icon {
+      font-size: 28px;
+      margin-bottom: 12px;
+      display: block;
+      line-height: 1;
+    }
+    .article-card-title {
+      font-size: 15px;
+      font-weight: 700;
+      line-height: 1.4;
+      margin-bottom: 8px;
+    }
+    .article-card-excerpt {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.55;
+      flex: 1;
+    }
+    .article-card-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 14px;
+      font-size: 11px;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+    .article-read-time {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      .tools-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .landing-hero h1 {
+        font-size: 34px;
+      }
+    }
+    @media (max-width: 540px) {
+      .tools-grid {
+        grid-template-columns: 1fr;
+      }
+      .articles-grid {
+        grid-template-columns: 1fr;
+      }
+      .landing-hero h1 {
+        font-size: 28px;
+      }
+      .landing-desc {
+        font-size: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- Breadcrumbs -->
+  <nav class="cn-breadcrumbs" aria-label="Breadcrumb">
+    <ol class="cn-bc-list">
+      <li class="cn-bc-item"><a href="index.html">Home</a></li>
+      <li class="cn-bc-sep" aria-hidden="true">›</li>
+      <li class="cn-bc-item cn-bc-current" aria-current="page">Scuba Diving</li>
+    </ol>
+  </nav>
+
+  <!-- Hero -->
+  <div class="landing-hero">
+    <div class="landing-badge">🤿 Specialty Calculators</div>
+    <h1>Scuba Diving <span>Calculators</span></h1>
+    <p class="landing-desc">Plan safer, smarter dives. Free scuba diving calculators for nitrox, gas blending, buoyancy, air consumption, and trimix — all running in your browser.</p>
+  </div>
+
+  <!-- Safety Disclaimer -->
+  <div class="safety-disclaimer">
+    🦺 <strong>Safety Notice:</strong> These calculators are planning aids only and are NOT a substitute for proper dive training, certification, and planning with qualified instructors. Always verify calculations with your dive computer, buddy, and instructor before any dive. Never exceed your training level.
+  </div>
+
+  <!-- Calculators -->
+  <div class="section-header">
+    <h2>Calculators</h2>
+    <span class="section-count">6 tools</span>
+  </div>
+  <div class="tools-grid">
+
+    <a href="nitrox-calculator.html" class="tool-card">
+      <div class="tool-card-icon">🫧</div>
+      <div class="tool-card-title">Nitrox / MOD Calculator</div>
+      <div class="tool-card-desc">Calculate Maximum Operating Depth, PO₂ at depth, Best Mix, and Equivalent Air Depth for nitrox diving.</div>
+      <div class="tool-card-footer">
+        <span class="tool-card-badge"><span class="dot"></span> New</span>
+        <span class="tool-card-arrow">→</span>
+      </div>
+    </a>
+
+    <a href="gas-blending-calculator.html" class="tool-card">
+      <div class="tool-card-icon">⚗️</div>
+      <div class="tool-card-title">Gas Blending Calculator</div>
+      <div class="tool-card-desc">Calculate how much O₂ and helium to add when blending nitrox or trimix. Supports fill from empty and top-up.</div>
+      <div class="tool-card-footer">
+        <span class="tool-card-badge"><span class="dot"></span> New</span>
+        <span class="tool-card-arrow">→</span>
+      </div>
+    </a>
+
+    <a href="dive-weight-calculator.html" class="tool-card">
+      <div class="tool-card-icon">⚖️</div>
+      <div class="tool-card-title">Dive Weight Calculator</div>
+      <div class="tool-card-desc">Estimate how much lead weight you need based on your body weight, suit, tank, and water type.</div>
+      <div class="tool-card-footer">
+        <span class="tool-card-badge"><span class="dot"></span> New</span>
+        <span class="tool-card-arrow">→</span>
+      </div>
+    </a>
+
+    <a href="sac-rate-calculator.html" class="tool-card">
+      <div class="tool-card-icon">💨</div>
+      <div class="tool-card-title">SAC / RMV Calculator</div>
+      <div class="tool-card-desc">Calculate your Surface Air Consumption and Respiratory Minute Volume from dive log data.</div>
+      <div class="tool-card-footer">
+        <span class="tool-card-badge"><span class="dot"></span> New</span>
+        <span class="tool-card-arrow">→</span>
+      </div>
+    </a>
+
+    <a href="tank-duration-calculator.html" class="tool-card">
+      <div class="tool-card-icon">⏱️</div>
+      <div class="tool-card-title">Tank Duration Calculator</div>
+      <div class="tool-card-desc">Estimate how long your tank will last at a given depth based on your breathing rate.</div>
+      <div class="tool-card-footer">
+        <span class="tool-card-badge"><span class="dot"></span> New</span>
+        <span class="tool-card-arrow">→</span>
+      </div>
+    </a>
+
+    <a href="trimix-calculator.html" class="tool-card">
+      <div class="tool-card-icon">🧪</div>
+      <div class="tool-card-title">Trimix / Narcosis Calculator</div>
+      <div class="tool-card-desc">Calculate Equivalent Narcotic Depth for trimix blends and find the best mix for your target depth.</div>
+      <div class="tool-card-footer">
+        <span class="tool-card-badge"><span class="dot"></span> New</span>
+        <span class="tool-card-arrow">→</span>
+      </div>
+    </a>
+
+  </div>
+
+  <!-- Articles -->
+  <div class="section-header">
+    <h2>Guides &amp; Articles</h2>
+  </div>
+  <div class="articles-grid">
+
+    <a href="article-nitrox.html" class="article-card">
+      <span class="article-card-icon">🫧</span>
+      <div class="article-card-title">Nitrox Diving Explained</div>
+      <div class="article-card-excerpt">What nitrox is, how it works, and why enriched air makes your dives better.</div>
+      <div class="article-card-meta">
+        <span class="article-read-time">📖 7 min read</span>
+      </div>
+    </a>
+
+    <a href="article-sac-rmv.html" class="article-card">
+      <span class="article-card-icon">💨</span>
+      <div class="article-card-title">SAC and RMV Explained</div>
+      <div class="article-card-excerpt">How to calculate your air consumption rate and use it for better gas planning.</div>
+      <div class="article-card-meta">
+        <span class="article-read-time">📖 6 min read</span>
+      </div>
+    </a>
+
+    <a href="article-weighting.html" class="article-card">
+      <span class="article-card-icon">⚖️</span>
+      <div class="article-card-title">Scuba Weighting Guide</div>
+      <div class="article-card-excerpt">How to get your buoyancy right — the buoyancy check procedure and common mistakes.</div>
+      <div class="article-card-meta">
+        <span class="article-read-time">📖 5 min read</span>
+      </div>
+    </a>
+
+    <a href="article-trimix.html" class="article-card">
+      <span class="article-card-icon">🧪</span>
+      <div class="article-card-title">Introduction to Trimix</div>
+      <div class="article-card-excerpt">Why helium matters for deep diving, how narcosis works, and when you need trimix.</div>
+      <div class="article-card-meta">
+        <span class="article-read-time">📖 8 min read</span>
+      </div>
+    </a>
+
+  </div>
+
+</div>
+
+<script>
+  window.CALCNOVA_PAGE = { id: '' };
+</script>
+<script src="shared/site-data.js"></script>
+<script src="shared/nav.js"></script>
+</body>
+</html>
