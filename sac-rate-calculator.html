@@ -1,0 +1,1325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>SAC / RMV Rate Calculator — Surface Air Consumption | CalcNova</title>
+  <meta name="description" content="Calculate your Surface Air Consumption (SAC) rate and Respiratory Minute Volume (RMV) from dive log data. Essential for gas planning and improving air consumption.">
+
+  <!-- Canonical -->
+  <link rel="canonical" href="https://calcnova.co/sac-rate-calculator.html">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="SAC / RMV Rate Calculator — Surface Air Consumption | CalcNova">
+  <meta property="og:description" content="Calculate your Surface Air Consumption (SAC) rate and Respiratory Minute Volume (RMV) from dive log data. Essential for gas planning and improving air consumption.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://calcnova.co/sac-rate-calculator.html">
+  <meta property="og:site_name" content="CalcNova">
+
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  [
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "SAC / RMV Rate Calculator",
+      "url": "https://calcnova.co/sac-rate-calculator.html",
+      "description": "Calculate your Surface Air Consumption (SAC) rate and Respiratory Minute Volume (RMV) from dive log data for gas planning.",
+      "applicationCategory": "HealthApplication",
+      "provider": { "@type": "Organization", "name": "CalcNova", "url": "https://calcnova.co" },
+      "offers": { "@type": "Offer", "price": "0" }
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is SAC rate in scuba diving?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "SAC (Surface Air Consumption) rate is the amount of gas a diver consumes per minute at the surface, expressed in bar/min (metric) or psi/min (imperial). It is calculated by dividing the pressure consumed during a dive by the dive time and the average depth in atmospheres."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is RMV in scuba diving?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "RMV (Respiratory Minute Volume) is the actual volume of gas a diver breathes per minute at the surface, expressed in litres per minute (L/min) or cubic feet per minute (cu ft/min). Unlike SAC rate, RMV is tank-independent, making it easier to compare across different cylinders."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is a good SAC rate for a recreational diver?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "A typical recreational diver has an RMV of 16–20 L/min. Experienced divers often achieve 12–16 L/min, while highly efficient divers may breathe less than 12 L/min. Beginners and stressed divers can exceed 25 L/min. With practice, good buoyancy, and calm breathing, most divers can significantly improve their air consumption."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I calculate my SAC rate?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "To calculate SAC rate: (1) Record your start and end pressure, tank size, average depth, and dive time. (2) Calculate gas used = start pressure minus end pressure. (3) Convert depth to atmospheres absolute (ATA) — for salt water at 20 m: ATA = (20/10) + 1 = 3 ATA. (4) SAC = gas used ÷ dive time ÷ ATA. For example: 100 bar used ÷ 40 min ÷ 3 ATA = 0.83 bar/min SAC."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the difference between SAC rate and RMV?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "SAC rate is measured in pressure units (bar/min or psi/min) and is specific to a particular tank. RMV is measured in volume units (L/min or cu ft/min) and represents the actual volume of gas breathed regardless of cylinder type. RMV is more universal and useful for planning dives with different cylinders."
+          }
+        }
+      ]
+    }
+  ]
+  </script>
+
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="shared/nav.css">
+  <style>
+    /* ── Base ── */
+    :root {
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --border: #e2e8f0;
+      --text-primary: #0f1623;
+      --text-secondary: #5a6478;
+      --text-muted: #9ba3b5;
+      --green: #10b981;
+      --purple: #6366f1;
+      --red: #ef4444;
+      --amber: #f59e0b;
+      --font: 'Plus Jakarta Sans', sans-serif;
+      --mono: 'JetBrains Mono', monospace;
+    }
+
+    .app {
+      position: relative; z-index: 1;
+      max-width: 960px; margin: 0 auto; padding: 0 16px 60px;
+    }
+
+    /* ── Hero ── */
+    .pill-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: linear-gradient(135deg, rgba(16,185,129,.1), rgba(99,102,241,.1));
+      border: 1px solid rgba(16,185,129,.25);
+      border-radius: 100px; padding: 6px 14px;
+      font-size: 12px; font-weight: 700; color: var(--green);
+      margin-bottom: 12px;
+    }
+    .hero {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 18px; padding: 32px 28px 26px; margin-bottom: 28px;
+    }
+    .hero-title { font-size: 26px; font-weight: 800; letter-spacing: -.5px; }
+    .hero-title span {
+      background: linear-gradient(135deg, var(--green), var(--purple));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .hero-desc { font-size: 14px; color: var(--text-secondary); margin-top: 6px; line-height: 1.6; max-width: 620px; }
+    .hero-formula {
+      font-family: var(--mono); font-size: 12px; color: var(--text-muted); margin-top: 10px; line-height: 1.7;
+    }
+    .hero-formula .hl { color: var(--green); font-weight: 700; }
+
+    /* ── Unit Toggle ── */
+    .unit-toggle {
+      display: inline-flex; background: var(--bg); border: 1px solid var(--border);
+      border-radius: 10px; padding: 3px; margin-bottom: 22px;
+    }
+    .unit-btn {
+      padding: 7px 22px; border: none; border-radius: 8px;
+      font-family: var(--font); font-size: 13px; font-weight: 600;
+      color: var(--text-secondary); background: none; cursor: pointer;
+      transition: all .15s;
+    }
+    .unit-btn.active {
+      background: var(--surface); color: var(--text-primary);
+      box-shadow: 0 1px 4px rgba(0,0,0,.08);
+    }
+
+    /* ── Water type toggle ── */
+    .water-toggle-row {
+      display: flex; align-items: center; gap: 10px; margin-bottom: 20px; flex-wrap: wrap;
+    }
+    .water-toggle-label {
+      font-size: 12px; font-weight: 600; color: var(--text-secondary);
+    }
+    .water-toggle {
+      display: inline-flex; background: var(--bg); border: 1px solid var(--border);
+      border-radius: 8px; padding: 2px;
+    }
+    .water-btn {
+      padding: 5px 14px; border: none; border-radius: 7px;
+      font-family: var(--font); font-size: 12px; font-weight: 600;
+      color: var(--text-secondary); background: none; cursor: pointer;
+      transition: all .15s;
+    }
+    .water-btn.active {
+      background: var(--surface); color: var(--text-primary);
+      box-shadow: 0 1px 3px rgba(0,0,0,.07);
+    }
+
+    /* ── Layout ── */
+    .main-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 28px;
+    }
+    @media (max-width: 640px) { .main-grid { grid-template-columns: 1fr; } }
+
+    /* ── Cards ── */
+    .card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 18px; padding: 22px;
+    }
+    .card-title {
+      font-family: var(--mono); font-size: 10px; font-weight: 700;
+      letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-muted);
+      margin-bottom: 18px; display: flex; align-items: center; gap: 8px;
+    }
+    .card-title-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+
+    /* ── Inputs ── */
+    .form-group { margin-bottom: 14px; }
+    .form-group:last-child { margin-bottom: 0; }
+    .form-label {
+      font-size: 12px; font-weight: 600; color: var(--text-secondary);
+      margin-bottom: 6px; display: block;
+    }
+    input[type="number"], select {
+      width: 100%; background: var(--bg); border: 1px solid var(--border);
+      border-radius: 10px; color: var(--text-primary); font-family: var(--font);
+      font-size: 14px; font-weight: 600; padding: 9px 12px; outline: none;
+      transition: border-color .2s, box-shadow .2s; box-sizing: border-box;
+      appearance: none; -webkit-appearance: none;
+    }
+    select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239ba3b5' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 10px center;
+      padding-right: 30px;
+    }
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+    input[type="number"]:focus, select:focus {
+      border-color: var(--green);
+      box-shadow: 0 0 0 3px rgba(16,185,129,.12);
+    }
+    input[type="number"].input-error {
+      border-color: var(--red);
+      box-shadow: 0 0 0 3px rgba(239,68,68,.10);
+    }
+    .input-hint {
+      font-size: 11px; color: var(--text-muted); margin-top: 4px; font-style: italic;
+    }
+
+    /* Custom tank inputs */
+    .custom-tank-inputs { display: none; }
+    .custom-tank-inputs.show { display: block; }
+    .input-row { display: flex; gap: 10px; }
+    .input-row .form-group { flex: 1; }
+
+    /* ── Error ── */
+    .error-box {
+      background: rgba(239,68,68,.08); border: 1px solid rgba(239,68,68,.25);
+      border-radius: 10px; padding: 10px 14px; font-size: 13px; font-weight: 600;
+      color: var(--red); margin-top: 14px; display: none; line-height: 1.5;
+    }
+    .error-box.show { display: block; }
+
+    /* ── Results section ── */
+    .results-section { display: none; }
+    .results-section.show { display: block; }
+
+    /* ── Result cards pair ── */
+    .result-pair {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;
+    }
+    @media (max-width: 520px) { .result-pair { grid-template-columns: 1fr; } }
+
+    .result-card {
+      background: linear-gradient(135deg, rgba(16,185,129,.07), rgba(99,102,241,.07));
+      border: 1.5px solid rgba(16,185,129,.28); border-radius: 20px;
+      padding: 26px 22px 22px; text-align: center;
+      position: relative; overflow: hidden;
+    }
+    .result-card::before {
+      content: ''; position: absolute; top: -40px; right: -40px;
+      width: 110px; height: 110px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--green), var(--purple)); opacity: .06;
+    }
+    .result-card::after {
+      content: ''; position: absolute; bottom: -28px; left: -28px;
+      width: 80px; height: 80px; border-radius: 50%;
+      background: var(--purple); opacity: .05;
+    }
+    .result-card.purple-tint {
+      background: linear-gradient(135deg, rgba(99,102,241,.07), rgba(16,185,129,.05));
+      border-color: rgba(99,102,241,.28);
+    }
+    .result-label {
+      font-family: var(--mono); font-size: 10px; font-weight: 700;
+      letter-spacing: 1.5px; text-transform: uppercase;
+      color: var(--text-muted); margin-bottom: 10px; position: relative; z-index: 1;
+    }
+    .result-value {
+      font-family: var(--mono); font-size: 42px; font-weight: 800;
+      line-height: 1; margin-bottom: 6px; color: var(--green);
+      position: relative; z-index: 1; transition: color .3s;
+    }
+    .result-unit {
+      font-family: var(--mono); font-size: 14px; font-weight: 600;
+      color: var(--text-secondary); position: relative; z-index: 1;
+    }
+
+    /* ── RMV rating ── */
+    .rmv-rating-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 18px; padding: 20px 22px; margin-bottom: 20px;
+    }
+    .rmv-rating-title {
+      font-family: var(--mono); font-size: 10px; font-weight: 700;
+      letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-muted);
+      margin-bottom: 14px; display: flex; align-items: center; gap: 8px;
+    }
+    .rmv-bar-track {
+      position: relative; height: 12px; border-radius: 6px; overflow: hidden;
+      background: linear-gradient(to right,
+        #10b981 0%, #10b981 33.3%,
+        #f59e0b 33.3%, #f59e0b 66.6%,
+        #ef4444 66.6%, #ef4444 100%
+      );
+      margin-bottom: 8px;
+    }
+    .rmv-bar-marker {
+      position: absolute; top: 50%; transform: translateX(-50%) translateY(-50%);
+      width: 14px; height: 22px; border-radius: 4px;
+      background: var(--surface); border: 2.5px solid var(--text-primary);
+      box-shadow: 0 2px 6px rgba(0,0,0,.2);
+      transition: left .5s cubic-bezier(.34,1.56,.64,1);
+      z-index: 2;
+    }
+    .rmv-bar-labels {
+      display: flex; justify-content: space-between;
+      font-family: var(--mono); font-size: 10px; color: var(--text-muted); font-weight: 600;
+      margin-bottom: 12px;
+    }
+    .rmv-badge {
+      display: inline-flex; align-items: center; gap: 7px;
+      padding: 7px 16px; border-radius: 100px;
+      font-size: 13px; font-weight: 700; border: 2px solid;
+      transition: all .3s;
+    }
+    .rmv-badge-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+    /* ── Gas duration card ── */
+    .duration-card {
+      background: linear-gradient(135deg, rgba(99,102,241,.06), rgba(16,185,129,.04));
+      border: 1px solid rgba(99,102,241,.2); border-radius: 16px;
+      padding: 18px 20px; margin-bottom: 20px; display: flex; align-items: flex-start; gap: 14px;
+    }
+    .duration-icon {
+      font-size: 24px; flex-shrink: 0; line-height: 1;
+    }
+    .duration-text { flex: 1; }
+    .duration-heading {
+      font-size: 12px; font-weight: 700; color: var(--text-muted);
+      font-family: var(--mono); text-transform: uppercase; letter-spacing: 1px;
+      margin-bottom: 4px;
+    }
+    .duration-value {
+      font-family: var(--mono); font-size: 22px; font-weight: 800;
+      color: var(--purple); line-height: 1; margin-bottom: 4px;
+    }
+    .duration-desc {
+      font-size: 12px; color: var(--text-secondary); line-height: 1.5;
+    }
+
+    /* ── Action row ── */
+    .action-row {
+      display: flex; gap: 10px; margin-bottom: 28px; flex-wrap: wrap;
+    }
+    .action-btn {
+      display: flex; align-items: center; gap: 7px; padding: 10px 18px;
+      background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+      font-family: var(--font); font-size: 13px; font-weight: 600;
+      color: var(--text-secondary); cursor: pointer; transition: all .15s;
+    }
+    .action-btn:hover { border-color: var(--green); color: var(--green); }
+    .action-btn svg { width: 15px; height: 15px; flex-shrink: 0; }
+
+    /* ── Toast ── */
+    #toast {
+      position: fixed; bottom: 28px; right: 24px;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 12px; padding: 12px 18px; font-size: 13px; font-weight: 600;
+      color: var(--text-primary); box-shadow: 0 8px 28px rgba(0,0,0,.12);
+      opacity: 0; transition: opacity .25s; pointer-events: none; z-index: 9999;
+      display: flex; align-items: center; gap: 8px;
+    }
+    #toast.show { opacity: 1; }
+
+    /* ── Safety disclaimer ── */
+    .safety-disclaimer {
+      background: rgba(239,68,68,.06); border: 1px solid rgba(239,68,68,.2);
+      border-radius: 14px; padding: 16px 18px; font-size: 13px;
+      color: var(--text-secondary); line-height: 1.7; margin-bottom: 28px;
+    }
+    .safety-disclaimer strong { color: var(--text-primary); }
+
+    /* ── Fade-in ── */
+    .fade-in {
+      opacity: 0; transform: translateY(14px);
+      transition: opacity .4s ease, transform .4s ease;
+    }
+    .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+    /* ── SEO content ── */
+    .content-section {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 18px; padding: 28px; margin-bottom: 20px;
+    }
+    .content-section h2 {
+      font-size: 20px; font-weight: 800; color: var(--text-primary);
+      margin: 0 0 12px; letter-spacing: -.3px;
+    }
+    .content-section h3 {
+      font-size: 16px; font-weight: 700; color: var(--text-primary);
+      margin: 20px 0 8px;
+    }
+    .content-section p {
+      font-size: 14px; color: var(--text-secondary); line-height: 1.75;
+      margin: 0 0 12px;
+    }
+    .content-section p:last-child { margin-bottom: 0; }
+    .content-section ol, .content-section ul {
+      font-size: 14px; color: var(--text-secondary); line-height: 1.75;
+      margin: 0 0 12px; padding-left: 20px;
+    }
+    .content-section li { margin-bottom: 6px; }
+    .content-section li:last-child { margin-bottom: 0; }
+    .content-section a {
+      color: var(--green); text-decoration: none; font-weight: 600;
+    }
+    .content-section a:hover { text-decoration: underline; }
+
+    /* ── Rating table ── */
+    .rating-table {
+      width: 100%; border-collapse: collapse; font-size: 13px;
+      margin: 14px 0; border-radius: 12px; overflow: hidden;
+    }
+    .rating-table th {
+      background: var(--bg); color: var(--text-muted);
+      font-family: var(--mono); font-size: 10px; font-weight: 700;
+      letter-spacing: 1px; text-transform: uppercase;
+      padding: 10px 14px; text-align: left; border-bottom: 1px solid var(--border);
+    }
+    .rating-table td {
+      padding: 10px 14px; border-bottom: 1px solid var(--border);
+      color: var(--text-secondary); font-weight: 500;
+    }
+    .rating-table tr:last-child td { border-bottom: none; }
+    .rating-table tr:hover td { background: var(--bg); }
+    .rating-dot {
+      display: inline-block; width: 8px; height: 8px;
+      border-radius: 50%; margin-right: 6px; vertical-align: middle;
+    }
+    .rating-badge-cell {
+      font-weight: 700; white-space: nowrap;
+    }
+
+    /* ── FAQ ── */
+    .faq-item {
+      border-bottom: 1px solid var(--border); padding: 16px 0;
+    }
+    .faq-item:first-of-type { padding-top: 0; }
+    .faq-item:last-of-type { border-bottom: none; padding-bottom: 0; }
+    .faq-q {
+      font-size: 15px; font-weight: 700; color: var(--text-primary);
+      cursor: pointer; display: flex; justify-content: space-between; align-items: flex-start;
+      gap: 12px; user-select: none;
+    }
+    .faq-q:hover { color: var(--green); }
+    .faq-chevron {
+      width: 18px; height: 18px; flex-shrink: 0; margin-top: 2px;
+      color: var(--text-muted); transition: transform .2s;
+    }
+    .faq-item.open .faq-chevron { transform: rotate(180deg); }
+    .faq-a {
+      font-size: 14px; color: var(--text-secondary); line-height: 1.75;
+      margin-top: 10px; display: none;
+    }
+    .faq-item.open .faq-a { display: block; }
+
+    /* ── Related links ── */
+    .related-links {
+      display: flex; gap: 12px; flex-wrap: wrap; margin-top: 14px;
+    }
+    .related-link {
+      display: inline-flex; align-items: center; gap: 7px;
+      background: linear-gradient(135deg, rgba(16,185,129,.08), rgba(99,102,241,.08));
+      border: 1px solid rgba(16,185,129,.2);
+      border-radius: 10px; padding: 10px 16px;
+      font-size: 13px; font-weight: 600; color: var(--text-primary);
+      text-decoration: none; transition: all .15s;
+    }
+    .related-link:hover {
+      border-color: var(--green); color: var(--green);
+      background: linear-gradient(135deg, rgba(16,185,129,.12), rgba(99,102,241,.1));
+    }
+
+    /* ── Print ── */
+    @media print {
+      #cn-header, .action-row, #toast, .pill-badge, .nav-tools-wrap,
+      .donate-btn, .mega-menu, .menu-overlay, .site-footer,
+      .footer-disclaimer, .unit-toggle, .water-toggle { display: none !important; }
+      .app { padding: 0; max-width: 100%; }
+      .hero { border: none; padding: 10px 0 8px; margin-bottom: 10px; }
+      .result-card, .card, .rmv-rating-card, .duration-card { page-break-inside: avoid; }
+      .fade-in { opacity: 1 !important; transform: none !important; }
+      .content-section { page-break-inside: avoid; }
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 640px) {
+      .hero { padding: 22px 18px 20px; }
+      .card { padding: 16px; }
+      .result-card { padding: 20px 16px 18px; }
+      .result-value { font-size: 34px; }
+      .content-section { padding: 20px 16px; }
+      .hero-title { font-size: 22px; }
+    }
+    @media (max-width: 380px) {
+      .result-value { font-size: 28px; }
+      .unit-btn { padding: 7px 14px; }
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="pill-badge">Scuba · Gas Planning · Free</div>
+    <div class="hero-title">SAC / RMV Rate <span>Calculator</span></div>
+    <div class="hero-desc">Calculate your Surface Air Consumption (SAC) rate and Respiratory Minute Volume (RMV) from your dive log. Essential for gas planning and tracking your progress as a diver.</div>
+    <div class="hero-formula">
+      Metric: SAC = <span class="hl">gas_used_bar</span> ÷ dive_time ÷ ATA &nbsp;|&nbsp;
+      RMV = <span class="hl">(gas_used_bar × tank_L)</span> ÷ dive_time ÷ ATA
+    </div>
+  </div>
+
+  <!-- Unit Toggle -->
+  <div class="unit-toggle" role="group" aria-label="Unit system">
+    <button class="unit-btn active" id="btn-metric" onclick="setUnit('metric')">Metric (bar / L / m)</button>
+    <button class="unit-btn" id="btn-imperial" onclick="setUnit('imperial')">Imperial (psi / cu ft / ft)</button>
+  </div>
+
+  <!-- Water type toggle -->
+  <div class="water-toggle-row">
+    <span class="water-toggle-label">Water type:</span>
+    <div class="water-toggle" role="group" aria-label="Water type">
+      <button class="water-btn active" id="btn-salt" onclick="setWater('salt')">Saltwater</button>
+      <button class="water-btn" id="btn-fresh" onclick="setWater('fresh')">Freshwater</button>
+    </div>
+  </div>
+
+  <!-- Inputs + Result grid -->
+  <div class="main-grid">
+
+    <!-- Input card -->
+    <div class="card">
+      <div class="card-title">
+        <div class="card-title-dot" style="background:var(--green)"></div>
+        Dive Data
+      </div>
+
+      <!-- Pressures -->
+      <div class="form-group">
+        <label class="form-label" for="inp-start">
+          Start Pressure <span id="lbl-pressure-unit">(bar)</span>
+        </label>
+        <input type="number" id="inp-start" min="0" max="400" step="1" placeholder="e.g. 200" oninput="calculate()">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="inp-end">
+          End Pressure <span id="lbl-pressure-unit2">(bar)</span>
+        </label>
+        <input type="number" id="inp-end" min="0" max="400" step="1" placeholder="e.g. 70" oninput="calculate()">
+      </div>
+
+      <!-- Tank size -->
+      <div class="form-group">
+        <label class="form-label" for="inp-tank">Tank Size</label>
+        <select id="inp-tank" onchange="onTankChange()">
+          <option value="al80">AL80 — <span id="al80-label">11.1 L @ 207 bar</span></option>
+          <option value="al63">AL63</option>
+          <option value="hp80">Steel HP80</option>
+          <option value="hp100">Steel HP100</option>
+          <option value="hp120">Steel HP120</option>
+          <option value="custom">Custom…</option>
+        </select>
+      </div>
+
+      <!-- Custom tank inputs -->
+      <div class="custom-tank-inputs" id="custom-tank-inputs">
+        <div class="input-row">
+          <div class="form-group">
+            <label class="form-label" for="inp-custom-vol">
+              Volume <span id="lbl-vol-unit">(L)</span>
+            </label>
+            <input type="number" id="inp-custom-vol" min="0.1" step="0.1" placeholder="e.g. 11.1" oninput="calculate()">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="inp-custom-wp">
+              Working Pressure <span id="lbl-wp-unit">(bar)</span>
+            </label>
+            <input type="number" id="inp-custom-wp" min="1" step="1" placeholder="e.g. 207" oninput="calculate()">
+          </div>
+        </div>
+      </div>
+
+      <!-- Depth -->
+      <div class="form-group">
+        <label class="form-label" for="inp-depth">
+          Average Depth <span id="lbl-depth-unit">(m)</span>
+        </label>
+        <input type="number" id="inp-depth" min="0" max="100" step="0.5" placeholder="e.g. 18" oninput="calculate()">
+      </div>
+
+      <!-- Dive time -->
+      <div class="form-group">
+        <label class="form-label" for="inp-time">Dive Time (minutes)</label>
+        <input type="number" id="inp-time" min="1" max="300" step="1" placeholder="e.g. 45" oninput="calculate()">
+      </div>
+
+      <!-- Error box -->
+      <div class="error-box" id="error-box"></div>
+    </div>
+
+    <!-- Results placeholder card (shown before calculation) -->
+    <div class="card" id="placeholder-card">
+      <div class="card-title">
+        <div class="card-title-dot" style="background:var(--purple)"></div>
+        Results
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:calc(100% - 36px);padding:20px 0;text-align:center;gap:10px;">
+        <div style="font-size:36px;line-height:1;">🤿</div>
+        <div style="font-size:13px;color:var(--text-muted);line-height:1.6;">Enter your dive data on the left to calculate your SAC rate and RMV.</div>
+      </div>
+    </div>
+
+    <!-- Actual result (hidden until calc) -->
+    <div id="results-right" style="display:none; flex-direction:column; gap:16px;">
+      <!-- SAC card -->
+      <div class="result-card">
+        <div class="result-label">SAC Rate</div>
+        <div class="result-value" id="res-sac">—</div>
+        <div class="result-unit" id="res-sac-unit">bar/min</div>
+      </div>
+      <!-- RMV card -->
+      <div class="result-card purple-tint">
+        <div class="result-label">RMV</div>
+        <div class="result-value" id="res-rmv" style="color:var(--purple)">—</div>
+        <div class="result-unit" id="res-rmv-unit">L/min</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Full-width results section (shown after calc) -->
+  <div class="results-section" id="results-section">
+
+    <!-- RMV Rating bar -->
+    <div class="rmv-rating-card fade-in" id="rmv-rating-card">
+      <div class="rmv-rating-title">
+        <div class="card-title-dot" style="background:var(--green)"></div>
+        RMV Rating
+      </div>
+      <div class="rmv-bar-track">
+        <div class="rmv-bar-marker" id="rmv-bar-marker" style="left:0%"></div>
+      </div>
+      <div class="rmv-bar-labels">
+        <span>Excellent</span>
+        <span id="rmv-bar-mid1"></span>
+        <span>Average</span>
+        <span id="rmv-bar-mid2"></span>
+        <span>High</span>
+      </div>
+      <div>
+        <div class="rmv-badge" id="rmv-badge">
+          <div class="rmv-badge-dot" id="rmv-badge-dot"></div>
+          <span id="rmv-badge-label">—</span>
+        </div>
+      </div>
+      <div style="font-size:12px;color:var(--text-muted);margin-top:8px;" id="rmv-context-text"></div>
+    </div>
+
+    <!-- Gas duration estimator -->
+    <div class="duration-card fade-in" id="duration-card">
+      <div class="duration-icon">⏱️</div>
+      <div class="duration-text">
+        <div class="duration-heading">Gas Duration Estimate</div>
+        <div class="duration-value" id="duration-value">— min</div>
+        <div class="duration-desc" id="duration-desc">Estimated bottom time with a full AL80 at the same depth.</div>
+      </div>
+    </div>
+
+    <!-- Action buttons -->
+    <div class="action-row fade-in">
+      <button class="action-btn" onclick="copySummary()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+          <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+        </svg>
+        Copy Summary
+      </button>
+      <button class="action-btn" onclick="window.print()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="6 9 6 2 18 2 18 9"></polyline>
+          <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+          <rect x="6" y="14" width="12" height="8"></rect>
+        </svg>
+        Print Results
+      </button>
+    </div>
+
+  </div><!-- /results-section -->
+
+  <!-- Safety Disclaimer -->
+  <div class="safety-disclaimer">
+    🦺 <strong>Safety Notice:</strong> This calculator is a planning aid only and is NOT a substitute for proper dive training, certification, and planning with qualified instructors. Always verify calculations with your dive computer, buddy, and instructor before any dive. Never exceed your training level.
+  </div>
+
+  <!-- ── SEO Content ── -->
+
+  <div class="content-section fade-in">
+    <h2>What is SAC Rate?</h2>
+    <p>
+      <strong>SAC (Surface Air Consumption) rate</strong> is a measure of how much gas a diver uses per minute, expressed as if they were breathing at the surface (1 atmosphere). It is calculated from your dive log data — specifically your start and end cylinder pressures, the depth of your dive, and your bottom time.
+    </p>
+    <p>
+      Because gas is compressed by depth (you consume more litres of gas per breath at 30 m than at 5 m), SAC normalises consumption back to surface pressure so you can compare dives at different depths. SAC is expressed in <strong>bar per minute</strong> (metric) or <strong>psi per minute</strong> (imperial) and is specific to the cylinder used.
+    </p>
+    <p>
+      SAC rate is one of the most useful numbers a diver can track. It tells you how efficiently you breathe underwater, helps you plan gas requirements before a dive, and lets you measure your improvement over time. As divers gain experience and improve their buoyancy control, SAC rates typically decrease significantly.
+    </p>
+  </div>
+
+  <div class="content-section fade-in">
+    <h2>What is RMV?</h2>
+    <p>
+      <strong>RMV (Respiratory Minute Volume)</strong> is the actual volume of gas you breathe per minute at the surface, expressed in <strong>litres per minute</strong> (metric) or <strong>cubic feet per minute</strong> (imperial). RMV is the tank-independent version of SAC — it represents your true breathing rate as a volume, regardless of which cylinder you used.
+    </p>
+    <p>
+      Because RMV is expressed as a volume, you can use it to plan dives with any cylinder type. For example, if your RMV is 15 L/min and you plan to dive a 12-litre tank to 20 m (3 ATA saltwater), you will consume approximately 15 × 3 = 45 L/min of compressed gas, so your 12 L cylinder at 200 bar (2,400 free litres) would last around 53 minutes.
+    </p>
+    <p>
+      RMV is preferred by technical divers and instructors for its universality. Once you know your RMV, you can quickly estimate gas duration for any cylinder at any depth without needing to recalculate from raw pressure figures.
+    </p>
+  </div>
+
+  <div class="content-section fade-in">
+    <h2>How to Calculate Your SAC Rate</h2>
+    <p>Follow these steps to calculate your SAC rate from your dive log:</p>
+    <ol>
+      <li><strong>Record your dive data:</strong> Note your start pressure, end pressure, cylinder size, average depth, and total bottom time from your dive log or computer.</li>
+      <li><strong>Calculate gas used:</strong> Subtract end pressure from start pressure. For example, 210 bar − 70 bar = 140 bar consumed.</li>
+      <li><strong>Calculate depth in atmospheres (ATA):</strong> For saltwater, ATA = (depth_m ÷ 10) + 1. At 20 m: ATA = (20 ÷ 10) + 1 = 3. For freshwater, use 10.3 instead of 10.</li>
+      <li><strong>Calculate SAC rate:</strong> SAC = gas used ÷ dive time ÷ ATA. Example: 140 bar ÷ 40 min ÷ 3 ATA = 1.17 bar/min.</li>
+      <li><strong>Calculate RMV (optional):</strong> RMV = SAC × tank volume in litres. Example: 1.17 bar/min × 11.1 L = 13.0 L/min.</li>
+    </ol>
+    <p>
+      For imperial units: SAC = (gas_used_psi ÷ dive_time) ÷ ATA. To get RMV in cu ft/min, multiply SAC by the tank factor (rated volume in cu ft ÷ working pressure in psi).
+    </p>
+    <p>
+      <strong>Use the calculator above</strong> to do all of this automatically — just enter your dive data and it computes both SAC and RMV instantly.
+    </p>
+  </div>
+
+  <div class="content-section fade-in">
+    <h2>What SAC Rate Should I Have?</h2>
+    <p>
+      RMV (in L/min) is the most standardised way to benchmark your breathing efficiency. Here is how typical divers fall across the range:
+    </p>
+    <table class="rating-table">
+      <thead>
+        <tr>
+          <th>RMV (L/min)</th>
+          <th>RMV (cu ft/min)</th>
+          <th>Rating</th>
+          <th>Typical diver profile</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="rating-dot" style="background:#10b981"></span>&lt; 12 L/min</td>
+          <td>&lt; 0.42 cu ft/min</td>
+          <td class="rating-badge-cell" style="color:#10b981">Excellent</td>
+          <td>Very efficient — experienced, calm, great buoyancy</td>
+        </tr>
+        <tr>
+          <td><span class="rating-dot" style="background:#10b981"></span>12 – 16 L/min</td>
+          <td>0.42 – 0.57 cu ft/min</td>
+          <td class="rating-badge-cell" style="color:#10b981">Good</td>
+          <td>Typical experienced recreational diver</td>
+        </tr>
+        <tr>
+          <td><span class="rating-dot" style="background:#f59e0b"></span>16 – 20 L/min</td>
+          <td>0.57 – 0.71 cu ft/min</td>
+          <td class="rating-badge-cell" style="color:#f59e0b">Average</td>
+          <td>Normal for most recreational divers</td>
+        </tr>
+        <tr>
+          <td><span class="rating-dot" style="background:#f59e0b"></span>20 – 25 L/min</td>
+          <td>0.71 – 0.88 cu ft/min</td>
+          <td class="rating-badge-cell" style="color:#f59e0b">Above Average</td>
+          <td>Room to improve — work on buoyancy and breathing</td>
+        </tr>
+        <tr>
+          <td><span class="rating-dot" style="background:#ef4444"></span>&gt; 25 L/min</td>
+          <td>&gt; 0.88 cu ft/min</td>
+          <td class="rating-badge-cell" style="color:#ef4444">High</td>
+          <td>Beginners, stressed divers, high exertion dives</td>
+        </tr>
+      </tbody>
+    </table>
+    <p>
+      Keep in mind that SAC and RMV naturally increase during stressful or physically demanding dives — cold water, strong currents, and new environments all elevate breathing rates. The benchmarks above are most meaningful for typical calm recreational dives. Do not be discouraged by a high initial rate; consistent practice almost always leads to significant improvement.
+    </p>
+  </div>
+
+  <div class="content-section fade-in">
+    <h2>Tips to Improve Your Air Consumption</h2>
+
+    <h3>1. Master Your Buoyancy</h3>
+    <p>
+      Poor buoyancy is the single biggest contributor to high air consumption. When divers are positively buoyant, they kick harder to stay down, increasing exertion and breathing rate. When negatively buoyant, they work to stay off the bottom. Perfect neutral buoyancy — achieved by fine-tuning weight and BCD inflation — dramatically reduces exertion and allows slow, effortless movement through the water.
+    </p>
+
+    <h3>2. Slow Down and Breathe Deliberately</h3>
+    <p>
+      Many divers breathe too quickly, taking shallow, frequent breaths. Practice slow, deep, diaphragmatic breathing — inhale fully, pause briefly, exhale slowly and completely. A complete breath cycle of 6–10 seconds dramatically improves gas efficiency compared to rapid shallow breaths. This is especially important in the first few minutes of a dive when many divers are still settling in.
+    </p>
+
+    <h3>3. Streamline Your Profile</h3>
+    <p>
+      Dangling equipment, a vertical body position, or flailing arms all create drag that requires more effort (and more gas) to overcome. Tuck your gauges and accessories close to your body, maintain a horizontal trim position, and keep your arms still during kicking. Even small improvements in streamlining can meaningfully reduce your SAC rate.
+    </p>
+
+    <h3>4. Stay Calm and Relax</h3>
+    <p>
+      Anxiety and stress spike breathing rate significantly. If you feel uneasy underwater, signal your buddy, stop, and focus on slow breathing before continuing. Building confidence through more dive experience and training in different conditions gradually reduces the ambient stress response that many divers experience.
+    </p>
+
+    <h3>5. Dive More (and Log Your SAC Rate)</h3>
+    <p>
+      Like any physical skill, air consumption improves with repetition. Log your SAC rate after every dive using a tool like this calculator. Tracking it over time reveals trends — you will likely see consistent improvement over dozens of dives as your body and mind adapt to the underwater environment.
+    </p>
+
+    <h3>6. Reduce Exertion and Plan Your Dive</h3>
+    <p>
+      Plan routes that work with currents rather than against them. Move slowly and deliberately — you are not in a race. Reduce unnecessary swimming and hover in place when observing marine life. The less physical effort required, the lower your gas consumption.
+    </p>
+  </div>
+
+  <!-- FAQ -->
+  <div class="content-section fade-in">
+    <h2>Frequently Asked Questions</h2>
+
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">
+        What is SAC rate in scuba diving?
+        <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+      </div>
+      <div class="faq-a">
+        SAC (Surface Air Consumption) rate is the amount of gas a diver consumes per minute, normalised to surface pressure. Expressed in bar/min or psi/min, it is calculated from your cylinder pressure drop, dive time, and average depth. SAC is cylinder-specific, meaning the same breathing effort will produce different SAC values in different tanks.
+      </div>
+    </div>
+
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">
+        What is the difference between SAC and RMV?
+        <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+      </div>
+      <div class="faq-a">
+        SAC is a pressure-based rate (bar/min or psi/min) tied to a specific cylinder. RMV is a volume-based rate (L/min or cu ft/min) that represents your actual breathing volume regardless of tank type. RMV is more versatile for planning dives with different cylinders and is preferred by technical divers and instructors. Both are calculated from the same dive data — RMV simply multiplies SAC by the cylinder's water capacity in litres.
+      </div>
+    </div>
+
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">
+        What is a good SAC rate for a beginner diver?
+        <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+      </div>
+      <div class="faq-a">
+        Beginners typically have an RMV of 20–30+ L/min due to a combination of anxiety, unfamiliar equipment, and suboptimal buoyancy. This is completely normal. With 20–50 dives of focused practice on buoyancy and breathing, many divers improve to the 16–20 L/min "average" range, and with continued practice can reach 12–16 L/min or better. Do not compare yourself to experienced divers early on — just track your own trend.
+      </div>
+    </div>
+
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">
+        Why does my SAC rate change between dives?
+        <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+      </div>
+      <div class="faq-a">
+        Many factors affect SAC rate from dive to dive: water temperature (cold water raises consumption), current strength, your physical fitness on the day, how familiar the dive site is, equipment configuration, and even how much sleep you had. SAC rate also naturally increases with physical exertion like fighting currents or swimming fast. For the most useful tracking, compare similar dives — same depth range, similar conditions, and at rest/cruising speed.
+      </div>
+    </div>
+
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">
+        How do I use my SAC rate to plan gas for a dive?
+        <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+      </div>
+      <div class="faq-a">
+        Once you know your RMV, gas planning is straightforward: (1) Calculate ATA for the planned depth. (2) Multiply RMV × ATA to get L/min consumption at depth. (3) Divide your available gas in litres by this consumption rate to get your maximum bottom time. Always apply a safety factor (e.g. plan to end the dive with 50 bar or 700 psi reserve) and account for ascent gas. For detailed gas duration calculations, see our <a href="tank-duration-calculator.html">Tank Duration Calculator</a>.
+      </div>
+    </div>
+
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">
+        Does depth affect SAC rate calculation?
+        <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+      </div>
+      <div class="faq-a">
+        Yes — this is the whole point of normalising to the surface. At 30 m (4 ATA), you are breathing gas at 4× the surface pressure, so each breath consumes 4× more gas from your cylinder than the same breath at the surface. The SAC calculation divides out this depth factor, giving you a number that represents your consumption as if at the surface. This allows fair comparison between dives at different depths.
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Related tools -->
+  <div class="content-section fade-in">
+    <h2>Related Dive Calculators</h2>
+    <p>Use these tools alongside your SAC rate for complete gas planning:</p>
+    <div class="related-links">
+      <a href="tank-duration-calculator.html" class="related-link">
+        🧴 Tank Duration Calculator
+      </a>
+      <a href="article-sac-rmv.html" class="related-link">
+        📖 Understanding SAC &amp; RMV — Guide
+      </a>
+    </div>
+  </div>
+
+</div><!-- /app -->
+
+<!-- Toast -->
+<div id="toast">
+  <span>✓</span>
+  <span id="toast-msg">Copied!</span>
+</div>
+
+<script>
+window.CALCNOVA_PAGE = {
+  id: 'sac-rate',
+  disclaimer: 'This calculator is a planning aid only and is NOT a substitute for proper dive training, certification, and planning with qualified instructors. Always verify calculations with your dive computer, buddy, and instructor before any dive.'
+};
+</script>
+<script src="shared/site-data.js"></script>
+<script src="shared/nav.js"></script>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ── State ── */
+  var unit  = 'metric';  // 'metric' | 'imperial'
+  var water = 'salt';    // 'salt' | 'fresh'
+  var lastResult = null;
+
+  /* ── Tank presets ── */
+  var TANKS = {
+    metric: {
+      al80:  { vol: 11.1, wp: 207 },
+      al63:  { vol: 8.9,  wp: 207 },
+      hp80:  { vol: 11.1, wp: 237 },
+      hp100: { vol: 13.2, wp: 237 },
+      hp120: { vol: 15.8, wp: 237 }
+    },
+    imperial: {
+      al80:  { vol: 80,  wp: 3000 },
+      al63:  { vol: 63,  wp: 3000 },
+      hp80:  { vol: 77,  wp: 3442 },
+      hp100: { vol: 100, wp: 3442 },
+      hp120: { vol: 120, wp: 3442 }
+    }
+  };
+
+  var TANK_LABELS = {
+    metric: {
+      al80:  'AL80 — 11.1 L @ 207 bar',
+      al63:  'AL63 — 8.9 L @ 207 bar',
+      hp80:  'Steel HP80 — 11.1 L @ 237 bar',
+      hp100: 'Steel HP100 — 13.2 L @ 237 bar',
+      hp120: 'Steel HP120 — 15.8 L @ 237 bar',
+      custom: 'Custom…'
+    },
+    imperial: {
+      al80:  'AL80 — 80 cu ft @ 3000 psi',
+      al63:  'AL63 — 63 cu ft @ 3000 psi',
+      hp80:  'Steel HP80 — 77 cu ft @ 3442 psi',
+      hp100: 'Steel HP100 — 100 cu ft @ 3442 psi',
+      hp120: 'Steel HP120 — 120 cu ft @ 3442 psi',
+      custom: 'Custom…'
+    }
+  };
+
+  /* ── RMV rating thresholds ── */
+  var RMV_RATINGS = {
+    metric: [
+      { max: 12,   label: 'Excellent',     desc: 'very efficient breather',       color: '#10b981' },
+      { max: 16,   label: 'Good',          desc: 'typical experienced diver',     color: '#10b981' },
+      { max: 20,   label: 'Average',       desc: 'normal for recreational',       color: '#f59e0b' },
+      { max: 25,   label: 'Above Average', desc: 'room to improve',               color: '#f59e0b' },
+      { max: Infinity, label: 'High',      desc: 'work on breathing technique',   color: '#ef4444' }
+    ],
+    imperial: [
+      { max: 0.42,     label: 'Excellent',     desc: 'very efficient breather',   color: '#10b981' },
+      { max: 0.57,     label: 'Good',          desc: 'typical experienced diver', color: '#10b981' },
+      { max: 0.71,     label: 'Average',       desc: 'normal for recreational',   color: '#f59e0b' },
+      { max: 0.88,     label: 'Above Average', desc: 'room to improve',           color: '#f59e0b' },
+      { max: Infinity, label: 'High',          desc: 'work on breathing technique', color: '#ef4444' }
+    ]
+  };
+
+  /* ── Helpers ── */
+  function fmt(n, decimals) {
+    return n.toFixed(decimals !== undefined ? decimals : 2);
+  }
+
+  function getVal(id) {
+    var v = parseFloat(document.getElementById(id).value);
+    return isNaN(v) ? null : v;
+  }
+
+  function showError(msg) {
+    var el = document.getElementById('error-box');
+    el.textContent = msg;
+    el.classList.add('show');
+  }
+
+  function clearError() {
+    var el = document.getElementById('error-box');
+    el.textContent = '';
+    el.classList.remove('show');
+  }
+
+  function showResults(show) {
+    var sec     = document.getElementById('results-section');
+    var right   = document.getElementById('results-right');
+    var ph      = document.getElementById('placeholder-card');
+    if (show) {
+      sec.classList.add('show');
+      right.style.display = 'flex';
+      ph.style.display = 'none';
+    } else {
+      sec.classList.remove('show');
+      right.style.display = 'none';
+      ph.style.display = '';
+    }
+  }
+
+  /* ── Unit switch ── */
+  window.setUnit = function (u) {
+    unit = u;
+    document.getElementById('btn-metric').classList.toggle('active', u === 'metric');
+    document.getElementById('btn-imperial').classList.toggle('active', u === 'imperial');
+
+    var m = u === 'metric';
+    // Update labels
+    document.getElementById('lbl-pressure-unit').textContent  = m ? '(bar)' : '(psi)';
+    document.getElementById('lbl-pressure-unit2').textContent = m ? '(bar)' : '(psi)';
+    document.getElementById('lbl-depth-unit').textContent     = m ? '(m)' : '(ft)';
+    document.getElementById('lbl-vol-unit').textContent       = m ? '(L)' : '(cu ft)';
+    document.getElementById('lbl-wp-unit').textContent        = m ? '(bar)' : '(psi)';
+
+    // Update placeholders
+    document.getElementById('inp-start').placeholder  = m ? 'e.g. 200' : 'e.g. 3000';
+    document.getElementById('inp-end').placeholder    = m ? 'e.g. 70'  : 'e.g. 700';
+    document.getElementById('inp-depth').placeholder  = m ? 'e.g. 18'  : 'e.g. 60';
+    document.getElementById('inp-custom-vol').placeholder = m ? 'e.g. 11.1' : 'e.g. 80';
+    document.getElementById('inp-custom-wp').placeholder  = m ? 'e.g. 207'  : 'e.g. 3000';
+
+    // Update result unit labels
+    document.getElementById('res-sac-unit').textContent = m ? 'bar/min' : 'psi/min';
+    document.getElementById('res-rmv-unit').textContent = m ? 'L/min' : 'cu ft/min';
+
+    // Update RMV bar midpoint labels
+    document.getElementById('rmv-bar-mid1').textContent = m ? '12 L/min' : '0.42';
+    document.getElementById('rmv-bar-mid2').textContent = m ? '20 L/min' : '0.71';
+
+    // Update tank select labels
+    updateTankLabels();
+    calculate();
+  };
+
+  /* ── Water switch ── */
+  window.setWater = function (w) {
+    water = w;
+    document.getElementById('btn-salt').classList.toggle('active', w === 'salt');
+    document.getElementById('btn-fresh').classList.toggle('active', w === 'fresh');
+    calculate();
+  };
+
+  /* ── Tank change ── */
+  function updateTankLabels() {
+    var sel    = document.getElementById('inp-tank');
+    var labels = TANK_LABELS[unit];
+    var keys   = ['al80', 'al63', 'hp80', 'hp100', 'hp120', 'custom'];
+    for (var i = 0; i < sel.options.length; i++) {
+      var key = keys[i];
+      if (key && labels[key]) sel.options[i].text = labels[key];
+    }
+  }
+
+  window.onTankChange = function () {
+    var val    = document.getElementById('inp-tank').value;
+    var custom = document.getElementById('custom-tank-inputs');
+    if (val === 'custom') {
+      custom.classList.add('show');
+    } else {
+      custom.classList.remove('show');
+    }
+    calculate();
+  };
+
+  /* ── ATA ── */
+  function calcATA(depth) {
+    if (unit === 'metric') {
+      return water === 'salt' ? (depth / 10) + 1 : (depth / 10.3) + 1;
+    } else {
+      return water === 'salt' ? (depth / 33) + 1 : (depth / 34) + 1;
+    }
+  }
+
+  /* ── Tank size ── */
+  function getTank() {
+    var sel = document.getElementById('inp-tank').value;
+    if (sel === 'custom') {
+      var vol = getVal('inp-custom-vol');
+      var wp  = getVal('inp-custom-wp');
+      if (!vol || vol <= 0 || !wp || wp <= 0) return null;
+      return { vol: vol, wp: wp };
+    }
+    return TANKS[unit][sel] || null;
+  }
+
+  /* ── Main calculation ── */
+  window.calculate = function () {
+    clearError();
+
+    var start = getVal('inp-start');
+    var end   = getVal('inp-end');
+    var depth = getVal('inp-depth');
+    var time  = getVal('inp-time');
+    var tank  = getTank();
+
+    /* Validate */
+    if (start === null || end === null || depth === null || time === null) {
+      showResults(false);
+      return;
+    }
+    if (start <= 0) { showError('Start pressure must be greater than zero.'); showResults(false); return; }
+    if (end < 0)    { showError('End pressure cannot be negative.'); showResults(false); return; }
+    if (end >= start) { showError('End pressure must be less than start pressure.'); showResults(false); return; }
+    if (depth < 0)  { showError('Depth cannot be negative.'); showResults(false); return; }
+    if (time <= 0)  { showError('Dive time must be greater than zero.'); showResults(false); return; }
+    if (document.getElementById('inp-tank').value === 'custom' && !tank) {
+      showError('Please enter a valid custom tank volume and working pressure.'); showResults(false); return;
+    }
+
+    var gasUsed = start - end;
+    var ata     = calcATA(depth);
+
+    var sac, rmv;
+
+    if (unit === 'metric') {
+      /* SAC = gas_used_bar / dive_time / ATA  [bar/min] */
+      sac = gasUsed / time / ata;
+      /* RMV = (gas_used_bar × tank_vol_L) / dive_time / ATA  [L/min] */
+      rmv = (gasUsed * tank.vol) / time / ata;
+    } else {
+      /* SAC = (gas_used_psi / dive_time) / ATA  [psi/min] */
+      sac = (gasUsed / time) / ata;
+      /* tank_factor = rated_vol_cuft / working_pressure_psi */
+      var tankFactor = tank.vol / tank.wp;
+      /* RMV = SAC × tank_factor  [cu ft/min] */
+      rmv = sac * tankFactor;
+    }
+
+    /* RMV Rating */
+    var ratings = RMV_RATINGS[unit];
+    var rating  = ratings[ratings.length - 1];
+    for (var i = 0; i < ratings.length; i++) {
+      if (rmv < ratings[i].max) { rating = ratings[i]; break; }
+    }
+
+    /* Gas duration estimate (full AL80 at same depth) */
+    var refTank  = TANKS[unit].al80;
+    var durMin;
+    if (unit === 'metric') {
+      /* Available gas at surface = working_pressure × vol = 207 × 11.1 = 2297.7 L */
+      /* Leave 50 bar reserve = 50 × 11.1 = 555 L */
+      var totalFreeL   = refTank.wp * refTank.vol;
+      var reserveFreeL = 50 * refTank.vol;
+      var usableFreeL  = totalFreeL - reserveFreeL;
+      /* Consumption = rmv × ata (L/min at depth) */
+      durMin = usableFreeL / (rmv * ata);
+    } else {
+      /* Available gas = rated volume (at full charge) minus reserve (approx 700 psi × tankFactor) */
+      var tf          = refTank.vol / refTank.wp;
+      var totalCuFt   = refTank.vol;  /* rated vol at full pressure */
+      var reserveCuFt = 700 * tf;     /* ~700 psi reserve */
+      var usableCuFt  = totalCuFt - reserveCuFt;
+      /* Consumption = rmv × ata (cu ft/min at depth) */
+      durMin = usableCuFt / (rmv * ata);
+    }
+
+    /* Store result */
+    lastResult = { sac: sac, rmv: rmv, rating: rating, gasUsed: gasUsed, ata: ata, depth: depth, time: time, durMin: durMin, tank: tank };
+
+    /* ── Update DOM ── */
+
+    /* Main result values */
+    var sacDecimals = unit === 'metric' ? 2 : 1;
+    var rmvDecimals = unit === 'metric' ? 1 : 2;
+    document.getElementById('res-sac').textContent = fmt(sac, sacDecimals);
+    document.getElementById('res-rmv').textContent = fmt(rmv, rmvDecimals);
+
+    /* RMV bar marker position (0–100%) */
+    /* Map RMV to a 0–100% position across 0–30 L/min (metric) or 0–1.06 cu ft/min (imp) */
+    var maxRmv = unit === 'metric' ? 30 : 1.06;
+    var pct    = Math.min(100, Math.max(0, (rmv / maxRmv) * 100));
+    document.getElementById('rmv-bar-marker').style.left = pct + '%';
+
+    /* RMV badge */
+    var badge = document.getElementById('rmv-badge');
+    var dot   = document.getElementById('rmv-badge-dot');
+    badge.style.color       = rating.color;
+    badge.style.borderColor = rating.color;
+    badge.style.background  = 'transparent';
+    dot.style.background    = rating.color;
+    document.getElementById('rmv-badge-label').textContent =
+      rating.label + ' — ' + rating.desc;
+
+    /* RMV context text */
+    var rmvStr = unit === 'metric'
+      ? fmt(rmv, 1) + ' L/min'
+      : fmt(rmv, 2) + ' cu ft/min';
+    document.getElementById('rmv-context-text').textContent =
+      'Your RMV of ' + rmvStr + ' places you in the "' + rating.label + '" category.';
+
+    /* Gas duration */
+    var durSafe = Math.max(0, Math.round(durMin));
+    document.getElementById('duration-value').textContent = durSafe + ' min';
+    var depthStr = unit === 'metric'
+      ? Math.round(depth) + ' m'
+      : Math.round(depth) + ' ft';
+    document.getElementById('duration-desc').textContent =
+      'Estimated bottom time with a full AL80 at ' + depthStr + ' (leaving ~' +
+      (unit === 'metric' ? '50 bar' : '700 psi') + ' reserve).';
+
+    showResults(true);
+
+    /* Trigger fade-ins */
+    requestAnimationFrame(function () {
+      var els = document.querySelectorAll('.fade-in');
+      for (var i = 0; i < els.length; i++) {
+        els[i].classList.add('visible');
+      }
+    });
+  };
+
+  /* ── Copy summary ── */
+  function copySummary() {
+    if (!lastResult) { showToast('Nothing to copy yet.'); return; }
+    var r  = lastResult;
+    var m  = unit === 'metric';
+    var sacDecimals = m ? 2 : 1;
+    var rmvDecimals = m ? 1 : 2;
+    var lines = [
+      'CalcNova · SAC / RMV Rate Calculator',
+      '---',
+      'Unit system:   ' + (m ? 'Metric' : 'Imperial'),
+      'Water type:    ' + (water === 'salt' ? 'Saltwater' : 'Freshwater'),
+      'Gas used:      ' + r.gasUsed + (m ? ' bar' : ' psi'),
+      'Avg depth:     ' + r.depth + (m ? ' m' : ' ft') + ' (' + r.ata.toFixed(2) + ' ATA)',
+      'Dive time:     ' + r.time + ' min',
+      'Tank:          ' + r.tank.vol + (m ? ' L @ ' + r.tank.wp + ' bar' : ' cu ft @ ' + r.tank.wp + ' psi'),
+      '---',
+      'SAC rate:      ' + fmt(r.sac, sacDecimals) + (m ? ' bar/min' : ' psi/min'),
+      'RMV:           ' + fmt(r.rmv, rmvDecimals) + (m ? ' L/min' : ' cu ft/min'),
+      'RMV rating:    ' + r.rating.label + ' (' + r.rating.desc + ')',
+      '---',
+      'Calculated by CalcNova — https://calcnova.co/sac-rate-calculator.html'
+    ];
+    var text = lines.join('\n');
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text)
+        .then(function () { showToast('Summary copied!'); })
+        .catch(function () { fallbackCopy(text); });
+    } else {
+      fallbackCopy(text);
+    }
+  }
+  window.copySummary = copySummary;
+
+  function fallbackCopy(text) {
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand('copy'); showToast('Summary copied!'); }
+    catch (e) { showToast('Copy failed — please copy manually.'); }
+    document.body.removeChild(ta);
+  }
+
+  /* ── Toast ── */
+  function showToast(msg) {
+    var toast = document.getElementById('toast');
+    document.getElementById('toast-msg').textContent = msg;
+    toast.classList.add('show');
+    setTimeout(function () { toast.classList.remove('show'); }, 2400);
+  }
+
+  /* ── FAQ accordion ── */
+  window.toggleFaq = function (el) {
+    el.classList.toggle('open');
+  };
+
+  /* ── Init ── */
+  updateTankLabels();
+
+  // Set initial RMV bar midpoint labels
+  document.getElementById('rmv-bar-mid1').textContent = '12 L/min';
+  document.getElementById('rmv-bar-mid2').textContent = '20 L/min';
+
+  // Trigger fade-in for static content on load
+  requestAnimationFrame(function () {
+    var els = document.querySelectorAll('.fade-in');
+    for (var i = 0; i < els.length; i++) {
+      els[i].classList.add('visible');
+    }
+  });
+
+})();
+</script>
+</body>
+</html>
