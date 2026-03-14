@@ -366,6 +366,15 @@
         </div>
       </div>
 
+      <!-- Current He (top-up trimix only) -->
+      <div class="form-group section-topup-he" style="display:none;">
+        <label class="form-label" for="current-he">Current He <span class="label-hint">(%)</span></label>
+        <div class="input-with-unit">
+          <input type="number" id="current-he" value="0" min="0" max="99" step="1" oninput="autoCalc()">
+          <span class="input-suffix">%</span>
+        </div>
+      </div>
+
     </div>
 
     <div class="error-box" id="error-box"></div>
@@ -521,11 +530,9 @@
     document.getElementById('btn-nitrox').classList.toggle('active', g === 'nitrox');
     document.getElementById('btn-trimix').classList.toggle('active', g === 'trimix');
     document.getElementById('group-target-he').style.display = g === 'trimix' ? '' : 'none';
-    // Trimix top-up not supported — force empty fill for trimix
-    if (g === 'trimix' && fill === 'topup') setFill('empty');
-    document.getElementById('fill-method-group').style.opacity = g === 'trimix' ? '.5' : '1';
-    document.getElementById('btn-topup').disabled = g === 'trimix';
-    // Set sensible defaults for trimix
+    // Show/hide current He field for trimix top-up
+    updateTopupFields();
+    // Set sensible defaults
     if (g === 'trimix') {
       document.getElementById('target-o2').value = 21;
       document.getElementById('target-he').value = 35;
@@ -536,14 +543,20 @@
   }
 
   function setFill(f) {
-    if (gas === 'trimix' && f === 'topup') return;
     fill = f;
     document.getElementById('btn-empty').classList.toggle('active', f === 'empty');
     document.getElementById('btn-topup').classList.toggle('active', f === 'topup');
     var topupEls = document.querySelectorAll('.section-topup');
     topupEls.forEach(function(el) { el.style.display = f === 'topup' ? '' : 'none'; });
+    updateTopupFields();
     document.getElementById('card-title-text').textContent = f === 'topup' ? 'Current Tank + Target Mix' : 'Target Mix';
     autoCalc();
+  }
+
+  function updateTopupFields() {
+    var showHeTopup = gas === 'trimix' && fill === 'topup';
+    var heFields = document.querySelectorAll('.section-topup-he');
+    heFields.forEach(function(el) { el.style.display = showHeTopup ? '' : 'none'; });
   }
 
   /* ── Auto-calculate on input change ── */
@@ -566,6 +579,7 @@
     var pFill     = parseFloat(document.getElementById('fill-pressure').value);
     var pCurrent  = fill === 'topup' ? parseFloat(document.getElementById('current-pressure').value) : 0;
     var fo2Current = fill === 'topup' ? parseFloat(document.getElementById('current-o2').value) / 100 : 0.21;
+    var fheCurrent = (fill === 'topup' && gas === 'trimix') ? parseFloat(document.getElementById('current-he').value) / 100 : 0;
 
     /* Validation */
     if (isNaN(fo2Target) || fo2Target <= 0 || fo2Target > 1) {
@@ -583,6 +597,8 @@
     if (fill === 'topup') {
       if (isNaN(pCurrent) || pCurrent < 0) return showError('Enter a valid current tank pressure.');
       if (pCurrent >= pFill) return showError('Current pressure must be less than target fill pressure.');
+      if (gas === 'trimix' && (isNaN(fheCurrent) || fheCurrent < 0 || fheCurrent >= 1)) return showError('Enter a valid current helium percentage.');
+      if (fo2Current + fheCurrent >= 1) return showError('Current O₂ + He cannot equal or exceed 100%.');
     }
     var isM = (unit === 'metric');
 
@@ -609,10 +625,11 @@
         pAirAdd = pFill - pO2Add - pHeAdd;
       }
     } else {
-      // Top-up nitrox
-      pHeAdd = 0;
-      pO2Add = ((fo2Target - 0.21) * pFill - (fo2Current - 0.21) * pCurrent) / 0.79;
-      pAirAdd = pFill - pCurrent - pO2Add;
+      // Top-up (nitrox or trimix)
+      pHeAdd = fheTarget * pFill - fheCurrent * pCurrent;
+      if (pHeAdd < 0) pHeAdd = 0;
+      pO2Add = ((fo2Target - 0.21) * pFill - (fo2Current - 0.21) * pCurrent + 0.21 * pHeAdd) / 0.79;
+      pAirAdd = pFill - pCurrent - pO2Add - pHeAdd;
     }
 
     /* Feasibility checks */
