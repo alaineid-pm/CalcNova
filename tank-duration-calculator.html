@@ -1,0 +1,1213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tank Duration / Gas Planning Calculator — How Long Will My Tank Last? | CalcNova</title>
+  <meta name="description" content="Free tank duration calculator for scuba diving. Estimate how long your cylinder will last at any depth based on your SAC/RMV rate, with turn pressure and depth comparison.">
+
+  <!-- Canonical -->
+  <link rel="canonical" href="https://calcnova.co/tank-duration-calculator.html">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Tank Duration / Gas Planning Calculator — How Long Will My Tank Last? | CalcNova">
+  <meta property="og:description" content="Free tank duration calculator for scuba diving. Estimate how long your cylinder will last at any depth based on your SAC/RMV rate, with turn pressure and depth comparison.">
+  <meta property="og:url" content="https://calcnova.co/tank-duration-calculator.html">
+  <meta property="og:site_name" content="CalcNova">
+
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebApplication",
+        "name": "Tank Duration / Gas Planning Calculator",
+        "url": "https://calcnova.co/tank-duration-calculator.html",
+        "description": "Estimate how long your scuba tank will last at any depth based on SAC or RMV rate, fill pressure, and reserve pressure.",
+        "applicationCategory": "SportsApplication",
+        "operatingSystem": "Any",
+        "provider": { "@type": "Organization", "name": "CalcNova", "url": "https://calcnova.co" },
+        "offers": { "@type": "Offer", "price": "0" }
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "How long will my scuba tank last?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Tank duration depends on your SAC (Surface Air Consumption) rate, the depth you dive, and how much usable gas is in your cylinder. At depth, you breathe air at higher pressure, which depletes your tank faster. Use this calculator to estimate duration based on your personal breathing rate."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "What is the rule of thirds for scuba diving?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "The rule of thirds is a gas management principle: use one third of your tank going out, one third coming back, and keep one third in reserve. This calculator automatically computes your turn pressure based on this rule."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "What is SAC rate in scuba diving?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "SAC (Surface Air Consumption) rate is how many bar (or psi) of gas you breathe per minute at the surface. A typical recreational diver has a SAC of 15–20 bar/min on an AL80 tank. Your actual consumption at depth is SAC multiplied by the ATA (absolute pressure) at that depth."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "What is RMV in scuba diving?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "RMV (Respiratory Minute Volume) is how many liters (or cubic feet) of gas you breathe per minute at the surface, independent of tank size. It's a more portable number than SAC because it doesn't depend on which tank you're using. Typical recreational RMV is 12–20 L/min."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Why does depth affect tank duration so much?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Every 10 meters (33 feet) of depth adds one atmosphere of pressure. At 20m you breathe at 3 ATA — meaning three times the gas volume per breath compared to the surface. This is why a tank that lasts 60 minutes at 10m might only last 20 minutes at 30m."
+            }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="shared/nav.css">
+
+  <style>
+    /* ── Layout ── */
+    .app {
+      position: relative;
+      z-index: 1;
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 0 16px 60px;
+    }
+
+    /* ── Hero ── */
+    .pill-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: linear-gradient(135deg, rgba(16,185,129,.1), rgba(99,102,241,.1));
+      border: 1px solid rgba(16,185,129,.25);
+      border-radius: 100px;
+      padding: 6px 16px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--green);
+      letter-spacing: .4px;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+    .hero {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 32px 28px 28px;
+      margin-bottom: 24px;
+    }
+    .hero-title {
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: -.5px;
+      line-height: 1.2;
+      margin-bottom: 8px;
+    }
+    .hero-title span {
+      background: linear-gradient(135deg, var(--green), var(--purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero-desc {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      max-width: 640px;
+    }
+
+    /* ── Safety Disclaimer ── */
+    .safety-disclaimer {
+      background: linear-gradient(135deg, rgba(245,158,11,.08), rgba(245,158,11,.04));
+      border: 1.5px solid rgba(245,158,11,.35);
+      border-radius: 14px;
+      padding: 16px 20px;
+      font-size: 13.5px;
+      color: var(--text-secondary);
+      line-height: 1.55;
+      margin-bottom: 28px;
+    }
+    .safety-disclaimer strong { color: #d97706; }
+    body.dark .safety-disclaimer { background: linear-gradient(135deg, rgba(245,158,11,.1), rgba(245,158,11,.05)); border-color: rgba(245,158,11,.3); }
+    body.dark .safety-disclaimer strong { color: #fbbf24; }
+
+    /* ── Card ── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 24px 24px 20px;
+      margin-bottom: 20px;
+    }
+    .card-title {
+      font-size: 14px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .6px;
+      color: var(--text-muted);
+      margin-bottom: 18px;
+    }
+
+    /* ── Toggles ── */
+    .toggle-row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 22px;
+      flex-wrap: wrap;
+    }
+    .toggle-group {
+      display: flex;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 3px;
+      gap: 2px;
+    }
+    .toggle-btn {
+      padding: 7px 16px;
+      border: none;
+      border-radius: 8px;
+      background: transparent;
+      color: var(--text-secondary);
+      font-family: var(--font);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all .18s;
+      white-space: nowrap;
+    }
+    .toggle-btn.active {
+      background: var(--surface);
+      color: var(--text-primary);
+      box-shadow: 0 1px 6px rgba(0,0,0,.1);
+    }
+    body.dark .toggle-btn.active { box-shadow: 0 1px 6px rgba(0,0,0,.4); }
+
+    /* ── Form Grid ── */
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+    .form-group.full { grid-column: 1 / -1; }
+    label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+    .label-hint {
+      font-size: 11px;
+      font-weight: 400;
+      color: var(--text-muted);
+      margin-left: 4px;
+    }
+    input, select {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-family: var(--font);
+      font-size: 14px;
+      color: var(--text-primary);
+      width: 100%;
+      transition: border-color .18s, box-shadow .18s;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+    input:focus, select:focus {
+      outline: none;
+      border-color: var(--green);
+      box-shadow: 0 0 0 3px rgba(16,185,129,.12);
+    }
+    select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%239ba3b5' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      padding-right: 34px;
+      cursor: pointer;
+    }
+    .custom-fields {
+      display: none;
+      grid-column: 1 / -1;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .custom-fields.visible { display: grid; }
+
+    /* ── Water type radio ── */
+    .radio-row {
+      display: flex;
+      gap: 10px;
+    }
+    .radio-option {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      cursor: pointer;
+      font-size: 14px;
+      color: var(--text-primary);
+    }
+    .radio-option input[type="radio"] {
+      width: 16px;
+      height: 16px;
+      accent-color: var(--green);
+      cursor: pointer;
+      padding: 0;
+      border: none;
+      background: none;
+      border-radius: 50%;
+    }
+
+    /* ── Calculate Button ── */
+    .calc-btn {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, var(--green), #059669);
+      border: none;
+      border-radius: 12px;
+      color: #fff;
+      font-family: var(--font);
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 20px;
+      transition: opacity .18s, transform .12s;
+      letter-spacing: .2px;
+    }
+    .calc-btn:hover { opacity: .9; transform: translateY(-1px); }
+    .calc-btn:active { transform: translateY(0); }
+
+    /* ── Results ── */
+    #results { display: none; }
+    .result-main {
+      text-align: center;
+      padding: 28px 20px 24px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      margin-bottom: 16px;
+    }
+    .result-label {
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .8px;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+    .result-value {
+      font-size: 52px;
+      font-weight: 800;
+      letter-spacing: -2px;
+      line-height: 1;
+      background: linear-gradient(135deg, var(--green), var(--purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 6px;
+    }
+    .result-sub {
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+
+    /* ── Stat grid ── */
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px 18px;
+    }
+    .stat-card-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .6px;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+    .stat-card-value {
+      font-family: var(--mono);
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1.2;
+    }
+    .stat-card-unit {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    /* ── NDL Warning ── */
+    .ndl-warning {
+      display: none;
+      background: linear-gradient(135deg, rgba(245,158,11,.09), rgba(245,158,11,.04));
+      border: 1.5px solid rgba(245,158,11,.4);
+      border-radius: 12px;
+      padding: 14px 18px;
+      font-size: 13.5px;
+      color: var(--text-secondary);
+      line-height: 1.55;
+      margin-bottom: 16px;
+    }
+    .ndl-warning.visible { display: block; }
+    body.dark .ndl-warning { background: rgba(245,158,11,.08); border-color: rgba(245,158,11,.3); }
+
+    /* ── Depth Comparison Table ── */
+    .table-wrap {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13.5px;
+    }
+    thead th {
+      text-align: left;
+      padding: 10px 14px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+    tbody td {
+      padding: 11px 14px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-secondary);
+      white-space: nowrap;
+    }
+    tbody tr:last-child td { border-bottom: none; }
+    tbody tr.highlight-row td { background: rgba(16,185,129,.05); color: var(--text-primary); font-weight: 600; }
+    .ndl-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      font-weight: 700;
+      color: #d97706;
+      background: rgba(245,158,11,.1);
+      border-radius: 6px;
+      padding: 2px 7px;
+    }
+
+    /* ── Action Buttons ── */
+    .action-row {
+      display: flex;
+      gap: 10px;
+      margin-top: 18px;
+      flex-wrap: wrap;
+    }
+    .action-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 9px 18px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: var(--surface);
+      color: var(--text-secondary);
+      font-family: var(--font);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all .18s;
+    }
+    .action-btn:hover {
+      border-color: var(--green);
+      color: var(--green);
+    }
+    .action-btn.copied {
+      border-color: var(--green);
+      color: var(--green);
+      background: rgba(16,185,129,.06);
+    }
+
+    /* ── SEO Content ── */
+    .seo-content {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 32px 32px 28px;
+      margin-top: 32px;
+    }
+    .seo-content h2 {
+      font-size: 21px;
+      font-weight: 800;
+      letter-spacing: -.3px;
+      margin-bottom: 12px;
+      margin-top: 30px;
+    }
+    .seo-content h2:first-child { margin-top: 0; }
+    .seo-content h3 {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      margin-top: 20px;
+    }
+    .seo-content p {
+      font-size: 14.5px;
+      line-height: 1.75;
+      color: var(--text-secondary);
+      margin-bottom: 14px;
+    }
+    .seo-content ul, .seo-content ol {
+      padding-left: 20px;
+      color: var(--text-secondary);
+      font-size: 14.5px;
+      line-height: 1.75;
+      margin-bottom: 14px;
+    }
+    .seo-content li { margin-bottom: 6px; }
+    .seo-content a {
+      color: var(--green);
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .seo-content a:hover { text-decoration: underline; }
+
+    /* ── FAQ ── */
+    .faq-list { margin-top: 12px; }
+    .faq-item {
+      border-bottom: 1px solid var(--border);
+      padding: 14px 0;
+    }
+    .faq-item:last-child { border-bottom: none; }
+    .faq-q {
+      font-size: 14.5px;
+      font-weight: 700;
+      color: var(--text-primary);
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+    .faq-q::after {
+      content: '+';
+      font-size: 20px;
+      font-weight: 400;
+      color: var(--text-muted);
+      flex-shrink: 0;
+      transition: transform .2s;
+    }
+    .faq-item.open .faq-q::after { transform: rotate(45deg); }
+    .faq-a {
+      display: none;
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      padding-top: 10px;
+    }
+    .faq-item.open .faq-a { display: block; }
+
+    /* ── Related links ── */
+    .related-links {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 6px;
+    }
+    .related-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      text-decoration: none;
+      color: var(--text-secondary);
+      font-size: 13px;
+      font-weight: 600;
+      transition: all .18s;
+    }
+    .related-link:hover {
+      border-color: var(--green);
+      color: var(--green);
+    }
+
+    /* ── Breadcrumbs ── */
+    .cn-breadcrumbs { margin-bottom: 6px; padding-top: 16px; }
+    .cn-bc-list { display: flex; align-items: center; gap: 6px; list-style: none; flex-wrap: wrap; }
+    .cn-bc-item { font-size: 12.5px; color: var(--text-muted); font-weight: 500; }
+    .cn-bc-item a { color: var(--text-muted); text-decoration: none; }
+    .cn-bc-item a:hover { color: var(--green); }
+    .cn-bc-sep { color: var(--text-muted); font-size: 12px; }
+    .cn-bc-current { color: var(--text-secondary); }
+
+    /* ── Responsive ── */
+    @media (max-width: 640px) {
+      .form-grid { grid-template-columns: 1fr; }
+      .custom-fields.visible { grid-template-columns: 1fr; }
+      .stat-grid { grid-template-columns: 1fr 1fr; }
+      .hero-title { font-size: 22px; }
+      .result-value { font-size: 42px; }
+      .seo-content { padding: 24px 18px 20px; }
+    }
+    @media (max-width: 400px) {
+      .stat-grid { grid-template-columns: 1fr; }
+      .result-value { font-size: 36px; }
+      .toggle-btn { padding: 7px 10px; font-size: 12px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- Breadcrumbs -->
+  <nav class="cn-breadcrumbs" aria-label="Breadcrumb">
+    <ol class="cn-bc-list">
+      <li class="cn-bc-item"><a href="index.html">Home</a></li>
+      <li class="cn-bc-sep" aria-hidden="true">›</li>
+      <li class="cn-bc-item"><a href="scuba-diving-calculators.html">Scuba Diving</a></li>
+      <li class="cn-bc-sep" aria-hidden="true">›</li>
+      <li class="cn-bc-item cn-bc-current" aria-current="page">Tank Duration</li>
+    </ol>
+  </nav>
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="pill-badge">⏱️ Gas Planning</div>
+    <h1 class="hero-title">Tank Duration / <span>Gas Planning</span> Calculator</h1>
+    <p class="hero-desc">Estimate how long your tank will last at any depth based on your SAC or RMV rate. Includes rule-of-thirds turn pressure, depth comparison table, and no-deco limit warnings.</p>
+  </div>
+
+  <!-- Safety Disclaimer -->
+  <div class="safety-disclaimer">
+    🦺 <strong>Safety Notice:</strong> This calculator is a planning aid only and is NOT a substitute for proper dive training, certification, and planning with qualified instructors. Always verify calculations with your dive computer, buddy, and instructor before any dive. Never exceed your training level.
+  </div>
+
+  <!-- Calculator Card -->
+  <div class="card">
+    <div class="card-title">Calculator Settings</div>
+
+    <!-- Unit + SAC Mode toggles -->
+    <div class="toggle-row">
+      <div class="toggle-group" role="group" aria-label="Unit system">
+        <button class="toggle-btn active" id="btn-metric" onclick="setUnit('metric')">Metric (bar, L, m)</button>
+        <button class="toggle-btn" id="btn-imperial" onclick="setUnit('imperial')">Imperial (psi, cu ft, ft)</button>
+      </div>
+      <div class="toggle-group" role="group" aria-label="Rate mode">
+        <button class="toggle-btn active" id="btn-sac" onclick="setMode('sac')">SAC</button>
+        <button class="toggle-btn" id="btn-rmv" onclick="setMode('rmv')">RMV</button>
+      </div>
+    </div>
+
+    <!-- Inputs -->
+    <div class="form-grid">
+
+      <!-- Tank Type -->
+      <div class="form-group full">
+        <label for="tankType">Tank Type</label>
+        <select id="tankType" onchange="onTankChange()">
+          <option value="al80">AL80 — 11.1 L @ 207 bar / 80 cu ft @ 3000 psi</option>
+          <option value="al63">AL63 — 8.9 L @ 207 bar / 63 cu ft @ 3000 psi</option>
+          <option value="hp80">Steel HP80 — 11.1 L @ 237 bar / 77 cu ft @ 3442 psi</option>
+          <option value="hp100">Steel HP100 — 13.2 L @ 237 bar / 100 cu ft @ 3442 psi</option>
+          <option value="hp120">Steel HP120 — 15.8 L @ 237 bar / 120 cu ft @ 3442 psi</option>
+          <option value="custom">Custom</option>
+        </select>
+      </div>
+
+      <!-- Custom fields (shown when Custom selected) -->
+      <div class="custom-fields" id="customFields">
+        <div class="form-group">
+          <label for="customVolume" id="labelCustomVolume">Tank Volume (L)</label>
+          <input type="number" id="customVolume" placeholder="e.g. 12" min="1" max="50" step="0.1">
+        </div>
+        <div class="form-group">
+          <label for="customPressure" id="labelCustomPressure">Working Pressure (bar)</label>
+          <input type="number" id="customPressure" placeholder="e.g. 232" min="100" max="500" step="1">
+        </div>
+      </div>
+
+      <!-- Fill Pressure -->
+      <div class="form-group">
+        <label for="fillPressure" id="labelFill">Fill Pressure <span class="label-hint">(bar)</span></label>
+        <input type="number" id="fillPressure" value="207" min="1" max="500" step="1" oninput="autoCalc()">
+      </div>
+
+      <!-- Reserve Pressure -->
+      <div class="form-group">
+        <label for="reservePressure" id="labelReserve">Reserve Pressure <span class="label-hint">(bar)</span></label>
+        <input type="number" id="reservePressure" value="50" min="0" max="300" step="1" oninput="autoCalc()">
+      </div>
+
+      <!-- Depth -->
+      <div class="form-group">
+        <label for="depth" id="labelDepth">Planned Depth <span class="label-hint">(m)</span></label>
+        <input type="number" id="depth" placeholder="e.g. 18" min="1" max="300" step="1" oninput="autoCalc()">
+      </div>
+
+      <!-- SAC / RMV -->
+      <div class="form-group">
+        <label for="rate" id="labelRate">SAC Rate <span class="label-hint" id="hintRate">(bar/min)</span></label>
+        <input type="number" id="rate" placeholder="e.g. 18" min="0.1" max="500" step="0.1" oninput="autoCalc()">
+      </div>
+
+      <!-- Water Type -->
+      <div class="form-group full">
+        <label>Water Type</label>
+        <div class="radio-row">
+          <label class="radio-option">
+            <input type="radio" name="water" value="salt" checked onchange="autoCalc()"> Saltwater
+          </label>
+          <label class="radio-option">
+            <input type="radio" name="water" value="fresh" onchange="autoCalc()"> Freshwater
+          </label>
+        </div>
+      </div>
+
+    </div><!-- /form-grid -->
+
+    <button class="calc-btn" onclick="calculate()">Calculate Tank Duration</button>
+  </div>
+
+  <!-- Results -->
+  <div id="results">
+
+    <!-- Main result -->
+    <div class="result-main">
+      <div class="result-label">Estimated Tank Duration</div>
+      <div class="result-value" id="resultDuration">— min</div>
+      <div class="result-sub" id="resultSub"></div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stat-grid">
+      <div class="stat-card">
+        <div class="stat-card-label">Turn Pressure</div>
+        <div class="stat-card-value" id="statTurn">—</div>
+        <div class="stat-card-unit">Rule of thirds</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-label">Usable Gas</div>
+        <div class="stat-card-value" id="statUsable">—</div>
+        <div class="stat-card-unit" id="statUsableUnit">bar above reserve</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-label">Depth Pressure</div>
+        <div class="stat-card-value" id="statATA">—</div>
+        <div class="stat-card-unit">ATA at target depth</div>
+      </div>
+    </div>
+
+    <!-- NDL warning -->
+    <div class="ndl-warning" id="ndlWarning"></div>
+
+    <!-- Depth comparison table -->
+    <div class="card">
+      <div class="card-title">Depth Comparison — Duration at Different Depths</div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th id="thDepth">Depth (m)</th>
+              <th>ATA</th>
+              <th>Duration (min)</th>
+              <th>Turn Press.</th>
+              <th>NDL Limit</th>
+            </tr>
+          </thead>
+          <tbody id="compTable"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Action buttons -->
+    <div class="action-row">
+      <button class="action-btn" id="copyBtn" onclick="copyResults()">
+        <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+        Copy Results
+      </button>
+      <button class="action-btn" onclick="window.print()">
+        <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+        Print
+      </button>
+    </div>
+
+  </div><!-- /results -->
+
+  <!-- SEO Content -->
+  <div class="seo-content">
+
+    <h2>How Long Will Your Tank Last?</h2>
+    <p>One of the most fundamental questions in dive planning is: <em>how much bottom time does my tank give me?</em> The answer depends on three things working together — how much usable gas you have, how fast you breathe it, and how much pressure the water adds to every breath at depth.</p>
+    <p>A standard AL80 tank filled to 207 bar might give a calm diver 60 minutes at 10 meters, but only 20 minutes at 30 meters. Understanding this relationship before you enter the water is essential for safe gas management.</p>
+
+    <h2>The Rule of Thirds</h2>
+    <p>The rule of thirds is the gold standard of gas planning for recreational and cave/overhead diving. The principle is simple: divide your usable gas into three equal parts.</p>
+    <ul>
+      <li><strong>First third:</strong> Used traveling away from the entry/exit point.</li>
+      <li><strong>Second third:</strong> Used for the return trip.</li>
+      <li><strong>Final third:</strong> Kept in reserve for emergencies — sharing gas with a buddy, dealing with a problem at depth, or a longer-than-expected ascent.</li>
+    </ul>
+    <p>This calculator automatically computes your <em>turn pressure</em> — the pressure at which you must begin heading back. For example, if you enter with 200 bar and keep 50 bar reserve, your usable gas is 150 bar. One third of 150 bar is 50 bar, so your turn pressure is 200 − 50 = 150 bar.</p>
+    <p>The rule of thirds is mandatory in cave and cavern diving, and strongly recommended for all diving. It gives you a clear, unambiguous decision point that doesn't require mental arithmetic at depth.</p>
+
+    <h2>How SAC Rate Affects Tank Duration</h2>
+    <p>Your <strong>SAC rate (Surface Air Consumption)</strong> is how many bar of gas you consume per minute breathing at the surface. It's unique to you and varies with your fitness, experience, water temperature, current, and workload.</p>
+    <ul>
+      <li>Beginner recreational diver: 20–25 bar/min (on an AL80)</li>
+      <li>Experienced recreational diver: 14–18 bar/min</li>
+      <li>Highly experienced / technical diver: 10–13 bar/min</li>
+    </ul>
+    <p>Your <strong>RMV (Respiratory Minute Volume)</strong> is the same concept expressed in liters per minute, independent of which tank you're using. A typical RMV is 12–20 L/min at the surface. Because RMV is tank-agnostic, it's the preferred metric for technical gas planning.</p>
+    <p>The relationship between the two: <code>RMV = SAC × tank_volume_L / working_pressure_bar</code>. This calculator accepts either format so you can use whichever you have from your dive log.</p>
+
+    <h2>Depth vs. Tank Duration: The ATA Relationship</h2>
+    <p>Pressure is the core reason depth has such a dramatic effect on tank duration. The atmosphere exerts about 1 bar of pressure at sea level. Water adds roughly 1 bar for every 10 meters of depth (10.06 m in seawater, 10.33 m in freshwater).</p>
+    <p>The total pressure you breathe at depth is expressed in ATA (Atmospheres Absolute):</p>
+    <ul>
+      <li>Surface: 1 ATA — you breathe 1 normal breath volume per breath</li>
+      <li>10 m (33 ft): 2 ATA — each breath delivers twice the gas</li>
+      <li>20 m (66 ft): 3 ATA — three times the gas per breath</li>
+      <li>30 m (99 ft): 4 ATA — four times the gas per breath</li>
+      <li>40 m (132 ft): 5 ATA — five times the gas per breath</li>
+    </ul>
+    <p>This means if you breathe at 15 bar/min at the surface, you're consuming 60 bar/min at 30 meters. A tank that would last 60 minutes at the surface lasts only 15 minutes at that depth. The depth comparison table in this calculator makes that relationship immediately visible across common recreational depths.</p>
+
+    <h2>Tips for Better Air Management</h2>
+    <h3>1. Log your SAC rate after every dive</h3>
+    <p>Use the <a href="sac-rate-calculator.html">SAC Rate Calculator</a> to compute your SAC from your dive log data. Track it over time — as you gain experience and reduce anxiety, your SAC will naturally drop.</p>
+    <h3>2. Streamline your gear</h3>
+    <p>Drag and poor trim significantly increase your workload. A horizontal body position, tucked hoses, and no dangling equipment can reduce air consumption by 15–25%.</p>
+    <h3>3. Slow, deep breaths</h3>
+    <p>Shallow rapid breathing wastes gas. Breathe fully and slowly — inhale for 3–4 seconds, pause briefly, exhale for 4–5 seconds. Never skip a breath cycle, especially on ascent.</p>
+    <h3>4. Stay warm</h3>
+    <p>Cold increases your metabolic rate and causes you to breathe more. A properly sized wetsuit or drysuit appropriate to the water temperature pays dividends in both comfort and bottom time.</p>
+    <h3>5. Agree on turn pressure before you dive</h3>
+    <p>Brief your buddy on your turn pressure and the minimum pressure at which you'll begin a safety stop. If either diver hits their turn pressure first, both divers turn. No arguments underwater.</p>
+    <h3>6. Account for gas sharing drills</h3>
+    <p>If you plan to practice out-of-air scenarios or donate air, factor that into your gas plan. Your reserve third is not for practice — it is genuinely for emergencies.</p>
+
+    <!-- FAQ -->
+    <h2>Frequently Asked Questions</h2>
+    <div class="faq-list">
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFAQ(this)">How long does a typical AL80 last at 18 meters?</div>
+        <div class="faq-a">With a SAC rate of 18 bar/min and a full fill to 207 bar (keeping 50 bar reserve), you have 157 bar of usable gas. At 18 m the ATA is 2.8, giving a consumption rate of about 50 bar/min. That yields roughly 31 minutes. An experienced diver with a 13 bar/min SAC would get about 43 minutes from the same tank.</div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFAQ(this)">What is a good SAC rate for a recreational diver?</div>
+        <div class="faq-a">For recreational divers, a SAC rate of 14–18 bar/min on a standard AL80 is considered normal. Below 14 bar/min is excellent. Above 25 bar/min usually indicates a diver who is working hard, stressed, cold, or has not yet relaxed into the environment. SAC typically improves with every logged dive.</div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFAQ(this)">Should I use SAC or RMV for gas planning?</div>
+        <div class="faq-a">Both work well. SAC is easier to compute from a dive log (just record start pressure, end pressure, tank size, depth, and time). RMV is better if you dive different tank sizes frequently, because it's independent of cylinder volume. Technical divers and those who plan multi-tank dives almost always use RMV.</div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFAQ(this)">Does the rule of thirds apply to recreational diving?</div>
+        <div class="faq-a">Yes, and it's strongly recommended even for open-water recreational divers. Many agencies teach a simpler "half-tank turn" for linear dives, which is the rule of halves. The rule of thirds originated in cave diving but is widely adopted by advanced recreational and technical divers because it provides a genuine emergency reserve rather than just a turnaround buffer.</div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFAQ(this)">What does it mean if the calculator shows a no-deco limit warning?</div>
+        <div class="faq-a">The NDL warning means your gas supply theoretically lasts longer than the no-decompression limit for that depth. In practice, this means nitrogen absorption, not gas supply, will determine when you must ascend. You will need to leave the bottom well before your tank is near reserve — and you must still observe the rule of thirds for your turn pressure regardless of NDL.</div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFAQ(this)">How accurate is this calculator?</div>
+        <div class="faq-a">This calculator uses standard ATA-based gas planning formulas used throughout recreational and technical diver training. However, it cannot account for exertion level changes during the dive, buoyancy problems, current, sharing gas, gear issues, or anxiety — all of which increase consumption. Always treat the result as an optimistic upper bound and apply a personal safety margin.</div>
+      </div>
+
+    </div><!-- /faq-list -->
+
+    <h2>Related Calculators</h2>
+    <p>Use these tools together for complete dive planning:</p>
+    <div class="related-links">
+      <a href="sac-rate-calculator.html" class="related-link">💨 SAC / RMV Calculator</a>
+      <a href="gas-blending-calculator.html" class="related-link">⚗️ Gas Blending Calculator</a>
+      <a href="nitrox-calculator.html" class="related-link">🫧 Nitrox / MOD Calculator</a>
+      <a href="scuba-diving-calculators.html" class="related-link">🤿 All Scuba Tools</a>
+    </div>
+
+  </div><!-- /seo-content -->
+
+</div><!-- /app -->
+
+<script>
+  window.CALCNOVA_PAGE = {
+    id: 'tank-duration',
+    disclaimer: 'This calculator is a planning aid only and is NOT a substitute for proper dive training, certification, and planning with qualified instructors. Always verify calculations with your dive computer, buddy, and instructor before any dive.'
+  };
+</script>
+<script src="shared/site-data.js"></script>
+<script src="shared/nav.js"></script>
+
+<script>
+  /* ── State ── */
+  var unit = 'metric'; // 'metric' | 'imperial'
+  var mode = 'sac';    // 'sac' | 'rmv'
+
+  /* ── Tank presets ── */
+  var TANKS = {
+    al80:  { metricVol: 11.1, metricPres: 207, impVol: 80,  impPres: 3000 },
+    al63:  { metricVol: 8.9,  metricPres: 207, impVol: 63,  impPres: 3000 },
+    hp80:  { metricVol: 11.1, metricPres: 237, impVol: 77,  impPres: 3442 },
+    hp100: { metricVol: 13.2, metricPres: 237, impVol: 100, impPres: 3442 },
+    hp120: { metricVol: 15.8, metricPres: 237, impVol: 120, impPres: 3442 },
+    custom: null
+  };
+
+  /* ── NDL table (approximate, PADI/GUE-style) in minutes ── */
+  var NDL = [
+    { depthM: 10, depthFt: 33,  ndl: 219 },
+    { depthM: 12, depthFt: 40,  ndl: 147 },
+    { depthM: 15, depthFt: 50,  ndl: 72  },
+    { depthM: 18, depthFt: 60,  ndl: 56  },
+    { depthM: 20, depthFt: 66,  ndl: 45  },
+    { depthM: 25, depthFt: 80,  ndl: 30  },
+    { depthM: 30, depthFt: 100, ndl: 20  },
+    { depthM: 40, depthFt: 130, ndl: 9   }
+  ];
+
+  /* comparison depths */
+  var COMP_DEPTHS_M  = [10, 15, 18, 20, 25, 30, 40];
+  var COMP_DEPTHS_FT = [33, 50, 60, 66, 80, 100, 130];
+
+  /* ── Unit toggle ── */
+  function setUnit(u) {
+    unit = u;
+    document.getElementById('btn-metric').classList.toggle('active', u === 'metric');
+    document.getElementById('btn-imperial').classList.toggle('active', u === 'imperial');
+    updateLabels();
+    onTankChange();
+    autoCalc();
+  }
+
+  function setMode(m) {
+    mode = m;
+    document.getElementById('btn-sac').classList.toggle('active', m === 'sac');
+    document.getElementById('btn-rmv').classList.toggle('active', m === 'rmv');
+    updateLabels();
+    autoCalc();
+  }
+
+  function updateLabels() {
+    var isM = (unit === 'metric');
+    document.getElementById('labelFill').innerHTML    = 'Fill Pressure <span class="label-hint">(' + (isM ? 'bar' : 'psi') + ')</span>';
+    document.getElementById('labelReserve').innerHTML = 'Reserve Pressure <span class="label-hint">(' + (isM ? 'bar' : 'psi') + ')</span>';
+    document.getElementById('labelDepth').innerHTML   = 'Planned Depth <span class="label-hint">(' + (isM ? 'm' : 'ft') + ')</span>';
+    document.getElementById('labelCustomVolume').textContent  = 'Tank Volume (' + (isM ? 'L' : 'cu ft') + ')';
+    document.getElementById('labelCustomPressure').textContent = 'Working Pressure (' + (isM ? 'bar' : 'psi') + ')';
+    document.getElementById('thDepth').textContent = 'Depth (' + (isM ? 'm' : 'ft') + ')';
+
+    if (mode === 'sac') {
+      document.getElementById('labelRate').innerHTML = 'SAC Rate <span class="label-hint" id="hintRate">(' + (isM ? 'bar/min' : 'psi/min') + ')</span>';
+    } else {
+      document.getElementById('labelRate').innerHTML = 'RMV <span class="label-hint" id="hintRate">(' + (isM ? 'L/min' : 'cu ft/min') + ')</span>';
+    }
+  }
+
+  /* ── Tank change ── */
+  function onTankChange() {
+    var key = document.getElementById('tankType').value;
+    var cf  = document.getElementById('customFields');
+    if (key === 'custom') {
+      cf.classList.add('visible');
+    } else {
+      cf.classList.remove('visible');
+      var t = TANKS[key];
+      if (unit === 'metric') {
+        document.getElementById('fillPressure').value = t.metricPres;
+      } else {
+        document.getElementById('fillPressure').value = t.impPres;
+      }
+    }
+    autoCalc();
+  }
+
+  /* ── Get tank volume + working pressure ── */
+  function getTankParams() {
+    var key = document.getElementById('tankType').value;
+    if (key === 'custom') {
+      return {
+        vol: parseFloat(document.getElementById('customVolume').value) || 0,
+        workingPres: parseFloat(document.getElementById('customPressure').value) || 0
+      };
+    }
+    var t = TANKS[key];
+    if (unit === 'metric') return { vol: t.metricVol, workingPres: t.metricPres };
+    return { vol: t.impVol, workingPres: t.impPres };
+  }
+
+  /* ── ATA ── */
+  function getATA(depth, waterType) {
+    var isSalt = (waterType === 'salt');
+    if (unit === 'metric') {
+      return depth / (isSalt ? 10 : 10.33) + 1;
+    } else {
+      return depth / (isSalt ? 33 : 34) + 1;
+    }
+  }
+
+  /* ── NDL for a depth ── */
+  function getNDL(depth) {
+    var isM = (unit === 'metric');
+    var list = NDL.slice().sort(function(a,b){ return a.depthM - b.depthM; });
+    var best = null;
+    for (var i = 0; i < list.length; i++) {
+      var d = isM ? list[i].depthM : list[i].depthFt;
+      if (Math.abs(d - depth) < 0.1) return list[i].ndl;
+      // interpolate nearest
+      if (d <= depth) best = list[i];
+    }
+    // linear interpolation between the two bracketing entries
+    var isM2 = (unit === 'metric');
+    for (var j = 0; j < list.length - 1; j++) {
+      var d1 = isM2 ? list[j].depthM : list[j].depthFt;
+      var d2 = isM2 ? list[j+1].depthM : list[j+1].depthFt;
+      if (depth >= d1 && depth <= d2) {
+        var frac = (depth - d1) / (d2 - d1);
+        return list[j].ndl + frac * (list[j+1].ndl - list[j].ndl);
+      }
+    }
+    // beyond deepest
+    if (best) return best.ndl;
+    return null;
+  }
+
+  /* ── Core calculation ── */
+  function calcDuration(fillPres, reservePres, depth, rate, waterType, tankParams) {
+    var isM = (unit === 'metric');
+    var usableGas = fillPres - reservePres;
+    if (usableGas <= 0) return null;
+
+    var ata = getATA(depth, waterType);
+    var duration, consumptionAtDepth, usableVol;
+
+    if (mode === 'sac') {
+      consumptionAtDepth = rate * ata; // bar/min or psi/min
+      duration = usableGas / consumptionAtDepth;
+      if (isM) {
+        usableVol = usableGas * tankParams.vol; // liters
+      } else {
+        usableVol = usableGas * (tankParams.vol / tankParams.workingPres); // cu ft
+      }
+    } else {
+      // RMV mode
+      if (isM) {
+        usableVol = usableGas * tankParams.vol; // liters
+        consumptionAtDepth = rate * ata; // L/min
+      } else {
+        var tankFactor = tankParams.vol / tankParams.workingPres;
+        usableVol = usableGas * tankFactor; // cu ft
+        consumptionAtDepth = rate * ata; // cu ft/min
+      }
+      duration = usableVol / consumptionAtDepth;
+    }
+
+    var turnPres = fillPres - (usableGas / 3);
+
+    return {
+      duration: duration,
+      turnPres: turnPres,
+      usableGas: usableGas,
+      usableVol: usableVol,
+      ata: ata
+    };
+  }
+
+  /* ── Main calculate ── */
+  function calculate() {
+    var isM = (unit === 'metric');
+    var fillPres    = parseFloat(document.getElementById('fillPressure').value);
+    var reservePres = parseFloat(document.getElementById('reservePressure').value);
+    var depth       = parseFloat(document.getElementById('depth').value);
+    var rate        = parseFloat(document.getElementById('rate').value);
+    var waterType   = document.querySelector('input[name="water"]:checked').value;
+    var tankParams  = getTankParams();
+
+    if (!fillPres || !reservePres || !depth || !rate || !tankParams.vol || !tankParams.workingPres) {
+      alert('Please fill in all fields.');
+      return;
+    }
+    if (fillPres <= reservePres) {
+      alert('Fill pressure must be greater than reserve pressure.');
+      return;
+    }
+
+    var res = calcDuration(fillPres, reservePres, depth, rate, waterType, tankParams);
+    if (!res) {
+      alert('Invalid inputs — check fill pressure vs. reserve pressure.');
+      return;
+    }
+
+    /* Show results section */
+    document.getElementById('results').style.display = 'block';
+
+    /* Main result */
+    var mins = Math.floor(res.duration);
+    var secs = Math.round((res.duration - mins) * 60);
+    document.getElementById('resultDuration').textContent = '~' + mins + ' min';
+    document.getElementById('resultSub').textContent =
+      'at ' + depth + (isM ? ' m' : ' ft') + ' (' + res.ata.toFixed(2) + ' ATA)' +
+      (secs > 0 ? ' · ' + mins + ' min ' + secs + ' sec' : '');
+
+    /* Stats */
+    var presUnit = isM ? 'bar' : 'psi';
+    var volUnit  = isM ? 'L'   : 'cu ft';
+    document.getElementById('statTurn').textContent = Math.round(res.turnPres) + ' ' + presUnit;
+    document.getElementById('statUsable').textContent =
+      res.usableGas.toFixed(0) + ' ' + presUnit +
+      (isM ? ' / ' + Math.round(res.usableVol) + ' L' : ' / ' + res.usableVol.toFixed(2) + ' cu ft');
+    document.getElementById('statATA').textContent = res.ata.toFixed(2) + ' ATA';
+    document.getElementById('statUsableUnit').textContent = presUnit + ' above reserve';
+
+    /* NDL warning */
+    var ndlEl = document.getElementById('ndlWarning');
+    var ndlLimit = getNDL(depth);
+    if (ndlLimit !== null && res.duration > ndlLimit) {
+      ndlEl.classList.add('visible');
+      ndlEl.innerHTML = '⚠️ <strong>Note:</strong> Your gas supply (~' + mins + ' min) exceeds the approximate no-decompression limit at this depth (~' + Math.round(ndlLimit) + ' min). Nitrogen absorption, not gas supply, will limit your bottom time. Always dive within your training and certification level.';
+    } else {
+      ndlEl.classList.remove('visible');
+    }
+
+    /* Depth comparison table */
+    buildTable(fillPres, reservePres, rate, waterType, tankParams, depth);
+
+    /* Scroll to results */
+    document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  /* ── Build comparison table ── */
+  function buildTable(fillPres, reservePres, rate, waterType, tankParams, targetDepth) {
+    var isM = (unit === 'metric');
+    var depths = isM ? COMP_DEPTHS_M : COMP_DEPTHS_FT;
+    var tbody = document.getElementById('compTable');
+    var presUnit = isM ? 'bar' : 'psi';
+    tbody.innerHTML = '';
+
+    depths.forEach(function(d) {
+      var res = calcDuration(fillPres, reservePres, d, rate, waterType, tankParams);
+      if (!res) return;
+      var mins = Math.floor(res.duration);
+      var isTarget = Math.abs(d - targetDepth) < 0.5;
+      var ndlLimit = getNDL(d);
+      var ndlCell = ndlLimit !== null
+        ? (res.duration > ndlLimit ? '<span class="ndl-badge">⚠️ NDL ~' + Math.round(ndlLimit) + ' min</span>' : '~' + Math.round(ndlLimit) + ' min')
+        : '—';
+
+      var tr = document.createElement('tr');
+      if (isTarget) tr.className = 'highlight-row';
+      tr.innerHTML =
+        '<td>' + d + (isM ? ' m' : ' ft') + (isTarget ? ' ★' : '') + '</td>' +
+        '<td>' + res.ata.toFixed(2) + '</td>' +
+        '<td>' + mins + ' min</td>' +
+        '<td>' + Math.round(res.turnPres) + ' ' + presUnit + '</td>' +
+        '<td>' + ndlCell + '</td>';
+      tbody.appendChild(tr);
+    });
+  }
+
+  /* ── Auto-calc on input change ── */
+  function autoCalc() {
+    var fillPres    = parseFloat(document.getElementById('fillPressure').value);
+    var reservePres = parseFloat(document.getElementById('reservePressure').value);
+    var depth       = parseFloat(document.getElementById('depth').value);
+    var rate        = parseFloat(document.getElementById('rate').value);
+    var tankParams  = getTankParams();
+    if (fillPres && reservePres && depth && rate && tankParams.vol && tankParams.workingPres && fillPres > reservePres) {
+      calculate();
+    }
+  }
+
+  /* ── Copy results ── */
+  function copyResults() {
+    var isM = (unit === 'metric');
+    var presUnit = isM ? 'bar' : 'psi';
+    var duration = document.getElementById('resultDuration').textContent;
+    var sub      = document.getElementById('resultSub').textContent;
+    var turn     = document.getElementById('statTurn').textContent;
+    var usable   = document.getElementById('statUsable').textContent;
+    var ata      = document.getElementById('statATA').textContent;
+    var text =
+      'Tank Duration Calculator — CalcNova\n' +
+      '=====================================\n' +
+      'Duration: ' + duration + '\n' +
+      sub + '\n\n' +
+      'Turn Pressure: ' + turn + '\n' +
+      'Usable Gas: ' + usable + '\n' +
+      'Depth Pressure: ' + ata + '\n\n' +
+      'calcnova.co/tank-duration-calculator.html';
+
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(function() { showCopied(); });
+    } else {
+      var ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      showCopied();
+    }
+  }
+
+  function showCopied() {
+    var btn = document.getElementById('copyBtn');
+    btn.classList.add('copied');
+    btn.innerHTML = '<svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Copied!';
+    setTimeout(function() {
+      btn.classList.remove('copied');
+      btn.innerHTML = '<svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg> Copy Results';
+    }, 2000);
+  }
+
+  /* ── FAQ toggle ── */
+  function toggleFAQ(el) {
+    el.closest('.faq-item').classList.toggle('open');
+  }
+
+  /* ── Init ── */
+  updateLabels();
+  onTankChange();
+</script>
+
+</body>
+</html>
