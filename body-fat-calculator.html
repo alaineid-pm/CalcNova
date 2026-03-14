@@ -324,9 +324,7 @@
   var sex  = 'male';
   var unit = (navigator.language || '').toLowerCase().startsWith('en-us') ? 'imperial' : 'metric';
 
-  /* ── Init ── */
-  setUnit(unit);
-  setSex(sex);
+  /* ── Init (moved to end of IIFE — needs setSex/setUnit to be defined first) ── */
 
   /* ── Sex toggle ── */
   window.setSex = function (s) {
@@ -564,6 +562,10 @@
   document.addEventListener('keydown', function (e) {
     if (e.key === 'Enter') { calculate(); }
   });
+
+  /* ── Init (runs after all functions are defined) ── */
+  setUnit(unit);
+  setSex(sex);
 
 })();
 </script>
