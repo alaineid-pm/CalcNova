@@ -431,6 +431,31 @@
     <input type="range" id="horizon" min="1" max="40" value="10" oninput="updateHorizonDisplay()">
   </div>
 
+  <!-- Personal Finances -->
+  <div class="card">
+    <div class="card-title"><div class="card-title-dot" style="background:var(--green)"></div> Your Finances</div>
+    <div class="form-grid">
+      <div class="form-group">
+        <label class="form-label" for="annual-income">Annual gross income</label>
+        <div class="input-wrap">
+          <span class="input-prefix" id="income-prefix">$</span>
+          <input type="number" id="annual-income" class="has-prefix" value="75000" min="0" step="1000" oninput="onIncomeChange()">
+        </div>
+        <div class="form-label hint" style="margin-top:2px">Used to estimate marginal tax rate</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Estimated marginal tax rate
+          <span class="hint" id="tax-rate-hint">(auto)</span>
+        </label>
+        <div class="input-wrap">
+          <input type="number" id="marginal-rate-auto" class="has-suffix" value="24" min="0" max="60" step="0.5">
+          <span class="input-suffix">%</span>
+        </div>
+        <div class="form-label hint" style="margin-top:2px">Editable — auto-estimated from income &amp; region</div>
+      </div>
+    </div>
+  </div>
+
   <!-- Home Purchase Inputs -->
   <div class="card">
     <div class="card-title"><div class="card-title-dot" style="background:var(--green)"></div> Home Purchase</div>
@@ -626,29 +651,93 @@
       </div>
     </div>
 
-    <!-- Investment & Opportunity Cost -->
+    <!-- Expected Returns -->
     <div class="card">
-      <div class="card-title"><div class="card-title-dot" style="background:var(--purple)"></div> Investment & Opportunity Cost</div>
+      <div class="card-title"><div class="card-title-dot" style="background:var(--purple)"></div> Expected Returns</div>
       <div class="form-grid">
-        <div class="form-group">
-          <label class="form-label" for="investment-return">Expected investment return (% / year)</label>
+        <div class="form-group full">
+          <label class="form-label" for="asset-allocation">Asset Allocation</label>
+          <select id="asset-allocation" onchange="onAllocationChange()">
+            <option value="100/0">100/0 — All equity</option>
+            <option value="80/20" selected>80/20 — Growth</option>
+            <option value="60/40">60/40 — Balanced</option>
+            <option value="40/60">40/60 — Conservative</option>
+            <option value="20/80">20/80 — Income</option>
+            <option value="custom">Custom</option>
+          </select>
+          <div class="form-label hint" style="margin-top:2px">Equity / Fixed income split — sets return defaults below</div>
+        </div>
+        <div class="form-group" id="grp-domestic-div">
+          <label class="form-label" for="domestic-dividends"><span id="domestic-div-label">Domestic</span> Dividends (%)</label>
           <div class="input-wrap">
-            <input type="number" id="investment-return" class="has-suffix" value="7" min="0" max="30" step="0.1">
+            <input type="number" id="domestic-dividends" class="has-suffix" value="0.60" min="0" max="10" step="0.01">
             <span class="input-suffix">%</span>
           </div>
         </div>
         <div class="form-group">
-          <label class="form-label" for="investment-fees">Investment management fees (% / year)</label>
+          <label class="form-label" for="foreign-dividends">Foreign Dividends (%)</label>
           <div class="input-wrap">
-            <input type="number" id="investment-fees" class="has-suffix" value="0.5" min="0" max="5" step="0.1">
+            <input type="number" id="foreign-dividends" class="has-suffix" value="0.75" min="0" max="10" step="0.01">
             <span class="input-suffix">%</span>
           </div>
         </div>
         <div class="form-group">
-          <label class="form-label" for="cg-tax-investments">Capital gains tax on investments (%)</label>
+          <label class="form-label" for="interest-income">Interest / Income (%)</label>
           <div class="input-wrap">
-            <input type="number" id="cg-tax-investments" class="has-suffix" value="0" min="0" max="50" step="1">
+            <input type="number" id="interest-income" class="has-suffix" value="0.67" min="0" max="10" step="0.01">
             <span class="input-suffix">%</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="unrealized-cg">Unrealized Capital Gains (%)</label>
+          <div class="input-wrap">
+            <input type="number" id="unrealized-cg" class="has-suffix" value="3.85" min="0" max="20" step="0.01">
+            <span class="input-suffix">%</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="realized-cg">Realized Capital Gains (%)</label>
+          <div class="input-wrap">
+            <input type="number" id="realized-cg" class="has-suffix" value="0.43" min="0" max="10" step="0.01">
+            <span class="input-suffix">%</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="inflation-rate">Inflation (%)</label>
+          <div class="input-wrap">
+            <input type="number" id="inflation-rate" class="has-suffix" value="2.50" min="0" max="15" step="0.1">
+            <span class="input-suffix">%</span>
+          </div>
+        </div>
+        <div class="form-group full" style="background:var(--bg);border-radius:10px;padding:12px;margin-top:4px">
+          <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
+            <span class="form-label" style="margin:0;font-size:13px">Total gross return</span>
+            <span id="total-gross-return" style="font-family:var(--mono);font-weight:700;font-size:15px;color:var(--green)">6.30%</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-top:6px">
+            <span class="form-label" style="margin:0;font-size:13px">Estimated after-tax return</span>
+            <span id="total-after-tax-return" style="font-family:var(--mono);font-weight:700;font-size:15px;color:var(--purple)">—</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Fees & Real Estate below the return breakdown -->
+      <div style="border-top:1px solid var(--border);margin-top:16px;padding-top:16px">
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label" for="investment-fees">Investment management fees (% / year)</label>
+            <div class="input-wrap">
+              <input type="number" id="investment-fees" class="has-suffix" value="0.5" min="0" max="5" step="0.1">
+              <span class="input-suffix">%</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="real-estate-growth">Real estate growth rate (% / year)</label>
+            <div class="input-wrap">
+              <input type="number" id="real-estate-growth" class="has-suffix" value="3.50" min="-5" max="15" step="0.1">
+              <span class="input-suffix">%</span>
+            </div>
+            <div class="form-label hint" style="margin-top:2px">Synced with home appreciation — editable independently</div>
           </div>
         </div>
       </div>
@@ -666,11 +755,8 @@
           </div>
         </div>
         <div class="form-group" id="marginal-rate-group" style="display:none">
-          <label class="form-label" for="marginal-rate">Marginal income tax rate (%)</label>
-          <div class="input-wrap">
-            <input type="number" id="marginal-rate" class="has-suffix" value="24" min="0" max="60" step="1">
-            <span class="input-suffix">%</span>
-          </div>
+          <label class="form-label">Marginal tax rate</label>
+          <div class="form-label hint">Using rate from "Your Finances" section: <strong id="tax-rate-display">24%</strong></div>
         </div>
         <div class="form-group" id="std-deduction-group" style="display:none">
           <label class="form-label" for="standard-deduction">Standard deduction ($)</label>
@@ -776,9 +862,9 @@
         <span class="sens-value" id="sens-appreciation-val">3.0%</span>
       </div>
       <div class="sens-row">
-        <span class="sens-label">Investment return</span>
-        <input type="range" class="sens-slider" id="sens-return" min="0" max="15" step="0.5" value="7" oninput="onSensitivityChange()">
-        <span class="sens-value" id="sens-return-val">7.0%</span>
+        <span class="sens-label">After-tax return</span>
+        <input type="range" class="sens-slider" id="sens-return" min="0" max="15" step="0.5" value="5.5" oninput="onSensitivityChange()">
+        <span class="sens-value" id="sens-return-val">5.5%</span>
       </div>
       <div class="sens-row">
         <span class="sens-label">Years to stay</span>
@@ -935,8 +1021,17 @@ function onRegionChange() {
   updateVisibility();
   updateCurrencyPrefixes();
   updateMortgageInsuranceVisibility();
+  onIncomeChange(); // Re-estimate marginal rate for new region
+  updateAfterTaxReturn();
+  updateDomesticDivLabel();
   if (getRegion() === 'uk') updateStampDuty();
   if (getRegion() === 'ca') updateLandTransferTax();
+}
+
+function updateDomesticDivLabel() {
+  var labels = { ca: 'Canadian', us: 'U.S.', uk: 'UK', au: 'Australian', eu: 'European' };
+  var el = document.getElementById('domestic-div-label');
+  el.textContent = labels[getRegion()] || 'Domestic';
 }
 
 function applyRegionDefaults() {
@@ -946,7 +1041,6 @@ function applyRegionDefaults() {
   document.getElementById('maintenance').value = d.maintenance;
   document.getElementById('closing-costs').value = d.closingCosts;
   document.getElementById('selling-costs').value = d.sellingCosts;
-  document.getElementById('cg-tax-investments').value = d.cgTax;
   document.getElementById('cg-exempt').checked = d.cgExempt;
   document.getElementById('home-insurance').value = Math.round((parseFloat(document.getElementById('home-price').value) || 500000) * 0.0035);
   if (d.interestDeductible) document.getElementById('interest-deductible').checked = true;
@@ -989,7 +1083,7 @@ function updateVisibility() {
 function updateCurrencyPrefixes() {
   var d = getDefaults();
   var sym = d.currency;
-  ['price-prefix', 'rent-prefix', 'ri-prefix', 'hi-prefix', 'hoa-prefix'].forEach(function(id) {
+  ['price-prefix', 'rent-prefix', 'ri-prefix', 'hi-prefix', 'hoa-prefix', 'income-prefix'].forEach(function(id) {
     var el = document.getElementById(id);
     if (el) el.textContent = sym;
   });
@@ -1097,6 +1191,162 @@ function updateLandTransferTax() {
   document.getElementById('land-transfer-tax').value = Math.round(calcOntarioLTT(hp));
 }
 
+// ── Income → Marginal Tax Rate ───────────────────────────────────────────
+var TAX_BRACKETS = {
+  us: [ // 2024 federal single filer
+    [11600, 10], [47150, 12], [100525, 22], [191950, 24], [243725, 32], [609350, 35], [Infinity, 37]
+  ],
+  ca: [ // 2024 federal
+    [55867, 15], [111733, 20.5], [154906, 26], [220000, 29], [Infinity, 33]
+  ],
+  uk: [ // 2024-25
+    [12570, 0], [50270, 20], [125140, 40], [Infinity, 45]
+  ],
+  au: [ // 2024-25
+    [18200, 0], [45000, 16], [135000, 30], [190000, 37], [Infinity, 45]
+  ],
+  eu: [ // Rough average
+    [10000, 15], [30000, 25], [60000, 35], [100000, 42], [Infinity, 45]
+  ],
+  international: [
+    [15000, 10], [50000, 20], [100000, 30], [200000, 35], [Infinity, 40]
+  ]
+};
+
+function estimateMarginalRate(income, region) {
+  var brackets = TAX_BRACKETS[region] || TAX_BRACKETS['international'];
+  for (var i = 0; i < brackets.length; i++) {
+    if (income <= brackets[i][0]) return brackets[i][1];
+  }
+  return brackets[brackets.length - 1][1];
+}
+
+function onIncomeChange() {
+  var income = parseFloat(document.getElementById('annual-income').value) || 0;
+  var region = getRegion();
+  var rate = estimateMarginalRate(income, region);
+  document.getElementById('marginal-rate-auto').value = rate;
+  document.getElementById('tax-rate-hint').textContent = '(' + rate + '% est.)';
+  updateTaxRateDisplay();
+  updateAfterTaxReturn();
+}
+
+function updateTaxRateDisplay() {
+  var rate = parseFloat(document.getElementById('marginal-rate-auto').value) || 0;
+  var el = document.getElementById('tax-rate-display');
+  if (el) el.textContent = rate + '%';
+}
+
+// ── Asset Allocation Presets ─────────────────────────────────────────────
+var ALLOCATION_PRESETS = {
+  '100/0':  { domDiv: 0.80, forDiv: 1.00, income: 0.00, unrealCG: 5.50, realCG: 0.60 },
+  '80/20':  { domDiv: 0.60, forDiv: 0.75, income: 0.67, unrealCG: 3.85, realCG: 0.43 },
+  '60/40':  { domDiv: 0.45, forDiv: 0.55, income: 1.20, unrealCG: 2.50, realCG: 0.30 },
+  '40/60':  { domDiv: 0.30, forDiv: 0.35, income: 1.80, unrealCG: 1.40, realCG: 0.15 },
+  '20/80':  { domDiv: 0.15, forDiv: 0.18, income: 2.30, unrealCG: 0.60, realCG: 0.07 }
+};
+
+function onAllocationChange() {
+  var sel = document.getElementById('asset-allocation').value;
+  var preset = ALLOCATION_PRESETS[sel];
+  if (preset) {
+    document.getElementById('domestic-dividends').value = preset.domDiv.toFixed(2);
+    document.getElementById('foreign-dividends').value = preset.forDiv.toFixed(2);
+    document.getElementById('interest-income').value = preset.income.toFixed(2);
+    document.getElementById('unrealized-cg').value = preset.unrealCG.toFixed(2);
+    document.getElementById('realized-cg').value = preset.realCG.toFixed(2);
+  }
+  updateGrossReturn();
+  updateAfterTaxReturn();
+}
+
+function getReturnComponents() {
+  return {
+    domesticDiv: parseFloat(document.getElementById('domestic-dividends').value) || 0,
+    foreignDiv:  parseFloat(document.getElementById('foreign-dividends').value) || 0,
+    income:      parseFloat(document.getElementById('interest-income').value) || 0,
+    unrealCG:    parseFloat(document.getElementById('unrealized-cg').value) || 0,
+    realCG:      parseFloat(document.getElementById('realized-cg').value) || 0,
+    inflation:   parseFloat(document.getElementById('inflation-rate').value) || 0,
+    fees:        parseFloat(document.getElementById('investment-fees').value) || 0
+  };
+}
+
+function getGrossReturn() {
+  var c = getReturnComponents();
+  return c.domesticDiv + c.foreignDiv + c.income + c.unrealCG + c.realCG;
+}
+
+function updateGrossReturn() {
+  var gross = getGrossReturn();
+  document.getElementById('total-gross-return').textContent = gross.toFixed(2) + '%';
+}
+
+function getAfterTaxReturn() {
+  var c = getReturnComponents();
+  var region = getRegion();
+  var marginal = (parseFloat(document.getElementById('marginal-rate-auto').value) || 0) / 100;
+
+  // Tax rates by type & region (simplified)
+  var divTaxDomestic, divTaxForeign, incomeTax, cgTax;
+
+  if (region === 'ca') {
+    // Eligible dividends get gross-up + tax credit ≈ effective ~25% for mid brackets
+    divTaxDomestic = marginal * 0.6;  // Approx after dividend tax credit
+    divTaxForeign = marginal;
+    incomeTax = marginal;
+    cgTax = marginal * 0.5;  // 50% inclusion rate
+  } else if (region === 'us') {
+    divTaxDomestic = 0.15;  // Qualified dividends
+    divTaxForeign = marginal;  // Ordinary income for non-qualified
+    incomeTax = marginal;
+    cgTax = 0.15;  // LTCG rate for most brackets
+  } else if (region === 'uk') {
+    divTaxDomestic = Math.max(0, marginal - 0.125);  // Dividend allowance effect
+    divTaxForeign = marginal;
+    incomeTax = marginal;
+    cgTax = marginal <= 0.20 ? 0.10 : 0.20;
+  } else if (region === 'au') {
+    divTaxDomestic = marginal * 0.55;  // Franking credits
+    divTaxForeign = marginal;
+    incomeTax = marginal;
+    cgTax = marginal * 0.5;  // 50% CGT discount (held > 1 year)
+  } else {
+    divTaxDomestic = marginal * 0.7;
+    divTaxForeign = marginal;
+    incomeTax = marginal;
+    cgTax = marginal * 0.5;
+  }
+
+  var afterTax =
+    c.domesticDiv * (1 - divTaxDomestic) +
+    c.foreignDiv  * (1 - divTaxForeign) +
+    c.income      * (1 - incomeTax) +
+    c.unrealCG +  // Not taxed until realized
+    c.realCG      * (1 - cgTax);
+
+  return { afterTax: afterTax, cgTax: cgTax, marginal: marginal };
+}
+
+function updateAfterTaxReturn() {
+  updateGrossReturn();
+  var result = getAfterTaxReturn();
+  document.getElementById('total-after-tax-return').textContent = result.afterTax.toFixed(2) + '%';
+}
+
+// Auto-update on return field changes
+['domestic-dividends', 'foreign-dividends', 'interest-income', 'unrealized-cg',
+ 'realized-cg', 'inflation-rate', 'investment-fees', 'marginal-rate-auto'].forEach(function(id) {
+  document.getElementById(id).addEventListener('input', function() {
+    // If user manually edits return fields, switch allocation to Custom
+    if (['domestic-dividends','foreign-dividends','interest-income','unrealized-cg','realized-cg'].indexOf(id) >= 0) {
+      document.getElementById('asset-allocation').value = 'custom';
+    }
+    updateAfterTaxReturn();
+    if (id === 'marginal-rate-auto') updateTaxRateDisplay();
+  });
+});
+
 // ── Horizon Display ──────────────────────────────────────────────────────
 function updateHorizonDisplay() {
   document.getElementById('horizon-display').textContent = document.getElementById('horizon').value;
@@ -1144,10 +1394,10 @@ function calculate() {
 
   // Sync sensitivity sliders
   document.getElementById('sens-appreciation').value = params.homeAppreciation * 100;
-  document.getElementById('sens-return').value = params.investmentReturn * 100;
+  document.getElementById('sens-return').value = params.afterTaxReturn * 100;
   document.getElementById('sens-years').value = params.years;
   document.getElementById('sens-appreciation-val').textContent = fmtPct(params.homeAppreciation * 100);
-  document.getElementById('sens-return-val').textContent = fmtPct(params.investmentReturn * 100);
+  document.getElementById('sens-return-val').textContent = fmtPct(params.afterTaxReturn * 100);
   document.getElementById('sens-years-val').textContent = params.years;
 
   renderResults(result);
@@ -1174,9 +1424,13 @@ function gatherParams() {
   var hoa = parseFloat(document.getElementById('hoa').value) || 0;
   var closingPct = (parseFloat(document.getElementById('closing-costs').value) || 0) / 100;
   var sellingPct = (parseFloat(document.getElementById('selling-costs').value) || 0) / 100;
-  var investReturn = (parseFloat(document.getElementById('investment-return').value) || 0) / 100;
+  var returnComps = getReturnComponents();
+  var grossReturn = getGrossReturn() / 100;
+  var afterTaxResult = getAfterTaxReturn();
+  var investReturn = grossReturn;
+  var afterTaxReturn = afterTaxResult.afterTax / 100;
   var investFees = (parseFloat(document.getElementById('investment-fees').value) || 0) / 100;
-  var cgTaxInv = (parseFloat(document.getElementById('cg-tax-investments').value) || 0) / 100;
+  var cgTaxRate = afterTaxResult.cgTax;
   var cgExempt = document.getElementById('cg-exempt').checked;
   var region = getRegion();
 
@@ -1215,7 +1469,7 @@ function gatherParams() {
   var standardDeduction = 0;
   if (region === 'us' && document.getElementById('interest-deductible').checked) {
     usDeduction = true;
-    marginalRate = (parseFloat(document.getElementById('marginal-rate').value) || 0) / 100;
+    marginalRate = (parseFloat(document.getElementById('marginal-rate-auto').value) || 0) / 100;
     standardDeduction = parseFloat(document.getElementById('standard-deduction').value) || 0;
   }
 
@@ -1230,8 +1484,9 @@ function gatherParams() {
     propertyTaxIncrease: propTaxIncrease, councilTax: councilTax,
     homeInsurance: homeIns, maintenanceRate: maintRate, hoa: hoa,
     closingCosts: closingDollars, sellingCostsPct: sellingPct,
-    investmentReturn: investReturn, investmentFees: investFees,
-    cgTaxInvestments: cgTaxInv, cgExempt: cgExempt,
+    investmentReturn: investReturn, afterTaxReturn: afterTaxReturn,
+    investmentFees: investFees,
+    cgTaxRate: cgTaxRate, cgExempt: cgExempt,
     mortgageInsRate: mortgageInsRate, usDeduction: usDeduction,
     marginalRate: marginalRate, standardDeduction: standardDeduction,
     region: region
@@ -1259,7 +1514,8 @@ function runSimulation(p) {
   var totalRentPaid = 0;
 
   var yearlyData = [];
-  var netInvestReturn = (p.investmentReturn - p.investmentFees) / 12;
+  // Use after-tax return for ongoing growth; fees reduce the return
+  var netInvestReturn = (p.afterTaxReturn - p.investmentFees) / 12;
   var buyerNWByYear = [];
   var renterNWByYear = [];
 
@@ -1356,12 +1612,13 @@ function runSimulation(p) {
     var homeGain = homeValue - p.homePrice;
     var homeCGTax = 0;
     if (!p.cgExempt && homeGain > 0) {
-      homeCGTax = homeGain * p.cgTaxInvestments;
+      homeCGTax = homeGain * p.cgTaxRate;
     }
     var buyerNW = homeValue - remainingMortgage - sellingCost - homeCGTax;
 
+    // Unrealized CG at horizon are taxed on liquidation
     var invGains = Math.max(0, portfolio - totalContributions);
-    var invCGTax = invGains * p.cgTaxInvestments;
+    var invCGTax = invGains * p.cgTaxRate;
     var renterNW = portfolio - invCGTax;
 
     buyerNWByYear.push(buyerNW);
@@ -1705,7 +1962,7 @@ function onSensitivityChange() {
   // Override params and recalculate
   var params = gatherParams();
   params.homeAppreciation = appr / 100;
-  params.investmentReturn = ret / 100;
+  params.afterTaxReturn = ret / 100;
   params.years = yrs;
 
   var result = runSimulation(params);
@@ -1768,7 +2025,8 @@ function shareLink() {
     rent: document.getElementById('monthly-rent').value,
     rentInc: document.getElementById('rent-increase').value,
     appr: document.getElementById('home-appreciation').value,
-    invRet: document.getElementById('investment-return').value,
+    income: document.getElementById('annual-income').value,
+    alloc: document.getElementById('asset-allocation').value,
     invFee: document.getElementById('investment-fees').value
   });
   var url = window.location.origin + window.location.pathname + '?' + params.toString();
@@ -1794,7 +2052,8 @@ function loadFromURL() {
   if (p.get('rent'))    document.getElementById('monthly-rent').value = p.get('rent');
   if (p.get('rentInc')) document.getElementById('rent-increase').value = p.get('rentInc');
   if (p.get('appr'))    document.getElementById('home-appreciation').value = p.get('appr');
-  if (p.get('invRet'))  document.getElementById('investment-return').value = p.get('invRet');
+  if (p.get('income'))  document.getElementById('annual-income').value = p.get('income');
+  if (p.get('alloc'))   { document.getElementById('asset-allocation').value = p.get('alloc'); onAllocationChange(); }
   if (p.get('invFee'))  document.getElementById('investment-fees').value = p.get('invFee');
   if (p.get('downMode')) setDownMode(p.get('downMode'));
   updateHorizonDisplay();
@@ -1809,6 +2068,19 @@ function loadFromURL() {
   updateDpHint();
   updateHorizonDisplay();
   updateMortgageInsuranceVisibility();
+  onIncomeChange();
+  updateGrossReturn();
+  updateAfterTaxReturn();
+  updateDomesticDivLabel();
+
+  // Sync real estate growth with home appreciation
+  document.getElementById('real-estate-growth').addEventListener('input', function() {
+    document.getElementById('home-appreciation').value = this.value;
+  });
+  document.getElementById('home-appreciation').addEventListener('input', function() {
+    document.getElementById('real-estate-growth').value = this.value;
+  });
+
   loadFromURL();
 
   // Listen for home price changes to update dependent fields
