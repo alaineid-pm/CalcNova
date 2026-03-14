@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Dive Weight / Buoyancy Calculator — How Much Lead Do I Need? | CalcNova</title>
+  <meta name="description" content="Free scuba dive weight calculator: estimate your ideal lead weight based on body weight, wetsuit type, tank material, and water type. Based on PADI weighting guidelines.">
+
+  <!-- Canonical -->
+  <link rel="canonical" href="https://calcnova.co/dive-weight-calculator.html">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Dive Weight / Buoyancy Calculator — How Much Lead Do I Need? | CalcNova">
+  <meta property="og:description" content="Free scuba dive weight calculator: estimate your ideal lead weight based on body weight, wetsuit type, tank material, and water type. Based on PADI weighting guidelines.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://calcnova.co/dive-weight-calculator.html">
+  <meta property="og:site_name" content="CalcNova">
+
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebApplication",
+        "name": "Dive Weight / Buoyancy Calculator",
+        "url": "https://calcnova.co/dive-weight-calculator.html",
+        "description": "Estimate your ideal scuba diving lead weight based on body weight, wetsuit type, tank material, and water type. Based on PADI weighting guidelines.",
+        "applicationCategory": "SportsApplication",
+        "provider": { "@type": "Organization", "name": "CalcNova", "url": "https://calcnova.co" },
+        "offers": { "@type": "Offer", "price": "0" }
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Should I always dive with the minimum weight?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Not necessarily. Diving with the minimum weight that allows a proper buoyancy check is the goal, but comfort and control matter too. Over-weighting is a common habit that leads to poor trim and excessive air consumption. Always do a surface buoyancy check at the start of any dive and adjust accordingly."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Why do I need more weight in a drysuit?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Drysuits — especially neoprene drysuits — trap a large amount of air and provide significant positive buoyancy. The suit material itself also adds buoyancy compared to a wetsuit. You must compensate with extra lead weight so you can achieve neutral buoyancy underwater and proper negative buoyancy at the surface during a buoyancy check."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Does water type really affect how much weight I need?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes. Saltwater is denser than freshwater (approximately 1025 kg/m³ vs 1000 kg/m³), which means your body is more buoyant in the ocean. Most divers need 1.5–3 kg less weight when diving in freshwater lakes or quarries compared to the sea."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How accurate is this dive weight calculator?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "This calculator provides a starting estimate based on PADI weighting guidelines and widely accepted dive industry rules of thumb. Individual body composition, specific gear configuration, and personal buoyancy habits all affect the final number. Always perform a proper buoyancy check in the water before descending on any dive."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Why does tank type affect my weighting?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Steel tanks are denser than aluminum and have negative or near-neutral buoyancy when full, becoming slightly positive when empty. Aluminum tanks (like the AL80) start near neutral when full but become positively buoyant as gas is consumed — requiring extra lead to compensate. Steel tanks effectively reduce your lead requirement by 2–4 kg compared to an AL80."
+            }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="shared/nav.css">
+  <style>
+    :root {
+      --bg: #f0f2f7;
+      --surface: #ffffff;
+      --border: #e2e6ef;
+      --text-primary: #0f1623;
+      --text-secondary: #5a6478;
+      --text-muted: #9ba3b5;
+      --green: #10b981;
+      --purple: #6366f1;
+      --red: #ef4444;
+      --amber: #f59e0b;
+      --blue: #3b82f6;
+      --font: 'Plus Jakarta Sans', sans-serif;
+      --mono: 'JetBrains Mono', monospace;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      font-family: var(--font);
+      color: var(--text-primary);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .app {
+      position: relative; z-index: 1;
+      max-width: 960px; margin: 0 auto; padding: 0 16px 60px;
+    }
+
+    /* ── Hero ── */
+    .pill-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: linear-gradient(135deg, rgba(16,185,129,.1), rgba(99,102,241,.1));
+      border: 1px solid rgba(16,185,129,.25);
+      border-radius: 100px; padding: 6px 14px;
+      font-size: 12px; font-weight: 700; color: var(--green);
+      margin-bottom: 12px;
+    }
+    .hero {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 18px; padding: 32px 28px 26px; margin-bottom: 28px;
+    }
+    .hero-title { font-size: 26px; font-weight: 800; letter-spacing: -.5px; line-height: 1.25; }
+    .hero-title span {
+      background: linear-gradient(135deg, var(--green), var(--purple));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .hero-desc { font-size: 14px; color: var(--text-secondary); margin-top: 8px; line-height: 1.6; max-width: 620px; }
+    .hero-formula {
+      font-family: var(--mono); font-size: 12px; color: var(--text-muted); margin-top: 10px;
+    }
+    .hero-formula .hl { color: var(--green); font-weight: 700; }
+
+    /* ── Layout ── */
+    .main-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 28px; }
+    @media (max-width: 660px) { .main-grid { grid-template-columns: 1fr; } }
+
+    /* ── Cards ── */
+    .card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 18px; padding: 22px;
+    }
+    .card-title {
+      font-family: var(--mono); font-size: 10px; font-weight: 700;
+      letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-muted);
+      margin-bottom: 18px; display: flex; align-items: center; gap: 8px;
+    }
+    .card-title-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+
+    /* ── Unit Toggle ── */
+    .unit-toggle {
+      display: inline-flex; background: var(--bg); border: 1px solid var(--border);
+      border-radius: 10px; padding: 3px; margin-bottom: 20px;
+    }
+    .unit-btn {
+      padding: 7px 20px; border: none; border-radius: 8px;
+      font-family: var(--font); font-size: 13px; font-weight: 600;
+      color: var(--text-secondary); background: none; cursor: pointer;
+      transition: all .15s;
+    }
+    .unit-btn.active {
+      background: var(--surface); color: var(--text-primary);
+      box-shadow: 0 1px 4px rgba(0,0,0,.08);
+    }
+
+    /* ── Inputs ── */
+    .form-group { margin-bottom: 14px; }
+    .form-group:last-child { margin-bottom: 0; }
+    .form-label {
+      font-size: 12px; font-weight: 600; color: var(--text-secondary);
+      margin-bottom: 6px; display: block;
+    }
+
+    input[type="number"], select {
+      width: 100%; background: var(--bg); border: 1px solid var(--border);
+      border-radius: 10px; color: var(--text-primary); font-family: var(--font);
+      font-size: 14px; font-weight: 600; padding: 9px 12px; outline: none;
+      transition: border-color .2s, box-shadow .2s; -webkit-appearance: none; appearance: none;
+    }
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+    input[type="number"]:focus, select:focus {
+      border-color: var(--green);
+      box-shadow: 0 0 0 3px rgba(16,185,129,.12);
+    }
+    input[type="number"].input-error {
+      border-color: var(--red);
+      box-shadow: 0 0 0 3px rgba(239,68,68,.10);
+    }
+    select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%239ba3b5' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      padding-right: 34px;
+      cursor: pointer;
+    }
+
+    /* ── Checkboxes ── */
+    .checkbox-group { display: flex; flex-direction: column; gap: 10px; }
+    .checkbox-item {
+      display: flex; align-items: center; gap: 10px;
+      cursor: pointer; user-select: none;
+    }
+    .checkbox-item input[type="checkbox"] {
+      width: 18px; height: 18px; min-width: 18px;
+      background: var(--bg); border: 1.5px solid var(--border);
+      border-radius: 5px; padding: 0; cursor: pointer;
+      accent-color: var(--green);
+    }
+    .checkbox-item input[type="checkbox"]:focus {
+      box-shadow: 0 0 0 3px rgba(16,185,129,.12);
+    }
+    .checkbox-label { font-size: 13px; font-weight: 600; color: var(--text-primary); }
+    .checkbox-sub { font-size: 11px; color: var(--text-muted); font-weight: 500; }
+
+    /* ── Error ── */
+    .error-box {
+      background: rgba(239,68,68,.08); border: 1px solid rgba(239,68,68,.25);
+      border-radius: 10px; padding: 10px 14px; font-size: 13px; font-weight: 600;
+      color: var(--red); margin-top: 14px; display: none; line-height: 1.5;
+    }
+    .error-box.show { display: block; }
+
+    /* ── Result card ── */
+    .result-card {
+      background: linear-gradient(135deg, rgba(16,185,129,.07), rgba(99,102,241,.07));
+      border: 1.5px solid rgba(16,185,129,.28); border-radius: 20px;
+      padding: 32px 28px 28px; margin-bottom: 28px; text-align: center;
+      position: relative; overflow: hidden;
+    }
+    .result-card::before {
+      content: ''; position: absolute; top: -50px; right: -50px;
+      width: 140px; height: 140px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--green), var(--purple)); opacity: .06;
+    }
+    .result-card::after {
+      content: ''; position: absolute; bottom: -40px; left: -40px;
+      width: 100px; height: 100px; border-radius: 50%;
+      background: var(--purple); opacity: .05;
+    }
+    .result-card.hidden { display: none; }
+
+    .result-label {
+      font-family: var(--mono); font-size: 10px; font-weight: 700;
+      letter-spacing: 1.5px; text-transform: uppercase;
+      color: var(--text-muted); margin-bottom: 10px;
+    }
+    .result-main {
+      font-family: var(--mono); font-size: 58px; font-weight: 800;
+      line-height: 1; margin-bottom: 6px;
+      background: linear-gradient(135deg, var(--green), var(--purple));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    @media (max-width: 480px) { .result-main { font-size: 42px; } }
+    .result-sub {
+      font-family: var(--mono); font-size: 18px; font-weight: 600;
+      color: var(--text-secondary); margin-bottom: 16px;
+    }
+    .result-tip {
+      font-size: 13px; color: var(--text-secondary); line-height: 1.6;
+      background: rgba(255,255,255,.6); border-radius: 10px;
+      padding: 10px 14px; margin-top: 8px; text-align: left;
+    }
+    .result-tip strong { color: var(--text-primary); }
+    .result-warning {
+      font-size: 12px; color: var(--text-muted); margin-top: 10px;
+      font-style: italic;
+    }
+
+    /* ── Breakdown table ── */
+    .breakdown-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 18px; padding: 22px; margin-bottom: 28px;
+    }
+    .breakdown-card.hidden { display: none; }
+    .breakdown-table { width: 100%; border-collapse: collapse; }
+    .breakdown-table th {
+      font-family: var(--mono); font-size: 10px; font-weight: 700;
+      letter-spacing: 1.2px; text-transform: uppercase; color: var(--text-muted);
+      text-align: left; padding: 0 0 10px; border-bottom: 1px solid var(--border);
+    }
+    .breakdown-table th:last-child { text-align: right; }
+    .breakdown-table td {
+      padding: 10px 0; font-size: 13px; font-weight: 600;
+      color: var(--text-primary); border-bottom: 1px solid var(--border);
+      vertical-align: middle;
+    }
+    .breakdown-table tr:last-child td { border-bottom: none; }
+    .breakdown-table td:last-child {
+      text-align: right; font-family: var(--mono); font-size: 13px;
+    }
+    .breakdown-table td .row-label { color: var(--text-secondary); font-weight: 500; }
+    .val-pos { color: var(--green); }
+    .val-neg { color: #3b82f6; }
+    .val-zero { color: var(--text-muted); }
+    .breakdown-total td {
+      border-top: 2px solid var(--border); border-bottom: none;
+      padding-top: 14px; font-size: 15px; font-weight: 800;
+    }
+    .breakdown-total td:last-child {
+      font-size: 16px;
+      background: linear-gradient(135deg, var(--green), var(--purple));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+
+    /* ── Action buttons ── */
+    .action-row {
+      display: flex; gap: 10px; margin-bottom: 28px; flex-wrap: wrap;
+    }
+    .action-row.hidden { display: none; }
+    .btn {
+      display: inline-flex; align-items: center; gap: 7px;
+      padding: 10px 20px; border-radius: 10px; border: none;
+      font-family: var(--font); font-size: 13px; font-weight: 700;
+      cursor: pointer; transition: all .15s; text-decoration: none;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--green), var(--purple));
+      color: #fff;
+    }
+    .btn-primary:hover { opacity: .88; transform: translateY(-1px); }
+    .btn-outline {
+      background: var(--surface); border: 1px solid var(--border);
+      color: var(--text-secondary);
+    }
+    .btn-outline:hover { border-color: var(--green); color: var(--green); }
+
+    /* ── Safety disclaimer ── */
+    .safety-disclaimer {
+      background: rgba(239,68,68,.06); border: 1px solid rgba(239,68,68,.2);
+      border-radius: 14px; padding: 16px 18px; margin-bottom: 28px;
+      font-size: 13px; color: var(--text-secondary); line-height: 1.65;
+    }
+    .safety-disclaimer strong { color: var(--red); }
+
+    /* ── SEO content ── */
+    .seo-section {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 18px; padding: 28px; margin-bottom: 20px;
+    }
+    .seo-section h2 {
+      font-size: 18px; font-weight: 800; letter-spacing: -.3px; margin: 0 0 12px;
+    }
+    .seo-section h3 {
+      font-size: 15px; font-weight: 700; margin: 20px 0 8px; color: var(--text-primary);
+    }
+    .seo-section p {
+      font-size: 14px; color: var(--text-secondary); line-height: 1.7; margin: 0 0 12px;
+    }
+    .seo-section p:last-child { margin-bottom: 0; }
+    .seo-section ol, .seo-section ul {
+      margin: 0 0 12px; padding-left: 22px;
+    }
+    .seo-section li {
+      font-size: 14px; color: var(--text-secondary); line-height: 1.7; margin-bottom: 6px;
+    }
+    .seo-section a { color: var(--green); text-decoration: none; font-weight: 600; }
+    .seo-section a:hover { text-decoration: underline; }
+
+    /* ── FAQ ── */
+    .faq-item { border-bottom: 1px solid var(--border); }
+    .faq-item:last-child { border-bottom: none; }
+    .faq-question {
+      width: 100%; background: none; border: none; text-align: left;
+      padding: 14px 0; cursor: pointer; font-family: var(--font);
+      font-size: 14px; font-weight: 700; color: var(--text-primary);
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    }
+    .faq-question:hover { color: var(--green); }
+    .faq-icon {
+      flex-shrink: 0; width: 20px; height: 20px; border-radius: 50%;
+      background: var(--bg); border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; line-height: 1; color: var(--text-muted);
+      transition: transform .2s;
+    }
+    .faq-item.open .faq-icon { transform: rotate(45deg); color: var(--green); border-color: var(--green); }
+    .faq-answer {
+      font-size: 14px; color: var(--text-secondary); line-height: 1.7;
+      max-height: 0; overflow: hidden; transition: max-height .3s ease;
+    }
+    .faq-item.open .faq-answer { max-height: 400px; }
+    .faq-answer-inner { padding-bottom: 14px; }
+
+    /* ── Toast ── */
+    #toast {
+      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(20px);
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 100px; padding: 10px 20px;
+      font-size: 13px; font-weight: 600; color: var(--text-primary);
+      box-shadow: 0 4px 20px rgba(0,0,0,.12);
+      display: flex; align-items: center; gap: 8px;
+      opacity: 0; transition: all .25s; pointer-events: none; z-index: 9999;
+    }
+    #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    /* ── Responsive ── */
+    @media (max-width: 480px) {
+      .hero { padding: 22px 18px 20px; }
+      .hero-title { font-size: 20px; }
+      .card { padding: 18px; }
+      .seo-section { padding: 20px 18px; }
+      .breakdown-card { padding: 18px; }
+      .result-card { padding: 24px 18px; }
+      .action-row { flex-direction: column; }
+      .btn { justify-content: center; }
+    }
+    @media (max-width: 360px) {
+      .hero-title { font-size: 18px; }
+      .result-main { font-size: 36px; }
+      .unit-btn { padding: 7px 14px; font-size: 12px; }
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="pill-badge">🤿 Scuba Diving Tool</div>
+    <h1 class="hero-title">Dive Weight &amp; <span>Buoyancy Calculator</span></h1>
+    <p class="hero-desc">Estimate how much lead weight you need for your next dive. Enter your body weight, exposure suit, tank type, and water conditions to get a starting point based on PADI weighting guidelines.</p>
+    <div class="hero-formula">
+      <span class="hl">lead</span> = (body_weight × water_factor) + suit + tank + experience + gear
+    </div>
+  </div>
+
+  <!-- Safety disclaimer -->
+  <div class="safety-disclaimer">
+    🦺 <strong>Safety Notice:</strong> This calculator is a planning aid only and is NOT a substitute for proper dive training, certification, and planning with qualified instructors. Always verify calculations with your dive computer, buddy, and instructor before any dive. Never exceed your training level.
+  </div>
+
+  <!-- Inputs + Results grid -->
+  <div class="main-grid">
+
+    <!-- Left: Inputs -->
+    <div class="card">
+      <div class="card-title">
+        <span class="card-title-dot" style="background:var(--green);"></span>
+        Diver &amp; Gear Inputs
+      </div>
+
+      <!-- Unit toggle -->
+      <div class="unit-toggle">
+        <button class="unit-btn active" id="btn-kg" onclick="setUnit('kg')">kg</button>
+        <button class="unit-btn" id="btn-lbs" onclick="setUnit('lbs')">lbs</button>
+      </div>
+
+      <!-- Body weight -->
+      <div class="form-group">
+        <label class="form-label" for="body-weight">
+          Body Weight <span id="unit-label-inline">(kg)</span>
+        </label>
+        <input type="number" id="body-weight" min="20" max="300" step="0.5"
+               placeholder="e.g. 75" oninput="calculate()" autocomplete="off">
+      </div>
+
+      <!-- Exposure suit -->
+      <div class="form-group">
+        <label class="form-label" for="suit-type">Exposure Suit</label>
+        <select id="suit-type" onchange="calculate()">
+          <option value="0">Swimsuit / Rashguard (+0 kg)</option>
+          <option value="0.5">3mm Shorty (+0.5 kg)</option>
+          <option value="1.5" selected>3mm Full Wetsuit (+1.5 kg)</option>
+          <option value="3.0">5mm Full Wetsuit (+3.0 kg)</option>
+          <option value="4.5">7mm Full Wetsuit (+4.5 kg)</option>
+          <option value="5.0">Drysuit — Shell (+5.0 kg)</option>
+          <option value="7.0">Drysuit — Neoprene (+7.0 kg)</option>
+        </select>
+      </div>
+
+      <!-- Water type -->
+      <div class="form-group">
+        <label class="form-label" for="water-type">Water Type</label>
+        <select id="water-type" onchange="calculate()">
+          <option value="0.10" selected>Saltwater (ocean / sea)</option>
+          <option value="0.085">Brackish (estuary / some seas)</option>
+          <option value="0.07">Freshwater (lake / quarry)</option>
+        </select>
+      </div>
+
+      <!-- Tank type -->
+      <div class="form-group">
+        <label class="form-label" for="tank-type">Tank Type</label>
+        <select id="tank-type" onchange="calculate()">
+          <option value="0">Aluminum 80 / AL80 (baseline)</option>
+          <option value="0.5">Aluminum 63 / AL63 (+0.5 kg)</option>
+          <option value="-2.0">Steel HP80 (−2.0 kg)</option>
+          <option value="-3.0">Steel HP100 (−3.0 kg)</option>
+          <option value="-4.0">Steel HP120 (−4.0 kg)</option>
+        </select>
+      </div>
+
+      <!-- Experience level -->
+      <div class="form-group">
+        <label class="form-label" for="experience">Experience Level</label>
+        <select id="experience" onchange="calculate()">
+          <option value="1">Beginner (+1 kg safety margin)</option>
+          <option value="0" selected>Intermediate (0 kg)</option>
+          <option value="-1">Advanced / Technical (−1 kg)</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Right: Additional gear + result placeholder -->
+    <div>
+      <div class="card" style="margin-bottom:20px;">
+        <div class="card-title">
+          <span class="card-title-dot" style="background:var(--purple);"></span>
+          Additional Gear
+        </div>
+
+        <div class="checkbox-group">
+          <label class="checkbox-item">
+            <input type="checkbox" id="gear-camera" value="1.5" onchange="calculate()">
+            <div>
+              <div class="checkbox-label">Camera System</div>
+              <div class="checkbox-sub">+1.5 kg (housing, strobes)</div>
+            </div>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" id="gear-light" value="0.5" onchange="calculate()">
+            <div>
+              <div class="checkbox-label">Heavy-Duty Video Light</div>
+              <div class="checkbox-sub">+0.5 kg</div>
+            </div>
+          </label>
+        </div>
+
+        <div class="error-box" id="error-box">
+          Please enter a valid body weight (20–300 kg or equivalent in lbs).
+        </div>
+      </div>
+
+      <!-- Mini result preview inside grid -->
+      <div class="card" id="mini-result" style="text-align:center; display:none;">
+        <div class="card-title" style="justify-content:center;">
+          <span class="card-title-dot" style="background:var(--green);"></span>
+          Estimated Lead
+        </div>
+        <div style="font-family:var(--mono);font-size:40px;font-weight:800;line-height:1;margin-bottom:4px;
+             background:linear-gradient(135deg,var(--green),var(--purple));
+             -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;"
+             id="mini-result-kg">—</div>
+        <div style="font-family:var(--mono);font-size:14px;font-weight:600;color:var(--text-secondary);margin-bottom:4px;"
+             id="mini-result-lbs">—</div>
+        <div style="font-size:12px;color:var(--text-muted);">Starting estimate</div>
+      </div>
+    </div>
+
+  </div><!-- /.main-grid -->
+
+  <!-- Full result card -->
+  <div class="result-card hidden" id="result-card">
+    <div class="result-label">Recommended Starting Weight</div>
+    <div class="result-main" id="result-kg-display">0 kg</div>
+    <div class="result-sub" id="result-lbs-display">0 lbs</div>
+
+    <div class="result-tip">
+      <strong>Surface buoyancy check:</strong> You should float at eye level at the surface with a full tank, empty BCD, and while holding a normal breath. When you exhale, you should sink slowly.
+    </div>
+    <div class="result-warning">
+      Always do a buoyancy check in the water before diving. This is an estimate only.
+    </div>
+  </div>
+
+  <!-- Breakdown table -->
+  <div class="breakdown-card hidden" id="breakdown-card">
+    <div class="card-title">
+      <span class="card-title-dot" style="background:var(--purple);"></span>
+      Weight Breakdown
+    </div>
+    <table class="breakdown-table">
+      <thead>
+        <tr>
+          <th>Component</th>
+          <th>Detail</th>
+          <th>Adjustment</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Base weight</td>
+          <td><span class="row-label" id="row-base-detail">—</span></td>
+          <td id="row-base-val" class="val-pos">—</td>
+        </tr>
+        <tr>
+          <td>Exposure suit</td>
+          <td><span class="row-label" id="row-suit-detail">—</span></td>
+          <td id="row-suit-val">—</td>
+        </tr>
+        <tr>
+          <td>Tank type</td>
+          <td><span class="row-label" id="row-tank-detail">—</span></td>
+          <td id="row-tank-val">—</td>
+        </tr>
+        <tr>
+          <td>Experience</td>
+          <td><span class="row-label" id="row-exp-detail">—</span></td>
+          <td id="row-exp-val">—</td>
+        </tr>
+        <tr>
+          <td>Additional gear</td>
+          <td><span class="row-label" id="row-gear-detail">—</span></td>
+          <td id="row-gear-val">—</td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr class="breakdown-total">
+          <td colspan="2"><strong>Total recommended weight</strong></td>
+          <td id="row-total-val">—</td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+
+  <!-- Action buttons -->
+  <div class="action-row hidden" id="action-row">
+    <button class="btn btn-primary" onclick="copySummary()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+      Copy Summary
+    </button>
+    <button class="btn btn-outline" onclick="window.print()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+      Print Results
+    </button>
+  </div>
+
+  <!-- ── SEO Content ── -->
+
+  <div class="seo-section">
+    <h2>Why Correct Weighting Matters</h2>
+    <p>Getting your dive weight right is one of the most important — and most overlooked — aspects of recreational and technical diving. Over-weighting is the single most common mistake divers make at all experience levels. Carrying too much lead forces you to add air to your BCD to compensate, leading to an uncontrolled pendulum effect: you add air, you rise, you dump air, you drop. This constant cycle wastes gas, increases nitrogen absorption through erratic depth changes, and exhausts you.</p>
+    <p>Correct weighting gives you true neutral buoyancy at depth with a near-empty BCD, better horizontal trim, less drag, and dramatically improved air consumption. A well-weighted diver can hover motionless, maintain position effortlessly, and ascend or descend with a breath. It is a core skill that every diver should refine throughout their diving career.</p>
+    <p>The numbers in this dive weight calculator are derived from <strong>PADI weighting guidelines</strong>, which form the industry baseline for initial weight estimates. They are a starting point — not a final answer. Every diver has different body composition, different gear, and different buoyancy habits. The in-water buoyancy check is the only true test.</p>
+  </div>
+
+  <div class="seo-section">
+    <h2>How to Do a Buoyancy Check</h2>
+    <p>Before descending on any dive — especially when diving new equipment, in a new water type, or after time away from the water — perform this standardised surface buoyancy check:</p>
+    <ol>
+      <li><strong>At the surface, fully deflate your BCD.</strong> Hold a normal breath and remain still.</li>
+      <li><strong>Check your eye level.</strong> You should float with the water at approximately eye-level or mid-forehead height. If you float higher, remove 1–2 kg. If you sink below the chin, add 1–2 kg.</li>
+      <li><strong>Exhale fully.</strong> You should begin to sink slowly. If you sink rapidly with a full breath, you are over-weighted.</li>
+      <li><strong>Adjust and repeat</strong> until the result is correct.</li>
+      <li><strong>At the end of the dive</strong> (tank near 50 bar / 500 psi), check neutral buoyancy at 5 metres / 15 feet during your safety stop. A properly weighted diver should be neutral at this point with an empty BCD, because an aluminium tank becomes positively buoyant as it empties. If you need to fin downward to stay at 5m, add 1–2 kg next time.</li>
+    </ol>
+    <p>This two-part buoyancy check — surface and end-of-dive at 5m — is the gold standard for dialling in your weighting. Perform it at the start of every new gear configuration or location.</p>
+  </div>
+
+  <div class="seo-section">
+    <h2>Factors Affecting Your Weight Requirements</h2>
+
+    <h3>Exposure Suit</h3>
+    <p>Your wetsuit or drysuit is the biggest variable after body weight. Neoprene is a closed-cell foam material that is inherently positively buoyant. A thin 3mm shorty adds very little, while a thick 7mm full wetsuit can add 4–5 kg of buoyancy that must be cancelled out with lead. Drysuits introduce undergarment air and suit volume into the equation — neoprene drysuits are especially buoyant and typically require 6–8 kg more lead than diving in a swimsuit in the same conditions.</p>
+
+    <h3>Water Type</h3>
+    <p>Saltwater is approximately 2.5% denser than freshwater, which means your body (and all your gear) displaces more weight of water per unit volume. Most divers need 1.5–3 kg less lead when transitioning from ocean diving to a freshwater quarry or inland lake. Brackish water (found in estuaries, the Baltic Sea, and some tropical diving sites) sits between the two. This calculator lets you select the correct water type so the base weight factor is accurate for your environment.</p>
+
+    <h3>Tank Material and Size</h3>
+    <p>Aluminum tanks are generally near-neutral when full but become <strong>positively buoyant</strong> by 1–2 kg when empty. Steel tanks are negatively buoyant throughout their pressure range and effectively reduce your lead requirement. Switching from an AL80 to a steel HP100 can save 3 kg of lead on your belt — a meaningful difference for comfort, air consumption, and streamlining. See our <a href="article-weighting.html">guide to dive weighting</a> for a deeper dive into tank buoyancy curves.</p>
+
+    <h3>Experience Level</h3>
+    <p>Beginner divers often benefit from a small additional weight margin (around 1 kg) during their initial dives while they develop buoyancy control. As a diver becomes more skilled, they typically discover they were over-weighted and can reduce their lead load. Advanced and technical divers who have refined their trim and buoyancy skills often find they can reduce their weight by 1 kg or more compared to the book recommendation.</p>
+  </div>
+
+  <div class="seo-section">
+    <h2>Common Weighting Mistakes</h2>
+    <ul>
+      <li><strong>Copying another diver's weights.</strong> Body composition, suit type, and tank choice vary enormously. A weight that works for your buddy may be very wrong for you.</li>
+      <li><strong>Skipping the surface check.</strong> Even experienced divers skip the buoyancy check when using rental gear or diving a new location. This is how over-weighting habits form and persist.</li>
+      <li><strong>Not accounting for tank state.</strong> Your buoyancy at the start of a dive (full tank) differs from the end (near-empty tank). This is especially significant with aluminium cylinders. Weight for the end-of-dive safety stop, not the descent.</li>
+      <li><strong>Ignoring freshwater vs. saltwater.</strong> Divers trained in the ocean and making their first freshwater dive are frequently surprised to find they sink straight to the bottom. Always recalculate when changing water environments.</li>
+      <li><strong>Adding weight to compensate for poor technique.</strong> If you are struggling to stay down, adding lead is often not the answer. Incorrect trim, over-inflated BCD, or improper breathing are common culprits. Take a Peak Performance Buoyancy course before automatically reaching for more lead.</li>
+    </ul>
+    <p>For a detailed look at refining your weighting and trim, read our <a href="article-weighting.html">complete guide to scuba weighting</a>. If you need to convert between weight units, our <a href="unit-converter.html">unit converter</a> handles kg, lbs, stones, and more.</p>
+  </div>
+
+  <!-- FAQ -->
+  <div class="seo-section">
+    <h2>Frequently Asked Questions</h2>
+    <div class="faq-item">
+      <button class="faq-question" onclick="toggleFaq(this)">
+        Should I always dive with the minimum weight?
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-answer">
+        <div class="faq-answer-inner">Not necessarily. Diving with the minimum weight that allows a proper buoyancy check is the goal, but comfort and control matter too. Over-weighting is a common habit that leads to poor trim and excessive air consumption. Always do a surface buoyancy check at the start of any dive and adjust accordingly. The aim is neutral buoyancy with an empty BCD at depth — not just sinking at the surface.</div>
+      </div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-question" onclick="toggleFaq(this)">
+        Why do I need more weight in a drysuit?
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-answer">
+        <div class="faq-answer-inner">Drysuits — especially neoprene drysuits — trap a large amount of air and provide significant positive buoyancy. The suit material itself also adds buoyancy compared to a wetsuit. You must compensate with extra lead weight so you can achieve neutral buoyancy underwater and proper negative buoyancy at the surface during a buoyancy check. Drysuit divers also use the suit for buoyancy control during the dive, which requires a higher baseline lead load.</div>
+      </div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-question" onclick="toggleFaq(this)">
+        Does water type really affect how much weight I need?
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-answer">
+        <div class="faq-answer-inner">Yes. Saltwater is approximately 2.5% denser than freshwater (roughly 1025 kg/m³ vs 1000 kg/m³), which means your body is more buoyant in the ocean. Most divers need 1.5–3 kg less weight when diving in freshwater lakes or quarries compared to the sea. Brackish water (estuaries, Baltic, some tropical sites) sits between the two extremes. Forgetting to adjust is one of the most common causes of unexpected sinking on freshwater dives.</div>
+      </div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-question" onclick="toggleFaq(this)">
+        How accurate is this dive weight calculator?
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-answer">
+        <div class="faq-answer-inner">This calculator provides a starting estimate based on PADI weighting guidelines and widely accepted dive industry rules of thumb. Individual body composition (muscle vs. fat ratio, bone density), specific gear dimensions, and personal buoyancy habits all affect the final number. Treat the result as a starting point and always perform a proper buoyancy check in the water before descending. Most divers end up within 1–2 kg of the calculated value.</div>
+      </div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-question" onclick="toggleFaq(this)">
+        Why does tank type affect my weighting?
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-answer">
+        <div class="faq-answer-inner">Steel tanks are denser than aluminum and have negative or near-neutral buoyancy throughout their pressure range. Aluminum tanks (like the popular AL80) start near neutral when full but become positively buoyant — by about 1–2 kg — as the gas is consumed during the dive. Because you weight for the end-of-dive safety stop, you need extra lead to compensate for this shift with an aluminum tank. Switching to steel effectively reduces your lead requirement by 2–4 kg and eliminates this end-of-dive buoyancy gain.</div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /.app -->
+
+<div id="toast">
+  <span style="color:var(--green);font-size:15px;">✓</span>
+  <span id="toast-msg">Copied!</span>
+</div>
+
+<script>
+  window.CALCNOVA_PAGE = {
+    id: 'dive-weight',
+    disclaimer: 'This calculator is a planning aid only and is NOT a substitute for proper dive training, certification, and planning with qualified instructors. Always verify calculations with your dive computer, buddy, and instructor before any dive.'
+  };
+</script>
+<script src="shared/site-data.js"></script>
+<script src="shared/nav.js"></script>
+<script>(function () {
+  'use strict';
+
+  /* ── State ── */
+  var unit = 'kg';
+  var lastResult = null;
+
+  /* ── Unit system ── */
+  function setUnit(u) {
+    unit = u;
+    document.getElementById('btn-kg').classList.toggle('active', u === 'kg');
+    document.getElementById('btn-lbs').classList.toggle('active', u === 'lbs');
+    document.getElementById('unit-label-inline').textContent = u === 'kg' ? '(kg)' : '(lbs)';
+    var inp = document.getElementById('body-weight');
+    inp.placeholder = u === 'kg' ? 'e.g. 75' : 'e.g. 165';
+    inp.min = u === 'kg' ? 20 : 44;
+    inp.max = u === 'kg' ? 300 : 660;
+    calculate();
+  }
+  window.setUnit = setUnit;
+
+  /* ── Helpers ── */
+  function numVal(id) {
+    var v = parseFloat(document.getElementById(id).value);
+    return isNaN(v) ? null : v;
+  }
+
+  function fmtKg(v) {
+    return (Math.round(v * 10) / 10).toFixed(1) + ' kg';
+  }
+
+  function fmtLbs(v) {
+    return (Math.round(v * 2.205 * 10) / 10).toFixed(1) + ' lbs';
+  }
+
+  function fmtAdj(v) {
+    if (v === 0) return '<span class="val-zero">0 kg</span>';
+    var sign = v > 0 ? '+' : '';
+    var cls = v > 0 ? 'val-pos' : 'val-neg';
+    return '<span class="' + cls + '">' + sign + (Math.round(v * 10) / 10).toFixed(1) + ' kg</span>';
+  }
+
+  /* ── Main calculation ── */
+  function calculate() {
+    var rawWeight = numVal('body-weight');
+    var waterFactor = parseFloat(document.getElementById('water-type').value);
+    var suitAdj = parseFloat(document.getElementById('suit-type').value);
+    var tankAdj = parseFloat(document.getElementById('tank-type').value);
+    var expAdj = parseFloat(document.getElementById('experience').value);
+    var gearCamera = document.getElementById('gear-camera').checked ? 1.5 : 0;
+    var gearLight = document.getElementById('gear-light').checked ? 0.5 : 0;
+    var gearAdj = gearCamera + gearLight;
+
+    var errorBox = document.getElementById('error-box');
+
+    /* Validate */
+    if (rawWeight === null || rawWeight <= 0) {
+      hideResults();
+      errorBox.classList.remove('show');
+      return;
+    }
+
+    var minW = unit === 'kg' ? 20 : 44;
+    var maxW = unit === 'kg' ? 300 : 660;
+    if (rawWeight < minW || rawWeight > maxW) {
+      hideResults();
+      document.getElementById('body-weight').classList.add('input-error');
+      errorBox.classList.add('show');
+      return;
+    }
+
+    document.getElementById('body-weight').classList.remove('input-error');
+    errorBox.classList.remove('show');
+
+    /* Convert to kg */
+    var bodyKg = (unit === 'lbs') ? rawWeight / 2.205 : rawWeight;
+
+    /* Calculate */
+    var base = bodyKg * waterFactor;
+    var total = base + suitAdj + tankAdj + expAdj + gearAdj;
+    total = Math.max(0, total);
+
+    lastResult = {
+      total: total,
+      base: base,
+      suitAdj: suitAdj,
+      tankAdj: tankAdj,
+      expAdj: expAdj,
+      gearAdj: gearAdj,
+      bodyKg: bodyKg,
+      waterFactor: waterFactor
+    };
+
+    renderResults(lastResult);
+  }
+
+  function hideResults() {
+    document.getElementById('result-card').classList.add('hidden');
+    document.getElementById('breakdown-card').classList.add('hidden');
+    document.getElementById('action-row').classList.add('hidden');
+    document.getElementById('mini-result').style.display = 'none';
+  }
+
+  function renderResults(r) {
+    var totalKg = r.total;
+    var totalLbs = totalKg * 2.205;
+
+    /* Mini preview */
+    var mini = document.getElementById('mini-result');
+    mini.style.display = '';
+    document.getElementById('mini-result-kg').textContent = (Math.round(totalKg * 10) / 10).toFixed(1) + ' kg';
+    document.getElementById('mini-result-lbs').textContent = '≈ ' + (Math.round(totalLbs * 10) / 10).toFixed(1) + ' lbs';
+
+    /* Full result */
+    var resultCard = document.getElementById('result-card');
+    resultCard.classList.remove('hidden');
+    document.getElementById('result-kg-display').textContent = (Math.round(totalKg * 10) / 10).toFixed(1) + ' kg';
+    document.getElementById('result-lbs-display').textContent = '≈ ' + (Math.round(totalLbs * 10) / 10).toFixed(1) + ' lbs';
+
+    /* Water type label */
+    var waterLabels = { '0.1': 'Saltwater (10% body wt)', '0.085': 'Brackish (8.5% body wt)', '0.07': 'Freshwater (7% body wt)' };
+    var waterKey = String(r.waterFactor);
+    var waterLabel = waterLabels[waterKey] || (Math.round(r.waterFactor * 1000) / 10) + '% body wt';
+
+    /* Suit label */
+    var suitEl = document.getElementById('suit-type');
+    var suitLabel = suitEl.options[suitEl.selectedIndex].text.split('(')[0].trim();
+
+    /* Tank label */
+    var tankEl = document.getElementById('tank-type');
+    var tankLabel = tankEl.options[tankEl.selectedIndex].text.split('(')[0].trim();
+
+    /* Exp label */
+    var expEl = document.getElementById('experience');
+    var expLabel = expEl.options[expEl.selectedIndex].text.split('(')[0].trim();
+
+    /* Gear label */
+    var gearParts = [];
+    if (document.getElementById('gear-camera').checked) gearParts.push('Camera');
+    if (document.getElementById('gear-light').checked) gearParts.push('Video light');
+    var gearLabel = gearParts.length ? gearParts.join(', ') : 'None';
+
+    /* Breakdown table */
+    document.getElementById('row-base-detail').textContent = waterLabel + ' · ' + (Math.round(r.bodyKg * 10) / 10).toFixed(1) + ' kg body';
+    document.getElementById('row-base-val').innerHTML = fmtAdj(r.base);
+    document.getElementById('row-suit-detail').textContent = suitLabel;
+    document.getElementById('row-suit-val').innerHTML = fmtAdj(r.suitAdj);
+    document.getElementById('row-tank-detail').textContent = tankLabel;
+    document.getElementById('row-tank-val').innerHTML = fmtAdj(r.tankAdj);
+    document.getElementById('row-exp-detail').textContent = expLabel;
+    document.getElementById('row-exp-val').innerHTML = fmtAdj(r.expAdj);
+    document.getElementById('row-gear-detail').textContent = gearLabel;
+    document.getElementById('row-gear-val').innerHTML = fmtAdj(r.gearAdj);
+    document.getElementById('row-total-val').textContent = (Math.round(totalKg * 10) / 10).toFixed(1) + ' kg (' + (Math.round(totalLbs * 10) / 10).toFixed(1) + ' lbs)';
+
+    document.getElementById('breakdown-card').classList.remove('hidden');
+    document.getElementById('action-row').classList.remove('hidden');
+  }
+
+  /* ── Copy summary ── */
+  function copySummary() {
+    if (!lastResult) return;
+    var r = lastResult;
+    var totalKg = r.total;
+    var totalLbs = totalKg * 2.205;
+
+    var suitEl = document.getElementById('suit-type');
+    var suitLabel = suitEl.options[suitEl.selectedIndex].text;
+    var tankEl = document.getElementById('tank-type');
+    var tankLabel = tankEl.options[tankEl.selectedIndex].text;
+    var expEl = document.getElementById('experience');
+    var expLabel = expEl.options[expEl.selectedIndex].text;
+    var waterEl = document.getElementById('water-type');
+    var waterLabel = waterEl.options[waterEl.selectedIndex].text;
+
+    var gearParts = [];
+    if (document.getElementById('gear-camera').checked) gearParts.push('Camera system (+1.5 kg)');
+    if (document.getElementById('gear-light').checked) gearParts.push('Heavy-duty video light (+0.5 kg)');
+
+    var bodyDisplay = unit === 'lbs'
+      ? parseFloat(document.getElementById('body-weight').value) + ' lbs (' + (Math.round(r.bodyKg * 10) / 10).toFixed(1) + ' kg)'
+      : (Math.round(r.bodyKg * 10) / 10).toFixed(1) + ' kg';
+
+    var lines = [
+      'Dive Weight Estimate — CalcNova',
+      '================================',
+      'Body weight: ' + bodyDisplay,
+      'Water type: ' + waterLabel,
+      'Exposure suit: ' + suitLabel,
+      'Tank type: ' + tankLabel,
+      'Experience: ' + expLabel,
+      gearParts.length ? 'Additional gear: ' + gearParts.join(', ') : '',
+      '--------------------------------',
+      'Base weight: ' + (Math.round(r.base * 10) / 10).toFixed(1) + ' kg',
+      'Suit adjustment: ' + (r.suitAdj >= 0 ? '+' : '') + (Math.round(r.suitAdj * 10) / 10).toFixed(1) + ' kg',
+      'Tank adjustment: ' + (r.tankAdj >= 0 ? '+' : '') + (Math.round(r.tankAdj * 10) / 10).toFixed(1) + ' kg',
+      'Experience adjustment: ' + (r.expAdj >= 0 ? '+' : '') + (Math.round(r.expAdj * 10) / 10).toFixed(1) + ' kg',
+      'Gear additions: +' + (Math.round(r.gearAdj * 10) / 10).toFixed(1) + ' kg',
+      '================================',
+      'RECOMMENDED WEIGHT: ' + (Math.round(totalKg * 10) / 10).toFixed(1) + ' kg (' + (Math.round(totalLbs * 10) / 10).toFixed(1) + ' lbs)',
+      '',
+      'Always perform a surface buoyancy check before diving.',
+      'This is an estimate only — verify with your instructor.',
+      'calcnova.co/dive-weight-calculator.html'
+    ].filter(function(l) { return l !== ''; }).join('\n');
+
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(lines).then(showToast).catch(function() { fallbackCopy(lines); });
+    } else {
+      fallbackCopy(lines);
+    }
+  }
+  window.copySummary = copySummary;
+
+  function fallbackCopy(text) {
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand('copy'); showToast(); } catch(e) {}
+    document.body.removeChild(ta);
+  }
+
+  function showToast(msg) {
+    var toast = document.getElementById('toast');
+    document.getElementById('toast-msg').textContent = msg || 'Summary copied!';
+    toast.classList.add('show');
+    setTimeout(function() { toast.classList.remove('show'); }, 2500);
+  }
+
+  /* ── FAQ accordion ── */
+  function toggleFaq(btn) {
+    var item = btn.parentElement;
+    var isOpen = item.classList.contains('open');
+    /* Close all */
+    var all = document.querySelectorAll('.faq-item.open');
+    for (var i = 0; i < all.length; i++) { all[i].classList.remove('open'); }
+    if (!isOpen) { item.classList.add('open'); }
+  }
+  window.toggleFaq = toggleFaq;
+
+  /* ── Init ── */
+  setUnit('kg');
+  calculate();
+
+})();
+</script>
+</body>
+</html>
