@@ -325,7 +325,7 @@
       <div class="form-group">
         <label class="form-label" for="target-o2">Target O₂ <span class="label-hint">(%)</span></label>
         <div class="input-with-unit">
-          <input type="number" id="target-o2" value="32" min="1" max="100" step="1" oninput="autoCalc()">
+          <input type="number" id="target-o2" value="32" min="4" max="100" step="1" oninput="autoCalc()">
           <span class="input-suffix">%</span>
         </div>
       </div>
@@ -584,11 +584,14 @@
       if (isNaN(pCurrent) || pCurrent < 0) return showError('Enter a valid current tank pressure.');
       if (pCurrent >= pFill) return showError('Current pressure must be less than target fill pressure.');
     }
-    if (fo2Target < 0.21) {
-      return showError('O₂ below 21% (hypoxic mixes) requires specialist technical training and is not supported here.');
-    }
-
     var isM = (unit === 'metric');
+
+    /* Hypoxic warning */
+    if (fo2Target < 0.18) {
+      showWarning('Hypoxic mix (O₂ < 18%): NOT breathable at the surface. This mix requires technical training, travel gas, and a team protocol. Ensure your cylinder is clearly labelled.');
+    } else if (fo2Target < 0.21) {
+      showWarning('Hypoxic mix (O₂ < 21%): may not be suitable for surface breathing. Ensure you have appropriate travel/deco gases and technical training.');
+    }
 
     /* Perform calculation */
     var pO2Add, pHeAdd, pAirAdd;
@@ -614,7 +617,11 @@
 
     /* Feasibility checks */
     if (pO2Add < -0.5) {
-      return showError('Cannot achieve target mix by adding O₂ and air. The existing gas has too high an O₂ fraction — bleed gas from the cylinder first or start from empty.');
+      if (fill === 'topup') {
+        return showError('Cannot achieve target mix — the existing gas has too much O₂. Bleed gas from the cylinder first or start from empty.');
+      } else {
+        return showError('Cannot achieve this O₂ level using air as a top-up gas. The air component alone provides more O₂ than your target. You would need a nitrogen or trimix top-up source instead.');
+      }
     }
     if (pO2Add < 0) pO2Add = 0; // negligible rounding
     if (pAirAdd < -0.5) {
