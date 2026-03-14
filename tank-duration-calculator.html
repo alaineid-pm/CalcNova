@@ -55,7 +55,7 @@
             "name": "What is SAC rate in scuba diving?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "SAC (Surface Air Consumption) rate is how many bar (or psi) of gas you breathe per minute at the surface. A typical recreational diver has a SAC of 15–20 bar/min on an AL80 tank. Your actual consumption at depth is SAC multiplied by the ATA (absolute pressure) at that depth."
+              "text": "SAC (Surface Air Consumption) rate is how many bar (or psi) of gas you breathe per minute at the surface. A typical recreational diver has a SAC of 1.5–2.5 bar/min on an AL80 tank. Your actual consumption at depth is SAC multiplied by the ATA (absolute pressure) at that depth."
             }
           },
           {
@@ -461,6 +461,39 @@
       background: rgba(16,185,129,.06);
     }
 
+    /* ── Tooltips ── */
+    .tooltip-wrap {
+      position: relative;
+      display: inline-flex;
+    }
+    .tooltip-icon {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 16px; height: 16px; border-radius: 50%;
+      background: var(--border); color: var(--text-muted);
+      font-size: 10px; font-weight: 800; cursor: help;
+      margin-left: 6px; flex-shrink: 0; line-height: 1;
+    }
+    .tooltip-icon:hover { background: var(--green); color: #fff; }
+    .tooltip-bubble {
+      display: none; position: absolute; bottom: calc(100% + 8px); left: 50%;
+      transform: translateX(-50%); width: 280px; padding: 12px 14px;
+      background: var(--text-primary); color: var(--bg); border-radius: 10px;
+      font-size: 12px; font-weight: 500; line-height: 1.55;
+      box-shadow: 0 6px 20px rgba(0,0,0,.25); z-index: 100;
+      pointer-events: none;
+    }
+    .tooltip-bubble::after {
+      content: ''; position: absolute; top: 100%; left: 50%;
+      transform: translateX(-50%); border: 6px solid transparent;
+      border-top-color: var(--text-primary);
+    }
+    .tooltip-icon:hover + .tooltip-bubble,
+    .tooltip-bubble:hover { display: block; }
+    @media (max-width: 600px) {
+      .tooltip-bubble { width: 220px; left: auto; right: -10px; transform: none; }
+      .tooltip-bubble::after { left: auto; right: 14px; transform: none; }
+    }
+
     /* ── SEO Content ── */
     .seo-content {
       background: var(--surface);
@@ -631,6 +664,13 @@
         <button class="toggle-btn active" id="btn-sac" onclick="setMode('sac')">SAC</button>
         <button class="toggle-btn" id="btn-rmv" onclick="setMode('rmv')">RMV</button>
       </div>
+      <div class="tooltip-wrap">
+        <span class="tooltip-icon" aria-label="SAC vs RMV info">?</span>
+        <div class="tooltip-bubble">
+          <strong>SAC</strong> (Surface Air Consumption) is measured in <strong>bar/min</strong> or psi/min — it's pressure-based and depends on the tank you used. Simple to calculate from a dive log.<br><br>
+          <strong>RMV</strong> (Respiratory Minute Volume) is measured in <strong>L/min</strong> or cu ft/min — it's volume-based and tank-independent. Preferred for technical diving and multi-tank planning.
+        </div>
+      </div>
     </div>
 
     <!-- Inputs -->
@@ -681,8 +721,8 @@
 
       <!-- SAC / RMV -->
       <div class="form-group">
-        <label for="rate" id="labelRate">SAC Rate <span class="label-hint" id="hintRate">(L/min)</span></label>
-        <input type="number" id="rate" placeholder="e.g. 15" min="0.1" max="200" step="0.1" oninput="autoCalc()">
+        <label for="rate" id="labelRate">SAC Rate <span class="label-hint" id="hintRate">(bar/min)</span></label>
+        <input type="number" id="rate" placeholder="e.g. 2" min="0.1" max="200" step="0.1" oninput="autoCalc()">
       </div>
 
       <!-- Water Type -->
@@ -788,12 +828,12 @@
     <h2>How SAC Rate Affects Tank Duration</h2>
     <p>Your <strong>SAC rate (Surface Air Consumption)</strong> is how many bar of gas you consume per minute breathing at the surface. It's unique to you and varies with your fitness, experience, water temperature, current, and workload.</p>
     <ul>
-      <li>Beginner recreational diver: 20–25 bar/min (on an AL80)</li>
-      <li>Experienced recreational diver: 14–18 bar/min</li>
-      <li>Highly experienced / technical diver: 10–13 bar/min</li>
+      <li>Beginner recreational diver: 2.0–2.5 bar/min (on an AL80)</li>
+      <li>Experienced recreational diver: 1.5–2.0 bar/min</li>
+      <li>Highly experienced / technical diver: 1.0–1.5 bar/min</li>
     </ul>
-    <p>Your <strong>RMV (Respiratory Minute Volume)</strong> is the same concept expressed in liters per minute, independent of which tank you're using. A typical RMV is 12–20 L/min at the surface. Because RMV is tank-agnostic, it's the preferred metric for technical gas planning.</p>
-    <p>The relationship between the two: <code>RMV = SAC × tank_volume_L / working_pressure_bar</code>. This calculator accepts either format so you can use whichever you have from your dive log.</p>
+    <p>Your <strong>RMV (Respiratory Minute Volume)</strong> is the same concept expressed in litres per minute, independent of which tank you're using. A typical RMV is 12–20 L/min at the surface. Because RMV is tank-agnostic, it's the preferred metric for technical gas planning.</p>
+    <p>The relationship between the two: <code>RMV = SAC (bar/min) × tank internal volume (L)</code>. For example, a SAC of 1.8 bar/min on an AL80 (11.1 L) gives an RMV of about 20 L/min. This calculator accepts either format so you can use whichever you have from your dive log.</p>
 
     <h2>Depth vs. Tank Duration: The ATA Relationship</h2>
     <p>Pressure is the core reason depth has such a dramatic effect on tank duration. The atmosphere exerts about 1 bar of pressure at sea level. Water adds roughly 1 bar for every 10 meters of depth (10.06 m in seawater, 10.33 m in freshwater).</p>
@@ -805,7 +845,7 @@
       <li>30 m (99 ft): 4 ATA — four times the gas per breath</li>
       <li>40 m (132 ft): 5 ATA — five times the gas per breath</li>
     </ul>
-    <p>This means if you breathe at 15 bar/min at the surface, you're consuming 60 bar/min at 30 meters. A tank that would last 60 minutes at the surface lasts only 15 minutes at that depth. The depth comparison table in this calculator makes that relationship immediately visible across common recreational depths.</p>
+    <p>This means if you have a SAC of 2 bar/min at the surface, you're consuming 8 bar/min at 30 metres. A full AL80 with 157 bar of usable gas that would last 78 minutes at the surface lasts only about 20 minutes at that depth. The depth comparison table in this calculator makes that relationship immediately visible across common recreational depths.</p>
 
     <h2>Tips for Better Air Management</h2>
     <h3>1. Log your SAC rate after every dive</h3>
@@ -827,12 +867,12 @@
 
       <div class="faq-item">
         <div class="faq-q" onclick="toggleFAQ(this)">How long does a typical AL80 last at 18 meters?</div>
-        <div class="faq-a">With a SAC rate of 18 bar/min and a full fill to 207 bar (keeping 50 bar reserve), you have 157 bar of usable gas. At 18 m the ATA is 2.8, giving a consumption rate of about 50 bar/min. That yields roughly 31 minutes. An experienced diver with a 13 bar/min SAC would get about 43 minutes from the same tank.</div>
+        <div class="faq-a">With a SAC of 2 bar/min and a full fill to 207 bar (keeping 50 bar reserve), you have 157 bar of usable gas. At 18 m the ATA is 2.8, giving a consumption rate of about 5.6 bar/min. That yields roughly 28 minutes. An experienced diver with a 1.5 bar/min SAC would get about 37 minutes from the same tank.</div>
       </div>
 
       <div class="faq-item">
         <div class="faq-q" onclick="toggleFAQ(this)">What is a good SAC rate for a recreational diver?</div>
-        <div class="faq-a">For recreational divers, a SAC rate of 14–18 bar/min on a standard AL80 is considered normal. Below 14 bar/min is excellent. Above 25 bar/min usually indicates a diver who is working hard, stressed, cold, or has not yet relaxed into the environment. SAC typically improves with every logged dive.</div>
+        <div class="faq-a">For recreational divers, a SAC rate of 1.5–2.5 bar/min on a standard AL80 is considered normal. Below 1.5 bar/min is excellent. Above 3 bar/min usually indicates a diver who is working hard, stressed, cold, or has not yet relaxed into the environment. SAC typically improves with every logged dive.</div>
       </div>
 
       <div class="faq-item">
@@ -924,6 +964,8 @@
     mode = m;
     document.getElementById('btn-sac').classList.toggle('active', m === 'sac');
     document.getElementById('btn-rmv').classList.toggle('active', m === 'rmv');
+    // Clear rate input when switching modes since units change
+    document.getElementById('rate').value = '';
     updateLabels();
     autoCalc();
   }
@@ -938,9 +980,11 @@
     document.getElementById('thDepth').textContent = 'Depth (' + (isM ? 'm' : 'ft') + ')';
 
     if (mode === 'sac') {
-      document.getElementById('labelRate').innerHTML = 'SAC Rate <span class="label-hint" id="hintRate">(' + (isM ? 'L/min' : 'cu ft/min') + ')</span>';
+      document.getElementById('labelRate').innerHTML = 'SAC Rate <span class="label-hint" id="hintRate">(' + (isM ? 'bar/min' : 'psi/min') + ')</span>';
+      document.getElementById('rate').placeholder = isM ? 'e.g. 2' : 'e.g. 25';
     } else {
       document.getElementById('labelRate').innerHTML = 'RMV <span class="label-hint" id="hintRate">(' + (isM ? 'L/min' : 'cu ft/min') + ')</span>';
+      document.getElementById('rate').placeholder = isM ? 'e.g. 15' : 'e.g. 0.5';
     }
   }
 
@@ -1021,16 +1065,25 @@
     var ata = getATA(depth, waterType);
     var duration, consumptionAtDepth, usableVol;
 
-    // Both SAC and RMV use volume-based calculation (L/min or cu ft/min)
+    // Compute usable volume (always needed for stats display)
     if (isM) {
-      usableVol = usableGas * tankParams.vol; // liters
-      consumptionAtDepth = rate * ata; // L/min at depth
+      usableVol = usableGas * tankParams.vol; // liters at surface
     } else {
       var tankFactor = tankParams.vol / tankParams.workingPres;
-      usableVol = usableGas * tankFactor; // cu ft
-      consumptionAtDepth = rate * ata; // cu ft/min
+      usableVol = usableGas * tankFactor; // cu ft at surface
     }
-    duration = usableVol / consumptionAtDepth;
+
+    if (mode === 'sac') {
+      // SAC is pressure-based (bar/min or psi/min) — tank-dependent
+      // duration = usableGas / (SAC × ATA)
+      consumptionAtDepth = rate * ata;
+      duration = usableGas / consumptionAtDepth;
+    } else {
+      // RMV is volume-based (L/min or cu ft/min) — tank-independent
+      // duration = usableVol / (RMV × ATA)
+      consumptionAtDepth = rate * ata;
+      duration = usableVol / consumptionAtDepth;
+    }
 
     var turnPres = fillPres - (usableGas / 3);
 
