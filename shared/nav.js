@@ -85,8 +85,8 @@
   function buildNav() {
     var dropdowns = '';
 
-    /* Tool category dropdowns */
-    CATEGORIES.filter(function (c) { return c.id !== 'guides'; }).forEach(function (cat) {
+    /* Tool category dropdowns (non-specialty, non-guides) */
+    CATEGORIES.filter(function (c) { return c.id !== 'guides' && !c.specialty; }).forEach(function (cat) {
       var tools = TOOLS.filter(function (t) { return t.category === cat.id; });
       if (!tools.length) return;
 
@@ -114,6 +114,41 @@
         + '</div>'
         + '</div>';
     });
+
+    /* "More ▾" dropdown for specialty categories */
+    var specialtyCats = CATEGORIES.filter(function (c) { return c.specialty; });
+    if (specialtyCats.length) {
+      var isMoreActive = currentTool && specialtyCats.some(function (c) { return c.id === currentTool.category; });
+      var moreItems = '';
+      specialtyCats.forEach(function (cat) {
+        var tools = TOOLS.filter(function (t) { return t.category === cat.id; });
+        if (!tools.length) return;
+        var landingUrl = cat.landingUrl || ('index.html#' + cat.id);
+        moreItems += '<li class="cn-dd-subcat-header">'
+          + '<a href="' + esc(landingUrl) + '" class="cn-dd-cat-link">'
+          + cat.emoji + ' ' + esc(cat.name) + ' (' + tools.length + ' tools)'
+          + '</a></li>';
+        tools.forEach(function (tool) {
+          var isCurrent = tool.id === currentId;
+          moreItems += '<li>'
+            + '<a href="' + esc(tool.url) + '" class="cn-dd-item' + (isCurrent ? ' current' : '') + '"'
+            + (isCurrent ? ' aria-current="page"' : '')
+            + ' title="' + esc(tool.description) + '">'
+            + '<span class="cn-dd-icon">' + tool.emoji + '</span>'
+            + '<span class="cn-dd-label">' + esc(tool.name) + '</span>'
+            + '</a></li>';
+        });
+      });
+      dropdowns += '<div class="cn-dropdown-wrap align-right" data-cat="more">'
+        + '<button class="cn-dropdown-btn' + (isMoreActive ? ' cat-active' : '') + '" type="button" aria-haspopup="true" aria-expanded="false">'
+        + '<span>More</span>'
+        + SVG_CHEVRON
+        + '</button>'
+        + '<div class="cn-dropdown-panel" role="menu">'
+        + '<ul>' + moreItems + '</ul>'
+        + '</div>'
+        + '</div>';
+    }
 
     /* Guides / Articles dropdown */
     var sortedArticles = ARTICLES.slice().sort(function (a, b) {
@@ -211,7 +246,7 @@
   function buildMobilePanel() {
     var accordions = '';
 
-    /* Tool categories */
+    /* Tool categories (all non-guides, including specialty) */
     CATEGORIES.filter(function (c) { return c.id !== 'guides'; }).forEach(function (cat) {
       var tools = TOOLS.filter(function (t) { return t.category === cat.id; });
       if (!tools.length) return;
@@ -288,7 +323,10 @@
 
     if (currentTool) {
       var cat = CATEGORIES.find(function (c) { return c.id === currentTool.category; });
-      if (cat) { catName = cat.name; catAnchor = 'index.html#' + cat.id; }
+      if (cat) {
+        catName = cat.name;
+        catAnchor = cat.specialty && cat.landingUrl ? cat.landingUrl : 'index.html#' + cat.id;
+      }
       items = [
         { name: 'Home', url: 'index.html' },
         { name: catName, url: catAnchor },
@@ -325,9 +363,12 @@
     if (currentTool) {
       var cat = CATEGORIES.find(function (c) { return c.id === currentTool.category; });
       var catName = cat ? cat.name : currentTool.category;
+      var catUrl = (cat && cat.specialty && cat.landingUrl)
+        ? baseUrl + '/' + cat.landingUrl
+        : baseUrl + '/#' + currentTool.category;
       items = [
         { pos: 1, name: 'Home',    url: baseUrl + '/' },
-        { pos: 2, name: catName,   url: baseUrl + '/#' + currentTool.category },
+        { pos: 2, name: catName,   url: catUrl },
         { pos: 3, name: currentTool.name, url: baseUrl + '/' + currentTool.url }
       ];
     } else if (currentArticle) {

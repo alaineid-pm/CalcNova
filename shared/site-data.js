@@ -31,7 +31,8 @@ var CALCNOVA_CATEGORIES = [
   { id: 'productivity', name: 'Productivity',      emoji: '⏱️', cssClass: 'productivity' },
   { id: 'utility',      name: 'Utility',           emoji: '🔧', cssClass: 'utility'      },
   { id: 'education',    name: 'Education',         emoji: '🎓', cssClass: 'education'    },
-  { id: 'guides',       name: 'Guides',            emoji: '📝', cssClass: 'articles'     }
+  { id: 'guides',       name: 'Guides',            emoji: '📝', cssClass: 'articles'     },
+  { id: 'scuba',        name: 'Scuba Diving',      emoji: '🤿', cssClass: 'scuba',       specialty: true, landingUrl: 'scuba-diving-calculators.html' }
 ];
 
 /* ── Tools ──────────────────────────────────────────────────── */
@@ -471,6 +472,68 @@ var CALCNOVA_TOOLS = [
     description: 'Create, study, and save flashcard decks right in your browser. No account needed.',
     related:     ['study-timer', 'grade-calculator', 'gpa-calculator'],
     badge:       'new'
+  },
+
+  /* ── Scuba Diving ─────────────────────────────────── */
+  {
+    id:          'nitrox-calculator',
+    name:        'Nitrox / MOD Calculator',
+    emoji:       '🫧',
+    category:    'scuba',
+    url:         'nitrox-calculator.html',
+    description: 'Calculate Maximum Operating Depth, PO₂ at depth, Best Mix, and Equivalent Air Depth for nitrox diving.',
+    related:     ['gas-blending', 'trimix-calculator', 'sac-rate'],
+    badge:       'new'
+  },
+  {
+    id:          'gas-blending',
+    name:        'Gas Blending Calculator',
+    emoji:       '⚗️',
+    category:    'scuba',
+    url:         'gas-blending-calculator.html',
+    description: 'Calculate how much O₂ and helium to add when blending nitrox or trimix. Supports fill from empty and top-up.',
+    related:     ['nitrox-calculator', 'trimix-calculator', 'tank-duration'],
+    badge:       'new'
+  },
+  {
+    id:          'dive-weight',
+    name:        'Dive Weight Calculator',
+    emoji:       '⚖️',
+    category:    'scuba',
+    url:         'dive-weight-calculator.html',
+    description: 'Estimate how much lead weight you need based on your body weight, suit, tank, and water type.',
+    related:     ['sac-rate', 'tank-duration', 'nitrox-calculator'],
+    badge:       'new'
+  },
+  {
+    id:          'sac-rate',
+    name:        'SAC / RMV Calculator',
+    emoji:       '💨',
+    category:    'scuba',
+    url:         'sac-rate-calculator.html',
+    description: 'Calculate your Surface Air Consumption and Respiratory Minute Volume from dive log data.',
+    related:     ['tank-duration', 'dive-weight', 'nitrox-calculator'],
+    badge:       'new'
+  },
+  {
+    id:          'tank-duration',
+    name:        'Tank Duration Calculator',
+    emoji:       '⏱️',
+    category:    'scuba',
+    url:         'tank-duration-calculator.html',
+    description: 'Estimate how long your tank will last at a given depth based on your breathing rate.',
+    related:     ['sac-rate', 'gas-blending', 'nitrox-calculator'],
+    badge:       'new'
+  },
+  {
+    id:          'trimix-calculator',
+    name:        'Trimix / Narcosis Calculator',
+    emoji:       '🧪',
+    category:    'scuba',
+    url:         'trimix-calculator.html',
+    description: 'Calculate Equivalent Narcotic Depth for trimix blends and find the best mix for your target depth.',
+    related:     ['nitrox-calculator', 'gas-blending', 'tank-duration'],
+    badge:       'new'
   }
 
 ];
@@ -695,6 +758,54 @@ var CALCNOVA_ARTICLES = [
     category:      'Security',
     subcategory:   'Online Safety',
     relatedTool:   'password-generator',
+    datePublished: '2026-03-14'
+  },
+  {
+    id:            'article-nitrox',
+    name:          'Nitrox Diving Explained',
+    emoji:         '🫧',
+    url:           'article-nitrox.html',
+    description:   'What nitrox is, how it works, and why enriched air makes your dives better.',
+    readTime:      '7 min',
+    category:      'Scuba Diving',
+    subcategory:   'Scuba Diving',
+    relatedTool:   'nitrox-calculator',
+    datePublished: '2026-03-14'
+  },
+  {
+    id:            'article-sac-rmv',
+    name:          'SAC and RMV Explained',
+    emoji:         '💨',
+    url:           'article-sac-rmv.html',
+    description:   'How to calculate your air consumption rate and use it for better gas planning.',
+    readTime:      '6 min',
+    category:      'Scuba Diving',
+    subcategory:   'Scuba Diving',
+    relatedTool:   'sac-rate',
+    datePublished: '2026-03-14'
+  },
+  {
+    id:            'article-weighting',
+    name:          'Scuba Weighting Guide',
+    emoji:         '⚖️',
+    url:           'article-weighting.html',
+    description:   'How to get your buoyancy right — the buoyancy check procedure, suit adjustments, and common mistakes.',
+    readTime:      '5 min',
+    category:      'Scuba Diving',
+    subcategory:   'Scuba Diving',
+    relatedTool:   'dive-weight',
+    datePublished: '2026-03-14'
+  },
+  {
+    id:            'article-trimix',
+    name:          'Introduction to Trimix',
+    emoji:         '🧪',
+    url:           'article-trimix.html',
+    description:   'Why helium matters for deep diving, how narcosis works, and when you need trimix.',
+    readTime:      '8 min',
+    category:      'Scuba Diving',
+    subcategory:   'Scuba Diving',
+    relatedTool:   'trimix-calculator',
     datePublished: '2026-03-14'
   }
 ];
