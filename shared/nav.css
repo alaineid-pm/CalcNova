@@ -211,19 +211,21 @@ body.dark .cn-dropdown-panel {
 }
 .cn-dd-viewall:hover { color: var(--green); }
 
-/* Multi-column guides dropdown (when > 8 articles) */
-.cn-dropdown-panel.two-col ul {
+/* Guides dropdown: subcategory group containers */
+.cn-dd-subcatgroups {
+  display: block;
+}
+.cn-dd-subcatgroups.two-col {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 0 8px;
+  gap: 4px 8px;
+  min-width: 420px;
 }
-
-/* Subcategory headers span full width in two-col grid */
-.cn-dropdown-panel.two-col ul .cn-dd-subcat-header {
-  grid-column: 1 / -1;
+.cn-dd-subcat-group {
+  display: flex;
+  flex-direction: column;
 }
-
-/* Subcategory section headers */
+/* Subcategory section header label */
 .cn-dd-subcat-header {
   font-size: 10px;
   font-weight: 800;
@@ -232,7 +234,6 @@ body.dark .cn-dropdown-panel {
   color: var(--text-muted);
   padding: 10px 10px 3px;
   pointer-events: none;
-  list-style: none;
 }
 
 /* ── NAV ACTIONS (right side) ──────────────────────────────── */

@@ -125,29 +125,39 @@
     var useSubcats    = sortedArticles.length > 8;
     var guideItems    = '';
 
+    var guidePanelContent = '';
+
     if (useSubcats) {
+      /* Build subcategory groups: each group is a self-contained div so the
+         CSS grid places whole groups into columns, not individual items. */
       var subcats = {};
+      var subcatOrder = [];
       sortedArticles.forEach(function (a) {
         var sc = a.subcategory || a.category || 'Other';
-        if (!subcats[sc]) subcats[sc] = [];
+        if (!subcats[sc]) { subcats[sc] = []; subcatOrder.push(sc); }
         subcats[sc].push(a);
       });
-      Object.keys(subcats).forEach(function (sc) {
-        guideItems += '<li class="cn-dd-subcat-header">' + esc(sc) + '</li>';
-        subcats[sc].forEach(function (a) {
-          guideItems += '<li><a href="' + esc(a.url) + '" class="cn-dd-item' + (a.id === currentId ? ' current' : '') + '">'
+      var groupsHtml = '';
+      subcatOrder.forEach(function (sc) {
+        var links = subcats[sc].map(function (a) {
+          return '<a href="' + esc(a.url) + '" class="cn-dd-item' + (a.id === currentId ? ' current' : '') + '">'
             + '<span class="cn-dd-icon">' + a.emoji + '</span>'
             + '<span class="cn-dd-label">' + esc(a.name) + '</span>'
-            + '</a></li>';
-        });
+            + '</a>';
+        }).join('');
+        groupsHtml += '<div class="cn-dd-subcat-group">'
+          + '<div class="cn-dd-subcat-header">' + esc(sc) + '</div>'
+          + links
+          + '</div>';
       });
+      guidePanelContent = '<div class="cn-dd-subcatgroups' + (useMultiCol ? ' two-col' : '') + '">' + groupsHtml + '</div>';
     } else {
-      guideItems = sortedArticles.map(function (a) {
+      guidePanelContent = '<ul>' + sortedArticles.map(function (a) {
         return '<li><a href="' + esc(a.url) + '" class="cn-dd-item' + (a.id === currentId ? ' current' : '') + '">'
           + '<span class="cn-dd-icon">' + a.emoji + '</span>'
           + '<span class="cn-dd-label">' + esc(a.name) + '</span>'
           + '</a></li>';
-      }).join('');
+      }).join('') + '</ul>';
     }
 
     dropdowns += '<div class="cn-dropdown-wrap align-right" data-cat="guides">'
@@ -156,8 +166,8 @@
       + '<span>Guides</span>'
       + SVG_CHEVRON
       + '</button>'
-      + '<div class="cn-dropdown-panel' + (useMultiCol ? ' two-col' : '') + '" role="menu">'
-      + '<ul>' + guideItems + '</ul>'
+      + '<div class="cn-dropdown-panel" role="menu">'
+      + guidePanelContent
       + '<a href="guides.html" class="cn-dd-viewall">View all guides &rarr;</a>'
       + '</div>'
       + '</div>';
