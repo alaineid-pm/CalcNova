@@ -3,22 +3,83 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Savings Goal Calculator — Plan Your Savings | CalcNova</title>
-  <meta name="description" content="Free savings goal calculator. Find out how much to save monthly or how long it takes to reach your financial goal — with interest. No login required.">
+  <title>Savings Goal Calculator — How Much to Save & How Long It Takes | CalcNova</title>
+  <meta name="description" content="Free savings goal calculator: find how much to save monthly to hit a target, or how long it takes to reach your goal with a set contribution. Includes interest. No sign-up needed.">
 
-  <meta property="og:title" content="Savings Goal Calculator — Plan Your Savings | CalcNova">
-  <meta property="og:description" content="Free savings goal calculator. Find out how much to save monthly or how long it takes to reach your financial goal.">
+  <!-- Canonical -->
+  <link rel="canonical" href="https://calcnova.co/savings-goal.html" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Savings Goal Calculator — How Much to Save & How Long It Takes | CalcNova">
+  <meta property="og:description" content="Free savings goal calculator: find your required monthly savings or time to goal, including interest. No sign-up needed.">
   <meta property="og:type" content="website">
+  <meta property="og:url" content="https://calcnova.co/savings-goal.html">
+  <meta property="og:site_name" content="CalcNova">
 
   <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "FinancialProduct",
-    "name": "Savings Goal Calculator",
-    "description": "Free savings goal calculator with interest. Plan monthly deposits or find how long to reach your goal.",
-    "provider": { "@type": "Organization", "name": "CalcNova" },
-    "feesAndCommissionsSpecification": "Free to use, no login required."
-  }
+  [
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": "Savings Goal Calculator — How Much to Save & How Long It Takes",
+      "url": "https://calcnova.co/savings-goal.html",
+      "description": "Free savings goal calculator with interest. Find required monthly deposits or time to reach any financial goal.",
+      "isPartOf": { "@type": "WebSite", "name": "CalcNova", "url": "https://calcnova.co/" },
+      "breadcrumb": {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://calcnova.co/" },
+          { "@type": "ListItem", "position": 2, "name": "Savings Goal Calculator", "item": "https://calcnova.co/savings-goal.html" }
+        ]
+      }
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How much should I save each month to reach a goal?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The required monthly savings depends on your target amount, time horizon, starting balance, and expected interest rate. The formula is: PMT = (FV - PV × (1+r)^n) × r / ((1+r)^n - 1), where FV is your goal, PV is starting balance, r is monthly rate, and n is months. For example, to save $20,000 in 3 years starting from zero at 4% annual interest, you need about $524/month. Use the calculator above to get your exact number instantly."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How long will it take to save a certain amount?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Time to goal depends on your monthly contribution, starting balance, target, and interest rate. At $500/month with no starting balance and 4% interest, you can save $10,000 in about 19 months, $50,000 in about 8 years. Higher interest rates compress the timeline, especially for long goals. Switch the calculator to 'How long?' mode and enter your monthly contribution to find your exact timeline."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Where should I keep my savings goal money?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "For short-term goals (under 3 years), keep savings in a high-yield savings account (HYSA) or money market account — these offer 4–5% interest with full liquidity and no risk to principal. For medium-term goals (3–7 years), GICs or CDs can lock in higher rates. For long-term goals (7+ years), a diversified investment portfolio typically outperforms savings accounts, though with more short-term volatility. Avoid investing money you'll need within 2–3 years in the stock market."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How does interest affect a savings goal?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Interest reduces how much you need to contribute from your own pocket. For example, saving $30,000 in 5 years with no interest requires $500/month. At 4% annual interest, you only need about $453/month — interest covers the rest. Over longer timeframes, the impact is even larger: interest can account for 30–50% of your total balance on a 10-year goal. The higher the rate and the longer the timeline, the more interest does the heavy lifting."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is a realistic savings rate?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Common savings benchmarks: the 50/30/20 rule suggests saving 20% of take-home income. For retirement, many advisors recommend saving 15% of gross income. For specific goals, work backwards from the target amount and deadline — this calculator shows exactly what monthly contribution is needed. Even starting with a small amount and increasing contributions annually (a 'savings rate escalator') can dramatically accelerate goal achievement."
+          }
+        }
+      ]
+    }
+  ]
   </script>
 
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -34,7 +95,7 @@
       padding: 38px 32px;
       margin-bottom: 20px;
     }
-    .hero-title { font-size: 26px; font-weight: 800; letter-spacing: -.5px; }
+    .hero-title { font-size: 26px; font-weight: 800; letter-spacing: -.5px; margin: 0; padding: 0; }
     .hero-title span {
       background: linear-gradient(135deg, var(--green), var(--purple));
       -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
@@ -231,10 +292,19 @@
     }
 
     /* ── PRINT ── */
+    /* ── SEO SECTION ── */
+    .seo-section {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 18px; padding: 28px 28px 24px; margin-top: 24px;
+    }
+    .seo-section h2 { font-size: 18px; font-weight: 700; color: var(--text-primary); margin-bottom: 10px; }
+    .seo-section h3 { font-size: 15px; font-weight: 600; color: var(--text-primary); margin-top: 20px; margin-bottom: 8px; }
+    .seo-section p  { font-size: 14px; color: var(--text-secondary); line-height: 1.7; }
+
     @media print {
       body { background: white !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
       body::before { display: none; }
-      header, .action-row, #toast,
+      header, .action-row, #toast, .seo-section,
       .nav-tools-wrap, .donate-btn,
       .two-col, .seg-toggle-wrap { display: none !important; }
       .mega-menu, .menu-overlay, .site-footer, .footer-disclaimer { display: none !important; }
@@ -276,7 +346,7 @@
 
   <!-- HERO -->
   <div class="hero">
-    <div class="hero-title">Savings Goal <span>Calculator</span></div>
+    <h1 class="hero-title">Savings Goal <span>Calculator</span></h1>
     <div class="hero-desc">Plan how much to save each month — or find out how long it takes to reach your goal,<br>factoring in interest and existing savings.</div>
   </div>
 
@@ -421,6 +491,54 @@
         </div>
       </div>
       <canvas id="chart" height="260"></canvas>
+    </div>
+
+    <!-- SEO SECTION -->
+    <div class="seo-section">
+      <h2>How to Use This Savings Goal Calculator</h2>
+      <p>Choose a mode: <strong>How much to save?</strong> — enter your goal, time horizon, starting balance, and interest rate to find the required monthly deposit. Or <strong>How long to save?</strong> — enter your monthly contribution to find the timeline. The chart shows your balance growing over time, split between contributions and interest earned.</p>
+
+      <h3>How Much Should I Save Monthly to Reach a Goal?</h3>
+      <p>Divide your target by the number of months, then adjust for interest using the future value of annuity formula: <strong>PMT = (FV − PV × (1+r)^n) × r / ((1+r)^n − 1)</strong>. In practice, interest reduces the required monthly contribution — especially over longer timeframes. For a $20,000 goal in 3 years at 4% annual interest starting from zero, you need about $524/month. Without interest, it would be $556/month — the interest saves you $32/month and ~$1,150 total.</p>
+
+      <h3>How Long Does It Take to Save a Specific Amount?</h3>
+      <p>Time to goal = log(FV × r / PMT + 1) / log(1+r), where FV is your goal, PMT is monthly payment, and r is monthly rate. In practice: $300/month at 4% interest takes about 5.5 years to reach $20,000, or 21 years to reach $100,000. Doubling your contribution halves the timeline. A high interest rate compresses the timeline most noticeably for long goals — enter your numbers above to see the exact months.</p>
+
+      <h3>Where to Keep Savings by Goal Type</h3>
+      <p><strong>Short-term (under 2 years):</strong> High-yield savings account (HYSA) or money market — 4–5% interest, fully liquid, zero principal risk. <strong>Medium-term (2–7 years):</strong> GICs/CDs or short-term bond funds for slightly higher rates in exchange for less liquidity. <strong>Long-term (7+ years):</strong> A diversified stock and bond portfolio will likely outperform savings accounts substantially, though with more volatility. Never put money in the stock market that you need within 2–3 years.</p>
+
+      <h3>Savings Goal Examples</h3>
+      <p>
+        <strong>House down payment ($80,000 in 5 years, 4% interest):</strong> ~$1,213/month from zero, or ~$898/month with a $20,000 head start.<br>
+        <strong>New car ($25,000 in 2 years, 4%):</strong> ~$1,004/month from zero.<br>
+        <strong>Emergency fund ($15,000 in 18 months, 4%):</strong> ~$804/month from zero.<br>
+        <strong>Vacation ($5,000 in 12 months, 4%):</strong> ~$408/month from zero.
+      </p>
+
+      <h3>Tips to Reach Your Savings Goal Faster</h3>
+      <p>Automate the transfer on payday so it happens before you can spend it. Put any windfalls (tax refund, bonus, gift) directly toward the goal. Use a dedicated account — mixing goal savings with everyday money leads to accidental spending. Incrementally increase contributions: a 1% raise often goes unnoticed if you save it automatically. Track progress monthly — seeing the balance grow is a powerful motivator that compounds your commitment as well as your interest.</p>
+    </div>
+
+    <!-- RELATED CALCULATORS -->
+    <div class="seo-section" style="margin-top: 16px;">
+      <h2>Related Calculators</h2>
+      <ul style="margin: 12px 0 0; padding-left: 20px; display: flex; flex-direction: column; gap: 8px;">
+        <li style="font-size: 14px; color: var(--text-secondary); line-height: 1.5;">
+          <a href="compound-interest-calculator.html" style="color: var(--green); font-weight: 600; text-decoration: none;">Compound Interest Calculator</a> — Model long-term investment growth with contributions, withdrawals, and compounding frequency.
+        </li>
+        <li style="font-size: 14px; color: var(--text-secondary); line-height: 1.5;">
+          <a href="emergency-fund.html" style="color: var(--green); font-weight: 600; text-decoration: none;">Emergency Fund Calculator</a> — Calculate your safety-net target and how long it takes to build it.
+        </li>
+        <li style="font-size: 14px; color: var(--text-secondary); line-height: 1.5;">
+          <a href="mortgage-calculator.html" style="color: var(--green); font-weight: 600; text-decoration: none;">Mortgage Calculator</a> — Plan your down payment savings goal alongside your mortgage payment estimate.
+        </li>
+        <li style="font-size: 14px; color: var(--text-secondary); line-height: 1.5;">
+          <a href="fire-calculator.html" style="color: var(--green); font-weight: 600; text-decoration: none;">FIRE Calculator</a> — Use savings goal logic to plan your path to financial independence.
+        </li>
+        <li style="font-size: 14px; color: var(--text-secondary); line-height: 1.5;">
+          <a href="debt-payoff.html" style="color: var(--green); font-weight: 600; text-decoration: none;">Debt Payoff Planner</a> — Pay off debt before redirecting that payment into your savings goal.
+        </li>
+      </ul>
     </div>
 
   </div>
