@@ -66,6 +66,8 @@
   }
 
   /* SVGs ───────────────────────────────────────────────────── */
+  var SVG_KOFI = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>';
+
   var SVG_BARS = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">'
     + '<line x1="18" y1="20" x2="18" y2="10"/>'
     + '<line x1="12" y1="20" x2="12" y2="4"/>'
@@ -156,7 +158,7 @@
       + '</button>'
       + '<div class="cn-dropdown-panel' + (useMultiCol ? ' two-col' : '') + '" role="menu">'
       + '<ul>' + guideItems + '</ul>'
-      + '<a href="index.html#articles" class="cn-dd-viewall">View all guides &rarr;</a>'
+      + '<a href="guides.html" class="cn-dd-viewall">View all guides &rarr;</a>'
       + '</div>'
       + '</div>';
 
@@ -174,11 +176,9 @@
       +   '</div>'
       + '</div>'
       /* Ko-fi */
-      + '<a href="' + esc(SITE_CFG.kofiUrl || 'https://ko-fi.com/calcnova') + '" target="_blank" rel="noopener" class="cn-kofi-btn" title="Buy me a coffee">☕</a>'
+      + '<a href="' + esc(SITE_CFG.kofiUrl || 'https://ko-fi.com/calcnova') + '" target="_blank" rel="noopener" class="cn-kofi-btn" title="Support CalcNova on Ko-fi">' + SVG_KOFI + 'Support</a>'
       /* Dark mode */
       + '<button class="icon-btn cn-dark-btn" id="darkBtn" type="button" title="Toggle dark mode">🌙</button>'
-      /* GitHub */
-      + '<a href="' + esc(SITE_CFG.githubUrl || 'https://github.com/calcnova') + '" target="_blank" rel="noopener" class="cn-github-link" title="CalcNova on GitHub" aria-label="GitHub">' + SVG_GITHUB + '</a>'
       /* Hamburger */
       + '<button class="cn-hamburger" id="cn-hamburger" type="button" aria-label="Open menu" aria-expanded="false">'
       +   '<span></span><span></span><span></span>'
@@ -385,6 +385,7 @@
       cols += '<div class="cn-footer-col">'
         + '<div class="cn-footer-col-header">' + cat.emoji + ' ' + esc(cat.name) + '</div>'
         + '<ul class="cn-footer-col-links">' + links + '</ul>'
+        + '<a href="tools.html#' + cat.id + '" class="cn-footer-viewall">All tools &rarr;</a>'
         + '</div>';
     });
 
@@ -398,14 +399,14 @@
     cols += '<div class="cn-footer-col">'
       + '<div class="cn-footer-col-header">📝 Guides</div>'
       + '<ul class="cn-footer-col-links">' + artLinks + '</ul>'
+      + '<a href="guides.html" class="cn-footer-viewall">All guides &rarr;</a>'
       + '</div>';
 
     var disclaimerHtml = disclaimer
       ? '<div class="cn-footer-disclaimer">' + disclaimer + '</div>'
       : '';
 
-    var githubUrl = SITE_CFG.githubUrl || 'https://github.com/calcnova';
-    var kofiUrl   = SITE_CFG.kofiUrl   || 'https://ko-fi.com/calcnova';
+    var kofiUrl = SITE_CFG.kofiUrl || 'https://ko-fi.com/calcnova';
 
     return '<footer class="cn-footer" role="contentinfo">'
       + '<div class="cn-footer-inner">'
@@ -416,9 +417,7 @@
       +       '<span class="cn-footer-privacy">All calculations run in your browser. Your data never leaves your device.</span>'
       +     '</div>'
       +     '<div class="cn-footer-meta">'
-      +       '<a href="' + esc(githubUrl) + '" target="_blank" rel="noopener">GitHub</a>'
-      +       '<span class="cn-sep">·</span>'
-      +       '<a href="' + esc(kofiUrl) + '" target="_blank" rel="noopener">☕ Support</a>'
+      +       '<a href="' + esc(kofiUrl) + '" target="_blank" rel="noopener">Support on Ko-fi</a>'
       +       '<span class="cn-sep">·</span>'
       +       '<a href="privacy.html">Privacy</a>'
       +       '<span class="cn-sep">·</span>'
