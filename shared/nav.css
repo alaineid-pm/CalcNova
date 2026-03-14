@@ -315,27 +315,21 @@ body.dark .cn-search-expanded {
 
 /* Ko-fi button */
 .cn-kofi-btn {
-  display: flex; align-items: center; justify-content: center;
+  display: inline-flex; align-items: center; gap: 5px;
   height: 32px; border-radius: 100px;
   padding: 0 12px;
-  background: linear-gradient(135deg, #fd7e14, #e85d04);
+  background: linear-gradient(135deg, #ff5e5b, #ff3f81);
   color: #fff; text-decoration: none;
   font-size: 12px; font-weight: 700;
   white-space: nowrap;
   transition: all .15s;
   box-shadow: 0 2px 8px rgba(232,93,4,.3);
 }
-.cn-kofi-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(232,93,4,.4); }
+.cn-kofi-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(255,63,129,.4); }
+.cn-kofi-btn svg { width: 14px; height: 14px; flex-shrink: 0; }
 
-/* GitHub link */
-.cn-github-link {
-  display: flex; align-items: center; justify-content: center;
-  width: 36px; height: 36px; border-radius: 8px;
-  color: var(--text-muted); text-decoration: none;
-  transition: all .15s;
-}
-.cn-github-link:hover { background: var(--bg); color: var(--text-primary); }
-.cn-github-link svg { width: 17px; height: 17px; }
+/* GitHub link — hidden */
+.cn-github-link { display: none !important; }
 
 /* Hamburger (mobile only) */
 .cn-hamburger {
@@ -613,6 +607,13 @@ body.dark .cn-overlay { background: rgba(0,0,0,.6); }
 }
 .cn-footer-col-links a:hover { color: var(--green); }
 
+.cn-footer-viewall {
+  display: inline-block; margin-top: 10px;
+  font-size: 12px; font-weight: 700; color: var(--green);
+  text-decoration: none; transition: opacity .15s;
+}
+.cn-footer-viewall:hover { opacity: .7; }
+
 .cn-footer-bottom {
   padding: 20px 0 32px;
   display: flex; align-items: flex-start; justify-content: space-between;
@@ -670,25 +671,24 @@ body.dark .cn-overlay { background: rgba(0,0,0,.6); }
 }
 .donate-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 14px rgba(232,93,4,.45); }
 
-/* ── AD SLOTS ────────────────────────────────────────────────── */
-.ad-slot {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--surface);
-  border: 1px dashed var(--border);
-  border-radius: 8px;
-  overflow: hidden;
-}
-.ad-slot--leaderboard { min-height: 90px; margin: 12px 0 20px; }
-.ad-slot--rectangle  { min-height: 250px; margin: 20px 0; }
-.ad-slot::before {
-  content: attr(data-label);
-  font-size: 10px; font-weight: 700; color: var(--text-muted);
-  letter-spacing: 1px; text-transform: uppercase; pointer-events: none;
-}
+/* ── GLOBAL INPUT PREFIX/SUFFIX FIX ─────────────────────────── */
+/* Ensures $ / € / % prefixes don't overlap input text site-wide  */
+.has-prefix { position: relative; }
+.has-suffix { position: relative; }
+.has-prefix input,
+.has-prefix input[type="number"],
+.has-prefix input[type="text"] { padding-left: 30px !important; }
+.has-suffix input,
+.has-suffix input[type="number"],
+.has-suffix input[type="text"] { padding-right: 36px !important; }
+/* For pages using .input-with-prefix pattern */
+.input-with-prefix { position: relative; }
+.input-with-prefix input { padding-left: 30px !important; }
 
+/* ── AD SLOTS — HIDDEN (enable when ready for ads) ───────────── */
+.ad-slot { display: none !important; }
+/* When you're ready to enable ads, remove the line above and
+   replace placeholder divs with your AdSense <ins> code.        */
 /* ── HOMEPAGE TOOL DIRECTORY (auto-generated) ───────────────── */
 /* Badge pills on tool names */
 .cn-badge {

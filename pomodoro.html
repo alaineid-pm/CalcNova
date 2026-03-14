@@ -280,6 +280,57 @@
       .mode-tabs { flex-wrap: wrap; justify-content: center; }
       .stats-grid { grid-template-columns: 1fr 1fr; }
     }
+    /* ── Task input ── */
+    .task-input-wrap {
+      width: 100%; max-width: 340px; margin-bottom: 22px;
+      position: relative;
+    }
+    .task-input {
+      width: 100%; padding: 9px 14px; text-align: center;
+      border: 1.5px solid var(--border); border-radius: 10px;
+      font-family: var(--font); font-size: 13px; font-weight: 600;
+      background: var(--bg); color: var(--text-primary);
+      transition: border-color .15s;
+    }
+    .task-input:focus { outline: none; border-color: var(--green); }
+    .task-input::placeholder { color: var(--text-muted); font-weight: 400; }
+
+    /* ── Ring task name (shown below ring circle) ── */
+    .ring-task {
+      font-size: 13px; font-weight: 600; color: var(--green);
+      min-height: 18px; margin-bottom: 12px;
+      max-width: 240px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+      text-align: center; opacity: 0; transition: opacity .2s;
+    }
+    .ring-task.visible { opacity: 1; }
+
+    /* ── Paused state ── */
+    .ring-wrap.paused { opacity: 0.5; transition: opacity .25s; }
+
+    /* ── Last-minute pulse ── */
+    @keyframes lastMinutePulse {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.4; }
+    }
+    .ring-wrap.last-minute .ring-fg {
+      animation: lastMinutePulse 0.8s ease-in-out infinite;
+    }
+
+    /* ── Keyboard hint chips ── */
+    .kbd-hints {
+      display: flex; gap: 12px; margin-top: 14px; justify-content: center;
+    }
+    .kbd-hint {
+      font-size: 11px; color: var(--text-muted); font-weight: 500;
+      display: flex; align-items: center; gap: 3px;
+    }
+    kbd {
+      display: inline-block; padding: 1px 6px; border-radius: 4px;
+      border: 1px solid var(--border); background: var(--bg);
+      font-family: var(--mono); font-size: 10px; font-weight: 700;
+      color: var(--text-secondary); line-height: 1.7;
+    }
+
     .sr-only {
       position: absolute; width: 1px; height: 1px;
       padding: 0; margin: -1px; overflow: hidden;
@@ -322,6 +373,11 @@
         <button class="mode-tab" data-mode="long" onclick="setMode('long')">🛋️ Long Break</button>
       </div>
 
+      <!-- Task input -->
+      <div class="task-input-wrap">
+        <input type="text" id="taskInput" class="task-input" placeholder="What are you working on?" maxlength="60" autocomplete="off" spellcheck="false">
+      </div>
+
       <!-- Ring -->
       <div class="ring-wrap" id="ringWrap">
         <svg width="100%" height="100%" viewBox="0 0 240 240">
@@ -334,6 +390,9 @@
           <div class="ring-label" id="ringLabel">Work Session</div>
         </div>
       </div>
+
+      <!-- Task name below ring -->
+      <div class="ring-task" id="ringTask"></div>
 
       <!-- Session dots -->
       <div class="session-dots" id="sessionDots"></div>
@@ -353,6 +412,13 @@
             <polygon points="5 4 15 12 5 20 5 4"/><line x1="19" y1="5" x2="19" y2="19"/>
           </svg>
         </button>
+      </div><!-- /timer-controls -->
+
+      <!-- Keyboard hints -->
+      <div class="kbd-hints">
+        <span class="kbd-hint"><kbd>Space</kbd> Start/Pause</span>
+        <span class="kbd-hint"><kbd>R</kbd> Reset</span>
+        <span class="kbd-hint"><kbd>S</kbd> Skip</span>
       </div>
 
     </div><!-- /timer-card -->
@@ -449,6 +515,15 @@
           </label>
         </div>
 
+        <div class="setting-row">
+          <div class="setting-label"><span class="lbl-icon">🔔</span> Desktop notifications <small>when tab is hidden</small></div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="setNotif" onchange="toggleNotif()">
+            <div class="toggle-track"></div>
+            <div class="toggle-thumb"></div>
+          </label>
+        </div>
+
       </div><!-- /settings-card -->
 
       <!-- Tips -->
@@ -510,6 +585,7 @@
 /* ── State ── */
 var mode          = 'work';   // 'work' | 'short' | 'long'
 var isRunning     = false;
+var isPaused      = false;    // true when manually paused (not just stopped)
 var intervalId    = null;
 var totalSeconds  = 25 * 60;
 var remaining     = totalSeconds;
@@ -517,6 +593,7 @@ var sessionsInSet = 0;        // work sessions completed in current set
 var todayPomos    = 0;
 var todaySets     = 0;
 var todayStreak   = 0;
+var notifEnabled  = false;
 
 var settings = {
   work:      25,
@@ -531,6 +608,7 @@ var settings = {
 var STORAGE_KEY      = 'cn_pomo_settings';
 var STATS_KEY        = 'cn_pomo_stats';
 var STATS_DATE_KEY   = 'cn_pomo_stats_date';
+var NOTIF_KEY        = 'cn_pomo_notif';
 
 /* ── Audio (Web Audio API — no external files) ── */
 var audioCtx = null;
@@ -571,6 +649,38 @@ function playBreakEnd() {
 
 function playTick() {
   playTone(880, 'square', 0.05, 0.04);
+}
+
+/* ── Browser notifications ── */
+function loadNotifSetting() {
+  try { notifEnabled = localStorage.getItem(NOTIF_KEY) === '1'; } catch(e) {}
+  // If permission was revoked externally, reset
+  if (notifEnabled && window.Notification && Notification.permission !== 'granted') notifEnabled = false;
+  var el = document.getElementById('setNotif');
+  if (el) el.checked = notifEnabled;
+}
+
+function toggleNotif() {
+  var el = document.getElementById('setNotif');
+  if (!el) return;
+  if (!('Notification' in window)) { el.checked = false; return; }
+  if (el.checked) {
+    Notification.requestPermission().then(function(perm) {
+      notifEnabled = perm === 'granted';
+      el.checked = notifEnabled;
+      try { localStorage.setItem(NOTIF_KEY, notifEnabled ? '1' : '0'); } catch(e) {}
+    });
+  } else {
+    notifEnabled = false;
+    try { localStorage.setItem(NOTIF_KEY, '0'); } catch(e) {}
+  }
+}
+
+function sendNotif(title, body) {
+  if (!notifEnabled || !('Notification' in window) || Notification.permission !== 'granted') return;
+  // Only send if tab is hidden — toast handles visible tab
+  if (document.visibilityState === 'visible') return;
+  try { new Notification(title, { body: body }); } catch(e) {}
 }
 
 /* ── Persistence ── */
@@ -619,7 +729,10 @@ function durationFor(m) {
 /* ── Mode switch ── */
 function setMode(m, auto) {
   stopTimer();
+  isPaused = false;
   mode = m;
+  var ringWrap = document.getElementById('ringWrap');
+  if (ringWrap) ringWrap.classList.remove('last-minute', 'paused');
   totalSeconds = durationFor(m);
   remaining    = totalSeconds;
 
@@ -650,24 +763,42 @@ function startTimer() {
   try { getAudioCtx().resume(); } catch(e) {}
 
   isRunning = true;
+  isPaused  = false;
   document.getElementById('btnPlay').innerHTML = '⏸';
   document.getElementById('btnPlay').style.background =
     'linear-gradient(135deg,var(--pomodoro-color),color-mix(in srgb,var(--pomodoro-color) 80%,black))';
 
+  var ringWrap = document.getElementById('ringWrap');
+  if (ringWrap) {
+    ringWrap.classList.remove('paused');
+    // Re-apply last-minute if resuming with <= 60s left
+    if (remaining <= 60 && remaining > 0 && mode === 'work') {
+      ringWrap.classList.add('last-minute');
+    }
+  }
+
   clearInterval(intervalId);
   intervalId = setInterval(tick, 1000);
+  renderDots(); // fix: show current-session dot immediately
 }
 
 function pauseTimer() {
   isRunning = false;
+  isPaused  = true;
   document.getElementById('btnPlay').innerHTML = '▶';
   clearInterval(intervalId);
+  var ringWrap = document.getElementById('ringWrap');
+  if (ringWrap) { ringWrap.classList.add('paused'); ringWrap.classList.remove('last-minute'); }
+  updateDisplay(); // show "Paused" label
 }
 
 function stopTimer() {
   isRunning = false;
+  isPaused  = false;
   clearInterval(intervalId);
   document.getElementById('btnPlay').innerHTML = '▶';
+  var ringWrap = document.getElementById('ringWrap');
+  if (ringWrap) { ringWrap.classList.remove('paused', 'last-minute'); }
 }
 
 function resetTimer() {
@@ -685,9 +816,18 @@ function skipPhase() {
 function tick() {
   remaining--;
   updateDisplay();
+
+  // Last-minute visual warning (work sessions only)
+  var ringWrap = document.getElementById('ringWrap');
+  if (ringWrap && mode === 'work') {
+    if (remaining <= 60 && remaining > 0) ringWrap.classList.add('last-minute');
+    else ringWrap.classList.remove('last-minute');
+  }
+
   if (remaining <= 0) {
     clearInterval(intervalId);
     isRunning = false;
+    if (ringWrap) ringWrap.classList.remove('last-minute', 'paused');
     onComplete();
   }
 }
@@ -713,9 +853,11 @@ function onComplete() {
       sessionsInSet = 0;
       saveStats();
       showToast('🛋️', 'Great job! Time for a long break.');
+      sendNotif('Long break time! 🛋️', 'You completed ' + settings.interval + ' sessions. Take ' + settings.long + ' minutes.');
       setMode('long', settings.autoBreak);
     } else {
       showToast('☕', 'Session done! Take a short break.');
+      sendNotif('Short break! ☕', 'Session complete. Take ' + settings.short + ' minutes.');
       setMode('short', settings.autoBreak);
     }
     renderDots();
@@ -724,6 +866,7 @@ function onComplete() {
     // Break done → back to work
     playBreakEnd();
     showToast('🍅', 'Break over! Ready to focus?');
+    sendNotif('Break over! 🍅', 'Time to get back to work.');
     setMode('work', settings.autoWork);
   }
 
@@ -737,8 +880,18 @@ function updateDisplay() {
   var timeStr = pad(m) + ':' + pad(s);
   document.getElementById('ringTime').textContent = timeStr;
 
+  // Ring label: show "Paused" when paused, otherwise phase name
   var labels = { work: 'Work Session', short: 'Short Break', long: 'Long Break' };
-  document.getElementById('ringLabel').textContent = labels[mode] || 'Work Session';
+  document.getElementById('ringLabel').textContent = isPaused ? 'Paused' : (labels[mode] || 'Work Session');
+
+  // Task name below ring
+  var taskInput = document.getElementById('taskInput');
+  var ringTask  = document.getElementById('ringTask');
+  if (taskInput && ringTask) {
+    var taskVal = taskInput.value.trim();
+    ringTask.textContent = taskVal;
+    ringTask.classList.toggle('visible', taskVal.length > 0);
+  }
 
   // Ring progress
   var CIRCUMFERENCE = 2 * Math.PI * 108; // 678.58
@@ -746,8 +899,9 @@ function updateDisplay() {
   var offset   = CIRCUMFERENCE * (1 - fraction);
   document.getElementById('ringFg').style.strokeDashoffset = offset;
 
-  // Browser tab title (while running)
-  if (isRunning) document.title = timeStr + ' · Pomodoro · CalcNova';
+  // Browser tab title — include task name while running
+  var taskPrefix = (taskInput && taskInput.value.trim()) ? taskInput.value.trim() + ' · ' : '';
+  if (isRunning) document.title = timeStr + ' · ' + taskPrefix + 'Pomodoro · CalcNova';
   else           document.title = 'Pomodoro Timer · CalcNova';
 }
 
@@ -859,6 +1013,13 @@ loadStats();
 populateSettingsUI();
 totalSeconds = durationFor(mode);
 remaining    = totalSeconds;
+
+// Update display when task is typed
+document.addEventListener('DOMContentLoaded', function() {
+  var taskInput = document.getElementById('taskInput');
+  if (taskInput) taskInput.addEventListener('input', function() { updateDisplay(); });
+});
+
 // Wait for nav.js to inject before rendering
 </script>
 
@@ -877,6 +1038,7 @@ remaining    = totalSeconds;
     updateRingColor();
     renderDots();
     updateStats();
+    loadNotifSetting();
   })();
 </script>
 </body>
