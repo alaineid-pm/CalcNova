@@ -4,26 +4,83 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Emergency Fund Calculator — How Much Do You Need? | CalcNova</title>
-  <meta name="description" content="Free emergency fund calculator — find out how much you need saved, how long it will take, and track your progress toward financial security.">
+  <meta name="description" content="Free emergency fund calculator: find out exactly how much you need in your emergency fund based on your expenses and situation, how long it takes to build, and where to keep it. No sign-up needed.">
+
+  <!-- Canonical -->
+  <link rel="canonical" href="https://calcnova.co/emergency-fund.html" />
 
   <!-- Open Graph -->
   <meta property="og:title" content="Emergency Fund Calculator — How Much Do You Need? | CalcNova">
-  <meta property="og:description" content="Free emergency fund calculator — find out how much you need saved, how long it will take, and track your progress toward financial security.">
+  <meta property="og:description" content="Free emergency fund calculator: find your target amount, build timeline, and how much to save monthly. No sign-up needed.">
   <meta property="og:type" content="website">
+  <meta property="og:url" content="https://calcnova.co/emergency-fund.html">
+  <meta property="og:site_name" content="CalcNova">
 
-  <!-- JSON-LD Structured Data -->
+  <!-- JSON-LD: WebPage + FAQPage -->
   <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "FinancialProduct",
-    "name": "Emergency Fund Calculator",
-    "description": "Free emergency fund calculator to determine how much you need and how long it will take to build your safety net.",
-    "provider": {
-      "@type": "Organization",
-      "name": "CalcNova"
+  [
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": "Emergency Fund Calculator — How Much Do You Need?",
+      "url": "https://calcnova.co/emergency-fund.html",
+      "description": "Free emergency fund calculator: find your target amount, monthly savings required, and timeline to full financial security.",
+      "isPartOf": { "@type": "WebSite", "name": "CalcNova", "url": "https://calcnova.co/" },
+      "breadcrumb": {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://calcnova.co/" },
+          { "@type": "ListItem", "position": 2, "name": "Emergency Fund Calculator", "item": "https://calcnova.co/emergency-fund.html" }
+        ]
+      }
     },
-    "feesAndCommissionsSpecification": "Free to use, no login required."
-  }
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How much should I have in my emergency fund?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Most financial advisors recommend 3–6 months of essential living expenses. If you have a stable job with easy re-employment, 3 months may suffice. If you're self-employed, have irregular income, dependants, or work in a volatile industry, aim for 6–12 months. Your emergency fund should cover rent/mortgage, utilities, groceries, insurance, and minimum debt payments — not discretionary spending. Use the calculator above to find your personalised target."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Where should I keep my emergency fund?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Keep your emergency fund in a high-yield savings account (HYSA) or money market account — somewhere liquid, safe, and earning competitive interest (currently 4–5% in many markets). Do not invest it in stocks or long-term bonds: you need guaranteed access and no risk of the balance dropping when you need it most. Keep it separate from your everyday chequing account so you're not tempted to spend it, but not so locked away that you can't access it in 24–48 hours."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What counts as an emergency for an emergency fund?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "A true emergency is an unexpected, necessary expense: job loss, medical emergency, major car or home repair, or a family crisis. It is NOT a vacation, holiday gifts, a sale on something you want, or a planned expense you failed to budget for. Using your emergency fund for non-emergencies means you'll have nothing left when a real crisis hits. Planned large expenses (car purchase, home renovation, annual insurance) should have their own sinking funds."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Should I build an emergency fund or pay off debt first?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Most experts recommend a 'starter' emergency fund of $1,000–$2,000 first, then aggressively pay off high-interest debt (credit cards), then build a full 3–6 month emergency fund. The logic: without any cushion, any small unexpected expense goes back onto a credit card — undoing your debt progress. Once high-interest debt is gone, build the full fund before focusing on investing or lower-rate debt payoff."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How long does it take to build an emergency fund?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Timeline depends on your monthly expenses, target coverage (3 vs 6 months), existing savings, and how much you can set aside each month. If your essential expenses are $3,000/month and you need 3 months ($9,000), saving $500/month gets you there in 18 months — faster if you already have some savings. Use this calculator to find your exact timeline based on your numbers."
+          }
+        }
+      ]
+    }
+  ]
   </script>
 
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -39,7 +96,7 @@
       padding: 38px 32px;
       margin-bottom: 20px;
     }
-    .hero-title { font-size: 28px; font-weight: 800; letter-spacing: -.5px; margin-bottom: 8px; }
+    .hero-title { font-size: 28px; font-weight: 800; letter-spacing: -.5px; margin: 0 0 8px 0; padding: 0; }
     .hero-title span {
       background: linear-gradient(135deg, var(--green), var(--purple));
       -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
@@ -320,6 +377,15 @@
       .action-row { flex-direction: column; }
       .action-btn { justify-content: center; }
     }
+
+    /* ── SEO SECTION ── */
+    .seo-section {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 18px; padding: 28px 28px 24px; margin-top: 24px;
+    }
+    .seo-section h2 { font-size: 18px; font-weight: 700; color: var(--text-primary); margin-bottom: 10px; }
+    .seo-section h3 { font-size: 15px; font-weight: 600; color: var(--text-primary); margin-top: 20px; margin-bottom: 8px; }
+    .seo-section p  { font-size: 14px; color: var(--text-secondary); line-height: 1.7; }
   </style>
 </head>
 <body>
@@ -327,7 +393,7 @@
 
   <!-- HERO -->
   <div class="hero fade-in">
-    <div class="hero-title">Emergency Fund <span>Calculator</span></div>
+    <h1 class="hero-title">Emergency Fund <span>Calculator</span></h1>
     <div class="hero-desc">Find out how much you need in your emergency fund, how long it will take to build, and track your progress toward financial security.</div>
   </div>
 
@@ -512,6 +578,49 @@
       </button>
     </div>
 
+    <!-- SEO SECTION -->
+    <div class="seo-section">
+      <h2>How to Use This Emergency Fund Calculator</h2>
+      <p>Enter your essential monthly expenses — rent/mortgage, utilities, groceries, insurance, and minimum debt payments. Select your target coverage (3, 6, or 9 months), enter any existing savings, and set a monthly contribution. The calculator shows your target amount, months to reach it, and a timeline chart. If you've already fully funded your emergency fund, it tells you that too.</p>
+
+      <h3>How Much Should I Have in My Emergency Fund?</h3>
+      <p>The standard recommendation is <strong>3–6 months of essential living expenses</strong>. The right amount depends on your situation: 3 months is typically enough for dual-income households with stable employment and no dependants. 6 months is appropriate for single-income households, those with dependants, or anyone in a volatile industry. Self-employed individuals and those with highly variable income should aim for <strong>9–12 months</strong>. Count only essential expenses — not dining out or subscriptions — since you'd cut those immediately in a real emergency.</p>
+
+      <h3>Where Should I Keep My Emergency Fund?</h3>
+      <p>Your emergency fund needs to be <strong>liquid</strong> (accessible within 24–48 hours), <strong>safe</strong> (no risk of the balance dropping), and <strong>earning interest</strong>. The best options are high-yield savings accounts (HYSAs) or money market accounts, which currently offer 4–5% annual interest. Avoid keeping it in: a chequing account (earns no interest), the stock market (balance can drop 30–50% when you need it most), or locked-in GICs/CDs (can't access without penalty).</p>
+
+      <h3>What Counts as an Emergency?</h3>
+      <p>A genuine emergency is <strong>unexpected, necessary, and urgent</strong>: job loss, medical bill, emergency car repair, critical home repair (furnace, roof leak), or a family crisis. It is NOT: a planned vacation, holiday shopping, a sale on something you want, a car purchase you knew was coming, or any expense you simply didn't budget for. Misusing your emergency fund is the most common reason people end up back in debt after paying it off. For planned large expenses, build separate <strong>sinking funds</strong> alongside your emergency reserve.</p>
+
+      <h3>Emergency Fund vs. Debt Payoff — Which Comes First?</h3>
+      <p>Build a <strong>starter emergency fund of $1,000–$2,000 first</strong>, then focus on high-interest debt (credit cards), then build the full 3–6 month fund. The reason: without any buffer, the first unexpected $500 expense goes back onto a credit card, undoing your progress. Once your high-interest debt is cleared, complete your full emergency fund before investing or tackling lower-rate debt. This sequence is the foundation of most evidence-based personal finance frameworks.</p>
+
+      <h3>How to Build Your Emergency Fund Faster</h3>
+      <p>Automate a fixed transfer to your HYSA on every payday. Redirect any windfalls — tax refund, work bonus, gifts — entirely to the fund until it's complete. Temporarily reduce discretionary spending and redirect the difference. Sell unused items. Consider a side income source for 3–6 months. Even $200–$300/month gets a $9,000 fund fully built in under 3 years — and once funded, you never have to think about it again.</p>
+    </div>
+
+    <!-- RELATED CALCULATORS -->
+    <div class="seo-section" style="margin-top: 16px;">
+      <h2>Related Calculators</h2>
+      <ul style="margin: 12px 0 0; padding-left: 20px; display: flex; flex-direction: column; gap: 8px;">
+        <li style="font-size: 14px; color: var(--text-secondary); line-height: 1.5;">
+          <a href="savings-goal.html" style="color: var(--green); font-weight: 600; text-decoration: none;">Savings Goal Calculator</a> — Plan any other savings target with the same monthly contribution approach.
+        </li>
+        <li style="font-size: 14px; color: var(--text-secondary); line-height: 1.5;">
+          <a href="debt-payoff.html" style="color: var(--green); font-weight: 600; text-decoration: none;">Debt Payoff Planner</a> — Tackle high-interest debt before or after your emergency fund using snowball or avalanche.
+        </li>
+        <li style="font-size: 14px; color: var(--text-secondary); line-height: 1.5;">
+          <a href="compound-interest-calculator.html" style="color: var(--green); font-weight: 600; text-decoration: none;">Compound Interest Calculator</a> — Once your emergency fund is complete, see how your savings compound as investments.
+        </li>
+        <li style="font-size: 14px; color: var(--text-secondary); line-height: 1.5;">
+          <a href="mortgage-calculator.html" style="color: var(--green); font-weight: 600; text-decoration: none;">Mortgage Calculator</a> — Factor your emergency fund into your total housing affordability picture.
+        </li>
+        <li style="font-size: 14px; color: var(--text-secondary); line-height: 1.5;">
+          <a href="net-worth-tracker.html" style="color: var(--green); font-weight: 600; text-decoration: none;">Net Worth Tracker</a> — Track your emergency fund as part of your overall financial picture.
+        </li>
+      </ul>
+    </div>
+
   </div>
 
 </div>
@@ -521,6 +630,7 @@
 <script>
   window.CALCNOVA_PAGE = { id:'emergency-fund', disclaimer:'For informational purposes only. Not financial advice.' };
 </script>
+<script src="shared/site-data.js"></script>
 <script src="shared/nav.js"></script>
 <script>
 (function() {

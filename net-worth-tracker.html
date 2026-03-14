@@ -3,8 +3,41 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Net Worth Tracker — Assets & Liabilities | CalcNova</title>
-  <meta name="description" content="Free net worth tracker — add your assets and liabilities to calculate your total net worth instantly. No sign-up required.">
+  <title>Net Worth Calculator — Track Assets & Liabilities | CalcNova</title>
+  <meta name="description" content="Free net worth calculator: add your assets (savings, investments, property) and liabilities (mortgage, loans, credit cards) to calculate your net worth instantly. No sign-up needed.">
+  <link rel="canonical" href="https://calcnova.co/net-worth-tracker.html" />
+  <meta property="og:title" content="Net Worth Calculator — Track Assets & Liabilities | CalcNova" />
+  <meta property="og:description" content="Free net worth calculator: add your assets and liabilities to calculate your net worth instantly. Track your financial progress over time." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://calcnova.co/net-worth-tracker.html" />
+  <meta property="og:site_name" content="CalcNova" />
+  <script type="application/ld+json">
+  [
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": "Net Worth Calculator — Track Assets & Liabilities",
+      "url": "https://calcnova.co/net-worth-tracker.html",
+      "description": "Free net worth calculator: add assets and liabilities to calculate your net worth instantly.",
+      "isPartOf": { "@type": "WebSite", "name": "CalcNova", "url": "https://calcnova.co/" },
+      "breadcrumb": { "@type": "BreadcrumbList", "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://calcnova.co/" },
+        { "@type": "ListItem", "position": 2, "name": "Net Worth Calculator", "item": "https://calcnova.co/net-worth-tracker.html" }
+      ]}
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        { "@type": "Question", "name": "What is net worth?", "acceptedAnswer": { "@type": "Answer", "text": "Net worth is the total value of everything you own (assets) minus everything you owe (liabilities). Assets include cash, savings, investments, retirement accounts, real estate, and vehicles. Liabilities include mortgages, car loans, student loans, credit card balances, and personal loans. Net worth = Total Assets − Total Liabilities. A positive net worth means your assets exceed your debts; negative means you owe more than you own." }},
+        { "@type": "Question", "name": "What is a good net worth by age?", "acceptedAnswer": { "@type": "Answer", "text": "A common benchmark is to have a net worth equal to your annual income by age 30, 3× by 40, 6× by 50, and 8–10× by retirement. The median US net worth is around $192,000 overall, but varies dramatically by age: ~$39,000 for under-35, ~$135,000 for 35–44, ~$247,000 for 45–54. These are medians — averages are much higher due to the ultra-wealthy. A more useful metric is progress toward your own FIRE number." }},
+        { "@type": "Question", "name": "What should I include in my net worth calculation?", "acceptedAnswer": { "@type": "Answer", "text": "Assets to include: chequing and savings accounts, investment and brokerage accounts, retirement accounts (RRSP, TFSA, 401k, IRA), real estate market value, vehicle value (use current resale value), business ownership value, and valuable personal property. Liabilities to include: mortgage balance (not the home value), car loans, student loans, credit card balances, personal loans, and any other debts. Do NOT include the full home value as an asset — include both the market value as an asset and the mortgage as a liability." }},
+        { "@type": "Question", "name": "How often should I calculate my net worth?", "acceptedAnswer": { "@type": "Answer", "text": "Monthly is ideal for staying motivated and catching problems early. Quarterly is a reasonable minimum. Annual tracking at least gives you a year-over-year baseline. Tracking more frequently than monthly tends to cause anxiety from normal market fluctuations without providing additional insight. The goal is to see a general upward trend over years, not to react to month-to-month swings in investment values." }},
+        { "@type": "Question", "name": "How do I increase my net worth?", "acceptedAnswer": { "@type": "Answer", "text": "Net worth grows by increasing assets, decreasing liabilities, or both. Practical strategies: maximize contributions to tax-advantaged accounts (RRSP, TFSA, 401k), invest consistently in low-cost index funds, pay down high-interest debt aggressively, avoid depreciating assets (new cars bought on credit), build an emergency fund so debt isn't needed for unexpected expenses, and increase income through career growth or side income." }}
+      ]
+    }
+  ]
+  </script>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="shared/nav.css">
   <style>
@@ -19,7 +52,24 @@
       margin-bottom: 20px;
       display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;
     }
-    .hero-title { font-size: 26px; font-weight: 800; letter-spacing: -.5px; }
+    .hero-title { font-size: 26px; font-weight: 800; letter-spacing: -.5px; margin: 0; padding: 0; }
+    .seo-section {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 18px; padding: 28px 28px 24px; margin-top: 24px;
+    }
+    .seo-section h2 { font-size: 18px; font-weight: 700; color: var(--text-primary); margin-bottom: 10px; }
+    .seo-section h3 { font-size: 15px; font-weight: 600; color: var(--text-primary); margin-top: 20px; margin-bottom: 8px; }
+    .seo-section p  { font-size: 14px; color: var(--text-secondary); line-height: 1.7; }
+    .seo-section ul { font-size: 14px; color: var(--text-secondary); line-height: 1.7; padding-left: 20px; }
+    .related-links { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+    .related-links a {
+      display: inline-flex; align-items: center;
+      padding: 7px 14px; border-radius: 10px;
+      border: 1px solid var(--border); background: var(--bg);
+      font-size: 13px; font-weight: 600; color: var(--text-secondary);
+      text-decoration: none; transition: all .15s;
+    }
+    .related-links a:hover { border-color: var(--green); color: var(--green); }
     .hero-title span {
       background: linear-gradient(135deg, var(--green), var(--purple));
       -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
@@ -207,6 +257,7 @@
     /* ── PRINT ── */
     @media print {
       body::before { display: none; }
+      .seo-section { display: none !important; }
       .header-right .icon-btn,
       .header-right .nav-tools-wrap,
       .header-right .donate-btn,
@@ -260,7 +311,7 @@
     <!-- HERO -->
     <div class="hero">
       <div>
-        <div class="hero-title"><span>Net Worth Tracker</span></div>
+        <h1 class="hero-title"><span>Net Worth Tracker</span></h1>
         <div class="hero-desc">Add your assets and liabilities to see your total net worth. Updates live as you type.</div>
       </div>
       <div class="hero-formula">
@@ -346,6 +397,35 @@
     <!-- AD SLOT -->
     <div class="ad-slot ad-slot--rectangle" data-label="Ad Space"></div>
 
+    <!-- SEO CONTENT -->
+    <div class="seo-section">
+      <h2>What Is Net Worth and Why Should You Track It?</h2>
+      <p>Your net worth is the single most important number in personal finance. It equals everything you own (assets) minus everything you owe (liabilities). A positive net worth means your assets exceed your debts; a growing net worth over time is the clearest sign that you're building wealth — regardless of your income level.</p>
+
+      <h3>How to Calculate Net Worth</h3>
+      <p>Net Worth = Total Assets − Total Liabilities. Add up all your assets: chequing accounts, savings, investment accounts, retirement funds (RRSP, TFSA, 401k, IRA), real estate market value, and vehicle resale value. Then subtract all liabilities: mortgage balance, car loans, student loans, credit card balances, and personal loans. Use current market values, not purchase prices.</p>
+
+      <h3>Net Worth Benchmarks by Age</h3>
+      <p>A widely used rule of thumb (from The Millionaire Next Door): multiply your age by your gross annual income, then divide by 10 — that's your "expected" net worth. For example, a 35-year-old earning $80,000 would aim for a net worth of $280,000. The median U.S. net worth by age group (Federal Reserve 2022): under 35: ~$39,000 · ages 35–44: ~$135,000 · ages 45–54: ~$247,000 · ages 55–64: ~$364,000.</p>
+
+      <h3>How to Increase Your Net Worth</h3>
+      <p>There are only three levers: increase assets, decrease liabilities, or both. The most effective strategies: maximize tax-advantaged accounts (RRSP, TFSA, 401k) to compound wealth tax-free or tax-deferred; invest consistently in low-cost index funds; pay down high-interest debt aggressively; build an emergency fund so unexpected expenses don't push you into more debt; and avoid depreciating assets like new vehicles bought on credit.</p>
+
+      <h3>Why Track Net Worth Monthly?</h3>
+      <p>Monthly net worth tracking gives you a clear feedback loop on financial decisions. You can see the impact of debt payoff, investment contributions, and spending habits in real numbers. It motivates consistent action, helps you catch problems early (credit card balances creeping up, investments stagnating), and gives you a roadmap toward your FIRE number or retirement goal.</p>
+
+      <div style="margin-top: 22px;">
+        <strong style="font-size: 14px; color: var(--text-primary);">Related Financial Calculators</strong>
+        <div class="related-links">
+          <a href="fire-calculator.html">FIRE Calculator</a>
+          <a href="coast-fire-calculator.html">Coast FIRE Calculator</a>
+          <a href="savings-goal.html">Savings Goal Calculator</a>
+          <a href="debt-payoff.html">Debt Payoff Calculator</a>
+          <a href="emergency-fund.html">Emergency Fund Calculator</a>
+        </div>
+      </div>
+    </div>
+
   </div>
 
   <div id="toast"></div>
@@ -353,7 +433,8 @@
   <script>
     window.CALCNOVA_PAGE = { id:'net-worth-tracker', disclaimer:'For informational purposes only. Not financial advice.' };
   </script>
-  <script src="shared/nav.js"></script>
+  <script src="shared/site-data.js"></script>
+<script src="shared/nav.js"></script>
 
   <script>
   (function() {

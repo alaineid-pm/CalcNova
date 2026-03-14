@@ -3,27 +3,96 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CalcNova · Compound Interest Calculator</title>
-  <meta name="description" content="Free compound interest calculator with contributions, withdrawals, and compounding frequency options. See how your money grows over time — no login required." />
+  <title>Compound Interest Calculator — See How Your Money Grows Over Time | CalcNova</title>
+  <meta name="description" content="Free compound interest calculator: enter your principal, rate, and contributions to see exactly how your money grows with daily, monthly, or yearly compounding. No sign-up needed." />
+
+  <!-- Canonical -->
+  <link rel="canonical" href="https://calcnova.co/compound-interest-calculator.html" />
 
   <!-- Open Graph -->
-  <meta property="og:title" content="Compound Interest Calculator · CalcNova" />
-  <meta property="og:description" content="Free compound interest calculator with contributions, withdrawals, and compounding frequency options. See how your money grows over time — no login required." />
+  <meta property="og:title" content="Compound Interest Calculator — See How Your Money Grows | CalcNova" />
+  <meta property="og:description" content="Free compound interest calculator with contributions, withdrawals, and compounding frequency. See how your savings grow over time — no login required." />
   <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://calcnova.co/compound-interest-calculator.html" />
+  <meta property="og:site_name" content="CalcNova" />
 
-  <!-- JSON-LD Structured Data -->
+  <!-- JSON-LD: WebPage + FAQPage -->
   <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "FinancialProduct",
-    "name": "Compound Interest Calculator",
-    "description": "Free compound interest calculator with contributions, withdrawals, and compounding frequency options.",
-    "provider": {
-      "@type": "Organization",
-      "name": "CalcNova"
+  [
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": "Compound Interest Calculator — See How Your Money Grows Over Time",
+      "url": "https://calcnova.co/compound-interest-calculator.html",
+      "description": "Free compound interest calculator with contributions, withdrawals, and compounding frequency options.",
+      "isPartOf": {
+        "@type": "WebSite",
+        "name": "CalcNova",
+        "url": "https://calcnova.co/"
+      },
+      "breadcrumb": {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://calcnova.co/" },
+          { "@type": "ListItem", "position": 2, "name": "Compound Interest Calculator", "item": "https://calcnova.co/compound-interest-calculator.html" }
+        ]
+      }
     },
-    "feesAndCommissionsSpecification": "Free to use, no login required."
-  }
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is compound interest?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Compound interest is interest calculated on both the initial principal and the accumulated interest from previous periods. Unlike simple interest (which is calculated only on the principal), compound interest grows exponentially over time — which is why it's often called 'the eighth wonder of the world.' The more frequently interest compounds (daily vs. monthly vs. yearly), the faster your money grows."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I calculate compound interest?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The compound interest formula is: A = P(1 + r/n)^(nt), where A is the final amount, P is the principal (starting balance), r is the annual interest rate (as a decimal), n is the number of compounding periods per year, and t is the time in years. For example, $10,000 at 7% compounded annually for 20 years grows to $10,000 × (1 + 0.07)^20 = $38,697. This calculator handles contributions and withdrawals on top of this formula."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the difference between daily, monthly, and yearly compounding?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Compounding frequency determines how often interest is added to your balance. Daily compounding adds interest every day, monthly adds it once per month, and yearly once per year. More frequent compounding means slightly faster growth. On $10,000 at 7% over 20 years: yearly compounding yields ~$38,697; monthly compounding yields ~$40,318; daily compounding yields ~$40,388. The difference is meaningful over long time horizons."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the Rule of 72?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The Rule of 72 is a quick mental math shortcut: divide 72 by your annual interest rate to estimate how many years it takes to double your money. At 6%, your money doubles in roughly 72 ÷ 6 = 12 years. At 9%, it doubles in about 8 years. It's a handy approximation — not exact — but useful for quickly comparing investment options or interest rates."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How much will $10,000 grow with compound interest?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It depends on the rate and time. At 7% compounded annually: $10,000 grows to ~$19,672 in 10 years, ~$38,697 in 20 years, and ~$76,123 in 30 years. With monthly contributions of $200 added to that same $10,000 at 7% over 30 years, you'd end up with over $265,000. Use the calculator above to model your exact numbers."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does compound interest work the same way on debt?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes — and it works against you on debt. Credit card debt, for example, compounds daily at rates of 20–30%. A $5,000 credit card balance at 24% APR compounded daily grows to over $6,200 in just one year if left unpaid. This is why paying off high-interest debt quickly is one of the best financial moves you can make — the same compounding math that builds wealth also accelerates debt growth."
+          }
+        }
+      ]
+    }
+  ]
   </script>
 
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
@@ -48,7 +117,7 @@
       margin-bottom: 20px;
       display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;
     }
-    .hero-title { font-size: 26px; font-weight: 800; letter-spacing: -.5px; }
+    .hero-title { font-size: 26px; font-weight: 800; letter-spacing: -.5px; margin: 0; padding: 0; }
     .hero-title span {
       background: linear-gradient(135deg, var(--green), var(--purple));
       -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
@@ -426,7 +495,7 @@
   <!-- HERO -->
   <div class="hero">
     <div>
-      <div class="hero-title">Compound Interest <span>Calculator</span></div>
+      <h1 class="hero-title">Compound Interest <span>Calculator</span></h1>
       <div class="hero-desc">See how your money grows over time — powered by compounding frequency, <br/>contributions, and the magic of time.</div>
     </div>
     <div class="hero-formula">
@@ -641,6 +710,56 @@
         <tbody id="tbl-body"></tbody>
       </table>
     </div>
+  </div>
+
+  <!-- SEO SECTION -->
+  <div class="seo-section">
+    <h2>How to Use This Compound Interest Calculator</h2>
+    <p>Enter your starting balance (principal), annual interest rate, and time horizon. Choose a compounding frequency — daily, monthly, or yearly. Optionally add regular contributions (monthly deposits) or periodic withdrawals to model real-world savings or investment scenarios. The chart and table update instantly as you type.</p>
+
+    <h3>What Is Compound Interest?</h3>
+    <p>Compound interest is interest calculated on both your initial principal <em>and</em> the accumulated interest from all previous periods. Unlike simple interest — which is calculated only on the original principal — compound interest grows exponentially. The longer your money compounds, the more powerful the effect. This is why starting to invest early, even with small amounts, has such an outsized long-term impact.</p>
+
+    <h3>The Compound Interest Formula</h3>
+    <p>The standard formula is: <strong>A = P(1 + r/n)^(nt)</strong>, where A is the final amount, P is the principal, r is the annual interest rate (as a decimal), n is the number of compounding periods per year, and t is the time in years. When you add regular contributions, each contribution also compounds for its remaining time — the calculator handles all of this automatically, including mid-period deposits and withdrawals.</p>
+
+    <h3>Daily vs. Monthly vs. Yearly Compounding</h3>
+    <p>The more frequently interest is compounded, the faster your balance grows — but the differences are smaller than many people expect. On $10,000 at 7% over 20 years: <strong>yearly compounding</strong> yields approximately $38,697; <strong>monthly compounding</strong> yields approximately $40,318; <strong>daily compounding</strong> yields approximately $40,388. The compounding frequency matters most at high interest rates and over very long time horizons. For most savings accounts and index fund estimates, monthly is a reasonable default.</p>
+
+    <h3>The Rule of 72</h3>
+    <p>The Rule of 72 is a quick mental shortcut for estimating how long it takes to double your money: <strong>divide 72 by your annual rate</strong>. At 6%, your money doubles in roughly 12 years. At 9%, roughly 8 years. At 12%, roughly 6 years. It's an approximation, not exact, but it's useful for quickly comparing options or stress-testing an investment thesis without a calculator.</p>
+
+    <h3>How Much Will My Savings Grow?</h3>
+    <p>The answer depends heavily on your rate, time, and contributions. A single $10,000 investment at 7% compounded annually grows to approximately $19,672 after 10 years, $38,697 after 20 years, and $76,123 after 30 years. If you add $500/month to that starting balance at 7% over 30 years, your ending balance exceeds $650,000. Time is the most powerful variable — a 25-year-old who invests $200/month at 7% ends up with more than a 35-year-old investing $400/month at the same rate, simply because of compounding time.</p>
+
+    <h3>Compound Interest on Debt</h3>
+    <p>Compound interest works the same way on debt — but against you. Credit card debt at 24% APR compounded daily means a $5,000 balance left unpaid for one year grows to over $6,200. Student loans, personal loans, and buy-now-pay-later products all use compound interest. This is why paying off high-interest debt as quickly as possible is one of the highest-return financial moves available — you earn a guaranteed "return" equal to the interest rate you're eliminating.</p>
+
+    <h3>Tips to Maximize Compound Growth</h3>
+    <p>Start as early as possible — time is the variable with the most leverage. Make consistent contributions, even small ones; regularity beats timing. Reinvest all dividends and interest so they compound too. Minimize fees: a 1% annual fund fee seems small but reduces your ending balance by 20–25% over 30 years. Keep investments in tax-advantaged accounts (RRSP, TFSA, 401k, IRA) where possible so compound growth isn't eroded by annual tax on gains.</p>
+  </div>
+
+  <!-- RELATED CALCULATORS -->
+  <div class="seo-section" style="margin-top: 16px;">
+    <h2>Related Calculators</h2>
+    <p>Tools that pair well with compound interest planning:</p>
+    <ul style="margin: 12px 0 0; padding-left: 20px; display: flex; flex-direction: column; gap: 8px;">
+      <li style="font-size: 14px; color: var(--text-secondary); line-height: 1.5;">
+        <a href="coast-fire-calculator.html" style="color: var(--green); font-weight: 600; text-decoration: none;">Coast FIRE Calculator</a> — Find out how much you need saved today so compounding does the rest of the work.
+      </li>
+      <li style="font-size: 14px; color: var(--text-secondary); line-height: 1.5;">
+        <a href="savings-goal.html" style="color: var(--green); font-weight: 600; text-decoration: none;">Savings Goal Calculator</a> — Work backwards: how much do you need to save per month to hit a target?
+      </li>
+      <li style="font-size: 14px; color: var(--text-secondary); line-height: 1.5;">
+        <a href="fire-calculator.html" style="color: var(--green); font-weight: 600; text-decoration: none;">FIRE Calculator</a> — Model your full path to financial independence and early retirement.
+      </li>
+      <li style="font-size: 14px; color: var(--text-secondary); line-height: 1.5;">
+        <a href="mortgage-calculator.html" style="color: var(--green); font-weight: 600; text-decoration: none;">Mortgage Calculator</a> — See how compound interest works against you on a home loan.
+      </li>
+      <li style="font-size: 14px; color: var(--text-secondary); line-height: 1.5;">
+        <a href="net-worth-tracker.html" style="color: var(--green); font-weight: 600; text-decoration: none;">Net Worth Tracker</a> — Track your total assets and liabilities as your investments compound over time.
+      </li>
+    </ul>
   </div>
 
   <!-- nav.js injects footer here -->
@@ -1081,6 +1200,7 @@
     disclaimer: 'This calculator is for educational purposes only and does not constitute financial advice. Always consult a qualified financial advisor for personalized guidance.'
   };
 </script>
+<script src="shared/site-data.js"></script>
 <script src="shared/nav.js"></script>
 </body>
 </html>

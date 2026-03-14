@@ -3,8 +3,41 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CalcNova · World Clock</title>
-  <meta name="description" content="A clean world clock with multiple cities, offsets, and day/night indicator. Runs entirely in your browser." />
+  <title>World Clock — Compare Time Zones Across Cities | CalcNova</title>
+  <meta name="description" content="Free world clock: add multiple cities to compare current times, UTC offsets, and day/night status in real time. Perfect for remote teams and international scheduling." />
+  <link rel="canonical" href="https://calcnova.co/world-clock.html" />
+  <meta property="og:title" content="World Clock — Compare Time Zones Across Cities | CalcNova" />
+  <meta property="og:description" content="Compare current times across multiple cities instantly. See UTC offsets and day/night status for remote teams and international scheduling." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://calcnova.co/world-clock.html" />
+  <meta property="og:site_name" content="CalcNova" />
+  <script type="application/ld+json">
+  [
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": "World Clock — Compare Time Zones Across Cities",
+      "url": "https://calcnova.co/world-clock.html",
+      "description": "Free world clock tool: add multiple cities to see current time, UTC offset, and day/night status simultaneously.",
+      "isPartOf": { "@type": "WebSite", "name": "CalcNova", "url": "https://calcnova.co/" },
+      "breadcrumb": { "@type": "BreadcrumbList", "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://calcnova.co/" },
+        { "@type": "ListItem", "position": 2, "name": "World Clock", "item": "https://calcnova.co/world-clock.html" }
+      ]}
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        { "@type": "Question", "name": "What is UTC offset and how does it work?", "acceptedAnswer": { "@type": "Answer", "text": "UTC (Coordinated Universal Time) is the global time standard. A UTC offset tells you how many hours a location is ahead or behind UTC. For example, UTC+5:30 means that location is 5 hours and 30 minutes ahead of UTC (India Standard Time). Offsets range from UTC-12 to UTC+14 and change during daylight saving time periods." }},
+        { "@type": "Question", "name": "How do I find a good meeting time for international teams?", "acceptedAnswer": { "@type": "Answer", "text": "Add all team cities to the World Clock and compare their current times. Look for overlap during normal business hours (9 AM–5 PM). Common overlap windows: London–New York is 2–5 PM London / 9 AM–12 PM New York. London–Singapore overlap is narrow at 9–10 AM London / 5–6 PM Singapore." }},
+        { "@type": "Question", "name": "What is daylight saving time and which countries observe it?", "acceptedAnswer": { "@type": "Answer", "text": "Daylight saving time (DST) advances clocks by one hour in summer months. In North America, DST runs March to November. In Europe, March to October. Countries near the equator — India, China, Japan, most of Africa and Southeast Asia — do not observe DST, making them consistent year-round scheduling partners." }},
+        { "@type": "Question", "name": "Why do some cities have half-hour UTC offsets?", "acceptedAnswer": { "@type": "Answer", "text": "Some countries use 30- or 45-minute offsets for historical or geographic reasons. Examples: India (UTC+5:30), Nepal (UTC+5:45), Iran (UTC+3:30), Afghanistan (UTC+4:30), Myanmar (UTC+6:30). These were typically chosen to better align with solar noon in their region." }},
+        { "@type": "Question", "name": "What is the difference between GMT and UTC?", "acceptedAnswer": { "@type": "Answer", "text": "GMT (Greenwich Mean Time) and UTC are almost identical and used interchangeably in everyday scheduling. GMT is based on mean solar time at Greenwich, London. UTC is an atomic time standard — the more precise scientific reference. For practical scheduling, they are the same." }}
+      ]
+    }
+  ]
+  </script>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="shared/nav.css" />
 
@@ -19,7 +52,23 @@
       margin-bottom: 20px;
       display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;
     }
-    .hero-title { font-size: 26px; font-weight: 800; letter-spacing: -.5px; }
+    .hero-title { font-size: 26px; font-weight: 800; letter-spacing: -.5px; margin: 0; padding: 0; }
+    .seo-section {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 18px; padding: 28px 28px 24px; margin-top: 16px;
+    }
+    .seo-section h2 { font-size: 18px; font-weight: 700; color: var(--text-primary); margin-bottom: 10px; }
+    .seo-section h3 { font-size: 15px; font-weight: 600; color: var(--text-primary); margin-top: 20px; margin-bottom: 8px; }
+    .seo-section p  { font-size: 14px; color: var(--text-secondary); line-height: 1.7; }
+    .related-links { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+    .related-links a {
+      display: inline-flex; align-items: center;
+      padding: 7px 14px; border-radius: 10px;
+      border: 1px solid var(--border); background: var(--bg);
+      font-size: 13px; font-weight: 600; color: var(--text-secondary);
+      text-decoration: none; transition: all .15s;
+    }
+    .related-links a:hover { border-color: var(--green); color: var(--green); }
     .hero-title span {
       background: linear-gradient(135deg, var(--green), var(--purple));
       -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
@@ -204,6 +253,7 @@
     @media print {
       body { background: white !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
       body::before { display: none; }
+      .seo-section { display: none !important; }
       header, #toast, .icon-btn, .pill-badge, .nav-tools-wrap, .donate-btn,
       .mega-menu, .menu-overlay, .site-footer, .footer-disclaimer { display: none !important; }
       .app { padding: 0; max-width: 100%; }
@@ -220,7 +270,7 @@
     <div class="hero">
       <div>
         <div class="pill-badge">🕐 Multi-city · Offsets · Day/Night</div>
-        <div class="hero-title">World <span>Clock</span></div>
+        <h1 class="hero-title">World <span>Clock</span></h1>
         <div class="hero-desc">Add cities to compare time zones instantly — perfect for distributed teams.</div>
       </div>
 
@@ -244,6 +294,32 @@
 
     <div class="footer-note">
       <b>How it works:</b> This tool uses <code>Intl.DateTimeFormat</code> in your browser to format dates/times for each IANA time zone. Offsets may vary by date due to daylight saving rules.
+    </div>
+
+    <!-- SEO CONTENT -->
+    <div class="seo-section">
+      <h2>World Clock — Compare Time Zones Instantly</h2>
+      <p>This world clock lets you track the current local time in multiple cities simultaneously. Add any city from a library of 120+ locations and see live-updating times, UTC offsets, and day/night status side by side. All time calculations use the Intl.DateTimeFormat API with IANA time zone data, so daylight saving time transitions are handled automatically.</p>
+
+      <h3>How to Find the Best Meeting Time for Global Teams</h3>
+      <p>Add all relevant cities and look for overlap during normal business hours (9 AM–5 PM) in each location. Common cross-timezone meeting windows: London–New York: 2–5 PM London / 9 AM–12 PM New York. New York–London–Singapore: 8–9 AM ET is afternoon London and late evening Singapore — rotate meeting times to share the inconvenience fairly.</p>
+
+      <h3>Understanding UTC Offsets and Daylight Saving Time</h3>
+      <p>UTC (Coordinated Universal Time) is the global reference point. A UTC+5:30 offset means that location is 5.5 hours ahead of UTC. Offsets change during daylight saving time: the US switches in March/November, Europe in late March/October, and some regions observe DST on different schedules — creating weeks where gaps between regions temporarily change by ±1 hour.</p>
+
+      <h3>Countries That Do Not Observe Daylight Saving Time</h3>
+      <p>Many major business hubs have no DST and maintain fixed UTC offsets year-round: India (UTC+5:30), China (UTC+8), Japan (UTC+9), Singapore (UTC+8), UAE (UTC+4), Saudi Arabia (UTC+3), and most of Africa and Southeast Asia. This makes them easier to schedule against, as their time relationship with your location never changes.</p>
+
+      <div style="margin-top: 22px;">
+        <strong style="font-size: 14px; color: var(--text-primary);">Related Tools</strong>
+        <div class="related-links">
+          <a href="TimeConvertor.html">Time Zone Converter</a>
+          <a href="date-duration.html">Date Duration Calculator</a>
+          <a href="age-calculator.html">Age Calculator</a>
+          <a href="pomodoro.html">Pomodoro Timer</a>
+          <a href="unit-converter.html">Unit Converter</a>
+        </div>
+      </div>
     </div>
 
     <!-- nav.js injects footer here -->
@@ -657,6 +733,7 @@
     disclaimer: 'This tool formats times using your browser\'s Intl time zone data. Offsets can change due to daylight saving rules.'
   };
 </script>
+<script src="shared/site-data.js"></script>
 <script src="shared/nav.js"></script>
 
 </body>

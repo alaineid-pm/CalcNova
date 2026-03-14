@@ -3,8 +3,41 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Random Number Generator — Dice, Coins & More | CalcNova</title>
-  <meta name="description" content="Generate random numbers, roll dice, flip coins, and pick from lists — all using cryptographic randomness in your browser.">
+  <title>Random Number Generator — Dice, Coins &amp; List Picker | CalcNova</title>
+  <meta name="description" content="Free random number generator: generate numbers in any range, roll dice (d4–d100), flip coins, or pick random items from a list. Powered by cryptographic randomness — no sign-up needed.">
+  <link rel="canonical" href="https://calcnova.co/random-number.html" />
+  <meta property="og:title" content="Random Number Generator — Dice, Coins & List Picker | CalcNova" />
+  <meta property="og:description" content="Generate random numbers, roll dice, flip coins, or pick from a list — powered by cryptographic randomness. Free, private, browser-only." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://calcnova.co/random-number.html" />
+  <meta property="og:site_name" content="CalcNova" />
+  <script type="application/ld+json">
+  [
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": "Random Number Generator — Dice, Coins & List Picker",
+      "url": "https://calcnova.co/random-number.html",
+      "description": "Free random number generator: generate numbers in any range, roll dice, flip coins, or pick random items from a list.",
+      "isPartOf": { "@type": "WebSite", "name": "CalcNova", "url": "https://calcnova.co/" },
+      "breadcrumb": { "@type": "BreadcrumbList", "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://calcnova.co/" },
+        { "@type": "ListItem", "position": 2, "name": "Random Number Generator", "item": "https://calcnova.co/random-number.html" }
+      ]}
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        { "@type": "Question", "name": "How does a random number generator work?", "acceptedAnswer": { "@type": "Answer", "text": "This generator uses crypto.getRandomValues() — the same cryptographic random number API used for security-critical applications like password generation and encryption keys. It generates random bytes using hardware entropy sources in your device, which are then mapped to numbers in your desired range using rejection sampling to ensure a perfectly uniform distribution." }},
+        { "@type": "Question", "name": "Is this random number generator truly random?", "acceptedAnswer": { "@type": "Answer", "text": "This generator uses cryptographically secure randomness (CSPRNG) from your device's hardware entropy pool — significantly more random than typical software-based pseudo-random number generators (PRNGs) like Math.random(). It is suitable for lottery picks, giveaways, games, simulations, and any application requiring genuine unpredictability." }},
+        { "@type": "Question", "name": "What dice can I roll with this dice roller?", "acceptedAnswer": { "@type": "Answer", "text": "The dice roller supports all standard tabletop RPG dice: d4 (4 sides), d6 (standard cube), d8 (8 sides), d10 (10 sides), d12 (12 sides), d20 (the iconic D&D die), and d100 (percentile die). You can roll up to 10 dice simultaneously and see individual results plus the total — perfect for D&D, Pathfinder, or any tabletop game." }},
+        { "@type": "Question", "name": "Can I use this to pick a random winner for a giveaway?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Use the List Picker tab: paste all participant names (one per line), set 'How many to pick' to 1 (or more for multiple winners), and click 'Pick Random Items'. The selection uses cryptographically secure randomness and Fisher-Yates shuffling for a completely fair, unbiased draw." }},
+        { "@type": "Question", "name": "What is the probability of flipping heads 10 times in a row?", "acceptedAnswer": { "@type": "Answer", "text": "The probability of flipping heads n times in a row is (0.5)^n. For 10 heads in a row: (0.5)^10 = 1/1024 ≈ 0.098% chance on any given 10-flip sequence. For 5 heads in a row: 1/32 ≈ 3.1%. For 20 heads: 1/1,048,576 ≈ 0.0001%. Each flip is always 50/50 regardless of previous results — the 'gambler's fallacy' is the mistaken belief that past results influence future independent events." }}
+      ]
+    }
+  ]
+  </script>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="shared/nav.css">
   <style>
@@ -26,7 +59,23 @@
       margin-bottom: 28px;
       display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;
     }
-    .hero-title { font-size: 26px; font-weight: 800; letter-spacing: -.5px; }
+    .hero-title { font-size: 26px; font-weight: 800; letter-spacing: -.5px; margin: 0; padding: 0; }
+    .seo-section {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 18px; padding: 28px 28px 24px; margin-top: 0;
+    }
+    .seo-section h2 { font-size: 18px; font-weight: 700; color: var(--text-primary); margin-bottom: 10px; }
+    .seo-section h3 { font-size: 15px; font-weight: 600; color: var(--text-primary); margin-top: 20px; margin-bottom: 8px; }
+    .seo-section p  { font-size: 14px; color: var(--text-secondary); line-height: 1.7; }
+    .related-links { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+    .related-links a {
+      display: inline-flex; align-items: center;
+      padding: 7px 14px; border-radius: 10px;
+      border: 1px solid var(--border); background: var(--bg);
+      font-size: 13px; font-weight: 600; color: var(--text-secondary);
+      text-decoration: none; transition: all .15s;
+    }
+    .related-links a:hover { border-color: var(--green); color: var(--green); }
     .hero-title span {
       background: linear-gradient(135deg, var(--green), var(--purple));
       -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
@@ -359,6 +408,7 @@
     @media print {
       body { background: white !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
       body::before { display: none; }
+      .seo-section { display: none !important; }
       header, .action-row, #toast, .icon-btn, .pill-badge, .nav-tools-wrap, .donate-btn,
       .mega-menu, .menu-overlay, .site-footer, .footer-disclaimer,
       .tabs, .generate-btn, .history-card, .error-msg { display: none !important; }
@@ -379,7 +429,7 @@
     <div class="hero">
       <div>
         <div class="pill-badge">Crypto-Secure · Instant · Private</div>
-        <div class="hero-title">Random Number <span>Generator</span></div>
+        <h1 class="hero-title">Random Number <span>Generator</span></h1>
         <div class="hero-desc">Generate random numbers, roll dice, flip coins, or pick from a list — powered by cryptographic randomness, entirely in your browser.</div>
         <div class="hero-formula-tip">Source: <span class="hl">crypto.getRandomValues()</span></div>
       </div>
@@ -521,6 +571,32 @@
       </div>
     </div>
 
+    <!-- SEO CONTENT -->
+    <div class="seo-section">
+      <h2>Random Number Generator — Cryptographically Secure Randomness</h2>
+      <p>This generator uses <code>crypto.getRandomValues()</code> — the same cryptographic API used for security-critical applications. It draws on hardware entropy sources in your device, producing numbers that are statistically indistinguishable from true randomness. All modes (number range, dice, coin flip, list picker) use this same high-quality randomness source.</p>
+
+      <h3>Number Range Generator</h3>
+      <p>Generate one or multiple random integers in any range. Enable unique mode to ensure no duplicates — ideal for lottery draws, random sampling, or shuffling. The unique picker uses a Fisher-Yates shuffle for perfectly uniform selection without bias.</p>
+
+      <h3>Dice Roller — d4 Through d100</h3>
+      <p>Roll standard tabletop RPG dice: d4, d6, d8, d10, d12, d20, and d100 (percentile). Roll up to 10 dice at once and see individual results plus the total — perfect for D&D 5e, Pathfinder, Call of Cthulhu, or any TTRPG session. Average rolls: d6 = 3.5, d8 = 4.5, d12 = 6.5, d20 = 10.5.</p>
+
+      <h3>Fair Coin Flip and List Picker</h3>
+      <p>Flip up to 100 coins simultaneously and see heads/tails counts and percentages. The List Picker lets you paste any number of items and randomly select one or more winners — ideal for giveaways, team assignments, or decision-making. All selections are equally probable and unbiased.</p>
+
+      <div style="margin-top: 22px;">
+        <strong style="font-size: 14px; color: var(--text-primary);">Related Tools</strong>
+        <div class="related-links">
+          <a href="percentage-calculator.html">Percentage Calculator</a>
+          <a href="word-counter.html">Word Counter</a>
+          <a href="unit-converter.html">Unit Converter</a>
+          <a href="age-calculator.html">Age Calculator</a>
+          <a href="date-duration.html">Date Duration</a>
+        </div>
+      </div>
+    </div>
+
     <!-- nav.js injects footer here -->
   </div>
 
@@ -529,7 +605,8 @@
   <script>
     window.CALCNOVA_PAGE = { id:'random-number', disclaimer:'For informational purposes only.' };
   </script>
-  <script src="shared/nav.js"></script>
+  <script src="shared/site-data.js"></script>
+<script src="shared/nav.js"></script>
 
   <script>
   (function() {

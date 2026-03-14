@@ -3,8 +3,41 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pomodoro Timer · CalcNova</title>
-  <meta name="description" content="A clean, customizable Pomodoro Timer. Set work sessions, short breaks, and long breaks. Track your productivity with session counts and sound alerts.">
+  <title>Pomodoro Timer — Free Focus & Productivity Timer | CalcNova</title>
+  <meta name="description" content="Free Pomodoro timer with customizable 25-min work sessions, short breaks, and long breaks. Track focus sessions, get sound alerts, and boost productivity using the Pomodoro Technique.">
+  <link rel="canonical" href="https://calcnova.co/pomodoro.html" />
+  <meta property="og:title" content="Pomodoro Timer — Free Focus & Productivity Timer | CalcNova" />
+  <meta property="og:description" content="Free Pomodoro timer with customizable sessions and break intervals. Boost focus and productivity with the proven Pomodoro Technique — no sign-up needed." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://calcnova.co/pomodoro.html" />
+  <meta property="og:site_name" content="CalcNova" />
+  <script type="application/ld+json">
+  [
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": "Pomodoro Timer — Free Focus & Productivity Timer",
+      "url": "https://calcnova.co/pomodoro.html",
+      "description": "Free Pomodoro timer with customizable work sessions and break intervals for maximum productivity.",
+      "isPartOf": { "@type": "WebSite", "name": "CalcNova", "url": "https://calcnova.co/" },
+      "breadcrumb": { "@type": "BreadcrumbList", "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://calcnova.co/" },
+        { "@type": "ListItem", "position": 2, "name": "Pomodoro Timer", "item": "https://calcnova.co/pomodoro.html" }
+      ]}
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        { "@type": "Question", "name": "What is the Pomodoro Technique?", "acceptedAnswer": { "@type": "Answer", "text": "The Pomodoro Technique is a time management method developed by Francesco Cirillo in the late 1980s. It breaks work into focused 25-minute intervals (called 'Pomodoros') separated by short 5-minute breaks. After four Pomodoros, you take a longer 15-minute break. This rhythm leverages your brain's natural focus and recovery cycles to boost productivity and reduce mental fatigue." }},
+        { "@type": "Question", "name": "How long should a Pomodoro work session be?", "acceptedAnswer": { "@type": "Answer", "text": "The classic Pomodoro interval is 25 minutes, but many people customise it. Common adjustments: 20–30 min for standard tasks, 45–60 min for deep creative work, 15–20 min for studying. The key principle is single-tasking during the interval with no interruptions. Experiment to find what length keeps you focused without fatigue." }},
+        { "@type": "Question", "name": "Does the Pomodoro Technique actually work?", "acceptedAnswer": { "@type": "Answer", "text": "Research supports time-boxing as an effective productivity strategy. Benefits include reduced procrastination (starting a 25-min session is less daunting than 'working all day'), built-in break reminders that prevent burnout, natural gamification through session counting, and reduced context-switching. It works best for knowledge work and study tasks." }},
+        { "@type": "Question", "name": "When should I take a long break?", "acceptedAnswer": { "@type": "Answer", "text": "The classic rule is to take a long break (15–30 minutes) after every 4 completed Pomodoro sessions — roughly 2 hours of focused work. During a long break, step away from the screen: go for a walk, eat, or do light stretching. Avoid activities requiring focused attention, as your brain needs genuine recovery to maintain performance in the next set." }},
+        { "@type": "Question", "name": "What should I do during a Pomodoro break?", "acceptedAnswer": { "@type": "Answer", "text": "Short breaks (5 min): stand up and stretch, get water, look away from the screen. Avoid checking email or social media as they re-engage focus networks. Long breaks (15–30 min): take a walk, eat a snack, do breathing exercises, or have a non-work conversation. The goal is genuine mental disengagement so you return refreshed." }}
+      ]
+    }
+  ]
+  </script>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="shared/nav.css">
   <style>
@@ -247,12 +280,35 @@
       .mode-tabs { flex-wrap: wrap; justify-content: center; }
       .stats-grid { grid-template-columns: 1fr 1fr; }
     }
+    .sr-only {
+      position: absolute; width: 1px; height: 1px;
+      padding: 0; margin: -1px; overflow: hidden;
+      clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+    }
+    .seo-section {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 18px; padding: 28px 28px 24px; margin-top: 20px;
+    }
+    .seo-section h2 { font-size: 18px; font-weight: 700; color: var(--text-primary); margin-bottom: 10px; }
+    .seo-section h3 { font-size: 15px; font-weight: 600; color: var(--text-primary); margin-top: 20px; margin-bottom: 8px; }
+    .seo-section p  { font-size: 14px; color: var(--text-secondary); line-height: 1.7; }
+    .related-links { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+    .related-links a {
+      display: inline-flex; align-items: center;
+      padding: 7px 14px; border-radius: 10px;
+      border: 1px solid var(--border); background: var(--bg);
+      font-size: 13px; font-weight: 600; color: var(--text-secondary);
+      text-decoration: none; transition: all .15s;
+    }
+    .related-links a:hover { border-color: var(--green); color: var(--green); }
+    @media print { .seo-section { display: none !important; } }
   </style>
 </head>
 <body>
 <div class="app">
 
   <!-- nav.js injects header here -->
+  <h1 class="sr-only">Pomodoro Timer — Free Focus &amp; Productivity Timer</h1>
 
   <div class="pomo-layout">
 
@@ -409,6 +465,32 @@
 
     </div><!-- /side-panel -->
   </div><!-- /pomo-layout -->
+
+  <!-- SEO CONTENT -->
+  <div class="seo-section">
+    <h2>Pomodoro Timer — Boost Focus with the Pomodoro Technique</h2>
+    <p>The Pomodoro Technique is a time management method developed by Francesco Cirillo in the late 1980s. It breaks work into 25-minute focused intervals (Pomodoros) separated by 5-minute short breaks. After four Pomodoros, you take a longer 15-minute break. This rhythm aligns with your brain's natural focus and recovery cycles to maximize productivity and reduce mental fatigue.</p>
+
+    <h3>How to Use This Pomodoro Timer</h3>
+    <p>1. Choose one task to focus on. 2. Click Start (or press Space). 3. Work without interruption for 25 minutes. 4. Take a 5-minute short break when the timer rings. 5. Repeat. After 4 Pomodoros, take a 15-minute long break. Customize session lengths in the Settings panel — common variants: 50/10 (50 min work, 10 min break) for deep work, or 20/5 for tasks requiring frequent mental resets.</p>
+
+    <h3>Why the Pomodoro Technique Works</h3>
+    <p>Time-boxing reduces procrastination because starting a 25-minute session is psychologically easier than "working all day." Regular breaks prevent cognitive fatigue and maintain consistent performance throughout the day. Session counting provides intrinsic motivation — completing 8 Pomodoros in a day feels tangible. The technique also builds awareness of how long tasks actually take, improving future time estimation.</p>
+
+    <h3>Keyboard Shortcuts</h3>
+    <p><strong>Space</strong>: Start / Pause the timer. <strong>R</strong>: Reset current session to full duration. <strong>S</strong>: Skip to the next phase (useful when you finish early). Sound alerts use the Web Audio API — no audio files, no permissions needed.</p>
+
+    <div style="margin-top: 22px;">
+      <strong style="font-size: 14px; color: var(--text-primary);">Related Productivity Tools</strong>
+      <div class="related-links">
+        <a href="world-clock.html">World Clock</a>
+        <a href="date-duration.html">Date Duration</a>
+        <a href="word-counter.html">Word Counter</a>
+        <a href="random-number.html">Random Number Generator</a>
+        <a href="age-calculator.html">Age Calculator</a>
+      </div>
+    </div>
+  </div>
 
   <!-- nav.js injects footer here -->
 
@@ -786,6 +868,7 @@ remaining    = totalSeconds;
     disclaimer: 'Pomodoro Timer is for productivity planning purposes only.'
   };
 </script>
+<script src="shared/site-data.js"></script>
 <script src="shared/nav.js"></script>
 <script>
   // Post-injection init

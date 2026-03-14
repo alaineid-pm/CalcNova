@@ -3,8 +3,86 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Debt Payoff Calculator — Snowball vs Avalanche | CalcNova</title>
-  <meta name="description" content="Free debt payoff calculator — compare Snowball vs Avalanche strategies, see how extra payments save you money and time.">
+  <title>Debt Payoff Calculator — Snowball vs Avalanche Strategy | CalcNova</title>
+  <meta name="description" content="Free debt payoff calculator: compare Snowball vs Avalanche strategies side by side, see your payoff date, total interest saved, and how extra monthly payments accelerate your debt freedom. No sign-up needed.">
+
+  <!-- Canonical -->
+  <link rel="canonical" href="https://calcnova.co/debt-payoff.html" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Debt Payoff Calculator — Snowball vs Avalanche | CalcNova" />
+  <meta property="og:description" content="Free debt payoff calculator: compare Snowball vs Avalanche strategies, see your payoff date and how extra payments save you thousands in interest." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://calcnova.co/debt-payoff.html" />
+  <meta property="og:site_name" content="CalcNova" />
+
+  <!-- JSON-LD: WebPage + FAQPage -->
+  <script type="application/ld+json">
+  [
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": "Debt Payoff Calculator — Snowball vs Avalanche Strategy",
+      "url": "https://calcnova.co/debt-payoff.html",
+      "description": "Free debt payoff calculator: compare Snowball vs Avalanche strategies and see how extra payments accelerate your path to debt freedom.",
+      "isPartOf": { "@type": "WebSite", "name": "CalcNova", "url": "https://calcnova.co/" },
+      "breadcrumb": {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://calcnova.co/" },
+          { "@type": "ListItem", "position": 2, "name": "Debt Payoff Calculator", "item": "https://calcnova.co/debt-payoff.html" }
+        ]
+      }
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is the debt snowball method?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The debt snowball method involves paying off your debts from smallest balance to largest, regardless of interest rate. You make minimum payments on all debts and put any extra money toward the smallest balance. Once it's paid off, you roll that payment to the next smallest. The key advantage is psychological: early wins keep you motivated. Research shows the snowball method leads to higher debt payoff completion rates than purely mathematical approaches."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the debt avalanche method?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The debt avalanche method prioritizes paying off debts with the highest interest rate first, regardless of balance size. You make minimum payments on all debts and direct extra money to the highest-rate debt. Once it's gone, you move to the next highest rate. The avalanche method saves the most money in total interest and pays off debt the fastest mathematically — but requires patience, since high-rate debts are often also high-balance debts."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Which is better: debt snowball or debt avalanche?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Mathematically, the avalanche method wins — it saves more total interest and pays debt off faster. But the snowball method often wins psychologically — early payoffs provide motivation that keeps people on track. The best method is the one you'll actually stick with. If you need quick wins to stay motivated, use snowball. If you're disciplined and want to minimize total interest paid, use avalanche. This calculator shows both side by side so you can compare the exact numbers for your situation."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How much faster can extra payments pay off debt?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Extra payments can dramatically accelerate payoff. For example, a $10,000 credit card balance at 20% APR with a $250 minimum payment takes over 6 years to pay off and costs $8,000+ in interest. Adding just $150/month cuts the payoff time nearly in half and saves over $4,000 in interest. The higher your interest rate, the bigger the impact of extra payments — use the extra monthly budget field above to see the exact impact for your debts."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Should I pay off debt or invest?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It depends on the interest rate. If your debt carries a rate higher than what you'd expect to earn investing (typically 6–8% for a diversified portfolio), paying down debt first is the mathematically better move — it's a guaranteed 'return' equal to the interest rate. High-interest debt (credit cards at 18–29%) should almost always be paid off aggressively before investing. Lower-rate debt (mortgages at 4–6%, student loans) can often be carried while also investing, especially in tax-advantaged accounts."
+          }
+        }
+      ]
+    }
+  ]
+  </script>
+
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="shared/nav.css">
   <style>
@@ -19,7 +97,7 @@
       margin-bottom: 20px;
     }
     .hero-top { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
-    .hero-title { font-size: 26px; font-weight: 800; letter-spacing: -.5px; }
+    .hero-title { font-size: 26px; font-weight: 800; letter-spacing: -.5px; margin: 0; padding: 0; }
     .hero-title span {
       background: linear-gradient(135deg, var(--green), var(--purple));
       -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
@@ -283,11 +361,20 @@
       flex-shrink: 0;
     }
 
+    /* ── SEO SECTION ── */
+    .seo-section {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 18px; padding: 28px 28px 24px; margin-top: 24px;
+    }
+    .seo-section h2 { font-size: 18px; font-weight: 700; color: var(--text-primary); margin-bottom: 10px; }
+    .seo-section h3 { font-size: 15px; font-weight: 600; color: var(--text-primary); margin-top: 20px; margin-bottom: 8px; }
+    .seo-section p  { font-size: 14px; color: var(--text-secondary); line-height: 1.7; }
+
     /* ── PRINT ── */
     @media print {
       body::before, header, .menu-overlay, .site-footer, .footer-disclaimer,
       .mode-toggle, .calc-btn, .action-row, .ad-slot, .add-debt-btn, .del-btn,
-      #toast, .hero-formula { display: none !important; }
+      #toast, .hero-formula, .seo-section { display: none !important; }
       body, body.dark { background: #fff !important; color: #000 !important;
         --bg: #f5f5f5; --surface: #fff; --border: #ddd;
         --text-primary: #000; --text-secondary: #333; --text-muted: #666;
@@ -417,6 +504,53 @@
     <!-- RESULTS -->
     <div id="results"></div>
 
+    <!-- SEO SECTION -->
+    <div class="seo-section">
+      <h2>How to Use This Debt Payoff Calculator</h2>
+      <p>Enter each of your debts — name, balance, interest rate, and minimum monthly payment — then set an extra monthly budget to apply on top of minimums. The calculator runs both the Snowball and Avalanche strategies simultaneously and shows your payoff date, total interest paid, and interest saved compared to paying minimums only. Use the comparison table to see which strategy works better for your situation.</p>
+
+      <h3>What Is the Debt Snowball Method?</h3>
+      <p>The debt snowball method, popularised by Dave Ramsey, involves paying off debts from <strong>smallest balance to largest</strong>, regardless of interest rate. You make minimum payments on every debt, and any extra money goes toward the smallest balance. Once it's gone, you "roll" that freed-up payment to the next smallest. The primary advantage is psychological: quick wins keep motivation high, which is why people who use the snowball method are more likely to follow through to full debt freedom.</p>
+
+      <h3>What Is the Debt Avalanche Method?</h3>
+      <p>The debt avalanche method prioritises paying off debts with the <strong>highest interest rate first</strong>, regardless of balance. Extra payments attack the most expensive debt first, then roll down to the next highest rate. Mathematically, this always saves the most money in total interest and achieves payoff in the shortest time. The trade-off: if your highest-rate debt also has a large balance, you may go months without a "win" — which can make it harder to stay motivated.</p>
+
+      <h3>Which Strategy Is Better: Snowball or Avalanche?</h3>
+      <p>The avalanche method wins mathematically — it minimises total interest paid. The snowball method wins psychologically — it maximises early momentum. Research from Harvard Business Review found that people are more motivated by paying off individual accounts than by optimising interest. The best strategy is whichever one you'll actually stick with. Enter your debts above to see the exact dollar difference between the two for your specific situation — sometimes it's surprisingly small.</p>
+
+      <h3>How Much Do Extra Payments Actually Save?</h3>
+      <p>Extra payments can dramatically cut both the time and cost of your debt. On a $10,000 credit card balance at 20% APR with a $250 minimum: paying just the minimum takes over 6 years and costs $8,000+ in interest. Adding $150/month extra cuts the payoff time nearly in half and saves over $4,000. The higher the interest rate, the larger the impact of extra payments. Even $50–$100 per month can make a meaningful difference — use the "Extra monthly budget" field to see the exact numbers for your debts.</p>
+
+      <h3>Should I Pay Off Debt or Invest?</h3>
+      <p>The crossover point is your expected investment return — typically 6–8% annually for a diversified portfolio. If your debt interest rate is <strong>above that threshold</strong>, paying it off is the better financial move: it's a guaranteed, risk-free return equal to the rate. If your rate is below it (e.g. a 3% mortgage), you may come out ahead investing the difference — especially in tax-advantaged accounts. High-interest debt (credit cards at 18–29%) should almost always be paid off aggressively before investing anything beyond an employer match.</p>
+
+      <h3>Debt Payoff Tips</h3>
+      <p>Stop adding new debt first — paying off a card and then using it again is counterproductive. Even small windfalls (tax refunds, bonuses) applied directly to principal have outsized impact. Call your lenders to negotiate a lower rate — credit card companies often accommodate good-standing customers. Consider a 0% balance transfer card to pause interest while you pay down principal. Once you're debt-free, redirect those same monthly payments directly into savings or investments.</p>
+    </div>
+
+    <!-- RELATED CALCULATORS -->
+    <div class="seo-section" style="margin-top: 16px;">
+      <h2>Related Calculators</h2>
+      <p>Tools that pair well with your debt payoff plan:</p>
+      <ul style="margin: 12px 0 0; padding-left: 20px; display: flex; flex-direction: column; gap: 8px;">
+        <li style="font-size: 14px; color: var(--text-secondary); line-height: 1.5;">
+          <a href="mortgage-calculator.html" style="color: var(--green); font-weight: 600; text-decoration: none;">Mortgage Calculator</a> — Plan your mortgage payment alongside your other debt payments.
+        </li>
+        <li style="font-size: 14px; color: var(--text-secondary); line-height: 1.5;">
+          <a href="compound-interest-calculator.html" style="color: var(--green); font-weight: 600; text-decoration: none;">Compound Interest Calculator</a> — See how the money you save on interest can compound as savings.
+        </li>
+        <li style="font-size: 14px; color: var(--text-secondary); line-height: 1.5;">
+          <a href="emergency-fund.html" style="color: var(--green); font-weight: 600; text-decoration: none;">Emergency Fund Calculator</a> — Build your safety net so unexpected costs don't derail your payoff plan.
+        </li>
+        <li style="font-size: 14px; color: var(--text-secondary); line-height: 1.5;">
+          <a href="savings-goal.html" style="color: var(--green); font-weight: 600; text-decoration: none;">Savings Goal Calculator</a> — Set and track your savings targets after you're debt-free.
+        </li>
+        <li style="font-size: 14px; color: var(--text-secondary); line-height: 1.5;">
+          <a href="net-worth-tracker.html" style="color: var(--green); font-weight: 600; text-decoration: none;">Net Worth Tracker</a> — Watch your net worth climb as your debt balances fall.
+        </li>
+      </ul>
+    </div>
+
   </div>
 
   <div id="toast"></div>
@@ -424,7 +558,8 @@
   <script>
     window.CALCNOVA_PAGE = { id:'debt-payoff', disclaimer:'For informational purposes only. Not financial advice.' };
   </script>
-  <script src="shared/nav.js"></script>
+  <script src="shared/site-data.js"></script>
+<script src="shared/nav.js"></script>
 
   <script>
   (function(){

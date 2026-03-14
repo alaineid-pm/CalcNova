@@ -3,8 +3,86 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CalcNova · Age Calculator</title>
-  <meta name="description" content="Calculate exact age in years, months, and days. See totals, next birthday, and more — all in your browser." />
+  <title>Age Calculator — Find Your Exact Age in Years, Months & Days | CalcNova</title>
+  <meta name="description" content="Free age calculator: enter any birthdate to find your exact age in years, months, weeks, and days. See days until your next birthday, zodiac sign, and more — no sign-up needed." />
+
+  <!-- Canonical -->
+  <link rel="canonical" href="https://calcnova.co/age-calculator.html" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Age Calculator — Find Your Exact Age in Years, Months & Days | CalcNova" />
+  <meta property="og:description" content="Free age calculator: find your exact age in years, months, weeks, and days from any birthdate. See days until your next birthday and more." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://calcnova.co/age-calculator.html" />
+  <meta property="og:site_name" content="CalcNova" />
+
+  <!-- JSON-LD: WebPage + FAQPage -->
+  <script type="application/ld+json">
+  [
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": "Age Calculator — Find Your Exact Age in Years, Months & Days",
+      "url": "https://calcnova.co/age-calculator.html",
+      "description": "Free age calculator: enter any birthdate to find your exact age in years, months, weeks, and days.",
+      "isPartOf": { "@type": "WebSite", "name": "CalcNova", "url": "https://calcnova.co/" },
+      "breadcrumb": {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://calcnova.co/" },
+          { "@type": "ListItem", "position": 2, "name": "Age Calculator", "item": "https://calcnova.co/age-calculator.html" }
+        ]
+      }
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How do I calculate my exact age?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "To calculate your exact age, subtract your birthdate from today's date. Count the full years first, then the remaining months, then the remaining days. For example, if you were born on March 5, 1990 and today is March 14, 2026, you are 36 years, 0 months, and 9 days old. This calculator handles all edge cases including leap years automatically."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How many days old am I?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "To find how many days old you are, multiply your age in years by 365, add extra days for leap years (one extra day for every 4 years), then add the remaining days since your last birthday. For example, someone born on January 1, 1990 is approximately 13,222 days old as of early 2026. Enter your birthdate above to get your exact count instantly."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I calculate the age difference between two people?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "To calculate age difference, subtract the earlier birthdate from the later one. For example, if Person A was born January 1, 1985 and Person B on June 15, 1990, the difference is 5 years, 5 months, and 14 days. You can use the 'Age between two dates' mode in this calculator to get the exact difference including years, months, and days."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do leap years affect age calculation?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Leap years add an extra day (February 29) every 4 years, with exceptions for century years not divisible by 400. If you were born on February 29, you only have a true birthday every 4 years. For age calculation purposes, February 28 or March 1 is typically used in non-leap years. This calculator accounts for leap years in all day-total and week-total calculations."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How many weeks old am I?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Divide your total days lived by 7 to get your age in weeks. A 30-year-old is approximately 1,565 weeks old (30 × 365.25 ÷ 7 ≈ 1,566). Babies are often measured in weeks for the first year or two — a 12-week-old baby is about 84 days old. Enter your birthdate in the calculator above to see your exact age in weeks, days, hours, and more."
+          }
+        }
+      ]
+    }
+  ]
+  </script>
+
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="shared/nav.css" />
 
@@ -27,7 +105,7 @@
       margin-bottom: 28px;
       display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;
     }
-    .hero-title { font-size: 26px; font-weight: 800; letter-spacing: -.5px; }
+    .hero-title { font-size: 26px; font-weight: 800; letter-spacing: -.5px; margin: 0; padding: 0; }
     .hero-title span {
       background: linear-gradient(135deg, var(--green), var(--purple));
       -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
@@ -286,7 +364,17 @@
       .hero { border: none; padding: 12px 0 8px; margin-bottom: 10px; }
       .stat-card, .table-card, .card, .hero-stat-card { page-break-inside: avoid; }
       .fade-in-result { opacity: 1 !important; transform: none !important; }
+      .seo-section { display: none; }
     }
+
+    /* ── SEO SECTION ── */
+    .seo-section {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 18px; padding: 28px 28px 24px; margin-top: 24px;
+    }
+    .seo-section h2 { font-size: 18px; font-weight: 700; color: var(--text-primary); margin-bottom: 10px; }
+    .seo-section h3 { font-size: 15px; font-weight: 600; color: var(--text-primary); margin-top: 20px; margin-bottom: 8px; }
+    .seo-section p  { font-size: 14px; color: var(--text-secondary); line-height: 1.7; }
   </style>
 </head>
 
@@ -297,7 +385,7 @@
     <div class="hero">
       <div>
         <div class="pill-badge">Exact · Instant · Private</div>
-        <div class="hero-title">Age <span>Calculator</span></div>
+        <h1 class="hero-title">Age <span>Calculator</span></h1>
         <div class="hero-desc">Calculate an exact age breakdown (years, months, days) — plus totals, zodiac sign, and next birthday.</div>
         <div class="hero-formula-tip">Formula: Age = <span class="hl">AsOf</span> − <span class="hlp">DOB</span></div>
       </div>
@@ -410,6 +498,53 @@
           </tbody>
         </table>
       </div>
+    </div>
+
+    <!-- SEO SECTION -->
+    <div class="seo-section">
+      <h2>How to Use This Age Calculator</h2>
+      <p>Enter your date of birth using the date picker, then select a "calculate age as of" date (defaults to today). The calculator instantly shows your exact age broken down into years, months, and days — plus totals in weeks, hours, and days. Use the second mode to find the duration or age difference between any two dates.</p>
+
+      <h3>How Is Exact Age Calculated?</h3>
+      <p>Exact age is calculated by counting the full years between your birthdate and the target date, then counting the remaining full months, then the remaining days. This is more precise than simply dividing total days by 365, because months have different lengths (28–31 days) and leap years add an extra day every 4 years. For example, someone born on January 31 who is calculated as of March 1 is 1 month and 1 day older, not 1 month and 3 days — because February has fewer days.</p>
+
+      <h3>How Many Days Old Am I?</h3>
+      <p>To find your total age in days, multiply your completed years by 365, add one extra day for every leap year you've lived through, then add the remaining days since your last birthday. A 30-year-old is approximately 10,957 days old (including 7–8 leap year days). The calculator shows this total automatically — enter your birthdate and look for the "Total Days" figure in the results.</p>
+
+      <h3>How Many Weeks Old Am I?</h3>
+      <p>Divide your total days lived by 7 to get your age in weeks. A 30-year-old is approximately 1,565 weeks old. Parents often track infant age in weeks for the first year or two: a baby described as "12 weeks old" is 84 days old. The milestone of 1,000 weeks (about 19 years and 2 months) is a fun number to know — enter your birthdate to find out exactly when yours was or will be.</p>
+
+      <h3>How Leap Years Affect Age</h3>
+      <p>A leap year adds February 29 to the calendar, occurring every 4 years (with exceptions for century years not divisible by 400: 1900 was not a leap year, but 2000 was). If you were born on February 29, your "official" birthday falls on February 28 or March 1 in non-leap years depending on jurisdiction. For day-total calculations, leap years are fully accounted for — each one adds an extra day to your cumulative age in days.</p>
+
+      <h3>How to Calculate Age Difference Between Two People</h3>
+      <p>To find the exact difference between two birthdates, subtract the earlier date from the later one in full years, months, and days. Use the "Date difference" mode in this calculator — enter both birthdates to get the precise gap. For example, if one person was born January 1, 1985 and another on June 15, 1990, the difference is 5 years, 5 months, and 14 days.</p>
+
+      <h3>Zodiac Signs and Birthdays</h3>
+      <p>Western astrology divides the year into 12 signs based on solar position. Aries: Mar 21–Apr 19. Taurus: Apr 20–May 20. Gemini: May 21–Jun 20. Cancer: Jun 21–Jul 22. Leo: Jul 23–Aug 22. Virgo: Aug 23–Sep 22. Libra: Sep 23–Oct 22. Scorpio: Oct 23–Nov 21. Sagittarius: Nov 22–Dec 21. Capricorn: Dec 22–Jan 19. Aquarius: Jan 20–Feb 18. Pisces: Feb 19–Mar 20. The calculator shows your sign based on your birthdate.</p>
+    </div>
+
+    <!-- RELATED CALCULATORS -->
+    <div class="seo-section" style="margin-top: 16px;">
+      <h2>Related Calculators</h2>
+      <p>Other free tools you might find useful:</p>
+      <ul style="margin: 12px 0 0; padding-left: 20px; display: flex; flex-direction: column; gap: 8px;">
+        <li style="font-size: 14px; color: var(--text-secondary); line-height: 1.5;">
+          <a href="date-duration.html" style="color: var(--green); font-weight: 600; text-decoration: none;">Date Duration Calculator</a> — Find the exact number of days, weeks, or months between any two dates.
+        </li>
+        <li style="font-size: 14px; color: var(--text-secondary); line-height: 1.5;">
+          <a href="world-clock.html" style="color: var(--green); font-weight: 600; text-decoration: none;">World Clock</a> — See the current time in any city or time zone around the world.
+        </li>
+        <li style="font-size: 14px; color: var(--text-secondary); line-height: 1.5;">
+          <a href="compound-interest-calculator.html" style="color: var(--green); font-weight: 600; text-decoration: none;">Compound Interest Calculator</a> — See how much your savings could grow by a specific age.
+        </li>
+        <li style="font-size: 14px; color: var(--text-secondary); line-height: 1.5;">
+          <a href="fire-calculator.html" style="color: var(--green); font-weight: 600; text-decoration: none;">FIRE Calculator</a> — Find your target retirement age and financial independence number.
+        </li>
+        <li style="font-size: 14px; color: var(--text-secondary); line-height: 1.5;">
+          <a href="percentage-calculator.html" style="color: var(--green); font-weight: 600; text-decoration: none;">Percentage Calculator</a> — Quickly calculate percentages, discounts, and percentage change.
+        </li>
+      </ul>
     </div>
 
     <!-- nav.js injects footer here -->
@@ -747,6 +882,7 @@
     disclaimer: 'This tool is for informational purposes only. Results depend on the dates provided and your browser\'s locale/timezone settings.'
   };
 </script>
+<script src="shared/site-data.js"></script>
 <script src="shared/nav.js"></script>
 
 </body>

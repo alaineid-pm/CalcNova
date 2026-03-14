@@ -3,27 +3,84 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CalcNova · Coast FIRE Calculator</title>
-  <meta name="description" content="Free Coast FIRE calculator — find out how much you need saved today so your portfolio grows to full financial independence without additional contributions." />
+  <title>Coast FIRE Calculator — Find Your Coast Number & Stop Contributing | CalcNova</title>
+  <meta name="description" content="Free Coast FIRE calculator: find how much you need saved today so your portfolio grows to your FI number by retirement age — with zero additional contributions. No sign-up needed." />
+
+  <!-- Canonical -->
+  <link rel="canonical" href="https://calcnova.co/coast-fire-calculator.html" />
 
   <!-- Open Graph -->
-  <meta property="og:title" content="Coast FIRE Calculator · CalcNova" />
-  <meta property="og:description" content="Free Coast FIRE calculator — find out how much you need saved today so your portfolio grows to full financial independence without additional contributions." />
+  <meta property="og:title" content="Coast FIRE Calculator — Find Your Coast Number | CalcNova" />
+  <meta property="og:description" content="Free Coast FIRE calculator: find how much you need saved today so your portfolio coasts to financial independence — no more contributions needed." />
   <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://calcnova.co/coast-fire-calculator.html" />
+  <meta property="og:site_name" content="CalcNova" />
 
-  <!-- JSON-LD Structured Data -->
+  <!-- JSON-LD: WebPage + FAQPage -->
   <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "FinancialProduct",
-    "name": "Coast FIRE Calculator",
-    "description": "Free Coast FIRE calculator to find your Coast FIRE number and track progress to financial independence.",
-    "provider": {
-      "@type": "Organization",
-      "name": "CalcNova"
+  [
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": "Coast FIRE Calculator — Find Your Coast Number & Stop Contributing",
+      "url": "https://calcnova.co/coast-fire-calculator.html",
+      "description": "Free Coast FIRE calculator to find your Coast FIRE number and see when your portfolio can grow to financial independence without additional contributions.",
+      "isPartOf": { "@type": "WebSite", "name": "CalcNova", "url": "https://calcnova.co/" },
+      "breadcrumb": {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://calcnova.co/" },
+          { "@type": "ListItem", "position": 2, "name": "Coast FIRE Calculator", "item": "https://calcnova.co/coast-fire-calculator.html" }
+        ]
+      }
     },
-    "feesAndCommissionsSpecification": "Free to use, no login required."
-  }
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is Coast FIRE?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Coast FIRE is a financial independence milestone where you've saved enough money that — even without making any additional investment contributions — your portfolio will grow to your full FIRE number (25× annual expenses) by your target retirement age, purely through compound growth. Once you reach your Coast number, you only need to earn enough to cover current living expenses, not save for retirement. It's called 'coasting' because you can let your investments do the work."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I calculate my Coast FIRE number?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Coast FIRE Number = FIRE Number ÷ (1 + r)^n, where FIRE Number = annual expenses × 25, r is your expected annual real return rate, and n is the number of years until your target retirement age. For example, if your FIRE number is $1,000,000, you have 25 years until retirement, and expect 7% annual returns: Coast Number = $1,000,000 ÷ (1.07)^25 = approximately $184,249. Saving that amount now means you could stop contributing entirely and still retire on schedule."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the difference between Coast FIRE and Barista FIRE?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Coast FIRE means your investments are already on track to reach full FI by retirement age — you just need to cover current living costs with earned income. Barista FIRE (named after part-time café work) means you've semi-retired and work part-time to cover some expenses while your portfolio continues to grow. Both involve no longer needing to aggressively save for retirement, but Barista FIRE typically involves more flexibility in work hours and may mean the portfolio isn't fully funded yet."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What return rate should I use for Coast FIRE?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Most FIRE calculators use 7% as the expected real (inflation-adjusted) annual return, based on historical US stock market averages (nominal ~10% minus ~3% inflation). Conservative planners use 5–6%. Aggressive planners occasionally use 8%. Using a lower rate gives you a larger, safer Coast number — meaning you'll have more cushion if returns disappoint. The calculator above lets you set your own rate so you can model different scenarios."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I reach Coast FIRE before traditional FIRE?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes — and for many people, Coast FIRE arrives much earlier than full FIRE. If you start investing young and aggressively in your 20s, you may hit your Coast number in your 30s, at which point you can shift to a lower-stress or part-time career without derailing your retirement. Coast FIRE is especially appealing for those who want to slow down but aren't ready to stop working entirely — it decouples career choices from financial necessity."
+          }
+        }
+      ]
+    }
+  ]
   </script>
 
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
@@ -58,7 +115,7 @@
       margin-bottom: 20px;
       display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;
     }
-    .hero-title { font-size: 26px; font-weight: 800; letter-spacing: -.5px; }
+    .hero-title { font-size: 26px; font-weight: 800; letter-spacing: -.5px; margin: 0; padding: 0; }
     .hero-title span {
       background: linear-gradient(135deg, var(--amber), var(--purple));
       -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
@@ -405,6 +462,15 @@
         font-family: 'JetBrains Mono', monospace;
       }
     }
+
+    /* ── SEO SECTION ── */
+    .seo-section {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 18px; padding: 28px 28px 24px; margin-top: 24px;
+    }
+    .seo-section h2 { font-size: 18px; font-weight: 700; color: var(--text-primary); margin-bottom: 10px; }
+    .seo-section h3 { font-size: 15px; font-weight: 600; color: var(--text-primary); margin-top: 20px; margin-bottom: 8px; }
+    .seo-section p  { font-size: 14px; color: var(--text-secondary); line-height: 1.7; }
   </style>
 </head>
 <body>
@@ -415,7 +481,7 @@
   <!-- HERO -->
   <div class="hero">
     <div>
-      <div class="hero-title">Coast FIRE <span>Calculator</span></div>
+      <h1 class="hero-title">Coast FIRE <span>Calculator</span></h1>
       <div class="hero-desc">Find out how much you need saved <em>today</em> so your portfolio can grow to full financial independence — without any additional contributions.</div>
     </div>
     <div class="hero-formula">
@@ -685,6 +751,49 @@
       <p><strong>Sequence of returns risk:</strong> Real markets are volatile. A higher Coast FIRE number (lower SWR) provides a larger safety margin against bad market timing early in retirement.</p>
       <p><strong>This is not financial advice.</strong> Use this as an educational tool and consult a qualified financial planner for personalized guidance.</p>
     </div>
+  </div>
+
+  <!-- SEO SECTION -->
+  <div class="seo-section">
+    <h2>How to Use This Coast FIRE Calculator</h2>
+    <p>Enter your current age, target retirement age, annual expenses in retirement, current portfolio value, and expected annual return. The calculator finds your full FIRE number (25× annual expenses), then works backwards to show your <strong>Coast FIRE number</strong> — the amount you need invested today so that compound growth alone reaches your FIRE number by retirement, with zero additional contributions. It also shows how many years (if any) remain until you hit your Coast number.</p>
+
+    <h3>What Is Coast FIRE?</h3>
+    <p>Coast FIRE is the point where your invested portfolio is large enough that — even if you never invest another dollar — compound growth will carry it to your full FIRE number by your target retirement age. The term "coasting" refers to letting your investments do the work while you ease off aggressive saving. Once you reach your Coast number, you only need to earn enough to cover your current living expenses. You can shift to a lower-stress job, work part-time, or pursue passion projects without worrying about retirement savings.</p>
+
+    <h3>The Coast FIRE Formula</h3>
+    <p>Coast FIRE Number = <strong>FIRE Number ÷ (1 + r)^n</strong>, where FIRE Number = annual expenses × 25, r = expected annual real return, and n = years until retirement. For example: if your annual expenses are $50,000, your FIRE number is $1,250,000. With 28 years to retirement at 7% returns: Coast Number = $1,250,000 ÷ (1.07)^28 = approximately $197,000. Save $197,000 by 37 and you can stop all retirement contributions — and still retire at 65 with $1,250,000.</p>
+
+    <h3>Coast FIRE vs. Barista FIRE vs. Full FIRE</h3>
+    <p><strong>Coast FIRE</strong>: investments are on track for retirement, but you still need earned income to cover current expenses — just no longer need to save for retirement. <strong>Barista FIRE</strong> (named after part-time café work): semi-retired with light part-time work to cover basic costs, investments growing but perhaps not yet at the full Coast number. <strong>Full FIRE</strong>: total financial independence — portfolio generates enough to cover all living expenses, no work required. Coast FIRE typically arrives 10–15 years before full FIRE, making it a meaningful and motivating intermediate milestone.</p>
+
+    <h3>What Return Rate Should I Use?</h3>
+    <p>For long-term projections, most FIRE community planners use <strong>7% real (inflation-adjusted) returns</strong>, based on historical US stock market performance (~10% nominal minus ~3% inflation). Conservative planners use 5–6%. The real rate matters because your expenses in retirement are stated in today's dollars — using real returns keeps the math consistent. A lower assumed return gives you a higher, safer Coast number with more margin for error.</p>
+
+    <h3>Why Coast FIRE Is Such a Powerful Milestone</h3>
+    <p>Coast FIRE is powerful because of asymmetry: saving aggressively early has a disproportionate long-term payoff due to compound interest. Someone who invests heavily in their 20s and hits their Coast number at 30 can then work a low-stress job for 20 years and still retire comfortably — while someone who started at 40 must continue intense saving until traditional retirement age. Coast FIRE decouples financial security from career trajectory, which reduces anxiety, enables career pivots, and often leads to better life satisfaction even before full FI.</p>
+  </div>
+
+  <!-- RELATED CALCULATORS -->
+  <div class="seo-section" style="margin-top: 16px;">
+    <h2>Related Calculators</h2>
+    <ul style="margin: 12px 0 0; padding-left: 20px; display: flex; flex-direction: column; gap: 8px;">
+      <li style="font-size: 14px; color: var(--text-secondary); line-height: 1.5;">
+        <a href="fire-calculator.html" style="color: var(--green); font-weight: 600; text-decoration: none;">FIRE Calculator</a> — Model your full path to Financial Independence and Early Retirement with a detailed timeline.
+      </li>
+      <li style="font-size: 14px; color: var(--text-secondary); line-height: 1.5;">
+        <a href="compound-interest-calculator.html" style="color: var(--green); font-weight: 600; text-decoration: none;">Compound Interest Calculator</a> — See how your portfolio grows from your Coast number to your full FIRE number over time.
+      </li>
+      <li style="font-size: 14px; color: var(--text-secondary); line-height: 1.5;">
+        <a href="savings-goal.html" style="color: var(--green); font-weight: 600; text-decoration: none;">Savings Goal Calculator</a> — Plan how long it takes to save your Coast FIRE number with monthly contributions.
+      </li>
+      <li style="font-size: 14px; color: var(--text-secondary); line-height: 1.5;">
+        <a href="net-worth-tracker.html" style="color: var(--green); font-weight: 600; text-decoration: none;">Net Worth Tracker</a> — Track your total portfolio progress toward your Coast and FIRE milestones.
+      </li>
+      <li style="font-size: 14px; color: var(--text-secondary); line-height: 1.5;">
+        <a href="debt-payoff.html" style="color: var(--green); font-weight: 600; text-decoration: none;">Debt Payoff Planner</a> — Clear high-interest debt first so your full savings rate can work toward your Coast number.
+      </li>
+    </ul>
   </div>
 
   <!-- nav.js injects footer here -->
@@ -1116,6 +1225,7 @@
     disclaimer: 'This calculator is for educational purposes only and does not constitute financial advice. Always consult a qualified financial advisor for personalized guidance.'
   };
 </script>
+<script src="shared/site-data.js"></script>
 <script src="shared/nav.js"></script>
 </body>
 </html>
