@@ -900,7 +900,7 @@ function defaultState() {
     if (!test.hour12) fmt = '24h';
   } catch(e) {}
   return {
-    version: 1, layout: 'vertical', clockFormat: fmt,
+    version: 1, layout: window.innerWidth >= 768 ? 'horizontal' : 'vertical', clockFormat: fmt,
     homeCity: homeCity.id,
     cities: [
       { id: homeCity.id, label: homeCity.label, country: homeCity.country },
