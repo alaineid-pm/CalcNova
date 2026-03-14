@@ -388,6 +388,52 @@
     .faq-item.open .faq-answer { max-height: 400px; }
     .faq-answer-inner { padding-bottom: 14px; }
 
+    /* ── Two-column form row ── */
+    .form-row-two {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px;
+    }
+    .form-row-two .form-group { margin-bottom: 0; }
+
+    /* ── Tank config toggle (full-width) ── */
+    .tank-config-toggle {
+      display: flex; width: 100%;
+      background: var(--bg); border: 1px solid var(--border);
+      border-radius: 10px; padding: 3px; margin-bottom: 10px;
+    }
+    .tank-config-toggle .unit-btn { flex: 1; text-align: center; }
+
+    /* ── Body-fat auto-estimate badge ── */
+    .bf-badge {
+      display: inline-block; font-size: 10px; font-weight: 700;
+      color: var(--green); background: rgba(16,185,129,.1);
+      border-radius: 6px; padding: 2px 6px; margin-left: 6px;
+      vertical-align: middle; letter-spacing: .3px;
+    }
+    .bf-reset-btn {
+      display: inline-block; font-size: 10px; font-weight: 600;
+      color: var(--text-muted); background: var(--bg); border: 1px solid var(--border);
+      border-radius: 6px; padding: 2px 7px; margin-left: 6px;
+      cursor: pointer; vertical-align: middle;
+    }
+    .bf-reset-btn:hover { border-color: var(--green); color: var(--green); }
+    .bf-hint {
+      font-size: 11px; color: var(--text-muted); margin-top: 5px; line-height: 1.45;
+    }
+
+    /* ── Twin note ── */
+    .twin-note {
+      font-size: 11px; color: var(--text-muted); margin-top: 7px;
+      padding: 6px 10px; background: rgba(99,102,241,.05);
+      border-radius: 8px; border-left: 2px solid rgba(99,102,241,.3);
+    }
+
+    /* ── Conditional field ── */
+    .conditional-field {
+      border: 1px solid rgba(99,102,241,.25); background: rgba(99,102,241,.04);
+      border-radius: 10px; padding: 12px 14px; margin-bottom: 14px;
+    }
+    .conditional-field .form-label { color: var(--purple); }
+
     /* ── Toast ── */
     #toast {
       position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(20px);
@@ -425,9 +471,9 @@
   <div class="hero">
     <div class="pill-badge">🤿 Scuba Diving Tool</div>
     <h1 class="hero-title">Dive Weight &amp; <span>Buoyancy Calculator</span></h1>
-    <p class="hero-desc">Estimate how much lead weight you need for your next dive. Enter your body weight, exposure suit, tank type, and water conditions to get a starting point based on PADI weighting guidelines.</p>
+    <p class="hero-desc">Physics-based buoyancy calculation using your body composition, tank type, suit, and water conditions. Body fat and lean mass are factored directly into buoyancy — not a one-size-fits-all percentage.</p>
     <div class="hero-formula">
-      <span class="hl">lead</span> = (body_weight × water_factor) + suit + tank + experience + gear
+      <span class="hl">lead</span> = body_buoyancy(fat%, gender, water) + suit + tank + undergarment + gear + margin
     </div>
   </div>
 
@@ -448,8 +494,24 @@
 
       <!-- Unit toggle -->
       <div class="unit-toggle">
-        <button class="unit-btn active" id="btn-kg" onclick="setUnit('kg')">kg</button>
-        <button class="unit-btn" id="btn-lbs" onclick="setUnit('lbs')">lbs</button>
+        <button class="unit-btn active" id="btn-kg" onclick="setUnit('kg')">kg / cm</button>
+        <button class="unit-btn" id="btn-lbs" onclick="setUnit('lbs')">lbs / in</button>
+      </div>
+
+      <!-- Gender + Height -->
+      <div class="form-row-two">
+        <div class="form-group">
+          <label class="form-label" for="gender">Biological Sex</label>
+          <select id="gender" onchange="onGenderChange()">
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="height">Height <span id="height-unit-label">(cm)</span></label>
+          <input type="number" id="height" placeholder="e.g. 178" min="100" max="250" step="1"
+                 oninput="onBodyProfileChange()" autocomplete="off">
+        </div>
       </div>
 
       <!-- Body weight -->
@@ -458,20 +520,56 @@
           Body Weight <span id="unit-label-inline">(kg)</span>
         </label>
         <input type="number" id="body-weight" min="20" max="300" step="0.5"
-               placeholder="e.g. 75" oninput="calculate()" autocomplete="off">
+               placeholder="e.g. 75" oninput="onBodyProfileChange()" autocomplete="off">
+      </div>
+
+      <!-- Body Fat % -->
+      <div class="form-group">
+        <label class="form-label" for="body-fat">
+          Body Fat %
+          <span class="bf-badge" id="bf-badge" style="display:none">auto-estimated</span>
+          <button class="bf-reset-btn" id="bf-reset" onclick="resetBF()" style="display:none">↺ re-estimate</button>
+        </label>
+        <input type="number" id="body-fat" min="5" max="60" step="0.5"
+               placeholder="Enter height above to auto-estimate" oninput="onBFManualInput()" autocomplete="off">
+        <div class="bf-hint" id="bf-hint">Fat tissue floats (0.9 g/cm³); lean muscle sinks (1.1 g/cm³). Your body composition directly affects how much you float.</div>
       </div>
 
       <!-- Exposure suit -->
       <div class="form-group">
         <label class="form-label" for="suit-type">Exposure Suit</label>
-        <select id="suit-type" onchange="calculate()">
-          <option value="0">Swimsuit / Rashguard (+0 kg)</option>
-          <option value="0.5">3mm Shorty (+0.5 kg)</option>
-          <option value="1.5" selected>3mm Full Wetsuit (+1.5 kg)</option>
-          <option value="3.0">5mm Full Wetsuit (+3.0 kg)</option>
-          <option value="4.5">7mm Full Wetsuit (+4.5 kg)</option>
-          <option value="5.0">Drysuit — Shell (+5.0 kg)</option>
-          <option value="7.0">Drysuit — Neoprene (+7.0 kg)</option>
+        <select id="suit-type" onchange="onSuitChange()">
+          <option value="0.3">Swimsuit / Rashguard</option>
+          <option value="1.5">3mm Shorty</option>
+          <option value="2.5" selected>3mm Full Wetsuit</option>
+          <option value="3.5">5mm Full Wetsuit</option>
+          <option value="5.0">7mm Full Wetsuit</option>
+          <option value="5.5">Drysuit — Shell</option>
+          <option value="8.0">Drysuit — Neoprene</option>
+        </select>
+      </div>
+
+      <!-- Water temperature (drives undergarment visibility) -->
+      <div class="form-group">
+        <label class="form-label" for="water-temp">Water Temperature</label>
+        <select id="water-temp" onchange="onWaterTempChange()">
+          <option value="tropical">Tropical (&gt;26 °C / &gt;79 °F)</option>
+          <option value="warm" selected>Warm (18–26 °C / 64–79 °F)</option>
+          <option value="temperate">Temperate (12–18 °C / 54–64 °F)</option>
+          <option value="cold">Cold (4–12 °C / 39–54 °F)</option>
+          <option value="arctic">Arctic / Ice (&lt;4 °C / &lt;39 °F)</option>
+        </select>
+      </div>
+
+      <!-- Drysuit undergarment (conditional) -->
+      <div class="conditional-field" id="undergarment-group" style="display:none">
+        <label class="form-label" for="undergarment">Drysuit Undergarment</label>
+        <select id="undergarment" onchange="calculate()">
+          <option value="0">Base layer / none (0 kg)</option>
+          <option value="0.5">Light 100 g/m² (+0.5 kg)</option>
+          <option value="1.0">Mid-weight 200 g/m² (+1.0 kg)</option>
+          <option value="2.0" selected>Heavy 400 g/m² (+2.0 kg)</option>
+          <option value="3.0">Expedition 600 g/m²+ (+3.0 kg)</option>
         </select>
       </div>
 
@@ -479,27 +577,46 @@
       <div class="form-group">
         <label class="form-label" for="water-type">Water Type</label>
         <select id="water-type" onchange="calculate()">
-          <option value="0.10" selected>Saltwater (ocean / sea)</option>
-          <option value="0.085">Brackish (estuary / some seas)</option>
-          <option value="0.07">Freshwater (lake / quarry)</option>
+          <option value="1.025" selected>Saltwater (ocean / sea)</option>
+          <option value="1.012">Brackish (estuary / some seas)</option>
+          <option value="1.000">Freshwater (lake / quarry)</option>
         </select>
       </div>
 
-      <!-- Tank type -->
+      <!-- Tank configuration -->
       <div class="form-group">
-        <label class="form-label" for="tank-type">Tank Type</label>
-        <select id="tank-type" onchange="calculate()">
-          <option value="0">Aluminum 80 / AL80 (baseline)</option>
-          <option value="0.5">Aluminum 63 / AL63 (+0.5 kg)</option>
-          <option value="-2.0">Steel HP80 (−2.0 kg)</option>
-          <option value="-3.0">Steel HP100 (−3.0 kg)</option>
-          <option value="-4.0">Steel HP120 (−4.0 kg)</option>
-        </select>
+        <label class="form-label">Tank Configuration</label>
+        <div class="tank-config-toggle">
+          <button class="unit-btn active" id="btn-single" onclick="setTankConfig('single')">Single Tank</button>
+          <button class="unit-btn" id="btn-twin" onclick="setTankConfig('twin')">Twin / Twinset</button>
+        </div>
+        <div id="single-tank-section">
+          <select id="tank-type" onchange="calculate()">
+            <option value="0">Aluminum 80 — AL80 (baseline)</option>
+            <option value="0.5">Aluminum 63 — AL63 (+0.5 kg)</option>
+            <option value="-2.0">Steel HP80 (−2.0 kg)</option>
+            <option value="-3.0">Steel HP100 (−3.0 kg)</option>
+            <option value="-4.0">Steel HP120 (−4.0 kg)</option>
+          </select>
+        </div>
+        <div id="twin-tank-section" style="display:none">
+          <select id="twin-type" onchange="calculate()">
+            <option value="2.0">Twin AL80 — 2× 11.1 L / 207 bar aluminum (+2.0 kg vs single AL80)</option>
+            <option value="-2.0">Twin HP80 — 2× 11.1 L / 237 bar steel (−2.0 kg)</option>
+            <option value="-3.0">Twin LP85 — 2× 13.6 L / 232 bar steel (−3.0 kg)</option>
+            <option value="-4.0">Twin 12 L / 232 bar steel — Euro tech standard (−4.0 kg)</option>
+            <option value="-4.0">Twin HP100 — 2× 13.2 L / 237 bar steel (−4.0 kg)</option>
+            <option value="-6.0">Twin HP120 — 2× 15.8 L / 237 bar steel (−6.0 kg)</option>
+            <option value="-6.5">Twin 7 L / 232 bar steel — compact Euro pair (−6.5 kg)</option>
+            <option value="-7.0">Twin 15 L / 232 bar steel — large Euro twinset (−7.0 kg)</option>
+          </select>
+          <div class="twin-note">All twinset values include manifold + 2nd first-stage regulator weight. Values are relative to single AL80 baseline.</div>
+        </div>
       </div>
 
       <!-- Experience level -->
       <div class="form-group">
-        <label class="form-label" for="experience">Experience Level</label>
+        <label class="form-label" for="experience">Experience / Safety Margin</label>
         <select id="experience" onchange="calculate()">
           <option value="1">Beginner (+1 kg safety margin)</option>
           <option value="0" selected>Intermediate (0 kg)</option>
@@ -586,7 +703,7 @@
       </thead>
       <tbody>
         <tr>
-          <td>Base weight</td>
+          <td>Body buoyancy</td>
           <td><span class="row-label" id="row-base-detail">—</span></td>
           <td id="row-base-val" class="val-pos">—</td>
         </tr>
@@ -595,13 +712,18 @@
           <td><span class="row-label" id="row-suit-detail">—</span></td>
           <td id="row-suit-val">—</td>
         </tr>
+        <tr id="row-undergarment-tr" style="display:none">
+          <td>Undergarment</td>
+          <td><span class="row-label" id="row-undergarment-detail">—</span></td>
+          <td id="row-undergarment-val">—</td>
+        </tr>
         <tr>
-          <td>Tank type</td>
+          <td>Tank / configuration</td>
           <td><span class="row-label" id="row-tank-detail">—</span></td>
           <td id="row-tank-val">—</td>
         </tr>
         <tr>
-          <td>Experience</td>
+          <td>Experience margin</td>
           <td><span class="row-label" id="row-exp-detail">—</span></td>
           <td id="row-exp-val">—</td>
         </tr>
@@ -752,97 +874,198 @@
 
   /* ── State ── */
   var unit = 'kg';
+  var tankConfig = 'single'; // 'single' | 'twin'
+  var bfManuallySet = false;
   var lastResult = null;
-
-  /* ── Unit system ── */
-  function setUnit(u) {
-    unit = u;
-    document.getElementById('btn-kg').classList.toggle('active', u === 'kg');
-    document.getElementById('btn-lbs').classList.toggle('active', u === 'lbs');
-    document.getElementById('unit-label-inline').textContent = u === 'kg' ? '(kg)' : '(lbs)';
-    var inp = document.getElementById('body-weight');
-    inp.placeholder = u === 'kg' ? 'e.g. 75' : 'e.g. 165';
-    inp.min = u === 'kg' ? 20 : 44;
-    inp.max = u === 'kg' ? 300 : 660;
-    calculate();
-  }
-  window.setUnit = setUnit;
-  window.calculate = calculate;
 
   /* ── Helpers ── */
   function numVal(id) {
     var v = parseFloat(document.getElementById(id).value);
     return isNaN(v) ? null : v;
   }
-
-  function fmtKg(v) {
-    return (Math.round(v * 10) / 10).toFixed(1) + ' kg';
-  }
-
-  function fmtLbs(v) {
-    return (Math.round(v * 2.205 * 10) / 10).toFixed(1) + ' lbs';
-  }
-
+  function fmt1(v) { return (Math.round(v * 10) / 10).toFixed(1); }
   function fmtAdj(v) {
-    if (v === 0) return '<span class="val-zero">0 kg</span>';
+    if (Math.abs(v) < 0.05) return '<span class="val-zero">0 kg</span>';
     var sign = v > 0 ? '+' : '';
     var cls = v > 0 ? 'val-pos' : 'val-neg';
-    return '<span class="' + cls + '">' + sign + (Math.round(v * 10) / 10).toFixed(1) + ' kg</span>';
+    return '<span class="' + cls + '">' + sign + fmt1(v) + ' kg</span>';
   }
+
+  /* ── Unit system ── */
+  function setUnit(u) {
+    unit = u;
+    var isKg = u === 'kg';
+    document.getElementById('btn-kg').classList.toggle('active', isKg);
+    document.getElementById('btn-lbs').classList.toggle('active', !isKg);
+    document.getElementById('unit-label-inline').textContent = isKg ? '(kg)' : '(lbs)';
+    var bw = document.getElementById('body-weight');
+    bw.placeholder = isKg ? 'e.g. 75' : 'e.g. 165';
+    bw.min = isKg ? 20 : 44; bw.max = isKg ? 300 : 660;
+    var hi = document.getElementById('height');
+    document.getElementById('height-unit-label').textContent = isKg ? '(cm)' : '(in)';
+    hi.placeholder = isKg ? 'e.g. 178' : 'e.g. 70';
+    hi.min = isKg ? 100 : 39; hi.max = isKg ? 250 : 98;
+    /* Convert existing height value */
+    if (hi.value) {
+      var hv = parseFloat(hi.value);
+      hi.value = Math.round(isKg ? hv * 2.54 : hv / 2.54);
+    }
+    if (!bfManuallySet) updateBFEstimate();
+    calculate();
+  }
+  window.setUnit = setUnit;
+
+  /* ── Tank config toggle ── */
+  function setTankConfig(cfg) {
+    tankConfig = cfg;
+    document.getElementById('btn-single').classList.toggle('active', cfg === 'single');
+    document.getElementById('btn-twin').classList.toggle('active', cfg === 'twin');
+    document.getElementById('single-tank-section').style.display = cfg === 'single' ? '' : 'none';
+    document.getElementById('twin-tank-section').style.display = cfg === 'twin' ? '' : 'none';
+    calculate();
+  }
+  window.setTankConfig = setTankConfig;
+
+  function getTankAdj() {
+    if (tankConfig === 'twin') return parseFloat(document.getElementById('twin-type').value);
+    return parseFloat(document.getElementById('tank-type').value);
+  }
+  function getTankLabel() {
+    if (tankConfig === 'twin') {
+      var el = document.getElementById('twin-type');
+      return el.options[el.selectedIndex].text.split('—')[0].trim();
+    }
+    var el = document.getElementById('tank-type');
+    return el.options[el.selectedIndex].text.split('—')[0].trim().split('(')[0].trim();
+  }
+
+  /* ── Body fat estimation (Deurenberg BMI-based, age 35 mid-point) ── */
+  function estimateBF(bodyKg, heightCm, gender) {
+    if (!bodyKg || !heightCm || heightCm < 80) return null;
+    var hm = heightCm / 100;
+    var bmi = bodyKg / (hm * hm);
+    // Deurenberg: BF% = 1.2*BMI + 0.23*age - 10.8*sex - 5.4 (male sex=1, female=0)
+    var bf = gender === 'male'
+      ? 1.2 * bmi + 0.23 * 35 - 10.8 - 5.4
+      : 1.2 * bmi + 0.23 * 35 - 5.4;
+    return Math.max(5, Math.min(60, Math.round(bf * 10) / 10));
+  }
+
+  function updateBFEstimate() {
+    var rawW = numVal('body-weight');
+    var bodyKg = rawW ? (unit === 'lbs' ? rawW / 2.205 : rawW) : null;
+    var rawH = numVal('height');
+    var heightCm = rawH ? (unit === 'kg' ? rawH : rawH * 2.54) : null;
+    var gender = document.getElementById('gender').value;
+    var est = estimateBF(bodyKg, heightCm, gender);
+    if (est !== null && !bfManuallySet) {
+      document.getElementById('body-fat').value = est;
+      document.getElementById('bf-badge').style.display = '';
+      document.getElementById('bf-reset').style.display = 'none';
+    }
+  }
+
+  function onBodyProfileChange() {
+    if (!bfManuallySet) updateBFEstimate();
+    calculate();
+  }
+  function onGenderChange() { updateBFEstimate(); calculate(); }
+  function onBFManualInput() {
+    bfManuallySet = true;
+    document.getElementById('bf-badge').style.display = 'none';
+    document.getElementById('bf-reset').style.display = '';
+    calculate();
+  }
+  function resetBF() {
+    bfManuallySet = false;
+    document.getElementById('bf-reset').style.display = 'none';
+    updateBFEstimate();
+    calculate();
+  }
+  window.onBodyProfileChange = onBodyProfileChange;
+  window.onGenderChange = onGenderChange;
+  window.onBFManualInput = onBFManualInput;
+  window.resetBF = resetBF;
+
+  /* ── Suit / undergarment visibility ── */
+  function onSuitChange() { updateUndergarmentVisibility(); calculate(); }
+  function onWaterTempChange() { updateUndergarmentVisibility(); calculate(); }
+  function updateUndergarmentVisibility() {
+    var suit = parseFloat(document.getElementById('suit-type').value);
+    var temp = document.getElementById('water-temp').value;
+    var isDrysuit = (suit >= 5.5);
+    var isCold = (temp === 'temperate' || temp === 'cold' || temp === 'arctic');
+    document.getElementById('undergarment-group').style.display = (isDrysuit && isCold) ? '' : 'none';
+  }
+  window.onSuitChange = onSuitChange;
+  window.onWaterTempChange = onWaterTempChange;
 
   /* ── Main calculation ── */
   function calculate() {
     var rawWeight = numVal('body-weight');
-    var waterFactor = parseFloat(document.getElementById('water-type').value);
-    var suitAdj = parseFloat(document.getElementById('suit-type').value);
-    var tankAdj = parseFloat(document.getElementById('tank-type').value);
-    var expAdj = parseFloat(document.getElementById('experience').value);
-    var gearCamera = document.getElementById('gear-camera').checked ? 1.5 : 0;
-    var gearLight = document.getElementById('gear-light').checked ? 0.5 : 0;
-    var gearAdj = gearCamera + gearLight;
-
     var errorBox = document.getElementById('error-box');
 
-    /* Validate */
     if (rawWeight === null || rawWeight <= 0) {
-      hideResults();
-      errorBox.classList.remove('show');
-      return;
+      hideResults(); errorBox.classList.remove('show'); return;
     }
-
     var minW = unit === 'kg' ? 20 : 44;
     var maxW = unit === 'kg' ? 300 : 660;
     if (rawWeight < minW || rawWeight > maxW) {
       hideResults();
       document.getElementById('body-weight').classList.add('input-error');
-      errorBox.classList.add('show');
-      return;
+      errorBox.classList.add('show'); return;
     }
-
     document.getElementById('body-weight').classList.remove('input-error');
     errorBox.classList.remove('show');
 
-    /* Convert to kg */
     var bodyKg = (unit === 'lbs') ? rawWeight / 2.205 : rawWeight;
+    var gender = document.getElementById('gender').value;
+    var waterDensity = parseFloat(document.getElementById('water-type').value);
 
-    /* Calculate */
-    var base = bodyKg * waterFactor;
-    var total = base + suitAdj + tankAdj + expAdj + gearAdj;
+    /* ── Physics-based body buoyancy ── */
+    var fatPct = numVal('body-fat');
+    if (fatPct === null) fatPct = gender === 'male' ? 20 : 27;
+    fatPct = Math.max(5, Math.min(60, fatPct));
+    var fatFrac = fatPct / 100;
+    var fatVolL  = bodyKg * fatFrac / 0.9;   // fat density 0.9 g/cm³
+    var leanVolL = bodyKg * (1 - fatFrac) / 1.1; // lean density 1.1 g/cm³
+    var lungVolL = gender === 'male' ? 3.7 : 2.7; // functional residual capacity (L)
+    var totalBodyVolL = fatVolL + leanVolL + lungVolL;
+    var bodyNetBuoyancy = totalBodyVolL * waterDensity - bodyKg;
+
+    /* ── AL80 reference buoyancy at end of dive (scaled for water density) ── */
+    // AL80 outer volume ≈ 17.5 L, mass at 50 bar ≈ 15.0 kg → net +2.94 kg in saltwater
+    var al80Buoyancy = 3.0 * (waterDensity / 1.025);
+
+    var base = bodyNetBuoyancy + al80Buoyancy;
+
+    /* ── Other adjustments ── */
+    var suitAdj = parseFloat(document.getElementById('suit-type').value);
+    var tankAdj = getTankAdj();
+    var expAdj  = parseFloat(document.getElementById('experience').value);
+    var gearCamera = document.getElementById('gear-camera').checked ? 1.5 : 0;
+    var gearLight  = document.getElementById('gear-light').checked ? 0.5 : 0;
+    var gearAdj = gearCamera + gearLight;
+
+    /* Undergarment (only when visible) */
+    var undergarmentAdj = 0;
+    var ugGroup = document.getElementById('undergarment-group');
+    if (ugGroup.style.display !== 'none') {
+      undergarmentAdj = parseFloat(document.getElementById('undergarment').value);
+    }
+
+    var total = base + suitAdj + tankAdj + expAdj + gearAdj + undergarmentAdj;
     total = Math.max(0, total);
 
     lastResult = {
-      total: total,
-      base: base,
-      suitAdj: suitAdj,
-      tankAdj: tankAdj,
-      expAdj: expAdj,
-      gearAdj: gearAdj,
-      bodyKg: bodyKg,
-      waterFactor: waterFactor
+      total: total, base: base, bodyNetBuoyancy: bodyNetBuoyancy,
+      al80Buoyancy: al80Buoyancy, suitAdj: suitAdj, tankAdj: tankAdj,
+      expAdj: expAdj, gearAdj: gearAdj, undergarmentAdj: undergarmentAdj,
+      bodyKg: bodyKg, fatPct: fatPct, gender: gender, waterDensity: waterDensity
     };
-
     renderResults(lastResult);
   }
+  window.calculate = calculate;
 
   function hideResults() {
     document.getElementById('result-card').classList.add('hidden');
@@ -852,33 +1075,30 @@
   }
 
   function renderResults(r) {
-    var totalKg = r.total;
+    var totalKg  = r.total;
     var totalLbs = totalKg * 2.205;
 
     /* Mini preview */
     var mini = document.getElementById('mini-result');
     mini.style.display = '';
-    document.getElementById('mini-result-kg').textContent = (Math.round(totalKg * 10) / 10).toFixed(1) + ' kg';
-    document.getElementById('mini-result-lbs').textContent = '≈ ' + (Math.round(totalLbs * 10) / 10).toFixed(1) + ' lbs';
+    document.getElementById('mini-result-kg').textContent  = fmt1(totalKg) + ' kg';
+    document.getElementById('mini-result-lbs').textContent = '≈ ' + fmt1(totalLbs) + ' lbs';
 
     /* Full result */
-    var resultCard = document.getElementById('result-card');
-    resultCard.classList.remove('hidden');
-    document.getElementById('result-kg-display').textContent = (Math.round(totalKg * 10) / 10).toFixed(1) + ' kg';
-    document.getElementById('result-lbs-display').textContent = '≈ ' + (Math.round(totalLbs * 10) / 10).toFixed(1) + ' lbs';
+    document.getElementById('result-card').classList.remove('hidden');
+    document.getElementById('result-kg-display').textContent  = fmt1(totalKg) + ' kg';
+    document.getElementById('result-lbs-display').textContent = '≈ ' + fmt1(totalLbs) + ' lbs';
 
-    /* Water type label */
-    var waterLabels = { '0.1': 'Saltwater (10% body wt)', '0.085': 'Brackish (8.5% body wt)', '0.07': 'Freshwater (7% body wt)' };
-    var waterKey = String(r.waterFactor);
-    var waterLabel = waterLabels[waterKey] || (Math.round(r.waterFactor * 1000) / 10) + '% body wt';
+    /* Water label */
+    var waterLabels = {'1.025':'Saltwater','1.012':'Brackish','1.000':'Freshwater'};
+    var waterLabel = waterLabels[String(r.waterDensity)] || 'Water';
 
     /* Suit label */
     var suitEl = document.getElementById('suit-type');
-    var suitLabel = suitEl.options[suitEl.selectedIndex].text.split('(')[0].trim();
+    var suitLabel = suitEl.options[suitEl.selectedIndex].text;
 
     /* Tank label */
-    var tankEl = document.getElementById('tank-type');
-    var tankLabel = tankEl.options[tankEl.selectedIndex].text.split('(')[0].trim();
+    var tankLabel = getTankLabel();
 
     /* Exp label */
     var expEl = document.getElementById('experience');
@@ -890,18 +1110,36 @@
     if (document.getElementById('gear-light').checked) gearParts.push('Video light');
     var gearLabel = gearParts.length ? gearParts.join(', ') : 'None';
 
-    /* Breakdown table */
-    document.getElementById('row-base-detail').textContent = waterLabel + ' · ' + (Math.round(r.bodyKg * 10) / 10).toFixed(1) + ' kg body';
+    /* Body buoyancy row detail */
+    var bodyDetail = fmt1(r.bodyKg) + ' kg body · ' + fmt1(r.fatPct) + '% fat · '
+      + r.gender + ' · ' + waterLabel
+      + ' (body +' + fmt1(r.bodyNetBuoyancy) + ' kg, AL80 +' + fmt1(r.al80Buoyancy) + ' kg)';
+
+    document.getElementById('row-base-detail').textContent = bodyDetail;
     document.getElementById('row-base-val').innerHTML = fmtAdj(r.base);
     document.getElementById('row-suit-detail').textContent = suitLabel;
     document.getElementById('row-suit-val').innerHTML = fmtAdj(r.suitAdj);
-    document.getElementById('row-tank-detail').textContent = tankLabel;
+
+    /* Undergarment row */
+    var ugTr = document.getElementById('row-undergarment-tr');
+    if (r.undergarmentAdj !== 0) {
+      ugTr.style.display = '';
+      var ugEl = document.getElementById('undergarment');
+      document.getElementById('row-undergarment-detail').textContent =
+        ugEl.options[ugEl.selectedIndex].text.split('(')[0].trim();
+      document.getElementById('row-undergarment-val').innerHTML = fmtAdj(r.undergarmentAdj);
+    } else {
+      ugTr.style.display = 'none';
+    }
+
+    document.getElementById('row-tank-detail').textContent = tankLabel + (tankConfig === 'twin' ? ' (twinset)' : '');
     document.getElementById('row-tank-val').innerHTML = fmtAdj(r.tankAdj);
     document.getElementById('row-exp-detail').textContent = expLabel;
     document.getElementById('row-exp-val').innerHTML = fmtAdj(r.expAdj);
     document.getElementById('row-gear-detail').textContent = gearLabel;
     document.getElementById('row-gear-val').innerHTML = fmtAdj(r.gearAdj);
-    document.getElementById('row-total-val').textContent = (Math.round(totalKg * 10) / 10).toFixed(1) + ' kg (' + (Math.round(totalLbs * 10) / 10).toFixed(1) + ' lbs)';
+    document.getElementById('row-total-val').textContent =
+      fmt1(totalKg) + ' kg (' + fmt1(totalLbs) + ' lbs)';
 
     document.getElementById('breakdown-card').classList.remove('hidden');
     document.getElementById('action-row').classList.remove('hidden');
@@ -911,46 +1149,49 @@
   function copySummary() {
     if (!lastResult) return;
     var r = lastResult;
-    var totalKg = r.total;
+    var totalKg  = r.total;
     var totalLbs = totalKg * 2.205;
 
     var suitEl = document.getElementById('suit-type');
-    var suitLabel = suitEl.options[suitEl.selectedIndex].text;
-    var tankEl = document.getElementById('tank-type');
-    var tankLabel = tankEl.options[tankEl.selectedIndex].text;
-    var expEl = document.getElementById('experience');
-    var expLabel = expEl.options[expEl.selectedIndex].text;
     var waterEl = document.getElementById('water-type');
-    var waterLabel = waterEl.options[waterEl.selectedIndex].text;
+    var expEl   = document.getElementById('experience');
 
     var gearParts = [];
     if (document.getElementById('gear-camera').checked) gearParts.push('Camera system (+1.5 kg)');
-    if (document.getElementById('gear-light').checked) gearParts.push('Heavy-duty video light (+0.5 kg)');
+    if (document.getElementById('gear-light').checked)  gearParts.push('Heavy-duty video light (+0.5 kg)');
 
     var bodyDisplay = unit === 'lbs'
-      ? parseFloat(document.getElementById('body-weight').value) + ' lbs (' + (Math.round(r.bodyKg * 10) / 10).toFixed(1) + ' kg)'
-      : (Math.round(r.bodyKg * 10) / 10).toFixed(1) + ' kg';
+      ? parseFloat(document.getElementById('body-weight').value) + ' lbs (' + fmt1(r.bodyKg) + ' kg)'
+      : fmt1(r.bodyKg) + ' kg';
+
+    var ugEl = document.getElementById('undergarment');
+    var ugLabel = (r.undergarmentAdj !== 0)
+      ? ugEl.options[ugEl.selectedIndex].text : '';
 
     var lines = [
       'Dive Weight Estimate — CalcNova',
       '================================',
       'Body weight: ' + bodyDisplay,
-      'Water type: ' + waterLabel,
-      'Exposure suit: ' + suitLabel,
-      'Tank type: ' + tankLabel,
-      'Experience: ' + expLabel,
+      'Gender: ' + r.gender,
+      'Body fat: ' + fmt1(r.fatPct) + '%',
+      'Water type: ' + waterEl.options[waterEl.selectedIndex].text,
+      'Exposure suit: ' + suitEl.options[suitEl.selectedIndex].text,
+      ugLabel ? 'Undergarment: ' + ugLabel : '',
+      'Tank: ' + getTankLabel() + (tankConfig === 'twin' ? ' (twinset)' : ''),
+      'Experience: ' + expEl.options[expEl.selectedIndex].text,
       gearParts.length ? 'Additional gear: ' + gearParts.join(', ') : '',
       '--------------------------------',
-      'Base weight: ' + (Math.round(r.base * 10) / 10).toFixed(1) + ' kg',
-      'Suit adjustment: ' + (r.suitAdj >= 0 ? '+' : '') + (Math.round(r.suitAdj * 10) / 10).toFixed(1) + ' kg',
-      'Tank adjustment: ' + (r.tankAdj >= 0 ? '+' : '') + (Math.round(r.tankAdj * 10) / 10).toFixed(1) + ' kg',
-      'Experience adjustment: ' + (r.expAdj >= 0 ? '+' : '') + (Math.round(r.expAdj * 10) / 10).toFixed(1) + ' kg',
-      'Gear additions: +' + (Math.round(r.gearAdj * 10) / 10).toFixed(1) + ' kg',
+      'Body buoyancy: +' + fmt1(r.base) + ' kg',
+      'Suit: +' + fmt1(r.suitAdj) + ' kg',
+      ugLabel ? 'Undergarment: +' + fmt1(r.undergarmentAdj) + ' kg' : '',
+      'Tank adj: ' + (r.tankAdj >= 0 ? '+' : '') + fmt1(r.tankAdj) + ' kg',
+      'Experience: ' + (r.expAdj >= 0 ? '+' : '') + fmt1(r.expAdj) + ' kg',
+      'Gear: +' + fmt1(r.gearAdj) + ' kg',
       '================================',
-      'RECOMMENDED WEIGHT: ' + (Math.round(totalKg * 10) / 10).toFixed(1) + ' kg (' + (Math.round(totalLbs * 10) / 10).toFixed(1) + ' lbs)',
+      'RECOMMENDED WEIGHT: ' + fmt1(totalKg) + ' kg (' + fmt1(totalLbs) + ' lbs)',
       '',
       'Always perform a surface buoyancy check before diving.',
-      'This is an estimate only — verify with your instructor.',
+      'This is a physics-based estimate — verify in water.',
       'calcnova.co/dive-weight-calculator.html'
     ].filter(function(l) { return l !== ''; }).join('\n');
 
