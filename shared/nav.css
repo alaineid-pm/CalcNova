@@ -143,6 +143,8 @@ body.dark .mega-menu { box-shadow: 0 12px 40px rgba(0,0,0,.4), 0 2px 8px rgba(0,
 .menu-cat-icon.productivity { background: linear-gradient(135deg, rgba(99,102,241,.15), rgba(99,102,241,.05)); }
 .menu-cat-icon.utility    { background: linear-gradient(135deg, rgba(16,185,129,.15), rgba(16,185,129,.05)); }
 .menu-cat-icon.articles   { background: linear-gradient(135deg, rgba(239,68,68,.12), rgba(239,68,68,.04)); }
+.menu-cat-icon.health     { background: linear-gradient(135deg, rgba(16,185,129,.15), rgba(99,102,241,.05)); }
+.menu-cat-icon.math       { background: linear-gradient(135deg, rgba(99,102,241,.15), rgba(16,185,129,.05)); }
 .menu-cat-name { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .6px; color: var(--text-muted); }
 
 .menu-items { list-style: none; }

@@ -1,0 +1,1157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Macro Calculator — Protein, Carbs &amp; Fat Calculator | CalcNova</title>
+  <meta name="description" content="Calculate your daily protein, carbohydrate, and fat targets based on your calorie goal. Free macronutrient calculator for fat loss, muscle gain, keto, and custom splits.">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Macro Calculator — Protein, Carbs &amp; Fat Calculator | CalcNova">
+  <meta property="og:description" content="Calculate your daily protein, carbohydrate, and fat targets based on your calorie goal. Free macronutrient calculator.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://calcnova.co/macro-calculator.html">
+  <meta property="og:site_name" content="CalcNova">
+
+  <!-- JSON-LD Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "Macro Calculator — Protein, Carbs & Fat Calculator",
+    "url": "https://calcnova.co/macro-calculator.html",
+    "description": "Calculate your daily protein, carbohydrate, and fat targets based on your calorie goal.",
+    "isPartOf": {
+      "@type": "WebSite",
+      "name": "CalcNova",
+      "url": "https://calcnova.co/"
+    }
+  }
+  </script>
+
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="shared/nav.css">
+  <style>
+    /* ── RESET / BASE ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text-primary);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── LAYOUT ── */
+    .app {
+      position: relative;
+      z-index: 1;
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 0 16px 60px;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 38px 32px 32px;
+      margin-bottom: 28px;
+    }
+    .hero-title {
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: -.5px;
+    }
+    .hero-title span {
+      background: linear-gradient(135deg, var(--green), var(--purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero-desc {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-top: 6px;
+      line-height: 1.5;
+      max-width: 640px;
+    }
+
+    /* ── CARD ── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 22px;
+      margin-bottom: 28px;
+    }
+    .card-title {
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .card-title-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    /* ── FORM ── */
+    .form-group { margin-bottom: 14px; }
+    .form-group:last-child { margin-bottom: 0; }
+    .form-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin-bottom: 6px;
+      display: block;
+    }
+
+    input[type="number"], select {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text-primary);
+      font-family: var(--font);
+      font-size: 14px;
+      font-weight: 600;
+      padding: 9px 12px;
+      outline: none;
+      transition: border-color .2s, box-shadow .2s;
+      -moz-appearance: textfield;
+    }
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+    input[type="number"]:focus, select:focus {
+      border-color: var(--green);
+      box-shadow: 0 0 0 3px rgba(16,185,129,.12);
+    }
+    select {
+      -webkit-appearance: none;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239ba3b5' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      padding-right: 32px;
+      cursor: pointer;
+    }
+
+    /* ── WEIGHT INPUT WITH UNIT TOGGLE ── */
+    .weight-row {
+      display: flex;
+      gap: 8px;
+      align-items: stretch;
+    }
+    .weight-row input[type="number"] {
+      flex: 1;
+    }
+    .unit-toggle {
+      display: flex;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    .unit-btn {
+      padding: 0 14px;
+      background: none;
+      border: none;
+      font-family: var(--font);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all .15s;
+      white-space: nowrap;
+    }
+    .unit-btn.active {
+      background: var(--green);
+      color: #fff;
+    }
+
+    /* ── SEGMENTED BUTTONS ── */
+    .seg-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .seg-btn {
+      padding: 7px 14px;
+      background: var(--bg);
+      border: 1.5px solid var(--border);
+      border-radius: 9px;
+      font-family: var(--font);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all .15s;
+      white-space: nowrap;
+    }
+    .seg-btn:hover {
+      border-color: var(--green);
+      color: var(--green);
+    }
+    .seg-btn.active {
+      background: var(--green);
+      border-color: var(--green);
+      color: #fff;
+    }
+    .seg-btn.meal-btn {
+      min-width: 52px;
+      text-align: center;
+    }
+
+    /* ── CUSTOM SLIDERS SECTION ── */
+    .custom-sliders {
+      display: none;
+      margin-top: 16px;
+      padding: 16px;
+      background: var(--bg);
+      border-radius: 12px;
+      border: 1px solid var(--border);
+    }
+    .custom-sliders.visible { display: block; }
+
+    .slider-group { margin-bottom: 14px; }
+    .slider-group:last-child { margin-bottom: 0; }
+
+    .slider-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+    .slider-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+    .slider-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .slider-pct {
+      font-family: var(--mono);
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-primary);
+      min-width: 38px;
+      text-align: right;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      height: 4px;
+      cursor: pointer;
+      border-radius: 4px;
+      outline: none;
+      border: none;
+      background: transparent;
+      padding: 0;
+    }
+    input[type="range"].protein-range { accent-color: #3b82f6; }
+    input[type="range"].carbs-range   { accent-color: var(--amber); }
+    input[type="range"].fat-range     { accent-color: var(--purple); }
+
+    .slider-sum-warning {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--red);
+      margin-top: 10px;
+      display: none;
+    }
+    .slider-sum-warning.visible { display: block; }
+
+    /* ── RESULT CARD ── */
+    .result-card {
+      background: linear-gradient(135deg, rgba(16,185,129,.08), rgba(99,102,241,.08));
+      border: 1.5px solid rgba(16,185,129,.3);
+      border-radius: 20px;
+      padding: 28px;
+      margin-bottom: 28px;
+    }
+    .result-card.hidden { display: none; }
+
+    .result-label {
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
+    /* ── MACRO CARDS ROW ── */
+    .macro-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+    @media (max-width: 520px) {
+      .macro-cards { grid-template-columns: 1fr; }
+    }
+
+    .macro-card {
+      border-radius: 14px;
+      padding: 18px 16px;
+      position: relative;
+      overflow: hidden;
+    }
+    .macro-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+    }
+    .macro-card.protein {
+      background: rgba(59,130,246,.07);
+      border: 1.5px solid rgba(59,130,246,.25);
+    }
+    .macro-card.protein::before { background: #3b82f6; }
+
+    .macro-card.carbs {
+      background: rgba(245,158,11,.07);
+      border: 1.5px solid rgba(245,158,11,.25);
+    }
+    .macro-card.carbs::before { background: var(--amber); }
+
+    .macro-card.fat {
+      background: rgba(99,102,241,.07);
+      border: 1.5px solid rgba(99,102,241,.25);
+    }
+    .macro-card.fat::before { background: var(--purple); }
+
+    .macro-card-name {
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .macro-card.protein .macro-card-name { color: #3b82f6; }
+    .macro-card.carbs   .macro-card-name { color: var(--amber); }
+    .macro-card.fat     .macro-card-name { color: var(--purple); }
+
+    .macro-card-grams {
+      font-family: var(--mono);
+      font-size: 32px;
+      font-weight: 700;
+      line-height: 1;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+    }
+    .macro-card-unit {
+      font-family: var(--mono);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-muted);
+    }
+    .macro-card-cal {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin-bottom: 4px;
+    }
+    .macro-card-pct {
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-muted);
+    }
+
+    /* ── MACRO BAR ── */
+    .macro-bar-wrap { margin-bottom: 22px; }
+    .macro-bar-label-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 6px;
+    }
+    .macro-bar {
+      height: 12px;
+      border-radius: 8px;
+      overflow: hidden;
+      display: flex;
+      background: var(--bg);
+      border: 1px solid var(--border);
+    }
+    .macro-bar-seg {
+      height: 100%;
+      transition: width .35s ease;
+    }
+    .macro-bar-seg.protein { background: #3b82f6; }
+    .macro-bar-seg.carbs   { background: var(--amber); }
+    .macro-bar-seg.fat     { background: var(--purple); }
+
+    .bar-legend {
+      display: flex;
+      gap: 16px;
+      margin-top: 8px;
+      flex-wrap: wrap;
+    }
+    .bar-legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+    .bar-legend-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    /* ── PROTEIN PER BODYWEIGHT ── */
+    .pbw-section { margin-bottom: 22px; }
+    .pbw-values {
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+    .pbw-stat {
+      text-align: center;
+    }
+    .pbw-num {
+      font-family: var(--mono);
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text-primary);
+      display: block;
+    }
+    .pbw-unit {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: .8px;
+    }
+
+    .pbw-ranges {
+      background: rgba(16,185,129,.06);
+      border: 1px solid rgba(16,185,129,.2);
+      border-radius: 10px;
+      padding: 12px 14px;
+      font-size: 12px;
+      line-height: 1.7;
+      color: var(--text-secondary);
+    }
+    .pbw-ranges strong { color: var(--text-primary); font-weight: 700; }
+
+    .pbw-warning {
+      display: none;
+      margin-top: 10px;
+      padding: 10px 14px;
+      background: rgba(239,68,68,.08);
+      border: 1px solid rgba(239,68,68,.25);
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--red);
+    }
+    .pbw-warning.visible { display: flex; align-items: center; gap: 8px; }
+
+    /* ── PER-MEAL TABLE ── */
+    .meal-table-wrap { margin-bottom: 4px; }
+    .meal-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    .meal-table th {
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      text-align: left;
+      padding: 0 12px 10px;
+      border-bottom: 1px solid var(--border);
+    }
+    .meal-table th:first-child { padding-left: 0; }
+    .meal-table td {
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border);
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    .meal-table td:first-child { padding-left: 0; color: var(--text-muted); font-weight: 700; }
+    .meal-table tr:last-child td { border-bottom: none; }
+    .meal-table .protein-val { color: #3b82f6; font-family: var(--mono); }
+    .meal-table .carbs-val   { color: var(--amber); font-family: var(--mono); }
+    .meal-table .fat-val     { color: var(--purple); font-family: var(--mono); }
+    .meal-table .total-row td { border-top: 2px solid var(--border); font-weight: 700; }
+
+    /* ── ACTION ROW ── */
+    .action-row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    .action-btn {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 10px 18px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-family: var(--font);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all .15s;
+    }
+    .action-btn:hover {
+      border-color: var(--green);
+      color: var(--green);
+    }
+    .action-btn svg { flex-shrink: 0; }
+
+    /* ── TOAST ── */
+    #toast {
+      position: fixed;
+      bottom: 28px;
+      right: 24px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 18px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-primary);
+      box-shadow: 0 8px 28px rgba(0,0,0,.12);
+      opacity: 0;
+      transition: opacity .25s;
+      pointer-events: none;
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    #toast.show { opacity: 1; }
+
+    /* ── DISCLAIMER ── */
+    .disclaimer {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.6;
+      padding: 14px 16px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+    }
+    .disclaimer strong { color: var(--text-secondary); }
+
+    /* ── UTILITY ── */
+    .hidden { display: none !important; }
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 0;
+    }
+    @media (max-width: 640px) {
+      .two-col { grid-template-columns: 1fr; }
+      .hero { padding: 24px 18px; }
+      .card { padding: 16px; }
+      .result-card { padding: 20px 16px; }
+      .pbw-values { gap: 16px; }
+    }
+    @media print {
+      #cn-header, .action-row, #toast { display: none !important; }
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+
+  <!-- HERO -->
+  <div class="hero">
+    <h1 class="hero-title">Macro <span>Calculator</span></h1>
+    <p class="hero-desc">Enter your daily calorie target, body weight, and diet goal to get precise protein, carbs, and fat targets — plus a per-meal breakdown.</p>
+  </div>
+
+  <!-- INPUTS -->
+  <div class="card">
+    <div class="card-title">
+      <span class="card-title-dot" style="background:var(--green);"></span>
+      Inputs
+    </div>
+
+    <div class="two-col" style="margin-bottom:14px;">
+      <!-- Calories -->
+      <div class="form-group" style="margin-bottom:0;">
+        <label class="form-label" for="calories">Daily Calorie Target</label>
+        <input type="number" id="calories" min="500" max="10000" step="10" placeholder="e.g. 2000">
+      </div>
+
+      <!-- Weight -->
+      <div class="form-group" style="margin-bottom:0;">
+        <label class="form-label" for="weight">Body Weight</label>
+        <div class="weight-row">
+          <input type="number" id="weight" min="40" max="500" step="0.1" placeholder="e.g. 160">
+          <div class="unit-toggle">
+            <button class="unit-btn active" data-unit="lbs" id="btn-lbs">lbs</button>
+            <button class="unit-btn" data-unit="kg" id="btn-kg">kg</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Goal -->
+    <div class="form-group">
+      <label class="form-label">Diet Goal</label>
+      <div class="seg-group" id="goal-group">
+        <button class="seg-btn active" data-goal="maintenance">Maintenance</button>
+        <button class="seg-btn" data-goal="fat-loss">Fat Loss</button>
+        <button class="seg-btn" data-goal="muscle-gain">Muscle Gain</button>
+        <button class="seg-btn" data-goal="low-carb">Low Carb</button>
+        <button class="seg-btn" data-goal="keto">Keto</button>
+        <button class="seg-btn" data-goal="custom">Custom</button>
+      </div>
+    </div>
+
+    <!-- Custom sliders (shown only when Custom is selected) -->
+    <div class="custom-sliders" id="custom-sliders">
+      <div class="slider-group">
+        <div class="slider-header">
+          <span class="slider-label">
+            <span class="slider-dot" style="background:#3b82f6;"></span>
+            Protein
+          </span>
+          <span class="slider-pct" id="protein-pct-label">30%</span>
+        </div>
+        <input type="range" class="protein-range" id="protein-slider" min="5" max="60" value="30">
+      </div>
+      <div class="slider-group">
+        <div class="slider-header">
+          <span class="slider-label">
+            <span class="slider-dot" style="background:var(--amber);"></span>
+            Carbs
+          </span>
+          <span class="slider-pct" id="carbs-pct-label">40%</span>
+        </div>
+        <input type="range" class="carbs-range" id="carbs-slider" min="5" max="75" value="40">
+      </div>
+      <div class="slider-group">
+        <div class="slider-header">
+          <span class="slider-label">
+            <span class="slider-dot" style="background:var(--purple);"></span>
+            Fat
+          </span>
+          <span class="slider-pct" id="fat-pct-label">30%</span>
+        </div>
+        <input type="range" class="fat-range" id="fat-slider" min="5" max="75" value="30">
+      </div>
+      <div class="slider-sum-warning" id="slider-warning">
+        ⚠ Ratios must add up to 100% — currently <span id="slider-sum-display">100</span>%
+      </div>
+    </div>
+
+    <!-- Meals -->
+    <div class="form-group" style="margin-top:14px;">
+      <label class="form-label">Meals Per Day</label>
+      <div class="seg-group" id="meals-group">
+        <button class="seg-btn meal-btn" data-meals="2">2</button>
+        <button class="seg-btn meal-btn active" data-meals="3">3</button>
+        <button class="seg-btn meal-btn" data-meals="4">4</button>
+        <button class="seg-btn meal-btn" data-meals="5">5</button>
+        <button class="seg-btn meal-btn" data-meals="6">6</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULTS -->
+  <div class="result-card hidden" id="result-card">
+
+    <!-- Action buttons -->
+    <div class="action-row">
+      <button class="action-btn" id="copy-btn">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        Copy Results
+      </button>
+      <button class="action-btn" id="print-btn">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+        Print
+      </button>
+    </div>
+
+    <!-- Daily totals label -->
+    <p class="result-label">Daily Macro Targets</p>
+
+    <!-- Three macro cards -->
+    <div class="macro-cards">
+      <div class="macro-card protein">
+        <div class="macro-card-name">Protein</div>
+        <div class="macro-card-grams" id="protein-g">—</div>
+        <div class="macro-card-unit">grams</div>
+        <div class="macro-card-cal" id="protein-cal">— cal</div>
+        <div class="macro-card-pct" id="protein-pct-display">—%</div>
+      </div>
+      <div class="macro-card carbs">
+        <div class="macro-card-name">Carbs</div>
+        <div class="macro-card-grams" id="carbs-g">—</div>
+        <div class="macro-card-unit">grams</div>
+        <div class="macro-card-cal" id="carbs-cal">— cal</div>
+        <div class="macro-card-pct" id="carbs-pct-display">—%</div>
+      </div>
+      <div class="macro-card fat">
+        <div class="macro-card-name">Fat</div>
+        <div class="macro-card-grams" id="fat-g">—</div>
+        <div class="macro-card-unit">grams</div>
+        <div class="macro-card-cal" id="fat-cal">— cal</div>
+        <div class="macro-card-pct" id="fat-pct-display">—%</div>
+      </div>
+    </div>
+
+    <!-- Macro bar -->
+    <div class="macro-bar-wrap">
+      <div class="macro-bar" id="macro-bar">
+        <div class="macro-bar-seg protein" id="bar-protein" style="width:30%"></div>
+        <div class="macro-bar-seg carbs"   id="bar-carbs"   style="width:40%"></div>
+        <div class="macro-bar-seg fat"     id="bar-fat"     style="width:30%"></div>
+      </div>
+      <div class="bar-legend">
+        <div class="bar-legend-item">
+          <span class="bar-legend-dot" style="background:#3b82f6;"></span>
+          Protein
+        </div>
+        <div class="bar-legend-item">
+          <span class="bar-legend-dot" style="background:var(--amber);"></span>
+          Carbs
+        </div>
+        <div class="bar-legend-item">
+          <span class="bar-legend-dot" style="background:var(--purple);"></span>
+          Fat
+        </div>
+      </div>
+    </div>
+
+    <!-- Protein per bodyweight -->
+    <div class="pbw-section" id="pbw-section" style="display:none;">
+      <p class="result-label">Protein Per Body Weight</p>
+      <div class="pbw-values">
+        <div class="pbw-stat">
+          <span class="pbw-num" id="pbw-per-lb">—</span>
+          <span class="pbw-unit">g / lb</span>
+        </div>
+        <div class="pbw-stat">
+          <span class="pbw-num" id="pbw-per-kg">—</span>
+          <span class="pbw-unit">g / kg</span>
+        </div>
+      </div>
+      <div class="pbw-ranges">
+        <strong>Reference ranges:</strong><br>
+        Sedentary: 0.36 g/lb &nbsp;(0.8 g/kg)<br>
+        Active / muscle building: 0.7–1.0 g/lb &nbsp;(1.6–2.2 g/kg)
+      </div>
+      <div class="pbw-warning" id="pbw-warning">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        Above typical recommendations (&gt; 1.5 g/lb). Consider consulting a dietitian.
+      </div>
+    </div>
+
+    <!-- Per-meal breakdown -->
+    <p class="result-label" style="margin-top:6px;">Per-Meal Breakdown</p>
+    <div class="meal-table-wrap">
+      <table class="meal-table" id="meal-table">
+        <thead>
+          <tr>
+            <th>Meal</th>
+            <th>Protein</th>
+            <th>Carbs</th>
+            <th>Fat</th>
+            <th>Calories</th>
+          </tr>
+        </thead>
+        <tbody id="meal-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- DISCLAIMER -->
+  <div class="disclaimer">
+    <strong>Disclaimer:</strong> This calculator provides estimates for educational purposes only. Results are based on statistical formulas and may not reflect your individual health profile. Consult a healthcare professional before making changes to your diet or exercise routine.
+  </div>
+
+</div><!-- .app -->
+
+<div id="toast">
+  <span style="color:var(--green);font-size:15px;">✓</span>
+  <span id="toast-msg">Copied!</span>
+</div>
+
+<script>window.CALCNOVA_PAGE = { id: 'macro-calculator', disclaimer: 'This calculator provides estimates for educational purposes only. Results are based on statistical formulas and may not reflect your individual health profile. Consult a healthcare professional before making changes to your diet or exercise routine.' };</script>
+<script src="shared/nav.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  /* ── GOAL PRESETS (protein%, carbs%, fat%) ── */
+  var PRESETS = {
+    'maintenance':  { p: 30, c: 40, f: 30 },
+    'fat-loss':     { p: 40, c: 30, f: 30 },
+    'muscle-gain':  { p: 30, c: 45, f: 25 },
+    'low-carb':     { p: 35, c: 15, f: 50 },
+    'keto':         { p: 20, c:  5, f: 75 },
+    'custom':       { p: 30, c: 40, f: 30 }  // initial custom defaults
+  };
+
+  /* ── STATE ── */
+  var state = {
+    calories: 0,
+    weight: 0,
+    unit: 'lbs',
+    goal: 'maintenance',
+    meals: 3,
+    custom: { p: 30, c: 40, f: 30 }
+  };
+
+  /* ── DOM REFS ── */
+  var calInput     = document.getElementById('calories');
+  var weightInput  = document.getElementById('weight');
+  var btnLbs       = document.getElementById('btn-lbs');
+  var btnKg        = document.getElementById('btn-kg');
+  var goalGroup    = document.getElementById('goal-group');
+  var mealsGroup   = document.getElementById('meals-group');
+  var customSliders = document.getElementById('custom-sliders');
+  var proteinSlider = document.getElementById('protein-slider');
+  var carbsSlider   = document.getElementById('carbs-slider');
+  var fatSlider     = document.getElementById('fat-slider');
+  var proteinPctLbl = document.getElementById('protein-pct-label');
+  var carbsPctLbl   = document.getElementById('carbs-pct-label');
+  var fatPctLbl     = document.getElementById('fat-pct-label');
+  var sliderWarning = document.getElementById('slider-warning');
+  var sliderSumDisp = document.getElementById('slider-sum-display');
+  var resultCard    = document.getElementById('result-card');
+  var pbwSection    = document.getElementById('pbw-section');
+
+  /* ── URL PARAM: pre-fill calories ── */
+  (function () {
+    var params = new URLSearchParams(window.location.search);
+    var cal = parseInt(params.get('calories'), 10);
+    if (!isNaN(cal) && cal > 0) {
+      calInput.value = cal;
+    }
+  })();
+
+  /* ── UNIT TOGGLE ── */
+  btnLbs.addEventListener('click', function () {
+    if (state.unit === 'lbs') return;
+    var w = parseFloat(weightInput.value);
+    state.unit = 'lbs';
+    btnLbs.classList.add('active');
+    btnKg.classList.remove('active');
+    if (!isNaN(w) && w > 0) {
+      weightInput.value = round1(w * 2.20462);
+    }
+    update();
+  });
+  btnKg.addEventListener('click', function () {
+    if (state.unit === 'kg') return;
+    var w = parseFloat(weightInput.value);
+    state.unit = 'kg';
+    btnKg.classList.add('active');
+    btnLbs.classList.remove('active');
+    if (!isNaN(w) && w > 0) {
+      weightInput.value = round1(w / 2.20462);
+    }
+    update();
+  });
+
+  /* ── GOAL BUTTONS ── */
+  goalGroup.addEventListener('click', function (e) {
+    var btn = e.target.closest('.seg-btn');
+    if (!btn) return;
+    var goal = btn.dataset.goal;
+    goalGroup.querySelectorAll('.seg-btn').forEach(function (b) { b.classList.remove('active'); });
+    btn.classList.add('active');
+    state.goal = goal;
+    if (goal === 'custom') {
+      customSliders.classList.add('visible');
+      syncSlidersToCustom();
+    } else {
+      customSliders.classList.remove('visible');
+    }
+    update();
+  });
+
+  /* ── MEALS BUTTONS ── */
+  mealsGroup.addEventListener('click', function (e) {
+    var btn = e.target.closest('.seg-btn');
+    if (!btn) return;
+    mealsGroup.querySelectorAll('.seg-btn').forEach(function (b) { b.classList.remove('active'); });
+    btn.classList.add('active');
+    state.meals = parseInt(btn.dataset.meals, 10);
+    update();
+  });
+
+  /* ── SLIDERS (Custom mode) ── */
+  /* When one moves, redistribute the remaining 100% between the other two proportionally */
+  proteinSlider.addEventListener('input', function () {
+    adjustSliders('p', parseInt(this.value, 10));
+  });
+  carbsSlider.addEventListener('input', function () {
+    adjustSliders('c', parseInt(this.value, 10));
+  });
+  fatSlider.addEventListener('input', function () {
+    adjustSliders('f', parseInt(this.value, 10));
+  });
+
+  function adjustSliders(changed, newVal) {
+    /* Clamp new value so the other two can still have at least 5% each */
+    newVal = Math.min(newVal, 90);
+    newVal = Math.max(newVal, 5);
+    state.custom[changed] = newVal;
+
+    var remaining = 100 - newVal;
+    var otherKeys = ['p', 'c', 'f'].filter(function (k) { return k !== changed; });
+    var sumOthers = state.custom[otherKeys[0]] + state.custom[otherKeys[1]];
+
+    if (sumOthers === 0) {
+      /* Edge case: split remaining equally */
+      state.custom[otherKeys[0]] = Math.round(remaining / 2);
+      state.custom[otherKeys[1]] = remaining - state.custom[otherKeys[0]];
+    } else {
+      /* Distribute proportionally */
+      var a = Math.round((state.custom[otherKeys[0]] / sumOthers) * remaining);
+      var b = remaining - a;
+      /* Enforce minimum 5 for each */
+      if (a < 5) { a = 5; b = remaining - a; }
+      if (b < 5) { b = 5; a = remaining - b; }
+      state.custom[otherKeys[0]] = a;
+      state.custom[otherKeys[1]] = b;
+    }
+
+    syncSlidersToCustom();
+    update();
+  }
+
+  function syncSlidersToCustom() {
+    proteinSlider.value = state.custom.p;
+    carbsSlider.value   = state.custom.c;
+    fatSlider.value     = state.custom.f;
+    proteinPctLbl.textContent = state.custom.p + '%';
+    carbsPctLbl.textContent   = state.custom.c + '%';
+    fatPctLbl.textContent     = state.custom.f + '%';
+
+    var sum = state.custom.p + state.custom.c + state.custom.f;
+    if (sum !== 100) {
+      sliderWarning.classList.add('visible');
+      sliderSumDisp.textContent = sum;
+    } else {
+      sliderWarning.classList.remove('visible');
+    }
+  }
+
+  /* ── INPUT EVENTS ── */
+  calInput.addEventListener('input', update);
+  weightInput.addEventListener('input', update);
+
+  /* ── HELPERS ── */
+  function round1(n) { return Math.round(n * 10) / 10; }
+  function fmt(n) { return Math.round(n).toLocaleString(); }
+
+  function getRatios() {
+    if (state.goal === 'custom') {
+      var sum = state.custom.p + state.custom.c + state.custom.f;
+      if (sum !== 100) return null;
+      return { p: state.custom.p / 100, c: state.custom.c / 100, f: state.custom.f / 100 };
+    }
+    var preset = PRESETS[state.goal];
+    return { p: preset.p / 100, c: preset.c / 100, f: preset.f / 100 };
+  }
+
+  /* ── MAIN CALCULATION & RENDER ── */
+  function update() {
+    var cal = parseFloat(calInput.value);
+    if (isNaN(cal) || cal <= 0) {
+      resultCard.classList.add('hidden');
+      return;
+    }
+
+    var ratios = getRatios();
+    if (!ratios) {
+      resultCard.classList.add('hidden');
+      return;
+    }
+
+    state.calories = cal;
+
+    /* Macros */
+    var proteinG = (cal * ratios.p) / 4;
+    var carbsG   = (cal * ratios.c) / 4;
+    var fatG     = (cal * ratios.f) / 9;
+
+    var proteinCal = proteinG * 4;
+    var carbsCal   = carbsG * 4;
+    var fatCal     = fatG * 9;
+
+    var proteinPct = Math.round(ratios.p * 100);
+    var carbsPct   = Math.round(ratios.c * 100);
+    var fatPct     = Math.round(ratios.f * 100);
+
+    /* Render macro cards */
+    document.getElementById('protein-g').textContent          = fmt(proteinG);
+    document.getElementById('protein-cal').textContent        = fmt(proteinCal) + ' cal';
+    document.getElementById('protein-pct-display').textContent = proteinPct + '% of calories';
+
+    document.getElementById('carbs-g').textContent           = fmt(carbsG);
+    document.getElementById('carbs-cal').textContent         = fmt(carbsCal) + ' cal';
+    document.getElementById('carbs-pct-display').textContent  = carbsPct + '% of calories';
+
+    document.getElementById('fat-g').textContent             = fmt(fatG);
+    document.getElementById('fat-cal').textContent           = fmt(fatCal) + ' cal';
+    document.getElementById('fat-pct-display').textContent    = fatPct + '% of calories';
+
+    /* Macro bar */
+    document.getElementById('bar-protein').style.width = proteinPct + '%';
+    document.getElementById('bar-carbs').style.width   = carbsPct + '%';
+    document.getElementById('bar-fat').style.width     = fatPct + '%';
+
+    /* Protein per bodyweight */
+    var weightVal = parseFloat(weightInput.value);
+    if (!isNaN(weightVal) && weightVal > 0) {
+      pbwSection.style.display = '';
+      var weightLbs = state.unit === 'lbs' ? weightVal : weightVal * 2.20462;
+      var weightKg  = state.unit === 'kg'  ? weightVal : weightVal / 2.20462;
+      var gPerLb = proteinG / weightLbs;
+      var gPerKg = proteinG / weightKg;
+      document.getElementById('pbw-per-lb').textContent = round1(gPerLb).toFixed(2);
+      document.getElementById('pbw-per-kg').textContent = round1(gPerKg).toFixed(2);
+
+      var warnEl = document.getElementById('pbw-warning');
+      if (gPerLb > 1.5) {
+        warnEl.classList.add('visible');
+      } else {
+        warnEl.classList.remove('visible');
+      }
+    } else {
+      pbwSection.style.display = 'none';
+    }
+
+    /* Per-meal breakdown */
+    var meals = state.meals;
+    var tbody = document.getElementById('meal-tbody');
+    tbody.innerHTML = '';
+    for (var i = 1; i <= meals; i++) {
+      var tr = document.createElement('tr');
+      var mealCal = Math.round((proteinG / meals) * 4 + (carbsG / meals) * 4 + (fatG / meals) * 9);
+      tr.innerHTML = '<td>Meal ' + i + '</td>' +
+        '<td class="protein-val">' + fmt(proteinG / meals) + 'g</td>' +
+        '<td class="carbs-val">'   + fmt(carbsG   / meals) + 'g</td>' +
+        '<td class="fat-val">'     + fmt(fatG     / meals) + 'g</td>' +
+        '<td>' + mealCal.toLocaleString() + ' cal</td>';
+      tbody.appendChild(tr);
+    }
+    /* Total row */
+    var trTotal = document.createElement('tr');
+    trTotal.className = 'total-row';
+    trTotal.innerHTML = '<td>Daily Total</td>' +
+      '<td class="protein-val">' + fmt(proteinG) + 'g</td>' +
+      '<td class="carbs-val">'   + fmt(carbsG)   + 'g</td>' +
+      '<td class="fat-val">'     + fmt(fatG)     + 'g</td>' +
+      '<td>' + Math.round(cal).toLocaleString() + ' cal</td>';
+    tbody.appendChild(trTotal);
+
+    resultCard.classList.remove('hidden');
+  }
+
+  /* ── COPY RESULTS ── */
+  document.getElementById('copy-btn').addEventListener('click', function () {
+    var cal    = parseFloat(calInput.value) || 0;
+    var ratios = getRatios();
+    if (!ratios || cal <= 0) return;
+
+    var proteinG = Math.round((cal * ratios.p) / 4);
+    var carbsG   = Math.round((cal * ratios.c) / 4);
+    var fatG     = Math.round((cal * ratios.f) / 9);
+    var goalLabel = document.querySelector('#goal-group .seg-btn.active').textContent.trim();
+
+    var lines = [
+      'CalcNova — Macro Calculator Results',
+      '=====================================',
+      'Goal: ' + goalLabel,
+      'Daily Calories: ' + Math.round(cal).toLocaleString() + ' cal',
+      '',
+      'Protein : ' + proteinG + 'g  (' + Math.round(ratios.p * 100) + '% / ' + (proteinG * 4).toLocaleString() + ' cal)',
+      'Carbs   : ' + carbsG   + 'g  (' + Math.round(ratios.c * 100) + '% / ' + (carbsG   * 4).toLocaleString() + ' cal)',
+      'Fat     : ' + fatG     + 'g  (' + Math.round(ratios.f * 100) + '% / ' + (fatG     * 9).toLocaleString() + ' cal)',
+    ];
+
+    var weightVal = parseFloat(weightInput.value);
+    if (!isNaN(weightVal) && weightVal > 0) {
+      var weightLbs = state.unit === 'lbs' ? weightVal : weightVal * 2.20462;
+      var weightKg  = state.unit === 'kg'  ? weightVal : weightVal / 2.20462;
+      var gPerLb = (proteinG / weightLbs).toFixed(2);
+      var gPerKg = (proteinG / weightKg).toFixed(2);
+      lines.push('');
+      lines.push('Protein per body weight: ' + gPerLb + ' g/lb  |  ' + gPerKg + ' g/kg');
+    }
+
+    lines.push('');
+    lines.push('Per-Meal Breakdown (' + state.meals + ' meals):');
+    var meals = state.meals;
+    for (var i = 1; i <= meals; i++) {
+      lines.push('  Meal ' + i + ': ' + Math.round(proteinG / meals) + 'g P / ' +
+        Math.round(carbsG / meals) + 'g C / ' + Math.round(fatG / meals) + 'g F');
+    }
+
+    lines.push('');
+    lines.push('Calculated at calcnova.co/macro-calculator.html');
+
+    navigator.clipboard.writeText(lines.join('\n')).then(function () {
+      showToast('Results copied!');
+    }).catch(function () {
+      showToast('Copy failed — try manually selecting the results.');
+    });
+  });
+
+  /* ── PRINT ── */
+  document.getElementById('print-btn').addEventListener('click', function () {
+    window.print();
+  });
+
+  /* ── TOAST ── */
+  var toastTimer;
+  function showToast(msg) {
+    var toast = document.getElementById('toast');
+    document.getElementById('toast-msg').textContent = msg || 'Done!';
+    toast.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { toast.classList.remove('show'); }, 2500);
+  }
+
+  /* ── INITIAL RENDER ── */
+  update();
+
+})();
+</script>
+</body>
+</html>
