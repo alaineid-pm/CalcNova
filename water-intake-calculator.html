@@ -265,6 +265,24 @@
       margin-left: 4px;
     }
 
+    /* ── Calculate button ── */
+    .calc-btn {
+      width: 100%;
+      padding: 13px;
+      background: linear-gradient(135deg, var(--green), var(--purple));
+      border: none;
+      border-radius: 12px;
+      font-family: var(--font);
+      font-size: 15px;
+      font-weight: 700;
+      color: white;
+      cursor: pointer;
+      transition: opacity .15s, transform .1s;
+      margin-top: 6px;
+    }
+    .calc-btn:hover { opacity: .9; }
+    .calc-btn:active { transform: scale(.98); }
+
     /* ── Error / Warning ── */
     .error-box {
       background: rgba(239,68,68,.08);
@@ -631,8 +649,8 @@
 
       <!-- Unit toggle -->
       <div class="unit-toggle" role="group" aria-label="Weight unit">
-        <button class="unit-btn active" id="btn-lbs" onclick="setUnit('lbs')">lbs</button>
-        <button class="unit-btn" id="btn-kg" onclick="setUnit('kg')">kg</button>
+        <button class="unit-btn active" id="btn-lbs" type="button">lbs</button>
+        <button class="unit-btn" id="btn-kg" type="button">kg</button>
       </div>
 
       <!-- Weight -->
@@ -682,6 +700,8 @@
 
       <div class="error-box" id="error-box" role="alert"></div>
       <div class="warning-box" id="warning-box" role="alert"></div>
+
+      <button class="calc-btn" id="calc-btn" onclick="calculate()">Calculate Water Intake</button>
     </div>
 
     <!-- Reference card -->
@@ -1213,10 +1233,19 @@
   }
 
   /* ─────────────────────────────────────────
-     Expose globals for onclick attributes
+     Expose globals
   ───────────────────────────────────────── */
-  window.setUnit      = setUnit;
-  window.copyResults  = copyResults;
+  window.setUnit     = setUnit;
+  window.calculate   = calculate;
+  window.copyResults = copyResults;
+
+  /* ─────────────────────────────────────────
+     Wire unit toggle buttons
+  ───────────────────────────────────────── */
+  var btnLbs = document.getElementById('btn-lbs');
+  var btnKg  = document.getElementById('btn-kg');
+  if (btnLbs) btnLbs.addEventListener('click', function () { setUnit('lbs'); });
+  if (btnKg)  btnKg.addEventListener('click',  function () { setUnit('kg'); });
 
   /* ─────────────────────────────────────────
      Wire all inputs
