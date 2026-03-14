@@ -725,7 +725,7 @@ function compute(){
     N, homePrice, downPayment, closingCosts, loanAmount, monthlyPayment,
     totalInterestPaid, mortgageDeduction, totalPropTax, totalHomeIns,
     totalHOA, totalMaint, sellingCosts, equityEnd, homeValueEnd,
-    remainingBalance, netBuyCost, totalCashOutBuy2,
+    remainingBalance, netBuyCost, totalCashOutBuy2, homeInsYr,
     totalRentPaid, totalRenterIns, investedAmount, investmentGain,
     dpGain, ccGain, netRentCost, rentMo,
     diff, buyWins, breakEvenYear,
@@ -880,9 +880,7 @@ function calculate(){
   document.getElementById('buy-col').classList.toggle('winner',res.buyWins);
   document.getElementById('rent-col').classList.toggle('winner',!res.buyWins);
 
-  // Compare grid
-  var totalBuyMonthly = res.monthlyPayment + (val('inp-prop-tax')/100*res.homePrice/12) + (res.homePrice*val('inp-maintenance')/100/12) + val('inp-hoa') + res.homeInsYr/12;
-  // simpler:
+  // Compare grid — all-in monthly average (mortgage + running costs averaged over horizon)
   var buyMonthlyAll = res.monthlyPayment + (res.totalPropTax + res.totalHomeIns + res.totalHOA + res.totalMaint)/(res.N*12);
   set('cmp-buy-monthly', fmt(buyMonthlyAll)+'/mo');
   set('cmp-buy-total-out', fmt(res.totalCashOutBuy2));
