@@ -3,8 +3,41 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CalcNova · Date Duration</title>
-  <meta name="description" content="Calculate the duration between two dates in years, months, days. Includes business days and add/subtract durations." />
+  <title>Date Duration Calculator — Days Between Dates | CalcNova</title>
+  <meta name="description" content="Free date duration calculator: find the exact number of days, weeks, months, and years between two dates. Includes business-day count and add/subtract date tool." />
+  <link rel="canonical" href="https://calcnova.co/date-duration.html" />
+  <meta property="og:title" content="Date Duration Calculator — Days Between Dates | CalcNova" />
+  <meta property="og:description" content="Calculate the exact duration between two dates in days, weeks, months, and years. Includes business-day count and date add/subtract tool." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://calcnova.co/date-duration.html" />
+  <meta property="og:site_name" content="CalcNova" />
+  <script type="application/ld+json">
+  [
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": "Date Duration Calculator — Days Between Dates",
+      "url": "https://calcnova.co/date-duration.html",
+      "description": "Free date duration calculator: find the exact number of days, business days, weeks, months, and years between two dates.",
+      "isPartOf": { "@type": "WebSite", "name": "CalcNova", "url": "https://calcnova.co/" },
+      "breadcrumb": { "@type": "BreadcrumbList", "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://calcnova.co/" },
+        { "@type": "ListItem", "position": 2, "name": "Date Duration Calculator", "item": "https://calcnova.co/date-duration.html" }
+      ]}
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        { "@type": "Question", "name": "How do I calculate the number of days between two dates?", "acceptedAnswer": { "@type": "Answer", "text": "To calculate days between two dates: subtract the earlier date from the later date. Each calendar day equals 86,400 seconds (24 × 60 × 60). This calculator handles that automatically and also shows the result in weeks, months, and years broken down. Just enter a start and end date and see the duration instantly." }},
+        { "@type": "Question", "name": "What counts as a business day?", "acceptedAnswer": { "@type": "Answer", "text": "A business day is any weekday that is not a Saturday or Sunday. This calculator counts business days between two dates excluding weekends only — it does not account for public holidays, which vary by country and region. If you need to exclude specific holidays, count the weekdays first and manually subtract any holidays that fall within the period." }},
+        { "@type": "Question", "name": "How do I add or subtract days from a date?", "acceptedAnswer": { "@type": "Answer", "text": "Use the 'Add / Subtract' tab in this calculator. Enter a base date, then specify the years, months, and days to add or subtract, and click the corresponding button. The calculator handles month-length variations correctly — for example, adding 1 month to January 31 gives February 28 (or 29 in a leap year), not March 2." }},
+        { "@type": "Question", "name": "How many days are there in a year?", "acceptedAnswer": { "@type": "Answer", "text": "A standard calendar year has 365 days. A leap year has 366 days. A leap year occurs every 4 years, except for years divisible by 100 (which are not leap years), unless also divisible by 400 (which are). For example: 2000 was a leap year (divisible by 400); 1900 was not (divisible by 100 but not 400); 2024 was a leap year (divisible by 4)." }},
+        { "@type": "Question", "name": "What is the difference between calendar months and 30-day months?", "acceptedAnswer": { "@type": "Answer", "text": "Calendar months have varying lengths: January has 31 days, February has 28 or 29, April has 30, etc. A '30-day month' is an approximation sometimes used in financial calculations (like bond interest). This calculator uses actual calendar months for duration calculations, so '1 month' from March 31 correctly lands on April 30, not May 1." }}
+      ]
+    }
+  ]
+  </script>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="shared/nav.css" />
 
@@ -26,7 +59,23 @@
       border-radius: 100px; padding: 6px 14px;
       font-size: 12px; font-weight: 700; color: var(--green);
     }
-    .hero-title { font-size: 26px; font-weight: 800; letter-spacing: -.5px; margin-top: 8px; }
+    .hero-title { font-size: 26px; font-weight: 800; letter-spacing: -.5px; margin: 0; padding: 0; }
+    .seo-section {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 18px; padding: 28px 28px 24px; margin-top: 16px;
+    }
+    .seo-section h2 { font-size: 18px; font-weight: 700; color: var(--text-primary); margin-bottom: 10px; }
+    .seo-section h3 { font-size: 15px; font-weight: 600; color: var(--text-primary); margin-top: 20px; margin-bottom: 8px; }
+    .seo-section p  { font-size: 14px; color: var(--text-secondary); line-height: 1.7; }
+    .related-links { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+    .related-links a {
+      display: inline-flex; align-items: center;
+      padding: 7px 14px; border-radius: 10px;
+      border: 1px solid var(--border); background: var(--bg);
+      font-size: 13px; font-weight: 600; color: var(--text-secondary);
+      text-decoration: none; transition: all .15s;
+    }
+    .related-links a:hover { border-color: var(--green); color: var(--green); }
     .hero-title span {
       background: linear-gradient(135deg, var(--green), var(--purple));
       -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
@@ -392,6 +441,7 @@
     @media print {
       body { background: white !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
       body::before { display: none; }
+      .seo-section { display: none !important; }
       header, .toolbar, #toast, .icon-btn, .pill-badge, .nav-tools-wrap, .donate-btn,
       .mega-menu, .menu-overlay, .site-footer, .footer-disclaimer, .tab-bar { display: none !important; }
       .app { padding: 0; max-width: 100%; }
@@ -409,7 +459,7 @@
 
     <div class="hero">
       <div class="pill-badge">Calendar-aware &middot; Business days &middot; Add/Subtract</div>
-      <div class="hero-title">Date <span>Duration</span></div>
+      <h1 class="hero-title">Date <span>Duration</span></h1>
       <div class="hero-desc">Calculate exact time between two dates, or add/subtract a duration from any date.</div>
     </div>
 
@@ -590,6 +640,32 @@
 
     <div class="footer-note">
       <b>How it works:</b> Duration is computed using calendar-aware logic with day clamping (e.g. Jan 31 + 1 month = Feb 28/29). Business days exclude weekends only &mdash; no holiday calendar is applied.
+    </div>
+
+    <!-- SEO CONTENT -->
+    <div class="seo-section">
+      <h2>Date Duration Calculator — Count Days Between Any Two Dates</h2>
+      <p>This calculator finds the exact duration between two dates in years, months, and days, plus total days, weeks, business days, hours, minutes, and seconds. The Add/Subtract tab lets you calculate a future or past date by adding or subtracting years, months, and days from any starting date — with correct month-end clamping (e.g. Jan 31 + 1 month = Feb 28/29, not March 2).</p>
+
+      <h3>Common Date Duration Calculations</h3>
+      <p><strong>Days until a deadline:</strong> Set today as the start date and your deadline as the end date. <strong>Days since an event:</strong> Set the event date as start and today as end. <strong>Project duration in business days:</strong> Enable the business days option to count weekdays only. <strong>Loan term end date:</strong> Use Add/Subtract — enter the loan start date and add the term in months.</p>
+
+      <h3>How Business Days Are Counted</h3>
+      <p>Business days in this calculator exclude Saturdays and Sundays only. Public holidays are not excluded, as holiday calendars vary by country, region, and year. To exclude holidays from your count, calculate the business-day count and manually subtract the number of holidays that fall within the period.</p>
+
+      <h3>Frequently Needed Date Durations</h3>
+      <p>30 days = 4 weeks 2 days · 90 days ≈ 3 months · 180 days ≈ 6 months · 365 days = 1 year · 52 weeks = 364 days · 10,000 days ≈ 27 years 4 months · A month has 20–23 business days (after excluding weekends). Pregnancy is approximately 280 days (40 weeks) from the last menstrual period.</p>
+
+      <div style="margin-top: 22px;">
+        <strong style="font-size: 14px; color: var(--text-primary);">Related Tools</strong>
+        <div class="related-links">
+          <a href="age-calculator.html">Age Calculator</a>
+          <a href="world-clock.html">World Clock</a>
+          <a href="TimeConvertor.html">Time Zone Converter</a>
+          <a href="mortgage-calculator.html">Mortgage Calculator</a>
+          <a href="savings-goal.html">Savings Goal Calculator</a>
+        </div>
+      </div>
     </div>
 
     <!-- nav.js injects footer here -->
