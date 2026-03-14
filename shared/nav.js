@@ -63,7 +63,29 @@
         { id: 'debt-payoff',       icon: '💳', label: 'Debt Payoff',        href: 'debt-payoff.html',                  live: true },
         { id: 'emergency-fund',    icon: '🛟', label: 'Emergency Fund',    href: 'emergency-fund.html',               live: true },
         { id: 'fire-calculator',   icon: '🔥', label: 'FIRE Calculator',    href: 'fire-calculator.html',              live: true },
-        { id: 'net-worth-tracker',  icon: '📊', label: 'Net Worth Tracker',  href: 'net-worth-tracker.html',            live: true },
+        { id: 'net-worth-tracker', icon: '📊', label: 'Net Worth Tracker',  href: 'net-worth-tracker.html',            live: true },
+        { id: 'salary-calculator', icon: '💵', label: 'Salary Converter',   href: 'salary-calculator.html',            live: true },
+        { id: 'inflation-calculator', icon: '📉', label: 'Inflation Calc',  href: 'inflation-calculator.html',         live: true },
+        { id: 'rent-vs-buy',       icon: '🏡', label: 'Rent vs. Buy',       href: 'rent-vs-buy.html',                  live: true },
+      ]
+    },
+    {
+      id: 'health', icon: '💪', label: 'Health & Fitness', cssClass: 'health',
+      items: [
+        { id: 'bmi-calculator',          icon: '⚖️',  label: 'BMI Calculator',       href: 'bmi-calculator.html',           live: true },
+        { id: 'calorie-calculator',      icon: '🔥',  label: 'Calorie / TDEE',        href: 'calorie-calculator.html',       live: true },
+        { id: 'macro-calculator',        icon: '🥗',  label: 'Macro Calculator',      href: 'macro-calculator.html',         live: true },
+        { id: 'body-fat-calculator',     icon: '📐',  label: 'Body Fat',              href: 'body-fat-calculator.html',      live: true },
+        { id: 'ideal-weight-calculator', icon: '🎯',  label: 'Ideal Weight',          href: 'ideal-weight-calculator.html',  live: true },
+        { id: 'water-intake-calculator', icon: '💧',  label: 'Water Intake',          href: 'water-intake-calculator.html',  live: true },
+      ]
+    },
+    {
+      id: 'math', icon: '🧮', label: 'Math', cssClass: 'math',
+      items: [
+        { id: 'tip-calculator',      icon: '🧾', label: 'Tip Calculator',   href: 'tip-calculator.html',      live: true },
+        { id: 'gpa-calculator',      icon: '🎓', label: 'GPA Calculator',   href: 'gpa-calculator.html',      live: true },
+        { id: 'discount-calculator', icon: '🏷️', label: 'Discount Calc',    href: 'discount-calculator.html', live: true },
       ]
     },
     {
@@ -79,10 +101,10 @@
     {
       id: 'utility', icon: '🔧', label: 'Utility', cssClass: 'utility',
       items: [
-        { id: 'unit-converter',   icon: '📏', label: 'Unit Converter',   href: 'unit-converter.html', live: true },
-        { id: 'percentage-calculator',  icon: '🔢', label: 'Percentage Calc',  href: 'percentage-calculator.html', live: true },
-        { id: 'random-number',    icon: '🎲', label: 'Random Number',    href: 'random-number.html', live: true },
-        { id: 'word-counter',     icon: '✍️', label: 'Word Counter',     href: 'word-counter.html', live: true },
+        { id: 'unit-converter',          icon: '📏', label: 'Unit Converter',   href: 'unit-converter.html',        live: true },
+        { id: 'percentage-calculator',   icon: '🔢', label: 'Percentage Calc',  href: 'percentage-calculator.html', live: true },
+        { id: 'random-number',           icon: '🎲', label: 'Random Number',    href: 'random-number.html',         live: true },
+        { id: 'word-counter',            icon: '✍️', label: 'Word Counter',     href: 'word-counter.html',          live: true },
       ]
     }
   ];
