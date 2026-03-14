@@ -313,6 +313,20 @@ body.dark .cn-search-expanded {
 }
 .icon-btn:hover { background: var(--bg); color: var(--text-primary); }
 
+/* Ko-fi button */
+.cn-kofi-btn {
+  display: flex; align-items: center; justify-content: center;
+  height: 32px; border-radius: 100px;
+  padding: 0 12px;
+  background: linear-gradient(135deg, #fd7e14, #e85d04);
+  color: #fff; text-decoration: none;
+  font-size: 12px; font-weight: 700;
+  white-space: nowrap;
+  transition: all .15s;
+  box-shadow: 0 2px 8px rgba(232,93,4,.3);
+}
+.cn-kofi-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(232,93,4,.4); }
+
 /* GitHub link */
 .cn-github-link {
   display: flex; align-items: center; justify-content: center;
@@ -734,6 +748,27 @@ body.dark .cn-overlay { background: rgba(0,0,0,.6); }
   .cn-related-grid { grid-template-columns: 1fr; }
   .cn-footer-grid  { grid-template-columns: 1fr; }
   .cn-footer-bottom { flex-direction: column; }
+}
+
+/* ── GLOBAL RANGE SLIDER THUMBS ─────────────────────────────── */
+/* Applied site-wide; each page may use its own track color */
+input[type="range"]::-webkit-slider-thumb {
+  width: 22px !important;
+  height: 22px !important;
+}
+input[type="range"]::-moz-range-thumb {
+  width: 22px !important;
+  height: 22px !important;
+}
+@media (max-width: 768px) {
+  input[type="range"]::-webkit-slider-thumb {
+    width: 26px !important;
+    height: 26px !important;
+  }
+  input[type="range"]::-moz-range-thumb {
+    width: 26px !important;
+    height: 26px !important;
+  }
 }
 
 /* ── PRINT ──────────────────────────────────────────────────── */

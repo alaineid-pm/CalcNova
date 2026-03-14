@@ -25,10 +25,12 @@ var CALCNOVA_CONFIG = {
 
 /* ── Categories ─────────────────────────────────────────────── */
 var CALCNOVA_CATEGORIES = [
-  { id: 'finance',      name: 'Finance',      emoji: '💰', cssClass: 'finance'      },
-  { id: 'productivity', name: 'Productivity',  emoji: '⏱️', cssClass: 'productivity' },
-  { id: 'utility',      name: 'Utility',       emoji: '🔧', cssClass: 'utility'      },
-  { id: 'guides',       name: 'Guides',        emoji: '📝', cssClass: 'articles'     }
+  { id: 'finance',      name: 'Finance',          emoji: '💰', cssClass: 'finance'      },
+  { id: 'health',       name: 'Health & Fitness',  emoji: '💪', cssClass: 'health'       },
+  { id: 'math',         name: 'Math',              emoji: '🧮', cssClass: 'math'         },
+  { id: 'productivity', name: 'Productivity',      emoji: '⏱️', cssClass: 'productivity' },
+  { id: 'utility',      name: 'Utility',           emoji: '🔧', cssClass: 'utility'      },
+  { id: 'guides',       name: 'Guides',            emoji: '📝', cssClass: 'articles'     }
 ];
 
 /* ── Tools ──────────────────────────────────────────────────── */
@@ -128,6 +130,120 @@ var CALCNOVA_TOOLS = [
     description: 'Track assets and liabilities to see your total net worth at a glance.',
     related:     ['savings-goal', 'fire-calculator', 'emergency-fund'],
     badge:       null
+  },
+  {
+    id:          'salary-calculator',
+    name:        'Salary Converter',
+    emoji:       '💵',
+    category:    'finance',
+    url:         'salary-calculator.html',
+    description: 'Convert salary between hourly, daily, weekly, monthly, and annual rates.',
+    related:     ['compound-interest', 'savings-goal', 'fire-calculator'],
+    badge:       'new'
+  },
+  {
+    id:          'inflation-calculator',
+    name:        'Inflation Calculator',
+    emoji:       '📉',
+    category:    'finance',
+    url:         'inflation-calculator.html',
+    description: 'See how inflation erodes purchasing power and what money is worth over time.',
+    related:     ['compound-interest', 'fire-calculator', 'savings-goal'],
+    badge:       'new'
+  },
+
+  /* ── Health & Fitness ─────────────────────────────── */
+  {
+    id:          'bmi-calculator',
+    name:        'BMI Calculator',
+    emoji:       '⚖️',
+    category:    'health',
+    url:         'bmi-calculator.html',
+    description: 'Calculate your Body Mass Index and understand what your result means.',
+    related:     ['calorie-calculator', 'ideal-weight-calculator', 'body-fat-calculator'],
+    badge:       'new'
+  },
+  {
+    id:          'calorie-calculator',
+    name:        'Calorie / TDEE Calculator',
+    emoji:       '🔥',
+    category:    'health',
+    url:         'calorie-calculator.html',
+    description: 'Find your Total Daily Energy Expenditure to manage weight and nutrition.',
+    related:     ['macro-calculator', 'bmi-calculator', 'ideal-weight-calculator'],
+    badge:       'new'
+  },
+  {
+    id:          'macro-calculator',
+    name:        'Macro Calculator',
+    emoji:       '🥗',
+    category:    'health',
+    url:         'macro-calculator.html',
+    description: 'Calculate your ideal macronutrient split for your fitness and diet goals.',
+    related:     ['calorie-calculator', 'bmi-calculator', 'body-fat-calculator'],
+    badge:       'new'
+  },
+  {
+    id:          'body-fat-calculator',
+    name:        'Body Fat Calculator',
+    emoji:       '📐',
+    category:    'health',
+    url:         'body-fat-calculator.html',
+    description: 'Estimate your body fat percentage using body measurements.',
+    related:     ['bmi-calculator', 'ideal-weight-calculator', 'calorie-calculator'],
+    badge:       'new'
+  },
+  {
+    id:          'ideal-weight-calculator',
+    name:        'Ideal Weight Calculator',
+    emoji:       '🎯',
+    category:    'health',
+    url:         'ideal-weight-calculator.html',
+    description: 'Find your ideal weight range based on height, age, and body frame.',
+    related:     ['bmi-calculator', 'body-fat-calculator', 'calorie-calculator'],
+    badge:       'new'
+  },
+  {
+    id:          'water-intake-calculator',
+    name:        'Water Intake Calculator',
+    emoji:       '💧',
+    category:    'health',
+    url:         'water-intake-calculator.html',
+    description: 'Calculate your recommended daily water intake based on weight and activity.',
+    related:     ['calorie-calculator', 'macro-calculator', 'bmi-calculator'],
+    badge:       'new'
+  },
+
+  /* ── Math ────────────────────────────────────────── */
+  {
+    id:          'tip-calculator',
+    name:        'Tip Calculator',
+    emoji:       '🧾',
+    category:    'math',
+    url:         'tip-calculator.html',
+    description: 'Calculate tips and split the bill evenly between any number of people.',
+    related:     ['percentage-calculator', 'discount-calculator', 'gpa-calculator'],
+    badge:       'new'
+  },
+  {
+    id:          'gpa-calculator',
+    name:        'GPA Calculator',
+    emoji:       '🎓',
+    category:    'math',
+    url:         'gpa-calculator.html',
+    description: 'Calculate your GPA from grades and credit hours for any grading scale.',
+    related:     ['percentage-calculator', 'tip-calculator', 'discount-calculator'],
+    badge:       'new'
+  },
+  {
+    id:          'discount-calculator',
+    name:        'Discount Calculator',
+    emoji:       '🏷️',
+    category:    'math',
+    url:         'discount-calculator.html',
+    description: 'Find the sale price, discount amount, or original price from any two values.',
+    related:     ['percentage-calculator', 'tip-calculator', 'unit-converter'],
+    badge:       'new'
   },
 
   /* ── Productivity ────────────────────────────────────── */
