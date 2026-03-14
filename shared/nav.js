@@ -32,6 +32,72 @@
 
   /* ── Page config ─────────────────────────────────────────── */
   var cfg        = window.CALCNOVA_PAGE || {};
+  /* ── Google Analytics ────────────────────────────────────── */
+  /* To change the GA property, update GA_MEASUREMENT_ID here. */
+  var GA_MEASUREMENT_ID = 'G-2HPZZPQCWD';
+
+  (function loadGA(id) {
+    var s = document.createElement('script');
+    s.async = true;
+    s.src = 'https://www.googletagmanager.com/gtag/js?id=' + id;
+    document.head.appendChild(s);
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    window.gtag = window.gtag || gtag;
+    gtag('js', new Date());
+    gtag('config', id);
+  })(GA_MEASUREMENT_ID);
+
+  /* ── Menu Data ───────────────────────────────────────────── */
+  /* Edit here to update nav across ALL pages */
+
+  var NAV_MENU = [
+    {
+      id: 'finance', icon: '💰', label: 'Finance', cssClass: 'finance',
+      items: [
+        { id: 'compound-interest', icon: '📈', label: 'Compound Interest', href: 'compound-interest-calculator.html', live: true },
+        { id: 'coast-fire',        icon: '🏖️', label: 'Coast FIRE',        href: 'coast-fire-calculator.html',        live: true },
+        { id: 'mortgage',          icon: '🏠', label: 'Mortgage Calculator', href: 'mortgage-calculator.html',          live: true },
+        { id: 'rent-vs-buy',       icon: '🏘️', label: 'Rent vs. Buy',       href: 'rent-vs-buy.html',                  live: true },
+        { id: 'savings-goal',      icon: '🎯', label: 'Savings Goal',      href: 'savings-goal.html',                  live: true },
+        { id: 'debt-payoff',       icon: '💳', label: 'Debt Payoff',        href: 'debt-payoff.html',                  live: true },
+        { id: 'emergency-fund',    icon: '🛟', label: 'Emergency Fund',    href: 'emergency-fund.html',               live: true },
+        { id: 'fire-calculator',   icon: '🔥', label: 'FIRE Calculator',    href: 'fire-calculator.html',              live: true },
+        { id: 'net-worth-tracker',  icon: '📊', label: 'Net Worth Tracker',  href: 'net-worth-tracker.html',            live: true },
+      ]
+    },
+    {
+      id: 'productivity', icon: '⏱️', label: 'Productivity', cssClass: 'productivity',
+      items: [
+        { id: 'time-converter',  icon: '🌍', label: 'Time Converter',  href: 'TimeConvertor.html', live: true },
+        { id: 'pomodoro',        icon: '🍅', label: 'Pomodoro Timer',  href: 'pomodoro.html',       live: true },
+        { id: 'world-clock',     icon: '🕐', label: 'World Clock',    href: 'world-clock.html',    live: true },
+        { id: 'date-duration',   icon: '📅', label: 'Date Duration',  href: 'date-duration.html',  live: true },
+        { id: 'age-calculator',  icon: '🎂', label: 'Age Calculator', href: 'age-calculator.html', live: true },
+      ]
+    },
+    {
+      id: 'utility', icon: '🔧', label: 'Utility', cssClass: 'utility',
+      items: [
+        { id: 'unit-converter',   icon: '📏', label: 'Unit Converter',   href: 'unit-converter.html', live: true },
+        { id: 'percentage-calculator',  icon: '🔢', label: 'Percentage Calc',  href: 'percentage-calculator.html', live: true },
+        { id: 'random-number',    icon: '🎲', label: 'Random Number',    href: 'random-number.html', live: true },
+        { id: 'word-counter',     icon: '✍️', label: 'Word Counter',     href: 'word-counter.html', live: true },
+      ]
+    }
+  ];
+
+  var ARTICLES = [
+    { icon: '📈', label: 'How to Calculate Compound Interest',  href: 'article-compound-interest.html' },
+    { icon: '🏖️', label: 'What Is Coast FIRE?',                href: 'article-coast-fire.html' },
+    { icon: '💳', label: 'Debt Snowball vs Avalanche',          href: 'article-debt-snowball-vs-avalanche.html' },
+    { icon: '🛟', label: 'How Much Emergency Fund Do I Need?',  href: 'article-emergency-fund.html' },
+    { icon: '🌍', label: 'Time Zones for Remote Teams',         href: 'article-time-zones-remote-teams.html' },
+    { icon: '🍅', label: 'The Pomodoro Technique Guide',        href: 'article-pomodoro-technique.html' },
+  ];
+
+  /* ── Page Config ─────────────────────────────────────────── */
+  var cfg = window.CALCNOVA_PAGE || {};
   var currentId  = cfg.id         || '';
   var disclaimer = cfg.disclaimer || '';
 
