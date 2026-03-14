@@ -1,0 +1,2109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CalcNova · Rent vs. Buy Calculator</title>
+  <meta name="description" content="Free rent vs. buy calculator — compare the total wealth outcome of buying a home vs. renting and investing the difference over your time horizon. International support with region-specific defaults." />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Rent vs. Buy Calculator · CalcNova" />
+  <meta property="og:description" content="Compare buying a home vs. renting and investing the difference. See which option leaves you wealthier after N years." />
+  <meta property="og:type" content="website" />
+
+  <!-- JSON-LD Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FinancialProduct",
+    "name": "Rent vs. Buy Calculator",
+    "description": "Compare the total wealth outcome of buying a home vs. renting and investing the difference over a user-defined time horizon.",
+    "provider": {
+      "@type": "Organization",
+      "name": "CalcNova"
+    },
+    "feesAndCommissionsSpecification": "Free to use, no login required."
+  }
+  </script>
+
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="shared/nav.css" />
+  <style>
+    .app { position: relative; z-index: 1; max-width: 960px; margin: 0 auto; padding: 0 16px 60px; }
+
+    .pill-badge {
+      display: flex; align-items: center; gap: 6px;
+      background: linear-gradient(135deg, rgba(16,185,129,.1), rgba(99,102,241,.1));
+      border: 1px solid rgba(16,185,129,.25);
+      border-radius: 100px; padding: 6px 14px;
+      font-size: 12px; font-weight: 700; color: var(--green);
+    }
+
+    /* ── PAGE HERO ── */
+    .hero {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 28px 28px 24px;
+      margin-bottom: 20px;
+      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;
+    }
+    .hero-title { font-size: 26px; font-weight: 800; letter-spacing: -.5px; }
+    .hero-title span {
+      background: linear-gradient(135deg, var(--green), var(--purple));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .hero-desc { font-size: 14px; color: var(--text-secondary); margin-top: 6px; line-height: 1.5; }
+
+    /* ── CARDS ── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 22px 22px 18px;
+      margin-bottom: 16px;
+    }
+    .card-title {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 15px; font-weight: 700; margin-bottom: 16px;
+    }
+    .card-title-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+    }
+
+    /* ── FORM GRID ── */
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .form-group { display: flex; flex-direction: column; gap: 5px; }
+    .form-group.full { grid-column: 1 / -1; }
+    .form-label {
+      font-size: 12px; font-weight: 600; color: var(--text-secondary);
+      display: flex; align-items: center; gap: 4px;
+    }
+    .form-label .hint { color: var(--text-muted); font-weight: 500; }
+    .input-wrap { position: relative; }
+    .input-prefix, .input-suffix {
+      position: absolute; top: 50%; transform: translateY(-50%);
+      font-size: 13px; font-weight: 600; color: var(--text-muted);
+      pointer-events: none;
+    }
+    .input-prefix { left: 12px; }
+    .input-suffix { right: 12px; }
+
+    input[type="number"], select {
+      width: 100%; box-sizing: border-box;
+      background: var(--bg); border: 1px solid var(--border); border-radius: 10px;
+      color: var(--text-primary); font-family: var(--font); font-size: 14px; font-weight: 600;
+      padding: 9px 12px; outline: none;
+      transition: border-color .2s, box-shadow .2s;
+      -moz-appearance: textfield;
+    }
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+    input[type="number"]:focus, select:focus {
+      border-color: var(--green); box-shadow: 0 0 0 3px rgba(16,185,129,.12);
+    }
+    input.error { border-color: var(--red); }
+    .field-error {
+      font-size: 11px; color: var(--red); font-weight: 600;
+      max-height: 0; overflow: hidden; transition: max-height .2s;
+    }
+    .field-error.visible { max-height: 30px; }
+    .has-prefix { padding-left: 28px !important; }
+    .has-suffix { padding-right: 36px !important; }
+
+    /* ── TOGGLE SWITCH ── */
+    .toggle-row {
+      display: flex; align-items: center; gap: 10px;
+      font-size: 13px; font-weight: 600; color: var(--text-secondary);
+    }
+    .toggle-switch {
+      position: relative; width: 40px; height: 22px; cursor: pointer;
+    }
+    .toggle-switch input { opacity: 0; width: 0; height: 0; }
+    .toggle-slider {
+      position: absolute; inset: 0;
+      background: var(--border); border-radius: 22px;
+      transition: background .2s;
+    }
+    .toggle-slider::before {
+      content: ''; position: absolute;
+      width: 16px; height: 16px; left: 3px; top: 3px;
+      background: white; border-radius: 50%;
+      transition: transform .2s;
+    }
+    .toggle-switch input:checked + .toggle-slider { background: var(--green); }
+    .toggle-switch input:checked + .toggle-slider::before { transform: translateX(18px); }
+
+    /* ── DOWN PAYMENT MODE TOGGLE ── */
+    .dp-toggle {
+      display: inline-flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden;
+    }
+    .dp-toggle button {
+      background: var(--bg); border: none; padding: 5px 12px;
+      font-family: var(--font); font-size: 12px; font-weight: 600;
+      color: var(--text-muted); cursor: pointer; transition: all .15s;
+    }
+    .dp-toggle button.active { background: var(--green); color: white; }
+
+    /* ── COLLAPSIBLE SECTIONS ── */
+    .section-toggle {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 13px; font-weight: 700; color: var(--text-muted);
+      cursor: pointer; user-select: none; padding: 8px 0; margin-top: 4px;
+      border: none; background: none; font-family: var(--font);
+      transition: color .2s;
+    }
+    .section-toggle:hover { color: var(--text-secondary); }
+    .section-toggle svg { width: 14px; height: 14px; transition: transform .2s; }
+    .section-toggle.open svg { transform: rotate(90deg); }
+    .collapsible-body {
+      overflow: hidden; max-height: 0;
+      transition: max-height .4s ease, opacity .3s ease; opacity: 0;
+    }
+    .collapsible-body.open { max-height: 2000px; opacity: 1; }
+
+    /* ── REGION SELECTOR ── */
+    .region-bar {
+      display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+    .region-bar select {
+      max-width: 220px;
+    }
+    .reset-link {
+      font-size: 12px; font-weight: 600; color: var(--green);
+      cursor: pointer; background: none; border: none; font-family: var(--font);
+      text-decoration: underline; text-underline-offset: 2px;
+    }
+    .reset-link:hover { color: var(--purple); }
+
+    /* ── TIME HORIZON SLIDER ── */
+    .horizon-card {
+      background: linear-gradient(135deg, rgba(16,185,129,.06), rgba(99,102,241,.06));
+      border: 1px solid rgba(16,185,129,.2);
+      border-radius: 18px; padding: 22px; margin-bottom: 16px;
+      text-align: center;
+    }
+    .horizon-label { font-size: 14px; font-weight: 700; margin-bottom: 12px; }
+    .horizon-value {
+      font-family: var(--mono); font-size: 36px; font-weight: 700;
+      background: linear-gradient(135deg, var(--green), var(--purple));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .horizon-unit { font-size: 16px; font-weight: 600; color: var(--text-secondary); margin-left: 4px; }
+    input[type="range"] {
+      -webkit-appearance: none; width: 100%; height: 6px;
+      background: var(--border); border-radius: 6px; outline: none;
+      margin-top: 12px;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none; width: 22px; height: 22px;
+      background: var(--green); border-radius: 50%; cursor: pointer;
+      border: 3px solid var(--surface);
+      box-shadow: 0 2px 8px rgba(16,185,129,.3);
+    }
+    input[type="range"]::-moz-range-thumb {
+      width: 22px; height: 22px;
+      background: var(--green); border-radius: 50%; cursor: pointer;
+      border: 3px solid var(--surface);
+    }
+
+    /* ── CALCULATE BUTTON ── */
+    .calc-btn {
+      width: 100%; padding: 14px;
+      background: linear-gradient(135deg, var(--green), #059669);
+      color: white; border: none; border-radius: 12px;
+      font-family: var(--font); font-size: 15px; font-weight: 700;
+      cursor: pointer; transition: transform .1s, box-shadow .2s;
+      margin-bottom: 20px;
+    }
+    .calc-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(16,185,129,.3); }
+    .calc-btn:active { transform: translateY(0); }
+
+    /* ── RESULTS ── */
+    .results-wrap { display: none; }
+    .results-wrap.visible { display: block; }
+
+    /* Verdict */
+    .verdict-card {
+      border-radius: 18px; padding: 28px; margin-bottom: 20px;
+      text-align: center; border: 1px solid var(--border);
+    }
+    .verdict-card.buy-wins {
+      background: linear-gradient(135deg, rgba(16,185,129,.08), rgba(16,185,129,.02));
+      border-color: rgba(16,185,129,.3);
+    }
+    .verdict-card.rent-wins {
+      background: linear-gradient(135deg, rgba(99,102,241,.08), rgba(99,102,241,.02));
+      border-color: rgba(99,102,241,.3);
+    }
+    .verdict-title { font-size: 22px; font-weight: 800; margin-bottom: 8px; }
+    .verdict-card.buy-wins .verdict-title { color: var(--green); }
+    .verdict-card.rent-wins .verdict-title { color: var(--purple); }
+    .verdict-amount {
+      font-family: var(--mono); font-size: 38px; font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .verdict-card.buy-wins .verdict-amount { color: var(--green); }
+    .verdict-card.rent-wins .verdict-amount { color: var(--purple); }
+    .verdict-summary { font-size: 14px; color: var(--text-secondary); line-height: 1.5; }
+
+    /* Stats Grid */
+    .stats-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px;
+      margin-bottom: 20px;
+    }
+    .stat-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 16px; padding: 18px 18px 16px;
+      position: relative; overflow: hidden;
+    }
+    .stat-card::before {
+      content: ''; position: absolute; top: 0; right: 0;
+      width: 60px; height: 60px; border-radius: 0 16px 0 60px; opacity: .06;
+    }
+    .stat-card.green::before { background: var(--green); }
+    .stat-card.purple::before { background: var(--purple); }
+    .stat-card.amber::before { background: var(--amber); }
+    .stat-label { font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 6px; }
+    .stat-value { font-family: var(--mono); font-size: 20px; font-weight: 700; }
+    .stat-sub { font-size: 11px; color: var(--text-muted); margin-top: 4px; font-weight: 500; }
+
+    /* Charts */
+    .chart-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 18px; padding: 22px; margin-bottom: 16px;
+    }
+    .chart-title { font-size: 14px; font-weight: 700; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+    .chart-wrap { position: relative; width: 100%; }
+    canvas { display: block; width: 100%; }
+    .chart-legend {
+      display: flex; gap: 16px; margin-top: 12px; flex-wrap: wrap;
+    }
+    .chart-legend-item {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 12px; font-weight: 600; color: var(--text-secondary);
+    }
+    .chart-legend-dot { width: 10px; height: 10px; border-radius: 50%; }
+
+    /* Sensitivity sliders */
+    .sensitivity-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 18px; padding: 22px; margin-bottom: 16px;
+    }
+    .sensitivity-card .card-title { margin-bottom: 18px; }
+    .sens-row {
+      display: flex; align-items: center; gap: 14px; margin-bottom: 14px;
+    }
+    .sens-label { font-size: 12px; font-weight: 600; color: var(--text-secondary); min-width: 140px; }
+    .sens-slider { flex: 1; }
+    .sens-value {
+      font-family: var(--mono); font-size: 13px; font-weight: 700;
+      color: var(--green); min-width: 56px; text-align: right;
+    }
+
+    /* Breakdown table */
+    .table-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 18px; padding: 22px; margin-bottom: 16px;
+    }
+    .table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    table {
+      width: 100%; border-collapse: collapse;
+      font-size: 12px; font-family: var(--mono);
+    }
+    th {
+      text-align: left; padding: 8px 10px;
+      font-size: 10px; font-weight: 700; color: var(--text-muted);
+      text-transform: uppercase; letter-spacing: .5px;
+      border-bottom: 2px solid var(--border);
+      white-space: nowrap;
+    }
+    td {
+      padding: 7px 10px; border-bottom: 1px solid var(--border);
+      color: var(--text-primary); white-space: nowrap;
+    }
+    tr.tbl-alt { background: var(--bg); }
+    .td-green { color: var(--green); }
+    .td-purple { color: var(--purple); }
+
+    /* Action row */
+    .action-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 16px; }
+    .action-btn {
+      display: flex; align-items: center; gap: 6px;
+      background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+      color: var(--text-secondary); font-family: var(--font); font-size: 13px; font-weight: 600;
+      padding: 8px 16px; cursor: pointer; transition: all .15s;
+    }
+    .action-btn:hover { border-color: var(--green); color: var(--green); }
+    .action-btn svg { width: 16px; height: 16px; }
+
+    /* Disclaimer */
+    .disclaimer {
+      font-size: 12px; color: var(--text-muted); line-height: 1.6;
+      padding: 16px; border-top: 1px solid var(--border); margin-top: 20px;
+    }
+
+    /* Toast */
+    #toast {
+      position: fixed; bottom: 24px; right: 24px; z-index: 200;
+      background: #0f1623; color: white; padding: 10px 18px;
+      border-radius: 100px; font-size: 12px; font-weight: 700;
+      font-family: var(--mono); display: flex; align-items: center; gap: 7px;
+      box-shadow: 0 8px 24px rgba(0,0,0,.25);
+      opacity: 0; transform: translateY(8px);
+      transition: opacity .25s, transform .25s; pointer-events: none;
+    }
+
+    /* Notes */
+    .field-note {
+      font-size: 11px; color: var(--amber); font-weight: 500;
+      margin-top: 2px; display: none;
+    }
+    .field-note.visible { display: block; }
+
+    /* ── PRINT ── */
+    @media print {
+      body { background: white !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      body::before { display: none; }
+      header, .action-row, #toast, .icon-btn, .pill-badge, .nav-tools-wrap,
+      .donate-btn, .mega-menu, .menu-overlay, .site-footer, .footer-disclaimer,
+      .section-toggle, .sensitivity-card, .calc-btn, .region-bar .reset-link { display: none !important; }
+      .collapsible-body { max-height: none !important; opacity: 1 !important; }
+      .results-wrap { display: block !important; }
+      .app { padding: 0; max-width: 100%; }
+      .hero { border: none; padding: 12px 0 8px; margin-bottom: 10px; }
+      .stat-card, .table-card, .card, .chart-card, .verdict-card { page-break-inside: avoid; }
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 640px) {
+      .hero { flex-direction: column; align-items: flex-start; }
+      .hero-title { font-size: 20px; }
+      .form-grid { grid-template-columns: 1fr; }
+      .stats-grid { grid-template-columns: 1fr 1fr; }
+      .verdict-amount { font-size: 28px; }
+      .sens-row { flex-direction: column; align-items: flex-start; gap: 6px; }
+      .sens-label { min-width: auto; }
+    }
+    @media (max-width: 380px) {
+      .stats-grid { grid-template-columns: 1fr; }
+      .verdict-amount { font-size: 22px; }
+      .horizon-value { font-size: 28px; }
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+
+  <!-- Hero -->
+  <div class="hero">
+    <div>
+      <div class="hero-title">Rent vs. <span>Buy</span> Calculator</div>
+      <div class="hero-desc">Compare the total wealth outcome of buying a home vs. renting and investing the difference over your time horizon.</div>
+    </div>
+    <div class="pill-badge">International · Instant · Private</div>
+  </div>
+
+  <!-- Region Selector -->
+  <div class="card">
+    <div class="region-bar">
+      <div class="form-group">
+        <label class="form-label">Region</label>
+        <select id="region" onchange="onRegionChange()">
+          <option value="international">International (generic)</option>
+          <option value="ca">Canada</option>
+          <option value="us">United States</option>
+          <option value="uk">United Kingdom</option>
+          <option value="au">Australia</option>
+          <option value="eu">Europe (generic)</option>
+        </select>
+      </div>
+      <button class="reset-link" onclick="resetDefaults()">Reset to defaults</button>
+    </div>
+  </div>
+
+  <!-- Time Horizon -->
+  <div class="horizon-card">
+    <div class="horizon-label">How long do you plan to stay?</div>
+    <span class="horizon-value" id="horizon-display">10</span><span class="horizon-unit">years</span>
+    <br>
+    <input type="range" id="horizon" min="1" max="40" value="10" oninput="updateHorizonDisplay()">
+  </div>
+
+  <!-- Personal Finances -->
+  <div class="card">
+    <div class="card-title"><div class="card-title-dot" style="background:var(--green)"></div> Your Finances</div>
+    <div class="form-grid">
+      <div class="form-group">
+        <label class="form-label" for="annual-income">Annual gross income</label>
+        <div class="input-wrap">
+          <span class="input-prefix" id="income-prefix">$</span>
+          <input type="number" id="annual-income" class="has-prefix" value="75000" min="0" step="1000" oninput="onIncomeChange()">
+        </div>
+        <div class="form-label hint" style="margin-top:2px">Used to estimate marginal tax rate</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Estimated marginal tax rate
+          <span class="hint" id="tax-rate-hint">(auto)</span>
+        </label>
+        <div class="input-wrap">
+          <input type="number" id="marginal-rate-auto" class="has-suffix" value="24" min="0" max="60" step="0.5">
+          <span class="input-suffix">%</span>
+        </div>
+        <div class="form-label hint" style="margin-top:2px">Editable — auto-estimated from income &amp; region</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Home Purchase Inputs -->
+  <div class="card">
+    <div class="card-title"><div class="card-title-dot" style="background:var(--green)"></div> Home Purchase</div>
+    <div class="form-grid">
+      <div class="form-group">
+        <label class="form-label" for="home-price">Home price</label>
+        <div class="input-wrap">
+          <span class="input-prefix" id="price-prefix">$</span>
+          <input type="number" id="home-price" class="has-prefix" value="500000" min="0" step="1000">
+        </div>
+        <div class="field-error" id="err-home-price">Home price is required</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="down-payment">Down payment
+          <span class="hint" id="dp-hint">(20%)</span>
+        </label>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <div class="dp-toggle">
+            <button id="dm-pct" class="active" onclick="setDownMode('pct')">%</button>
+            <button id="dm-dollar" onclick="setDownMode('dollar')">$</button>
+          </div>
+          <div class="input-wrap" style="flex:1">
+            <span class="input-suffix" id="down-suffix">%</span>
+            <span class="input-prefix" id="down-prefix" style="display:none">$</span>
+            <input type="number" id="down-payment" class="has-suffix" value="20" min="0" step="1" oninput="updateDpHint()">
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="mortgage-rate">Mortgage interest rate (%)</label>
+        <div class="input-wrap">
+          <input type="number" id="mortgage-rate" class="has-suffix" value="5.5" min="0" max="20" step="0.1">
+          <span class="input-suffix">%</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="mortgage-term">Mortgage term (years)</label>
+        <select id="mortgage-term">
+          <option value="10">10 years</option>
+          <option value="15">15 years</option>
+          <option value="20">20 years</option>
+          <option value="25" selected>25 years</option>
+          <option value="30">30 years</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="home-appreciation">Home price appreciation (% / year)</label>
+        <div class="input-wrap">
+          <input type="number" id="home-appreciation" class="has-suffix" value="3" min="-10" max="20" step="0.1">
+          <span class="input-suffix">%</span>
+        </div>
+        <div class="field-note" id="note-appreciation">This appreciation rate is historically unusual</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="mortgage-type">Mortgage type</label>
+        <select id="mortgage-type">
+          <option value="fixed">Fixed</option>
+          <option value="variable">Variable (avg. rate)</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Renting Inputs -->
+  <div class="card">
+    <div class="card-title"><div class="card-title-dot" style="background:var(--purple)"></div> Renting</div>
+    <div class="form-grid">
+      <div class="form-group">
+        <label class="form-label" for="monthly-rent">Monthly rent</label>
+        <div class="input-wrap">
+          <span class="input-prefix" id="rent-prefix">$</span>
+          <input type="number" id="monthly-rent" class="has-prefix" value="2000" min="0" step="50">
+        </div>
+        <div class="field-error" id="err-monthly-rent">Monthly rent is required</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="rent-increase">Rent increase (% / year)</label>
+        <div class="input-wrap">
+          <input type="number" id="rent-increase" class="has-suffix" value="3" min="0" max="20" step="0.1">
+          <span class="input-suffix">%</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="renter-insurance">Renter's insurance ($ / month)</label>
+        <div class="input-wrap">
+          <span class="input-prefix" id="ri-prefix">$</span>
+          <input type="number" id="renter-insurance" class="has-prefix" value="30" min="0" step="5">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Advanced Settings Toggle -->
+  <button class="section-toggle" id="adv-toggle" onclick="toggleAdvanced()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+    Advanced Settings
+  </button>
+  <div class="collapsible-body" id="adv-body">
+
+    <!-- Ownership Costs -->
+    <div class="card" style="margin-top:12px">
+      <div class="card-title"><div class="card-title-dot" style="background:var(--amber)"></div> <span id="ownership-title">Ownership Costs</span></div>
+      <div class="form-grid">
+        <div class="form-group" id="prop-tax-group">
+          <label class="form-label" for="property-tax" id="prop-tax-label">Property tax (% of value / year)</label>
+          <div class="input-wrap">
+            <input type="number" id="property-tax" class="has-suffix" value="1.0" min="0" max="10" step="0.1">
+            <span class="input-suffix">%</span>
+          </div>
+        </div>
+        <div class="form-group" id="council-tax-group" style="display:none">
+          <label class="form-label" for="council-tax">Council Tax (£ / year)</label>
+          <div class="input-wrap">
+            <span class="input-prefix">£</span>
+            <input type="number" id="council-tax" class="has-prefix" value="2000" min="0" step="100">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="home-insurance">Home insurance ($ / year)</label>
+          <div class="input-wrap">
+            <span class="input-prefix" id="hi-prefix">$</span>
+            <input type="number" id="home-insurance" class="has-prefix" value="1750" min="0" step="50">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="maintenance">Maintenance & repairs (% of value / year)</label>
+          <div class="input-wrap">
+            <input type="number" id="maintenance" class="has-suffix" value="1.5" min="0" max="10" step="0.1">
+            <span class="input-suffix">%</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="hoa">HOA / Condo fees ($ / month)</label>
+          <div class="input-wrap">
+            <span class="input-prefix" id="hoa-prefix">$</span>
+            <input type="number" id="hoa" class="has-prefix" value="0" min="0" step="25">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="prop-tax-increase">Property tax increase (% / year)</label>
+          <div class="input-wrap">
+            <input type="number" id="prop-tax-increase" class="has-suffix" value="2" min="0" max="10" step="0.1">
+            <span class="input-suffix">%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Transaction Costs -->
+    <div class="card">
+      <div class="card-title"><div class="card-title-dot" style="background:var(--red)"></div> Transaction Costs</div>
+      <div class="form-grid">
+        <div class="form-group" id="closing-cost-group">
+          <label class="form-label" for="closing-costs" id="closing-costs-label">Buying closing costs (%)</label>
+          <div class="input-wrap">
+            <input type="number" id="closing-costs" class="has-suffix" value="2.5" min="0" max="20" step="0.1">
+            <span class="input-suffix">%</span>
+          </div>
+        </div>
+        <div class="form-group" id="ltt-group" style="display:none">
+          <label class="form-label" for="land-transfer-tax">Land transfer tax ($)</label>
+          <div class="input-wrap">
+            <span class="input-prefix">$</span>
+            <input type="number" id="land-transfer-tax" class="has-prefix" value="0" min="0" step="100">
+          </div>
+          <div class="form-label hint" style="margin-top:2px">Ontario scale — editable</div>
+        </div>
+        <div class="form-group" id="stamp-duty-group" style="display:none">
+          <label class="form-label" for="stamp-duty-override">Stamp duty (calculated)</label>
+          <div class="input-wrap">
+            <span class="input-prefix">£</span>
+            <input type="number" id="stamp-duty-override" class="has-prefix" value="0" min="0" step="100">
+          </div>
+          <div class="toggle-row" style="margin-top:6px">
+            <label class="toggle-switch"><input type="checkbox" id="first-time-buyer" onchange="updateStampDuty()"><span class="toggle-slider"></span></label>
+            <span>First-time buyer</span>
+          </div>
+        </div>
+        <div class="form-group" id="mortgage-insurance-group" style="display:none">
+          <label class="form-label" for="mortgage-insurance">Mortgage insurance (% of loan)</label>
+          <div class="input-wrap">
+            <input type="number" id="mortgage-insurance" class="has-suffix" value="0" min="0" max="10" step="0.1">
+            <span class="input-suffix">%</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="selling-costs">Selling costs (% at sale)</label>
+          <div class="input-wrap">
+            <input type="number" id="selling-costs" class="has-suffix" value="5" min="0" max="15" step="0.1">
+            <span class="input-suffix">%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Expected Returns -->
+    <div class="card">
+      <div class="card-title"><div class="card-title-dot" style="background:var(--purple)"></div> Expected Returns</div>
+      <div class="form-grid">
+        <div class="form-group full">
+          <label class="form-label" for="asset-allocation">Asset Allocation</label>
+          <select id="asset-allocation" onchange="onAllocationChange()">
+            <option value="100/0">100/0 — All equity</option>
+            <option value="80/20" selected>80/20 — Growth</option>
+            <option value="60/40">60/40 — Balanced</option>
+            <option value="40/60">40/60 — Conservative</option>
+            <option value="20/80">20/80 — Income</option>
+            <option value="custom">Custom</option>
+          </select>
+          <div class="form-label hint" style="margin-top:2px">Equity / Fixed income split — sets return defaults below</div>
+        </div>
+        <div class="form-group" id="grp-domestic-div">
+          <label class="form-label" for="domestic-dividends"><span id="domestic-div-label">Domestic</span> Dividends (%)</label>
+          <div class="input-wrap">
+            <input type="number" id="domestic-dividends" class="has-suffix" value="0.60" min="0" max="10" step="0.01">
+            <span class="input-suffix">%</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="foreign-dividends">Foreign Dividends (%)</label>
+          <div class="input-wrap">
+            <input type="number" id="foreign-dividends" class="has-suffix" value="0.75" min="0" max="10" step="0.01">
+            <span class="input-suffix">%</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="interest-income">Interest / Income (%)</label>
+          <div class="input-wrap">
+            <input type="number" id="interest-income" class="has-suffix" value="0.67" min="0" max="10" step="0.01">
+            <span class="input-suffix">%</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="unrealized-cg">Unrealized Capital Gains (%)</label>
+          <div class="input-wrap">
+            <input type="number" id="unrealized-cg" class="has-suffix" value="3.85" min="0" max="20" step="0.01">
+            <span class="input-suffix">%</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="realized-cg">Realized Capital Gains (%)</label>
+          <div class="input-wrap">
+            <input type="number" id="realized-cg" class="has-suffix" value="0.43" min="0" max="10" step="0.01">
+            <span class="input-suffix">%</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="inflation-rate">Inflation (%)</label>
+          <div class="input-wrap">
+            <input type="number" id="inflation-rate" class="has-suffix" value="2.50" min="0" max="15" step="0.1">
+            <span class="input-suffix">%</span>
+          </div>
+        </div>
+        <div class="form-group full" style="background:var(--bg);border-radius:10px;padding:12px;margin-top:4px">
+          <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
+            <span class="form-label" style="margin:0;font-size:13px">Total gross return</span>
+            <span id="total-gross-return" style="font-family:var(--mono);font-weight:700;font-size:15px;color:var(--green)">6.30%</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-top:6px">
+            <span class="form-label" style="margin:0;font-size:13px">Estimated after-tax return</span>
+            <span id="total-after-tax-return" style="font-family:var(--mono);font-weight:700;font-size:15px;color:var(--purple)">—</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Fees & Real Estate below the return breakdown -->
+      <div style="border-top:1px solid var(--border);margin-top:16px;padding-top:16px">
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label" for="investment-fees">Investment management fees (% / year)</label>
+            <div class="input-wrap">
+              <input type="number" id="investment-fees" class="has-suffix" value="0.5" min="0" max="5" step="0.1">
+              <span class="input-suffix">%</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="real-estate-growth">Real estate growth rate (% / year)</label>
+            <div class="input-wrap">
+              <input type="number" id="real-estate-growth" class="has-suffix" value="3.50" min="-5" max="15" step="0.1">
+              <span class="input-suffix">%</span>
+            </div>
+            <div class="form-label hint" style="margin-top:2px">Synced with home appreciation — editable independently</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tax Benefits -->
+    <div class="card" id="tax-card" style="display:none">
+      <div class="card-title"><div class="card-title-dot" style="background:var(--green)"></div> Tax Benefits</div>
+      <div class="form-grid">
+        <div class="form-group" id="interest-deduction-group" style="display:none">
+          <label class="form-label">Mortgage interest tax deductible</label>
+          <div class="toggle-row">
+            <label class="toggle-switch"><input type="checkbox" id="interest-deductible" checked><span class="toggle-slider"></span></label>
+            <span>Yes</span>
+          </div>
+        </div>
+        <div class="form-group" id="marginal-rate-group" style="display:none">
+          <label class="form-label">Marginal tax rate</label>
+          <div class="form-label hint">Using rate from "Your Finances" section: <strong id="tax-rate-display">24%</strong></div>
+        </div>
+        <div class="form-group" id="std-deduction-group" style="display:none">
+          <label class="form-label" for="standard-deduction">Standard deduction ($)</label>
+          <div class="input-wrap">
+            <span class="input-prefix">$</span>
+            <input type="number" id="standard-deduction" class="has-prefix" value="14600" min="0" step="100">
+          </div>
+        </div>
+        <div class="form-group" id="cg-exempt-group">
+          <label class="form-label">Primary residence CG exempt</label>
+          <div class="toggle-row">
+            <label class="toggle-switch"><input type="checkbox" id="cg-exempt"><span class="toggle-slider"></span></label>
+            <span>Yes</span>
+          </div>
+        </div>
+      </div>
+      <div class="disclaimer" style="border:none;padding:8px 0 0;margin:0;font-style:italic;">
+        Tax estimates are approximate. Consult a tax professional for advice specific to your situation.
+      </div>
+    </div>
+
+  </div><!-- /adv-body -->
+
+  <!-- Calculate Button -->
+  <button class="calc-btn" onclick="calculate()">Calculate — Rent vs. Buy</button>
+
+  <!-- ═══════════ RESULTS ═══════════ -->
+  <div class="results-wrap" id="results">
+
+    <!-- Verdict -->
+    <div class="verdict-card" id="verdict-card">
+      <div class="verdict-title" id="verdict-title">—</div>
+      <div class="verdict-amount" id="verdict-amount">—</div>
+      <div class="verdict-summary" id="verdict-summary">—</div>
+    </div>
+
+    <!-- Stats Grid -->
+    <div class="stats-grid">
+      <div class="stat-card green">
+        <div class="stat-label">Buyer Net Worth</div>
+        <div class="stat-value" id="stat-buyer-nw">—</div>
+        <div class="stat-sub" id="stat-buyer-sub">after selling costs & taxes</div>
+      </div>
+      <div class="stat-card purple">
+        <div class="stat-label">Renter Net Worth</div>
+        <div class="stat-value" id="stat-renter-nw">—</div>
+        <div class="stat-sub" id="stat-renter-sub">after capital gains tax</div>
+      </div>
+      <div class="stat-card amber">
+        <div class="stat-label">Break-even Year</div>
+        <div class="stat-value" id="stat-breakeven">—</div>
+        <div class="stat-sub" id="stat-breakeven-sub">—</div>
+      </div>
+    </div>
+
+    <div class="stats-grid" style="grid-template-columns: 1fr 1fr;">
+      <div class="stat-card green">
+        <div class="stat-label">Total Interest Paid</div>
+        <div class="stat-value" id="stat-interest">—</div>
+      </div>
+      <div class="stat-card purple">
+        <div class="stat-label">Total Rent Paid</div>
+        <div class="stat-value" id="stat-rent-paid">—</div>
+      </div>
+    </div>
+
+    <!-- Net Worth Chart -->
+    <div class="chart-card">
+      <div class="chart-title">
+        <div class="card-title-dot" style="background:var(--green)"></div>
+        Net Worth Over Time
+      </div>
+      <div class="chart-wrap">
+        <canvas id="nw-chart" height="280" role="img" aria-label="Line chart comparing buyer and renter net worth over time"></canvas>
+      </div>
+      <div class="chart-legend">
+        <div class="chart-legend-item"><div class="chart-legend-dot" style="background:var(--green)"></div> Buyer</div>
+        <div class="chart-legend-item"><div class="chart-legend-dot" style="background:var(--purple)"></div> Renter</div>
+      </div>
+    </div>
+
+    <!-- Monthly Cost Chart -->
+    <div class="chart-card">
+      <div class="chart-title">
+        <div class="card-title-dot" style="background:var(--purple)"></div>
+        Monthly Cost Comparison
+      </div>
+      <div class="chart-wrap">
+        <canvas id="cost-chart" height="240" role="img" aria-label="Bar chart comparing monthly costs of buying vs renting over time"></canvas>
+      </div>
+      <div class="chart-legend">
+        <div class="chart-legend-item"><div class="chart-legend-dot" style="background:var(--green)"></div> Buyer</div>
+        <div class="chart-legend-item"><div class="chart-legend-dot" style="background:var(--purple)"></div> Renter</div>
+      </div>
+    </div>
+
+    <!-- Sensitivity Sliders -->
+    <div class="sensitivity-card">
+      <div class="card-title"><div class="card-title-dot" style="background:var(--amber)"></div> What If?</div>
+      <div class="sens-row">
+        <span class="sens-label">Home appreciation</span>
+        <input type="range" class="sens-slider" id="sens-appreciation" min="-2" max="10" step="0.5" value="3" oninput="onSensitivityChange()">
+        <span class="sens-value" id="sens-appreciation-val">3.0%</span>
+      </div>
+      <div class="sens-row">
+        <span class="sens-label">After-tax return</span>
+        <input type="range" class="sens-slider" id="sens-return" min="0" max="15" step="0.5" value="5.5" oninput="onSensitivityChange()">
+        <span class="sens-value" id="sens-return-val">5.5%</span>
+      </div>
+      <div class="sens-row">
+        <span class="sens-label">Years to stay</span>
+        <input type="range" class="sens-slider" id="sens-years" min="1" max="40" step="1" value="10" oninput="onSensitivityChange()">
+        <span class="sens-value" id="sens-years-val">10</span>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="action-row">
+      <button class="action-btn" onclick="copySummary()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        <span>Copy summary</span>
+      </button>
+      <button class="action-btn" onclick="printPage()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+        <span>Print results</span>
+      </button>
+      <button class="action-btn" onclick="shareLink()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+        <span>Share link</span>
+      </button>
+    </div>
+
+    <!-- Year-by-Year Breakdown Table -->
+    <div class="table-card">
+      <div class="card-title"><div class="card-title-dot" style="background:var(--green)"></div> Year-by-Year Breakdown</div>
+      <div class="table-scroll">
+        <table>
+          <thead id="breakdown-thead"></thead>
+          <tbody id="breakdown-tbody"></tbody>
+        </table>
+      </div>
+      <div id="show-all-wrap" style="text-align:center;margin-top:10px;display:none">
+        <button class="action-btn" style="margin:0 auto" onclick="toggleShowAll()" id="show-all-btn">Show All</button>
+      </div>
+    </div>
+
+    <!-- Disclaimer -->
+    <div class="disclaimer">
+      This calculator provides estimates for educational purposes only. Actual costs vary based on your specific financial situation, local taxes, and market conditions. It does not constitute financial advice. Consult a qualified financial advisor before making housing decisions.
+    </div>
+
+  </div><!-- /results -->
+
+</div><!-- /app -->
+
+<!-- Toast -->
+<div id="toast">
+  <span style="color:var(--green);font-size:15px;">✓</span>
+  <span id="toast-msg">Copied!</span>
+</div>
+
+<!-- Nav config -->
+<script>
+  window.CALCNOVA_PAGE = {
+    id: 'rent-vs-buy',
+    disclaimer: 'Estimates are for educational purposes only and do not constitute financial advice.'
+  };
+</script>
+<script src="shared/nav.js"></script>
+
+<script>
+// ═══════════════════════════════════════════════════════════════════════════
+// RENT VS. BUY CALCULATOR — CalcNova
+// ═══════════════════════════════════════════════════════════════════════════
+
+var downMode = 'pct';
+var showAllRows = false;
+var lastResult = null;
+
+// ── Region Defaults ──────────────────────────────────────────────────────
+var REGION_DEFAULTS = {
+  international: {
+    currency: '$', locale: 'en-US', currencyCode: 'USD',
+    mortgageTerm: '25', propertyTax: 1.0, maintenance: 1.5,
+    closingCosts: 2.5, sellingCosts: 5.0, cgTax: 0, cgExempt: false,
+    interestDeductible: false, showCouncilTax: false, showLTT: false,
+    showStampDuty: false, showTaxCard: false
+  },
+  ca: {
+    currency: '$', locale: 'en-CA', currencyCode: 'CAD',
+    mortgageTerm: '25', propertyTax: 1.0, maintenance: 1.5,
+    closingCosts: 1.5, sellingCosts: 5.0, cgTax: 25, cgExempt: true,
+    interestDeductible: false, showCouncilTax: false, showLTT: true,
+    showStampDuty: false, showTaxCard: true
+  },
+  us: {
+    currency: '$', locale: 'en-US', currencyCode: 'USD',
+    mortgageTerm: '30', propertyTax: 1.2, maintenance: 1.5,
+    closingCosts: 3.0, sellingCosts: 6.0, cgTax: 15, cgExempt: true,
+    interestDeductible: true, showCouncilTax: false, showLTT: false,
+    showStampDuty: false, showTaxCard: true
+  },
+  uk: {
+    currency: '£', locale: 'en-GB', currencyCode: 'GBP',
+    mortgageTerm: '25', propertyTax: 0, maintenance: 1.5,
+    closingCosts: 0, sellingCosts: 1.5, cgTax: 20, cgExempt: true,
+    interestDeductible: false, showCouncilTax: true, showLTT: false,
+    showStampDuty: true, showTaxCard: true
+  },
+  au: {
+    currency: 'A$', locale: 'en-AU', currencyCode: 'AUD',
+    mortgageTerm: '30', propertyTax: 0.5, maintenance: 1.5,
+    closingCosts: 4.0, sellingCosts: 2.5, cgTax: 25, cgExempt: true,
+    interestDeductible: false, showCouncilTax: false, showLTT: false,
+    showStampDuty: false, showTaxCard: true
+  },
+  eu: {
+    currency: '€', locale: 'de-DE', currencyCode: 'EUR',
+    mortgageTerm: '20', propertyTax: 0.5, maintenance: 1.5,
+    closingCosts: 3.0, sellingCosts: 3.0, cgTax: 0, cgExempt: false,
+    interestDeductible: false, showCouncilTax: false, showLTT: false,
+    showStampDuty: false, showTaxCard: false
+  }
+};
+
+function getRegion() { return document.getElementById('region').value; }
+function getDefaults() { return REGION_DEFAULTS[getRegion()]; }
+
+// ── Currency Formatting ──────────────────────────────────────────────────
+function fmtCurrency(val) {
+  var d = getDefaults();
+  try {
+    return new Intl.NumberFormat(d.locale, { style: 'currency', currency: d.currencyCode, minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(val);
+  } catch(e) {
+    return d.currency + Math.round(val).toLocaleString();
+  }
+}
+
+function fmtCurrencyFull(val) {
+  var d = getDefaults();
+  try {
+    return new Intl.NumberFormat(d.locale, { style: 'currency', currency: d.currencyCode, minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(val);
+  } catch(e) {
+    return d.currency + val.toFixed(2);
+  }
+}
+
+function fmtPct(val) { return val.toFixed(1) + '%'; }
+function fmtInt(n) { return Math.round(n).toLocaleString('en-US'); }
+
+// ── Toast ────────────────────────────────────────────────────────────────
+function showToast(msg) {
+  var toast = document.getElementById('toast');
+  document.getElementById('toast-msg').textContent = msg;
+  toast.style.opacity = '1'; toast.style.transform = 'translateY(0)';
+  setTimeout(function() { toast.style.opacity = '0'; toast.style.transform = 'translateY(8px)'; }, 2200);
+}
+
+// ── Region Change ────────────────────────────────────────────────────────
+function onRegionChange() {
+  applyRegionDefaults();
+  updateVisibility();
+  updateCurrencyPrefixes();
+  updateMortgageInsuranceVisibility();
+  onIncomeChange(); // Re-estimate marginal rate for new region
+  updateAfterTaxReturn();
+  updateDomesticDivLabel();
+  if (getRegion() === 'uk') updateStampDuty();
+  if (getRegion() === 'ca') updateLandTransferTax();
+}
+
+function updateDomesticDivLabel() {
+  var labels = { ca: 'Canadian', us: 'U.S.', uk: 'UK', au: 'Australian', eu: 'European' };
+  var el = document.getElementById('domestic-div-label');
+  el.textContent = labels[getRegion()] || 'Domestic';
+}
+
+function applyRegionDefaults() {
+  var d = getDefaults();
+  document.getElementById('mortgage-term').value = d.mortgageTerm;
+  document.getElementById('property-tax').value = d.propertyTax;
+  document.getElementById('maintenance').value = d.maintenance;
+  document.getElementById('closing-costs').value = d.closingCosts;
+  document.getElementById('selling-costs').value = d.sellingCosts;
+  document.getElementById('cg-exempt').checked = d.cgExempt;
+  document.getElementById('home-insurance').value = Math.round((parseFloat(document.getElementById('home-price').value) || 500000) * 0.0035);
+  if (d.interestDeductible) document.getElementById('interest-deductible').checked = true;
+}
+
+function resetDefaults() {
+  applyRegionDefaults();
+  updateVisibility();
+  updateCurrencyPrefixes();
+  updateMortgageInsuranceVisibility();
+  if (getRegion() === 'uk') updateStampDuty();
+  if (getRegion() === 'ca') updateLandTransferTax();
+  showToast('Defaults restored');
+}
+
+function updateVisibility() {
+  var d = getDefaults();
+  var r = getRegion();
+  // Council tax
+  document.getElementById('council-tax-group').style.display = d.showCouncilTax ? '' : 'none';
+  document.getElementById('prop-tax-group').style.display = d.showCouncilTax ? 'none' : '';
+  // LTT
+  document.getElementById('ltt-group').style.display = d.showLTT ? '' : 'none';
+  // Stamp duty
+  document.getElementById('stamp-duty-group').style.display = d.showStampDuty ? '' : 'none';
+  // Closing cost label
+  document.getElementById('closing-costs-label').textContent =
+    r === 'uk' ? 'Other buying costs (%)' : 'Buying closing costs (%)';
+  // Tax card
+  document.getElementById('tax-card').style.display = d.showTaxCard ? '' : 'none';
+  // US-specific fields
+  document.getElementById('interest-deduction-group').style.display = r === 'us' ? '' : 'none';
+  document.getElementById('marginal-rate-group').style.display = r === 'us' ? '' : 'none';
+  document.getElementById('std-deduction-group').style.display = r === 'us' ? '' : 'none';
+  // CG exempt (show for applicable regions)
+  document.getElementById('cg-exempt-group').style.display =
+    (r === 'us' || r === 'ca' || r === 'uk' || r === 'au') ? '' : 'none';
+}
+
+function updateCurrencyPrefixes() {
+  var d = getDefaults();
+  var sym = d.currency;
+  ['price-prefix', 'rent-prefix', 'ri-prefix', 'hi-prefix', 'hoa-prefix', 'income-prefix'].forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el) el.textContent = sym;
+  });
+}
+
+// ── Down Payment Mode ────────────────────────────────────────────────────
+function setDownMode(mode) {
+  var hp = parseFloat(document.getElementById('home-price').value) || 0;
+  var cur = parseFloat(document.getElementById('down-payment').value) || 0;
+  if (mode === 'pct' && downMode === 'dollar') {
+    document.getElementById('down-payment').value = hp > 0 ? parseFloat(((cur / hp) * 100).toFixed(2)) : 0;
+  } else if (mode === 'dollar' && downMode === 'pct') {
+    document.getElementById('down-payment').value = Math.round(hp * cur / 100);
+  }
+  downMode = mode;
+  document.getElementById('dm-dollar').classList.toggle('active', mode === 'dollar');
+  document.getElementById('dm-pct').classList.toggle('active', mode === 'pct');
+  document.getElementById('down-prefix').style.display = mode === 'dollar' ? '' : 'none';
+  document.getElementById('down-suffix').style.display = mode === 'pct' ? '' : 'none';
+  document.getElementById('down-payment').className = mode === 'dollar' ? 'has-prefix' : 'has-suffix';
+  updateDpHint();
+}
+
+function updateDpHint() {
+  var hp = parseFloat(document.getElementById('home-price').value) || 0;
+  var dp = parseFloat(document.getElementById('down-payment').value) || 0;
+  var hint = document.getElementById('dp-hint');
+  if (downMode === 'pct') {
+    hint.textContent = '(' + fmtCurrency(hp * dp / 100) + ')';
+  } else {
+    hint.textContent = '(' + (hp > 0 ? (dp / hp * 100).toFixed(1) : 0) + '%)';
+  }
+  updateMortgageInsuranceVisibility();
+}
+
+function getDownPaymentDollars() {
+  var hp = parseFloat(document.getElementById('home-price').value) || 0;
+  var dp = parseFloat(document.getElementById('down-payment').value) || 0;
+  return downMode === 'pct' ? hp * dp / 100 : dp;
+}
+
+function getDownPaymentPct() {
+  var hp = parseFloat(document.getElementById('home-price').value) || 0;
+  var dp = parseFloat(document.getElementById('down-payment').value) || 0;
+  if (hp <= 0) return 0;
+  return downMode === 'pct' ? dp : (dp / hp * 100);
+}
+
+// ── Mortgage Insurance ───────────────────────────────────────────────────
+function updateMortgageInsuranceVisibility() {
+  var pct = getDownPaymentPct();
+  var r = getRegion();
+  var threshold = (r === 'uk') ? 10 : 20;
+  var show = pct < threshold && (r === 'ca' || r === 'us' || r === 'uk');
+  document.getElementById('mortgage-insurance-group').style.display = show ? '' : 'none';
+  if (show && r === 'ca') {
+    document.getElementById('mortgage-insurance').value = getCMHCPremium(pct).toFixed(2);
+  } else if (show && r === 'us') {
+    document.getElementById('mortgage-insurance').value = '0.75';
+  }
+}
+
+function getCMHCPremium(dpPct) {
+  if (dpPct >= 20) return 0;
+  if (dpPct >= 15) return 2.8;
+  if (dpPct >= 10) return 3.1;
+  if (dpPct >= 5) return 4.0;
+  return 4.0;
+}
+
+// ── UK Stamp Duty Calculator ─────────────────────────────────────────────
+function calcStampDuty(price, firstTimeBuyer) {
+  if (firstTimeBuyer) {
+    if (price <= 425000) return 0;
+    if (price <= 625000) return (price - 425000) * 0.05;
+    // Over 625k, no first-time buyer relief — calculate normally
+  }
+  var duty = 0;
+  if (price > 1500000) { duty += (price - 1500000) * 0.12; price = 1500000; }
+  if (price > 925000)  { duty += (price - 925000) * 0.10; price = 925000; }
+  if (price > 250000)  { duty += (price - 250000) * 0.05; price = 250000; }
+  return duty;
+}
+
+function updateStampDuty() {
+  var hp = parseFloat(document.getElementById('home-price').value) || 0;
+  var ftb = document.getElementById('first-time-buyer').checked;
+  var duty = calcStampDuty(hp, ftb);
+  document.getElementById('stamp-duty-override').value = Math.round(duty);
+}
+
+// ── Canada Land Transfer Tax (Ontario scale) ─────────────────────────────
+function calcOntarioLTT(price) {
+  var tax = 0;
+  if (price > 2000000)  { tax += (price - 2000000) * 0.025; price = 2000000; }
+  if (price > 400000)   { tax += (price - 400000)  * 0.02;  price = 400000; }
+  if (price > 250000)   { tax += (price - 250000)  * 0.015; price = 250000; }
+  if (price > 55000)    { tax += (price - 55000)   * 0.01;  price = 55000; }
+  tax += price * 0.005;
+  return tax;
+}
+
+function updateLandTransferTax() {
+  var hp = parseFloat(document.getElementById('home-price').value) || 0;
+  document.getElementById('land-transfer-tax').value = Math.round(calcOntarioLTT(hp));
+}
+
+// ── Income → Marginal Tax Rate ───────────────────────────────────────────
+var TAX_BRACKETS = {
+  us: [ // 2024 federal single filer
+    [11600, 10], [47150, 12], [100525, 22], [191950, 24], [243725, 32], [609350, 35], [Infinity, 37]
+  ],
+  ca: [ // 2024 federal
+    [55867, 15], [111733, 20.5], [154906, 26], [220000, 29], [Infinity, 33]
+  ],
+  uk: [ // 2024-25
+    [12570, 0], [50270, 20], [125140, 40], [Infinity, 45]
+  ],
+  au: [ // 2024-25
+    [18200, 0], [45000, 16], [135000, 30], [190000, 37], [Infinity, 45]
+  ],
+  eu: [ // Rough average
+    [10000, 15], [30000, 25], [60000, 35], [100000, 42], [Infinity, 45]
+  ],
+  international: [
+    [15000, 10], [50000, 20], [100000, 30], [200000, 35], [Infinity, 40]
+  ]
+};
+
+function estimateMarginalRate(income, region) {
+  var brackets = TAX_BRACKETS[region] || TAX_BRACKETS['international'];
+  for (var i = 0; i < brackets.length; i++) {
+    if (income <= brackets[i][0]) return brackets[i][1];
+  }
+  return brackets[brackets.length - 1][1];
+}
+
+function onIncomeChange() {
+  var income = parseFloat(document.getElementById('annual-income').value) || 0;
+  var region = getRegion();
+  var rate = estimateMarginalRate(income, region);
+  document.getElementById('marginal-rate-auto').value = rate;
+  document.getElementById('tax-rate-hint').textContent = '(' + rate + '% est.)';
+  updateTaxRateDisplay();
+  updateAfterTaxReturn();
+}
+
+function updateTaxRateDisplay() {
+  var rate = parseFloat(document.getElementById('marginal-rate-auto').value) || 0;
+  var el = document.getElementById('tax-rate-display');
+  if (el) el.textContent = rate + '%';
+}
+
+// ── Asset Allocation Presets ─────────────────────────────────────────────
+var ALLOCATION_PRESETS = {
+  '100/0':  { domDiv: 0.80, forDiv: 1.00, income: 0.00, unrealCG: 5.50, realCG: 0.60 },
+  '80/20':  { domDiv: 0.60, forDiv: 0.75, income: 0.67, unrealCG: 3.85, realCG: 0.43 },
+  '60/40':  { domDiv: 0.45, forDiv: 0.55, income: 1.20, unrealCG: 2.50, realCG: 0.30 },
+  '40/60':  { domDiv: 0.30, forDiv: 0.35, income: 1.80, unrealCG: 1.40, realCG: 0.15 },
+  '20/80':  { domDiv: 0.15, forDiv: 0.18, income: 2.30, unrealCG: 0.60, realCG: 0.07 }
+};
+
+function onAllocationChange() {
+  var sel = document.getElementById('asset-allocation').value;
+  var preset = ALLOCATION_PRESETS[sel];
+  if (preset) {
+    document.getElementById('domestic-dividends').value = preset.domDiv.toFixed(2);
+    document.getElementById('foreign-dividends').value = preset.forDiv.toFixed(2);
+    document.getElementById('interest-income').value = preset.income.toFixed(2);
+    document.getElementById('unrealized-cg').value = preset.unrealCG.toFixed(2);
+    document.getElementById('realized-cg').value = preset.realCG.toFixed(2);
+  }
+  updateGrossReturn();
+  updateAfterTaxReturn();
+}
+
+function getReturnComponents() {
+  return {
+    domesticDiv: parseFloat(document.getElementById('domestic-dividends').value) || 0,
+    foreignDiv:  parseFloat(document.getElementById('foreign-dividends').value) || 0,
+    income:      parseFloat(document.getElementById('interest-income').value) || 0,
+    unrealCG:    parseFloat(document.getElementById('unrealized-cg').value) || 0,
+    realCG:      parseFloat(document.getElementById('realized-cg').value) || 0,
+    inflation:   parseFloat(document.getElementById('inflation-rate').value) || 0,
+    fees:        parseFloat(document.getElementById('investment-fees').value) || 0
+  };
+}
+
+function getGrossReturn() {
+  var c = getReturnComponents();
+  return c.domesticDiv + c.foreignDiv + c.income + c.unrealCG + c.realCG;
+}
+
+function updateGrossReturn() {
+  var gross = getGrossReturn();
+  document.getElementById('total-gross-return').textContent = gross.toFixed(2) + '%';
+}
+
+function getAfterTaxReturn() {
+  var c = getReturnComponents();
+  var region = getRegion();
+  var marginal = (parseFloat(document.getElementById('marginal-rate-auto').value) || 0) / 100;
+
+  // Tax rates by type & region (simplified)
+  var divTaxDomestic, divTaxForeign, incomeTax, cgTax;
+
+  if (region === 'ca') {
+    // Eligible dividends get gross-up + tax credit ≈ effective ~25% for mid brackets
+    divTaxDomestic = marginal * 0.6;  // Approx after dividend tax credit
+    divTaxForeign = marginal;
+    incomeTax = marginal;
+    cgTax = marginal * 0.5;  // 50% inclusion rate
+  } else if (region === 'us') {
+    divTaxDomestic = 0.15;  // Qualified dividends
+    divTaxForeign = marginal;  // Ordinary income for non-qualified
+    incomeTax = marginal;
+    cgTax = 0.15;  // LTCG rate for most brackets
+  } else if (region === 'uk') {
+    divTaxDomestic = Math.max(0, marginal - 0.125);  // Dividend allowance effect
+    divTaxForeign = marginal;
+    incomeTax = marginal;
+    cgTax = marginal <= 0.20 ? 0.10 : 0.20;
+  } else if (region === 'au') {
+    divTaxDomestic = marginal * 0.55;  // Franking credits
+    divTaxForeign = marginal;
+    incomeTax = marginal;
+    cgTax = marginal * 0.5;  // 50% CGT discount (held > 1 year)
+  } else {
+    divTaxDomestic = marginal * 0.7;
+    divTaxForeign = marginal;
+    incomeTax = marginal;
+    cgTax = marginal * 0.5;
+  }
+
+  var afterTax =
+    c.domesticDiv * (1 - divTaxDomestic) +
+    c.foreignDiv  * (1 - divTaxForeign) +
+    c.income      * (1 - incomeTax) +
+    c.unrealCG +  // Not taxed until realized
+    c.realCG      * (1 - cgTax);
+
+  return { afterTax: afterTax, cgTax: cgTax, marginal: marginal };
+}
+
+function updateAfterTaxReturn() {
+  updateGrossReturn();
+  var result = getAfterTaxReturn();
+  document.getElementById('total-after-tax-return').textContent = result.afterTax.toFixed(2) + '%';
+}
+
+// Auto-update on return field changes
+['domestic-dividends', 'foreign-dividends', 'interest-income', 'unrealized-cg',
+ 'realized-cg', 'inflation-rate', 'investment-fees', 'marginal-rate-auto'].forEach(function(id) {
+  document.getElementById(id).addEventListener('input', function() {
+    // If user manually edits return fields, switch allocation to Custom
+    if (['domestic-dividends','foreign-dividends','interest-income','unrealized-cg','realized-cg'].indexOf(id) >= 0) {
+      document.getElementById('asset-allocation').value = 'custom';
+    }
+    updateAfterTaxReturn();
+    if (id === 'marginal-rate-auto') updateTaxRateDisplay();
+  });
+});
+
+// ── Horizon Display ──────────────────────────────────────────────────────
+function updateHorizonDisplay() {
+  document.getElementById('horizon-display').textContent = document.getElementById('horizon').value;
+}
+
+// ── Toggle Sections ──────────────────────────────────────────────────────
+function toggleAdvanced() {
+  var btn = document.getElementById('adv-toggle');
+  var body = document.getElementById('adv-body');
+  btn.classList.toggle('open');
+  body.classList.toggle('open');
+}
+
+// ── Validation ───────────────────────────────────────────────────────────
+function validate() {
+  var ok = true;
+  var hp = parseFloat(document.getElementById('home-price').value) || 0;
+  var rent = parseFloat(document.getElementById('monthly-rent').value) || 0;
+
+  var errHP = document.getElementById('err-home-price');
+  var errRent = document.getElementById('err-monthly-rent');
+
+  if (hp <= 0) { errHP.classList.add('visible'); document.getElementById('home-price').classList.add('error'); ok = false; }
+  else { errHP.classList.remove('visible'); document.getElementById('home-price').classList.remove('error'); }
+
+  if (rent <= 0) { errRent.classList.add('visible'); document.getElementById('monthly-rent').classList.add('error'); ok = false; }
+  else { errRent.classList.remove('visible'); document.getElementById('monthly-rent').classList.remove('error'); }
+
+  // Appreciation note
+  var appr = parseFloat(document.getElementById('home-appreciation').value) || 0;
+  document.getElementById('note-appreciation').classList.toggle('visible', appr > 10);
+
+  return ok;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// CORE CALCULATION
+// ═══════════════════════════════════════════════════════════════════════════
+function calculate() {
+  if (!validate()) return;
+
+  var params = gatherParams();
+  var result = runSimulation(params);
+  lastResult = result;
+
+  // Sync sensitivity sliders
+  document.getElementById('sens-appreciation').value = params.homeAppreciation * 100;
+  document.getElementById('sens-return').value = params.afterTaxReturn * 100;
+  document.getElementById('sens-years').value = params.years;
+  document.getElementById('sens-appreciation-val').textContent = fmtPct(params.homeAppreciation * 100);
+  document.getElementById('sens-return-val').textContent = fmtPct(params.afterTaxReturn * 100);
+  document.getElementById('sens-years-val').textContent = params.years;
+
+  renderResults(result);
+  document.getElementById('results').classList.add('visible');
+  document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function gatherParams() {
+  var hp = parseFloat(document.getElementById('home-price').value) || 0;
+  var dpDollars = getDownPaymentDollars();
+  if (dpDollars > hp) dpDollars = hp;
+  var mortgage = Math.max(0, hp - dpDollars);
+  var rate = (parseFloat(document.getElementById('mortgage-rate').value) || 0) / 100;
+  var termYears = parseInt(document.getElementById('mortgage-term').value) || 25;
+  var years = parseInt(document.getElementById('horizon').value) || 10;
+  var homeAppr = (parseFloat(document.getElementById('home-appreciation').value) || 0) / 100;
+  var rent = parseFloat(document.getElementById('monthly-rent').value) || 0;
+  var rentIncrease = (parseFloat(document.getElementById('rent-increase').value) || 0) / 100;
+  var renterIns = parseFloat(document.getElementById('renter-insurance').value) || 0;
+  var propTaxRate = (parseFloat(document.getElementById('property-tax').value) || 0) / 100;
+  var propTaxIncrease = (parseFloat(document.getElementById('prop-tax-increase').value) || 0) / 100;
+  var homeIns = parseFloat(document.getElementById('home-insurance').value) || 0;
+  var maintRate = (parseFloat(document.getElementById('maintenance').value) || 0) / 100;
+  var hoa = parseFloat(document.getElementById('hoa').value) || 0;
+  var closingPct = (parseFloat(document.getElementById('closing-costs').value) || 0) / 100;
+  var sellingPct = (parseFloat(document.getElementById('selling-costs').value) || 0) / 100;
+  var returnComps = getReturnComponents();
+  var grossReturn = getGrossReturn() / 100;
+  var afterTaxResult = getAfterTaxReturn();
+  var investReturn = grossReturn;
+  var afterTaxReturn = afterTaxResult.afterTax / 100;
+  var investFees = (parseFloat(document.getElementById('investment-fees').value) || 0) / 100;
+  var cgTaxRate = afterTaxResult.cgTax;
+  var cgExempt = document.getElementById('cg-exempt').checked;
+  var region = getRegion();
+
+  // Closing costs
+  var closingDollars = hp * closingPct;
+  // UK stamp duty
+  if (region === 'uk') {
+    closingDollars += parseFloat(document.getElementById('stamp-duty-override').value) || 0;
+  }
+  // CA land transfer tax
+  if (region === 'ca') {
+    closingDollars += parseFloat(document.getElementById('land-transfer-tax').value) || 0;
+  }
+
+  // Mortgage insurance
+  var mortgageInsRate = 0;
+  var mortgageInsLump = 0;
+  if (document.getElementById('mortgage-insurance-group').style.display !== 'none') {
+    var miPct = (parseFloat(document.getElementById('mortgage-insurance').value) || 0) / 100;
+    if (region === 'ca') {
+      mortgageInsLump = mortgage * miPct; // CMHC added to mortgage
+    } else {
+      mortgageInsRate = miPct; // Annual PMI rate
+    }
+  }
+
+  // Council tax (UK)
+  var councilTax = 0;
+  if (region === 'uk') {
+    councilTax = parseFloat(document.getElementById('council-tax').value) || 0;
+  }
+
+  // US tax deduction
+  var usDeduction = false;
+  var marginalRate = 0;
+  var standardDeduction = 0;
+  if (region === 'us' && document.getElementById('interest-deductible').checked) {
+    usDeduction = true;
+    marginalRate = (parseFloat(document.getElementById('marginal-rate-auto').value) || 0) / 100;
+    standardDeduction = parseFloat(document.getElementById('standard-deduction').value) || 0;
+  }
+
+  // Add CMHC to mortgage principal for Canada
+  var effectiveMortgage = mortgage + mortgageInsLump;
+
+  return {
+    homePrice: hp, downPayment: dpDollars, mortgage: effectiveMortgage,
+    rate: rate, termYears: termYears, years: years,
+    homeAppreciation: homeAppr, rent: rent, rentIncrease: rentIncrease,
+    renterInsurance: renterIns, propertyTaxRate: propTaxRate,
+    propertyTaxIncrease: propTaxIncrease, councilTax: councilTax,
+    homeInsurance: homeIns, maintenanceRate: maintRate, hoa: hoa,
+    closingCosts: closingDollars, sellingCostsPct: sellingPct,
+    investmentReturn: investReturn, afterTaxReturn: afterTaxReturn,
+    investmentFees: investFees,
+    cgTaxRate: cgTaxRate, cgExempt: cgExempt,
+    mortgageInsRate: mortgageInsRate, usDeduction: usDeduction,
+    marginalRate: marginalRate, standardDeduction: standardDeduction,
+    region: region
+  };
+}
+
+function runSimulation(p) {
+  var monthlyRate = p.rate / 12;
+  var totalPayments = p.termYears * 12;
+
+  // Monthly mortgage payment (P&I)
+  var monthlyPI;
+  if (monthlyRate === 0) {
+    monthlyPI = p.mortgage / totalPayments;
+  } else {
+    var factor = Math.pow(1 + monthlyRate, totalPayments);
+    monthlyPI = p.mortgage * monthlyRate * factor / (factor - 1);
+  }
+
+  var balance = p.mortgage;
+  var homeValue = p.homePrice;
+  var portfolio = p.downPayment + p.closingCosts; // Renter invests what buyer spends upfront
+  var totalContributions = portfolio;
+  var totalInterestPaid = 0;
+  var totalRentPaid = 0;
+
+  var yearlyData = [];
+  // Use after-tax return for ongoing growth; fees reduce the return
+  var netInvestReturn = (p.afterTaxReturn - p.investmentFees) / 12;
+  var buyerNWByYear = [];
+  var renterNWByYear = [];
+
+  // Track year 0
+  buyerNWByYear.push(-p.downPayment - p.closingCosts); // buyer spent upfront costs
+  renterNWByYear.push(portfolio); // renter has the portfolio
+
+  var annualInterest = 0;
+  var renterOutOfMoney = -1;
+
+  for (var year = 1; year <= p.years; year++) {
+    var yearBuyerCost = 0;
+    var yearRenterCost = 0;
+    annualInterest = 0;
+    var yearPropTax = 0;
+
+    for (var month = 1; month <= 12; month++) {
+      var m = (year - 1) * 12 + month;
+
+      // ── Buyer costs ──
+      var pi = 0;
+      var interestPortion = 0;
+      var principalPortion = 0;
+      if (balance > 0.01 && m <= totalPayments) {
+        interestPortion = balance * monthlyRate;
+        principalPortion = monthlyPI - interestPortion;
+        if (principalPortion > balance) principalPortion = balance;
+        balance = Math.max(0, balance - principalPortion);
+        pi = monthlyPI;
+        totalInterestPaid += interestPortion;
+        annualInterest += interestPortion;
+      }
+
+      var monthPropTax;
+      if (p.region === 'uk') {
+        monthPropTax = p.councilTax / 12 * Math.pow(1 + p.propertyTaxIncrease, year - 1);
+      } else {
+        monthPropTax = (homeValue * p.propertyTaxRate * Math.pow(1 + p.propertyTaxIncrease, year - 1)) / 12;
+      }
+      yearPropTax += monthPropTax;
+      var monthIns = p.homeInsurance / 12;
+      var monthMaint = (homeValue * p.maintenanceRate) / 12;
+      var monthHOA = p.hoa;
+
+      // PMI (US-style annual rate)
+      var monthPMI = 0;
+      var equity = (homeValue - balance) / homeValue;
+      if (p.mortgageInsRate > 0 && equity < 0.2) {
+        monthPMI = (p.mortgage * p.mortgageInsRate) / 12;
+      }
+
+      var buyerMonthly = pi + monthPropTax + monthIns + monthMaint + monthHOA + monthPMI;
+      yearBuyerCost += buyerMonthly;
+
+      // ── Renter costs ──
+      var currentRent = p.rent * Math.pow(1 + p.rentIncrease, year - 1);
+      var renterMonthly = currentRent + p.renterInsurance;
+      yearRenterCost += renterMonthly;
+      totalRentPaid += renterMonthly;
+
+      // ── Renter investment ──
+      var diff = buyerMonthly - renterMonthly;
+      if (diff > 0) {
+        portfolio += diff;
+        totalContributions += diff;
+      } else if (diff < 0) {
+        portfolio += diff; // negative = withdrawal
+      }
+
+      // Portfolio growth
+      portfolio *= (1 + netInvestReturn);
+
+      if (portfolio < 0) {
+        if (renterOutOfMoney < 0) renterOutOfMoney = year;
+        portfolio = 0;
+      }
+    }
+
+    // Home appreciation at end of year
+    homeValue = p.homePrice * Math.pow(1 + p.homeAppreciation, year);
+
+    // US tax deduction benefit
+    var taxBenefit = 0;
+    if (p.usDeduction) {
+      var itemized = annualInterest + yearPropTax;
+      if (itemized > p.standardDeduction) {
+        taxBenefit = (itemized - p.standardDeduction) * p.marginalRate;
+      }
+    }
+
+    // Compute net worth at this year
+    var remainingMortgage = balance;
+    var sellingCost = homeValue * p.sellingCostsPct;
+    var homeGain = homeValue - p.homePrice;
+    var homeCGTax = 0;
+    if (!p.cgExempt && homeGain > 0) {
+      homeCGTax = homeGain * p.cgTaxRate;
+    }
+    var buyerNW = homeValue - remainingMortgage - sellingCost - homeCGTax;
+
+    // Unrealized CG at horizon are taxed on liquidation
+    var invGains = Math.max(0, portfolio - totalContributions);
+    var invCGTax = invGains * p.cgTaxRate;
+    var renterNW = portfolio - invCGTax;
+
+    buyerNWByYear.push(buyerNW);
+    renterNWByYear.push(renterNW);
+
+    yearlyData.push({
+      year: year,
+      buyerMonthlyCost: yearBuyerCost / 12,
+      renterMonthlyCost: yearRenterCost / 12,
+      buyerCumulativeCost: yearBuyerCost,
+      renterCumulativeCost: yearRenterCost,
+      homeValue: homeValue,
+      mortgageBalance: balance,
+      portfolio: portfolio,
+      buyerNW: buyerNW,
+      renterNW: renterNW,
+      taxBenefit: taxBenefit
+    });
+  }
+
+  // Cumulative costs
+  var cumBuyer = 0, cumRenter = 0;
+  for (var i = 0; i < yearlyData.length; i++) {
+    cumBuyer += yearlyData[i].buyerCumulativeCost - (yearlyData[i].taxBenefit || 0);
+    cumRenter += yearlyData[i].renterCumulativeCost;
+    yearlyData[i].cumBuyerCost = cumBuyer;
+    yearlyData[i].cumRenterCost = cumRenter;
+  }
+
+  // Break-even year
+  var breakEvenYear = null;
+  for (var i = 1; i < buyerNWByYear.length; i++) {
+    var prev = buyerNWByYear[i-1] - renterNWByYear[i-1];
+    var curr = buyerNWByYear[i] - renterNWByYear[i];
+    if ((prev < 0 && curr >= 0) || (prev > 0 && curr <= 0)) {
+      breakEvenYear = i;
+      break;
+    }
+  }
+
+  var finalBuyerNW = buyerNWByYear[buyerNWByYear.length - 1];
+  var finalRenterNW = renterNWByYear[renterNWByYear.length - 1];
+  var diff = finalBuyerNW - finalRenterNW;
+
+  return {
+    buyerNW: finalBuyerNW,
+    renterNW: finalRenterNW,
+    difference: diff,
+    buyWins: diff > 0,
+    breakEvenYear: breakEvenYear,
+    totalInterest: totalInterestPaid,
+    totalRent: totalRentPaid,
+    buyerNWByYear: buyerNWByYear,
+    renterNWByYear: renterNWByYear,
+    yearlyData: yearlyData,
+    years: p.years,
+    renterOutOfMoney: renterOutOfMoney
+  };
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// RENDER RESULTS
+// ═══════════════════════════════════════════════════════════════════════════
+function renderResults(r) {
+  var vc = document.getElementById('verdict-card');
+  vc.className = 'verdict-card ' + (r.buyWins ? 'buy-wins' : 'rent-wins');
+
+  document.getElementById('verdict-title').textContent = r.buyWins ? 'Buying is better' : 'Renting is better';
+  document.getElementById('verdict-amount').textContent = 'by ' + fmtCurrency(Math.abs(r.difference));
+
+  var summary = 'Over ' + r.years + ' year' + (r.years > 1 ? 's' : '') + ', ';
+  if (r.buyWins) {
+    summary += 'buying would leave you ' + fmtCurrency(Math.abs(r.difference)) + ' wealthier than renting.';
+  } else {
+    summary += 'renting and investing the difference would leave you ' + fmtCurrency(Math.abs(r.difference)) + ' wealthier than buying.';
+  }
+  if (r.renterOutOfMoney > 0) {
+    summary += ' Note: renter runs out of investment capital in year ' + r.renterOutOfMoney + '.';
+  }
+  document.getElementById('verdict-summary').textContent = summary;
+
+  // Stats
+  document.getElementById('stat-buyer-nw').textContent = fmtCurrency(r.buyerNW);
+  document.getElementById('stat-renter-nw').textContent = fmtCurrency(r.renterNW);
+
+  if (r.breakEvenYear !== null) {
+    document.getElementById('stat-breakeven').textContent = 'Year ' + r.breakEvenYear;
+    document.getElementById('stat-breakeven-sub').textContent = 'buying becomes ' + (r.buyWins ? 'better' : 'worse');
+  } else {
+    document.getElementById('stat-breakeven').textContent = 'Never';
+    document.getElementById('stat-breakeven-sub').textContent = 'within ' + r.years + '-year horizon';
+  }
+
+  document.getElementById('stat-interest').textContent = fmtCurrency(r.totalInterest);
+  document.getElementById('stat-rent-paid').textContent = fmtCurrency(r.totalRent);
+
+  drawNWChart(r);
+  drawCostChart(r);
+  renderBreakdownTable(r);
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// CHARTS
+// ═══════════════════════════════════════════════════════════════════════════
+function drawNWChart(r) {
+  var canvas = document.getElementById('nw-chart');
+  var dpr = window.devicePixelRatio || 1;
+  var container = canvas.parentElement;
+  var W = Math.max(200, container.clientWidth);
+  var H = Math.max(160, Math.min(280, W * 0.4));
+
+  canvas.width = W * dpr; canvas.height = H * dpr;
+  canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
+  var ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+
+  var isDark = document.body.classList.contains('dark');
+  var gridColor = isDark ? 'rgba(48,54,61,0.8)' : 'rgba(226,230,239,0.8)';
+  var labelColor = isDark ? '#484f58' : '#9ba3b5';
+
+  var padL = 65, padR = 20, padT = 20, padB = 35;
+  var cW = W - padL - padR, cH = H - padT - padB;
+
+  var allVals = r.buyerNWByYear.concat(r.renterNWByYear);
+  var minV = Math.min.apply(null, allVals);
+  var maxV = Math.max.apply(null, allVals);
+  if (maxV === minV) { maxV += 1000; minV -= 1000; }
+  var range = maxV - minV;
+  minV -= range * 0.05; maxV += range * 0.05;
+
+  function xPos(i) { return padL + (i / r.years) * cW; }
+  function yPos(v) { return padT + (1 - (v - minV) / (maxV - minV)) * cH; }
+
+  // Grid
+  ctx.font = '500 10px "JetBrains Mono", monospace';
+  ctx.textAlign = 'right';
+  for (var g = 0; g <= 4; g++) {
+    var y = padT + (g / 4) * cH;
+    var val = maxV - (g / 4) * (maxV - minV);
+    ctx.strokeStyle = gridColor; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(padL, y); ctx.lineTo(W - padR, y); ctx.stroke();
+    ctx.fillStyle = labelColor;
+    ctx.fillText(fmtShort(val), padL - 8, y + 4);
+  }
+
+  // X labels
+  ctx.textAlign = 'center';
+  var step = r.years <= 10 ? 1 : r.years <= 20 ? 2 : 5;
+  for (var i = 0; i <= r.years; i += step) {
+    ctx.fillStyle = labelColor;
+    ctx.fillText(i, xPos(i), H - 8);
+  }
+
+  // Zero line
+  if (minV < 0 && maxV > 0) {
+    ctx.strokeStyle = isDark ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.1)';
+    ctx.lineWidth = 1; ctx.setLineDash([4,4]);
+    ctx.beginPath(); ctx.moveTo(padL, yPos(0)); ctx.lineTo(W - padR, yPos(0)); ctx.stroke();
+    ctx.setLineDash([]);
+  }
+
+  // Fill areas
+  function drawFill(data, color) {
+    var grad = ctx.createLinearGradient(0, padT, 0, padT + cH);
+    grad.addColorStop(0, color.replace('1)', '0.2)')); grad.addColorStop(1, color.replace('1)', '0.02)'));
+    ctx.beginPath(); ctx.moveTo(xPos(0), yPos(data[0]));
+    for (var i = 1; i < data.length; i++) ctx.lineTo(xPos(i), yPos(data[i]));
+    ctx.lineTo(xPos(data.length - 1), yPos(minV)); ctx.lineTo(xPos(0), yPos(minV));
+    ctx.closePath(); ctx.fillStyle = grad; ctx.fill();
+  }
+  drawFill(r.buyerNWByYear, 'rgba(16,185,129,1)');
+  drawFill(r.renterNWByYear, 'rgba(99,102,241,1)');
+
+  // Lines
+  function drawLine(data, color, width) {
+    ctx.beginPath();
+    for (var i = 0; i < data.length; i++) {
+      i === 0 ? ctx.moveTo(xPos(i), yPos(data[i])) : ctx.lineTo(xPos(i), yPos(data[i]));
+    }
+    ctx.strokeStyle = color; ctx.lineWidth = width; ctx.lineJoin = 'round'; ctx.stroke();
+  }
+  drawLine(r.buyerNWByYear, '#10b981', 2.5);
+  drawLine(r.renterNWByYear, '#6366f1', 2.5);
+
+  // Break-even marker
+  if (r.breakEvenYear !== null) {
+    var bx = xPos(r.breakEvenYear);
+    var by = yPos(r.buyerNWByYear[r.breakEvenYear]);
+    ctx.beginPath(); ctx.arc(bx, by, 6, 0, Math.PI * 2);
+    ctx.fillStyle = '#f59e0b'; ctx.fill();
+    ctx.strokeStyle = isDark ? '#161b22' : '#fff'; ctx.lineWidth = 2; ctx.stroke();
+    ctx.fillStyle = labelColor; ctx.textAlign = 'center';
+    ctx.font = '600 10px "Plus Jakarta Sans", sans-serif';
+    ctx.fillText('Break-even: Yr ' + r.breakEvenYear, bx, by - 12);
+  }
+
+  // End dots
+  function drawDot(val, color, idx) {
+    var x = xPos(idx), y = yPos(val);
+    ctx.beginPath(); ctx.arc(x, y, 5, 0, Math.PI * 2);
+    ctx.fillStyle = color; ctx.fill();
+    ctx.strokeStyle = isDark ? '#161b22' : '#fff'; ctx.lineWidth = 2; ctx.stroke();
+  }
+  drawDot(r.buyerNWByYear[r.years], '#10b981', r.years);
+  drawDot(r.renterNWByYear[r.years], '#6366f1', r.years);
+}
+
+function drawCostChart(r) {
+  var canvas = document.getElementById('cost-chart');
+  var dpr = window.devicePixelRatio || 1;
+  var container = canvas.parentElement;
+  var W = Math.max(200, container.clientWidth);
+  var H = Math.max(140, Math.min(240, W * 0.35));
+
+  canvas.width = W * dpr; canvas.height = H * dpr;
+  canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
+  var ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+
+  var isDark = document.body.classList.contains('dark');
+  var gridColor = isDark ? 'rgba(48,54,61,0.8)' : 'rgba(226,230,239,0.8)';
+  var labelColor = isDark ? '#484f58' : '#9ba3b5';
+
+  var padL = 65, padR = 20, padT = 15, padB = 35;
+  var cW = W - padL - padR, cH = H - padT - padB;
+
+  var data = r.yearlyData;
+  var maxCost = 0;
+  for (var i = 0; i < data.length; i++) {
+    maxCost = Math.max(maxCost, data[i].buyerMonthlyCost, data[i].renterMonthlyCost);
+  }
+  maxCost *= 1.1;
+
+  var barW = Math.max(4, (cW / data.length - 6) / 2);
+
+  // Grid
+  ctx.font = '500 10px "JetBrains Mono", monospace';
+  ctx.textAlign = 'right';
+  for (var g = 0; g <= 4; g++) {
+    var y = padT + (g / 4) * cH;
+    var val = maxCost - (g / 4) * maxCost;
+    ctx.strokeStyle = gridColor; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(padL, y); ctx.lineTo(W - padR, y); ctx.stroke();
+    ctx.fillStyle = labelColor;
+    ctx.fillText(fmtShort(val), padL - 8, y + 4);
+  }
+
+  // Bars
+  for (var i = 0; i < data.length; i++) {
+    var cx = padL + ((i + 0.5) / data.length) * cW;
+    var bH = (data[i].buyerMonthlyCost / maxCost) * cH;
+    var rH = (data[i].renterMonthlyCost / maxCost) * cH;
+
+    ctx.fillStyle = 'rgba(16,185,129,0.7)';
+    ctx.beginPath();
+    roundRect(ctx, cx - barW - 1, padT + cH - bH, barW, bH, 3);
+    ctx.fill();
+
+    ctx.fillStyle = 'rgba(99,102,241,0.7)';
+    ctx.beginPath();
+    roundRect(ctx, cx + 1, padT + cH - rH, barW, rH, 3);
+    ctx.fill();
+
+    // X label
+    var step = data.length <= 10 ? 1 : data.length <= 20 ? 2 : 5;
+    if ((i + 1) % step === 0 || i === 0) {
+      ctx.fillStyle = labelColor; ctx.textAlign = 'center';
+      ctx.font = '500 10px "JetBrains Mono", monospace';
+      ctx.fillText(data[i].year, cx, H - 8);
+    }
+  }
+}
+
+function roundRect(ctx, x, y, w, h, r) {
+  if (h <= 0) return;
+  r = Math.min(r, w / 2, h / 2);
+  ctx.moveTo(x + r, y);
+  ctx.lineTo(x + w - r, y);
+  ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+  ctx.lineTo(x + w, y + h);
+  ctx.lineTo(x, y + h);
+  ctx.lineTo(x, y + r);
+  ctx.quadraticCurveTo(x, y, x + r, y);
+  ctx.closePath();
+}
+
+function fmtShort(n) {
+  var abs = Math.abs(n);
+  var sign = n < 0 ? '-' : '';
+  if (abs >= 1e6) return sign + (abs / 1e6).toFixed(1) + 'M';
+  if (abs >= 1e3) return sign + (abs / 1e3).toFixed(0) + 'K';
+  return sign + Math.round(abs);
+}
+
+// ── Breakdown Table ──────────────────────────────────────────────────────
+function renderBreakdownTable(r) {
+  var thead = document.getElementById('breakdown-thead');
+  thead.innerHTML = '<tr><th>Year</th><th>Buyer $/mo</th><th>Renter $/mo</th>' +
+    '<th>Home Value</th><th>Mortgage Bal.</th><th>Portfolio</th>' +
+    '<th>Buyer NW</th><th>Renter NW</th></tr>';
+
+  var PREVIEW = 10;
+  var data = r.yearlyData;
+  var displayData = showAllRows ? data : data.slice(0, PREVIEW);
+
+  var tbody = document.getElementById('breakdown-tbody');
+  tbody.innerHTML = displayData.map(function(d, idx) {
+    var alt = idx % 2 === 1 ? ' class="tbl-alt"' : '';
+    return '<tr' + alt + '>' +
+      '<td>' + d.year + '</td>' +
+      '<td>' + fmtCurrency(d.buyerMonthlyCost) + '</td>' +
+      '<td>' + fmtCurrency(d.renterMonthlyCost) + '</td>' +
+      '<td>' + fmtCurrency(d.homeValue) + '</td>' +
+      '<td>' + fmtCurrency(d.mortgageBalance) + '</td>' +
+      '<td>' + fmtCurrency(d.portfolio) + '</td>' +
+      '<td class="td-green">' + fmtCurrency(d.buyerNW) + '</td>' +
+      '<td class="td-purple">' + fmtCurrency(d.renterNW) + '</td>' +
+      '</tr>';
+  }).join('');
+
+  var wrap = document.getElementById('show-all-wrap');
+  wrap.style.display = data.length > PREVIEW ? '' : 'none';
+  document.getElementById('show-all-btn').textContent = showAllRows ? 'Show Less' : 'Show All';
+}
+
+function toggleShowAll() {
+  showAllRows = !showAllRows;
+  if (lastResult) renderBreakdownTable(lastResult);
+}
+
+// ── Sensitivity Sliders ──────────────────────────────────────────────────
+function onSensitivityChange() {
+  var appr = parseFloat(document.getElementById('sens-appreciation').value);
+  var ret = parseFloat(document.getElementById('sens-return').value);
+  var yrs = parseInt(document.getElementById('sens-years').value);
+
+  document.getElementById('sens-appreciation-val').textContent = appr.toFixed(1) + '%';
+  document.getElementById('sens-return-val').textContent = ret.toFixed(1) + '%';
+  document.getElementById('sens-years-val').textContent = yrs;
+
+  // Override params and recalculate
+  var params = gatherParams();
+  params.homeAppreciation = appr / 100;
+  params.afterTaxReturn = ret / 100;
+  params.years = yrs;
+
+  var result = runSimulation(params);
+  lastResult = result;
+  renderResults(result);
+}
+
+// ── Dark mode redraw ─────────────────────────────────────────────────────
+document.addEventListener('calcnova:darkchanged', function() {
+  if (lastResult) {
+    drawNWChart(lastResult);
+    drawCostChart(lastResult);
+  }
+});
+
+// ── Copy Summary ─────────────────────────────────────────────────────────
+function copySummary() {
+  if (!lastResult) { showToast('Calculate first'); return; }
+  var r = lastResult;
+  var d = getDefaults();
+  var text = [
+    'Rent vs. Buy Calculator Summary — CalcNova',
+    '─────────────────────────────────────',
+    'Time Horizon:        ' + r.years + ' years',
+    'Home Price:          ' + fmtCurrency(parseFloat(document.getElementById('home-price').value)),
+    'Monthly Rent:        ' + fmtCurrency(parseFloat(document.getElementById('monthly-rent').value)),
+    '─────────────────────────────────────',
+    'Verdict:             ' + (r.buyWins ? 'Buying' : 'Renting') + ' is better by ' + fmtCurrency(Math.abs(r.difference)),
+    'Buyer Net Worth:     ' + fmtCurrency(r.buyerNW),
+    'Renter Net Worth:    ' + fmtCurrency(r.renterNW),
+    'Break-even Year:     ' + (r.breakEvenYear !== null ? 'Year ' + r.breakEvenYear : 'Never'),
+    'Total Interest Paid: ' + fmtCurrency(r.totalInterest),
+    'Total Rent Paid:     ' + fmtCurrency(r.totalRent),
+    '─────────────────────────────────────',
+    window.location.host + window.location.pathname,
+  ].join('\n');
+
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(text).then(function() { showToast('Summary copied!'); });
+  } else {
+    var ta = document.createElement('textarea');
+    ta.value = text; document.body.appendChild(ta); ta.select();
+    document.execCommand('copy'); document.body.removeChild(ta);
+    showToast('Summary copied!');
+  }
+}
+
+function printPage() { window.print(); }
+
+// ── Share Link ───────────────────────────────────────────────────────────
+function shareLink() {
+  var params = new URLSearchParams({
+    region: getRegion(),
+    price: document.getElementById('home-price').value,
+    down: document.getElementById('down-payment').value,
+    downMode: downMode,
+    rate: document.getElementById('mortgage-rate').value,
+    term: document.getElementById('mortgage-term').value,
+    horizon: document.getElementById('horizon').value,
+    rent: document.getElementById('monthly-rent').value,
+    rentInc: document.getElementById('rent-increase').value,
+    appr: document.getElementById('home-appreciation').value,
+    income: document.getElementById('annual-income').value,
+    alloc: document.getElementById('asset-allocation').value,
+    invFee: document.getElementById('investment-fees').value
+  });
+  var url = window.location.origin + window.location.pathname + '?' + params.toString();
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(url).then(function() { showToast('Link copied!'); });
+  } else {
+    var ta = document.createElement('textarea');
+    ta.value = url; document.body.appendChild(ta); ta.select();
+    document.execCommand('copy'); document.body.removeChild(ta);
+    showToast('Link copied!');
+  }
+}
+
+function loadFromURL() {
+  var p = new URLSearchParams(window.location.search);
+  if (!p.get('price')) return;
+  if (p.get('region'))  document.getElementById('region').value = p.get('region');
+  if (p.get('price'))   document.getElementById('home-price').value = p.get('price');
+  if (p.get('down'))    document.getElementById('down-payment').value = p.get('down');
+  if (p.get('rate'))    document.getElementById('mortgage-rate').value = p.get('rate');
+  if (p.get('term'))    document.getElementById('mortgage-term').value = p.get('term');
+  if (p.get('horizon')) document.getElementById('horizon').value = p.get('horizon');
+  if (p.get('rent'))    document.getElementById('monthly-rent').value = p.get('rent');
+  if (p.get('rentInc')) document.getElementById('rent-increase').value = p.get('rentInc');
+  if (p.get('appr'))    document.getElementById('home-appreciation').value = p.get('appr');
+  if (p.get('income'))  document.getElementById('annual-income').value = p.get('income');
+  if (p.get('alloc'))   { document.getElementById('asset-allocation').value = p.get('alloc'); onAllocationChange(); }
+  if (p.get('invFee'))  document.getElementById('investment-fees').value = p.get('invFee');
+  if (p.get('downMode')) setDownMode(p.get('downMode'));
+  updateHorizonDisplay();
+  onRegionChange();
+  calculate();
+}
+
+// ── Init ─────────────────────────────────────────────────────────────────
+(function init() {
+  updateVisibility();
+  updateCurrencyPrefixes();
+  updateDpHint();
+  updateHorizonDisplay();
+  updateMortgageInsuranceVisibility();
+  onIncomeChange();
+  updateGrossReturn();
+  updateAfterTaxReturn();
+  updateDomesticDivLabel();
+
+  // Sync real estate growth with home appreciation
+  document.getElementById('real-estate-growth').addEventListener('input', function() {
+    document.getElementById('home-appreciation').value = this.value;
+  });
+  document.getElementById('home-appreciation').addEventListener('input', function() {
+    document.getElementById('real-estate-growth').value = this.value;
+  });
+
+  loadFromURL();
+
+  // Listen for home price changes to update dependent fields
+  document.getElementById('home-price').addEventListener('input', function() {
+    document.getElementById('home-insurance').value = Math.round((parseFloat(this.value) || 0) * 0.0035);
+    updateDpHint();
+    updateMortgageInsuranceVisibility();
+    if (getRegion() === 'uk') updateStampDuty();
+    if (getRegion() === 'ca') updateLandTransferTax();
+  });
+
+  // Window resize redraw charts
+  var resizeTimer;
+  window.addEventListener('resize', function() {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(function() {
+      if (lastResult) {
+        drawNWChart(lastResult);
+        drawCostChart(lastResult);
+      }
+    }, 200);
+  });
+})();
+</script>
+</body>
+</html>
