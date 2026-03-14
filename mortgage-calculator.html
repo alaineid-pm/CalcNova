@@ -3,30 +3,96 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mortgage Payment Calculator · CalcNova</title>
-  <meta name="description" content="Free mortgage calculator to estimate monthly payments, total interest, and amortization schedule. Calculate your mortgage payment instantly — no login required." />
+  <title>Mortgage Calculator — Monthly Payment, Amortization & Total Cost | CalcNova</title>
+  <meta name="description" content="Free mortgage calculator: estimate your monthly payment, total interest paid, and full amortization schedule. Adjust rate, term, down payment, and extra payments — no sign-up needed." />
+
+  <!-- Canonical -->
+  <link rel="canonical" href="https://calcnova.co/mortgage-calculator.html" />
 
   <!-- Open Graph -->
-  <meta property="og:title" content="Mortgage Payment Calculator · CalcNova" />
-  <meta property="og:description" content="Free mortgage calculator to estimate monthly payments, total interest, and amortization schedule. Calculate your mortgage payment instantly — no login required." />
+  <meta property="og:title" content="Mortgage Calculator — Monthly Payment & Amortization | CalcNova" />
+  <meta property="og:description" content="Free mortgage calculator: estimate your monthly payment, total interest, and amortization schedule instantly. No sign-up required." />
   <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://alaineid-pm.github.io/CalcNova/mortgage-calculator.html" />
+  <meta property="og:url" content="https://calcnova.co/mortgage-calculator.html" />
+  <meta property="og:site_name" content="CalcNova" />
 
-  <!-- JSON-LD Structured Data -->
+  <!-- JSON-LD: WebPage + FAQPage (enables rich results in Google) -->
   <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "FinancialProduct",
-    "name": "Mortgage Payment Calculator",
-    "description": "Free mortgage calculator to estimate monthly payments, total interest, and full amortization schedule.",
-    "url": "https://alaineid-pm.github.io/CalcNova/mortgage-calculator.html",
-    "provider": {
-      "@type": "Organization",
-      "name": "CalcNova",
-      "url": "https://alaineid-pm.github.io/CalcNova"
+  [
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": "Mortgage Calculator — Monthly Payment, Amortization & Total Cost",
+      "url": "https://calcnova.co/mortgage-calculator.html",
+      "description": "Free mortgage calculator to estimate monthly payments, total interest, and full amortization schedule.",
+      "isPartOf": {
+        "@type": "WebSite",
+        "name": "CalcNova",
+        "url": "https://calcnova.co/"
+      },
+      "breadcrumb": {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://calcnova.co/" },
+          { "@type": "ListItem", "position": 2, "name": "Mortgage Calculator", "item": "https://calcnova.co/mortgage-calculator.html" }
+        ]
+      }
     },
-    "feesAndCommissionsSpecification": "Free to use, no login required."
-  }
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How do I calculate my monthly mortgage payment?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Your monthly mortgage payment is calculated using the formula: M = P × r(1+r)^n / ((1+r)^n − 1), where P is the loan amount (home price minus down payment), r is the monthly interest rate (annual rate ÷ 12), and n is the total number of payments (years × 12). Enter your values above and the calculator does this instantly."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How much mortgage can I afford?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "A common guideline is the 28/36 rule: your monthly mortgage payment should not exceed 28% of your gross monthly income, and your total debt payments should not exceed 36%. For example, if your household earns $8,000/month, your mortgage payment should ideally stay under $2,240. Lenders also consider your credit score, debt-to-income ratio, and down payment size."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is a good mortgage interest rate?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "A good mortgage rate depends on current market conditions, your credit score, loan term, and down payment. Historically, rates below 6% are considered favorable. Borrowers with credit scores above 760 and a 20% down payment typically qualify for the best available rates. Always compare quotes from at least 3 lenders before committing."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the difference between a 15-year and 30-year mortgage?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "A 30-year mortgage has lower monthly payments but you pay significantly more total interest over the life of the loan. A 15-year mortgage has higher monthly payments but you build equity faster and pay far less in total interest — often saving tens of thousands of dollars. Use this calculator to compare both scenarios side by side by changing the amortization period."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How does a down payment affect my mortgage payment?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "A larger down payment reduces your loan principal, which lowers your monthly payment and the total interest you pay. It also reduces or eliminates mortgage insurance (PMI or CMHC) once you reach 20% equity. For example, on a $500,000 home at 6.5%, putting 20% down ($100,000) instead of 10% ($50,000) saves hundreds per month and tens of thousands in interest over 25 years."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Do extra mortgage payments really make a difference?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes — even small extra payments applied directly to principal can significantly shorten your mortgage and save substantial interest. For example, adding $200/month to a $400,000 mortgage at 6.5% over 25 years can cut 4+ years off your payoff date and save over $50,000 in interest. Use the Advanced Options in this calculator to model the exact impact of extra payments."
+          }
+        }
+      ]
+    }
+  ]
   </script>
 
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
@@ -43,7 +109,7 @@
       margin-bottom: 20px;
       display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;
     }
-    .hero-title { font-size: 26px; font-weight: 800; letter-spacing: -.5px; }
+    .hero-title { font-size: 26px; font-weight: 800; letter-spacing: -.5px; margin: 0; padding: 0; }
     .hero-title span {
       background: linear-gradient(135deg, var(--green), var(--purple));
       -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
@@ -442,7 +508,7 @@
   <!-- HERO -->
   <div class="hero">
     <div>
-      <div class="hero-title">Mortgage <span>Calculator</span></div>
+      <h1 class="hero-title">Mortgage <span>Calculator</span></h1>
       <div class="hero-desc">Estimate your monthly payment, total interest, and full amortization schedule — instantly in your browser.</div>
     </div>
     <div class="hero-formula">
@@ -747,19 +813,54 @@
   <!-- SEO SECTION -->
   <div class="seo-section">
     <h2>How to Use This Mortgage Calculator</h2>
-    <p>Enter your home price, down payment, interest rate, and amortization period to instantly see your estimated mortgage payment. Adjust the payment frequency to see monthly, bi-weekly, or weekly payment amounts. Add optional costs like property tax, insurance, and PMI for a complete picture of your true housing cost.</p>
+    <p>Enter your home price, down payment, interest rate, and amortization period to instantly see your estimated mortgage payment. Adjust the payment frequency to see monthly, bi-weekly, or weekly payment amounts. Add optional costs like property tax, home insurance, and PMI/CMHC for a complete picture of your true monthly housing cost. Use Advanced Options to model the impact of extra payments on your payoff date and total interest.</p>
 
-    <h3>What is a Mortgage Payment?</h3>
-    <p>A mortgage payment is the regular amount paid to a lender to repay a home loan. Each payment is split between principal — the amount borrowed — and interest, which is the cost of borrowing. In the early years of a mortgage, the majority of each payment goes toward interest. Over time, a greater portion is applied to the principal as the balance decreases.</p>
+    <h3>How Much Mortgage Can I Afford?</h3>
+    <p>The most common guideline is the <strong>28/36 rule</strong>: your monthly mortgage payment (principal + interest) should not exceed <strong>28% of your gross monthly income</strong>, and your total monthly debt payments should not exceed 36%. For example, with a household income of $8,000/month, aim to keep your mortgage payment under $2,240. Lenders also weigh your credit score, employment history, and existing debts when qualifying you. A stronger credit profile (760+) and a larger down payment typically unlock better interest rates.</p>
 
-    <h3>How Mortgage Interest Works</h3>
-    <p>Mortgage interest is calculated on the outstanding loan balance each period. The formula used here is the standard amortizing loan formula: M = P · r(1+r)^n / ((1+r)^n − 1), where P is the principal, r is the periodic interest rate, and n is the total number of payments. With a fixed-rate mortgage, your payment stays the same each period but the proportion of interest vs. principal shifts gradually over time.</p>
+    <h3>What Is a Good Mortgage Interest Rate?</h3>
+    <p>A "good" rate is one that's competitive relative to current market conditions. Rates fluctuate based on central bank policy, inflation, and bond yields. Borrowers with excellent credit (760+), a stable income, and a 20%+ down payment tend to qualify for the lowest available rates. Always get quotes from at least three lenders — banks, credit unions, and mortgage brokers — before committing. Even a 0.25% difference in rate can save tens of thousands of dollars over 25–30 years.</p>
 
-    <h3>How to Reduce Your Mortgage Costs</h3>
-    <p>There are several proven strategies to reduce the total cost of your mortgage. Making a larger down payment reduces your loan balance and eliminates PMI once you reach 20% equity. Choosing a shorter amortization period (e.g. 15 years instead of 25) dramatically reduces total interest paid, although your monthly payment will be higher. Making extra payments directly against the principal — even small amounts — can shave years off your mortgage and save tens of thousands in interest. Finally, shopping for the best available interest rate before committing can have a significant long-term impact.</p>
+    <h3>15-Year vs. 30-Year Mortgage: Which Is Better?</h3>
+    <p>Both have trade-offs. A <strong>30-year (or 25-year) mortgage</strong> has lower monthly payments, giving you more cash flow flexibility, but you pay significantly more interest over the life of the loan. A <strong>15-year mortgage</strong> has higher monthly payments but you build equity much faster and pay far less in total interest — often saving $100,000+ on a large loan. Use the amortization period dropdown above to compare scenarios. If your budget allows, a shorter term is almost always cheaper in the long run.</p>
 
-    <h3>Understanding Amortization</h3>
-    <p>Amortization is the process of paying off a loan through regular scheduled payments over time. An amortization schedule shows every payment broken down into its principal and interest components, along with the remaining loan balance after each payment. Early payments are interest-heavy; later payments are principal-heavy. The full amortization table generated by this calculator shows the complete repayment timeline — you can view it year by year or month by month and export it as a CSV spreadsheet for your records.</p>
+    <h3>How Does a Down Payment Affect Your Mortgage?</h3>
+    <p>Your down payment directly reduces your loan principal, which lowers both your monthly payment and the total interest you pay. It also determines whether you need mortgage insurance. In Canada, a down payment below 20% requires CMHC insurance. In the US, conventional loans require PMI when down payment is under 20%. For example, on a $500,000 home at 6.5%: putting 20% down ($100,000) versus 10% ($50,000) reduces your monthly principal and interest payment by roughly $330/month and saves over $100,000 in total interest over 25 years.</p>
+
+    <h3>Do Extra Mortgage Payments Really Make a Difference?</h3>
+    <p>Yes — significantly. Extra payments go directly to principal, reducing the balance on which interest is charged. Even an additional $200–$300/month on a $400,000 mortgage at 6.5% can cut 4–5 years off your payoff date and save $50,000–$75,000 in interest. Bi-weekly payments (26 payments/year instead of 12) also effectively make one extra monthly payment per year. Use the <strong>Advanced Options</strong> section above to model the exact savings for your loan.</p>
+
+    <h3>What Is a Mortgage Payment Made Of?</h3>
+    <p>Each mortgage payment is split between <strong>principal</strong> (the amount that reduces your loan balance) and <strong>interest</strong> (the cost of borrowing). In the early years, the majority of each payment is interest. Over time, as your balance decreases, more of each payment goes toward principal. This is called amortization. If you add optional costs above, your total payment also includes property tax, home insurance, and PMI/CMHC — these don't reduce your loan balance but are often rolled into your monthly payment by the lender or collected in an escrow account.</p>
+
+    <h3>The Mortgage Formula Explained</h3>
+    <p>The standard fixed-rate mortgage payment formula is: <strong>M = P · r(1+r)ⁿ / ((1+r)ⁿ − 1)</strong>, where P is the principal (loan amount), r is the periodic interest rate (annual rate ÷ payment periods per year), and n is the total number of payments (years × payment periods). With a fixed rate, your payment amount stays constant every period, but the split between interest and principal changes with each payment as your balance declines.</p>
+
+    <h3>Understanding the Amortization Schedule</h3>
+    <p>The amortization table below the calculator shows every payment broken down into principal paid, interest paid, and remaining balance — year by year or month by month. It's useful for seeing exactly when you'll cross key milestones like 50% equity, or how much interest you've paid by year 5. You can export the full schedule as a CSV to use in your own spreadsheet, or print it as a PDF for your records.</p>
+  </div>
+
+  <!-- RELATED CALCULATORS -->
+  <div class="seo-section" style="margin-top: 16px;">
+    <h2>Related Calculators</h2>
+    <p>Explore other free tools that pair well with your mortgage planning:</p>
+    <ul style="margin: 12px 0 0; padding-left: 20px; display: flex; flex-direction: column; gap: 8px;">
+      <li style="font-size: 14px; color: var(--text-secondary); line-height: 1.5;">
+        <a href="compound-interest-calculator.html" style="color: var(--green); font-weight: 600; text-decoration: none;">Compound Interest Calculator</a> — See how your savings or investments grow over time with compounding.
+      </li>
+      <li style="font-size: 14px; color: var(--text-secondary); line-height: 1.5;">
+        <a href="debt-payoff.html" style="color: var(--green); font-weight: 600; text-decoration: none;">Debt Payoff Planner</a> — Compare snowball vs. avalanche strategies to eliminate debt faster.
+      </li>
+      <li style="font-size: 14px; color: var(--text-secondary); line-height: 1.5;">
+        <a href="savings-goal.html" style="color: var(--green); font-weight: 600; text-decoration: none;">Savings Goal Calculator</a> — Plan how long it takes to save your down payment.
+      </li>
+      <li style="font-size: 14px; color: var(--text-secondary); line-height: 1.5;">
+        <a href="fire-calculator.html" style="color: var(--green); font-weight: 600; text-decoration: none;">FIRE Calculator</a> — Model your path to financial independence alongside your mortgage payoff.
+      </li>
+      <li style="font-size: 14px; color: var(--text-secondary); line-height: 1.5;">
+        <a href="net-worth-tracker.html" style="color: var(--green); font-weight: 600; text-decoration: none;">Net Worth Tracker</a> — Track your total assets and liabilities, including home equity, over time.
+      </li>
+    </ul>
   </div>
 
   <!-- nav.js injects footer here -->
