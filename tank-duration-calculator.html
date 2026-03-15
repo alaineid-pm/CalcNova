@@ -740,7 +740,6 @@
 
     </div><!-- /form-grid -->
 
-    <button class="calc-btn" onclick="calculate()">Calculate Tank Duration</button>
   </div>
 
   <!-- Results -->
@@ -1155,8 +1154,6 @@
     /* Depth comparison table */
     buildTable(fillPres, reservePres, rate, waterType, tankParams, depth);
 
-    /* Scroll to results */
-    document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
   /* ── Build comparison table ── */
@@ -1191,14 +1188,7 @@
 
   /* ── Auto-calc on input change ── */
   function autoCalc() {
-    var fillPres    = parseFloat(document.getElementById('fillPressure').value);
-    var reservePres = parseFloat(document.getElementById('reservePressure').value);
-    var depth       = parseFloat(document.getElementById('depth').value);
-    var rate        = parseFloat(document.getElementById('rate').value);
-    var tankParams  = getTankParams();
-    if (fillPres && reservePres && depth && rate && tankParams.vol && tankParams.workingPres && fillPres > reservePres) {
-      calculate();
-    }
+    calculate();
   }
 
   /* ── Copy results ── */
@@ -1253,6 +1243,7 @@
   /* ── Init ── */
   updateLabels();
   onTankChange();
+  calculate();
 </script>
 
 </body>
