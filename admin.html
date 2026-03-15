@@ -1,0 +1,1946 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>CalcNova Admin</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet">
+  <style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --green:#10b981;--purple:#6366f1;
+  --bg:#0a0a0f;--surface:#13131a;--surface2:#1a1a24;--surface3:#20202e;
+  --border:rgba(255,255,255,.08);--border2:rgba(255,255,255,.12);
+  --text-primary:#f0f0f5;--text-secondary:#a0a0b8;--text-muted:#606078;
+  --font:'Plus Jakarta Sans',sans-serif;--mono:'JetBrains Mono',monospace;
+  --red:#ef4444;--amber:#f59e0b;
+}
+body{font-family:var(--font);background:var(--bg);color:var(--text-primary);min-height:100vh;font-size:14px;line-height:1.5}
+a{color:var(--green);text-decoration:none}
+input,select,textarea{font-family:var(--font);font-size:14px}
+/* Layout */
+.admin-wrap{display:flex;height:100vh;overflow:hidden}
+.sidebar{width:200px;flex-shrink:0;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;padding:0}
+.sidebar-logo{padding:20px 18px 14px;border-bottom:1px solid var(--border)}
+.sidebar-logo .logo-text{font-size:18px;font-weight:800;background:linear-gradient(135deg,var(--green),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.sidebar-logo .logo-sub{font-size:10px;color:var(--text-muted);font-weight:600;letter-spacing:.5px;text-transform:uppercase;margin-top:2px}
+.sidebar-nav{display:flex;flex-direction:column;gap:2px;padding:10px 8px;flex:1}
+.nav-tab{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;cursor:pointer;color:var(--text-secondary);font-size:13px;font-weight:500;border:none;background:none;width:100%;text-align:left;transition:all .15s}
+.nav-tab:hover{background:var(--surface2);color:var(--text-primary)}
+.nav-tab.active{background:linear-gradient(135deg,rgba(16,185,129,.15),rgba(99,102,241,.1));color:var(--green);border:1px solid rgba(16,185,129,.2)}
+.nav-tab .tab-emoji{font-size:16px}
+.sidebar-footer{padding:12px 8px;border-top:1px solid var(--border)}
+.main{flex:1;overflow-y:auto;display:flex;flex-direction:column}
+/* Header */
+.main-header{padding:16px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:var(--surface);flex-shrink:0;position:sticky;top:0;z-index:100}
+.main-header h2{font-size:16px;font-weight:700;color:var(--text-primary)}
+.header-actions{display:flex;align-items:center;gap:10px}
+.dirty-pill{display:none;align-items:center;gap:6px;background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.25);border-radius:100px;padding:4px 12px;font-size:11px;font-weight:700;color:var(--amber);letter-spacing:.3px;text-transform:uppercase}
+.dirty-pill.show{display:flex}
+/* Panels */
+.panel{display:none;flex:1;padding:0}
+.panel.active{display:flex;flex-direction:column}
+.panel-inner{padding:20px 24px;flex:1}
+/* Buttons */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;border:none;font-family:var(--font);transition:all .15s;white-space:nowrap}
+.btn-primary{background:linear-gradient(135deg,var(--green),#059669);color:#fff}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(16,185,129,.3)}
+.btn-secondary{background:var(--surface2);color:var(--text-primary);border:1px solid var(--border)}
+.btn-secondary:hover{border-color:var(--green);color:var(--green)}
+.btn-danger{background:rgba(239,68,68,.1);color:var(--red);border:1px solid rgba(239,68,68,.2)}
+.btn-danger:hover{background:rgba(239,68,68,.18)}
+.btn-save{background:linear-gradient(135deg,var(--amber),#d97706);color:#fff}
+.btn-save:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(245,158,11,.3)}
+.btn-save.highlight{animation:pulse-amber 1.5s ease infinite}
+.btn-sm{padding:5px 10px;font-size:12px}
+@keyframes pulse-amber{0%,100%{box-shadow:0 0 0 0 rgba(245,158,11,.4)}50%{box-shadow:0 0 0 6px rgba(245,158,11,0)}}
+/* Search bar */
+.search-bar{padding:14px 24px;border-bottom:1px solid var(--border);background:var(--surface)}
+.search-input{width:100%;max-width:380px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:8px 14px;color:var(--text-primary);font-size:13px;outline:none;transition:border-color .15s}
+.search-input:focus{border-color:var(--green)}
+.search-input::placeholder{color:var(--text-muted)}
+/* List */
+.list-container{display:flex;flex-direction:column;gap:6px;margin-top:12px}
+.list-row{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:border-color .15s}
+.list-row:hover{border-color:rgba(16,185,129,.3)}
+.list-row-main{display:flex;align-items:center;gap:12px;padding:12px 16px}
+.row-emoji{font-size:20px;flex-shrink:0;width:28px;text-align:center}
+.row-info{flex:1;min-width:0}
+.row-name{font-size:14px;font-weight:600;color:var(--text-primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row-meta{font-size:12px;color:var(--text-muted);margin-top:2px}
+.row-actions{display:flex;align-items:center;gap:6px;flex-shrink:0}
+/* Inline edit */
+.inline-edit{display:none;padding:16px;border-top:1px solid var(--border);background:var(--surface2)}
+.inline-edit.open{display:block}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.form-grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.form-group{display:flex;flex-direction:column;gap:5px}
+.form-group.full{grid-column:1/-1}
+.form-label{font-size:11px;font-weight:700;color:var(--text-muted);letter-spacing:.4px;text-transform:uppercase}
+.form-input,.form-select,.form-textarea{background:var(--surface);border:1px solid var(--border2);border-radius:8px;padding:8px 12px;color:var(--text-primary);font-size:13px;outline:none;transition:border-color .15s;width:100%}
+.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--green)}
+.form-select option{background:var(--surface);color:var(--text-primary)}
+.form-textarea{resize:vertical;min-height:80px}
+.form-actions{display:flex;gap:8px;margin-top:14px}
+/* Badge */
+.badge{display:inline-flex;align-items:center;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700;letter-spacing:.4px;text-transform:uppercase}
+.badge-new{background:rgba(16,185,129,.12);color:var(--green);border:1px solid rgba(16,185,129,.2)}
+.badge-popular{background:rgba(245,158,11,.12);color:var(--amber);border:1px solid rgba(245,158,11,.2)}
+/* Category color pills */
+.cat-pill{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600}
+.cat-finance{background:rgba(245,158,11,.1);color:var(--amber)}
+.cat-health{background:rgba(16,185,129,.1);color:var(--green)}
+.cat-datetime{background:rgba(99,102,241,.1);color:var(--purple)}
+.cat-tools{background:rgba(96,160,120,.1);color:#60a878}
+.cat-education{background:rgba(59,130,246,.1);color:#3b82f6}
+.cat-guides,.cat-articles{background:rgba(168,85,247,.1);color:#a855f7}
+.cat-scuba{background:rgba(6,182,212,.1);color:#06b6d4}
+/* Sub-view */
+.subview{display:none;flex:1;flex-direction:column}
+.subview.active{display:flex}
+.subview-header{padding:14px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:14px;background:var(--surface);flex-shrink:0}
+.subview-header h3{font-size:15px;font-weight:700}
+.subview-body{padding:20px 24px;flex:1;overflow-y:auto}
+/* Upload zone */
+.upload-zone{border:2px dashed var(--border2);border-radius:14px;padding:36px 24px;text-align:center;cursor:pointer;transition:all .2s;background:var(--surface)}
+.upload-zone:hover,.upload-zone.drag-over{border-color:var(--green);background:rgba(16,185,129,.05)}
+.upload-zone p{color:var(--text-muted);font-size:13px;margin-top:6px}
+.upload-zone input[type=file]{display:none}
+/* Quill customization */
+#quill-editor{background:var(--surface);color:var(--text-primary);min-height:280px;border-radius:0 0 8px 8px;font-family:var(--font)}
+.ql-toolbar{background:var(--surface2);border:1px solid var(--border2) !important;border-radius:8px 8px 0 0;border-bottom:none !important}
+.ql-container{border:1px solid var(--border2) !important;border-radius:0 0 8px 8px}
+.ql-toolbar .ql-stroke{stroke:var(--text-secondary) !important}
+.ql-toolbar .ql-fill{fill:var(--text-secondary) !important}
+.ql-toolbar button:hover .ql-stroke,.ql-toolbar button.ql-active .ql-stroke{stroke:var(--green) !important}
+.ql-toolbar button:hover .ql-fill,.ql-toolbar button.ql-active .ql-fill{fill:var(--green) !important}
+.ql-toolbar .ql-picker-label{color:var(--text-secondary) !important}
+.ql-editor{color:var(--text-primary) !important;font-size:14px;line-height:1.7}
+.ql-editor.ql-blank::before{color:var(--text-muted) !important;font-style:normal}
+/* FAQ Editor */
+.faq-item{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:10px}
+.faq-item-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.faq-num{font-size:11px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.4px}
+/* Homepage generator */
+.gen-section{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:18px;margin-bottom:16px}
+.gen-section h4{font-size:13px;font-weight:700;color:var(--text-primary);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.output-box{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px;margin-top:10px;position:relative}
+.output-box pre{font-family:var(--mono);font-size:11px;color:var(--text-secondary);white-space:pre-wrap;word-break:break-all;max-height:180px;overflow-y:auto}
+.copy-btn{position:absolute;top:8px;right:8px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:4px 10px;font-size:11px;font-weight:600;color:var(--text-muted);cursor:pointer;font-family:var(--font);transition:all .15s}
+.copy-btn:hover{color:var(--green);border-color:var(--green)}
+/* Categories */
+.cat-row{background:var(--surface);border:1px solid var(--border);border-radius:10px;margin-bottom:6px;overflow:hidden}
+.cat-row-main{display:flex;align-items:center;gap:10px;padding:10px 14px}
+.cat-reorder{display:flex;flex-direction:column;gap:2px}
+.cat-reorder button{background:none;border:1px solid var(--border);border-radius:4px;padding:1px 4px;color:var(--text-muted);cursor:pointer;font-size:10px;line-height:1.4;transition:all .15s}
+.cat-reorder button:hover{border-color:var(--green);color:var(--green)}
+/* Config */
+.config-section{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:18px;margin-bottom:16px}
+.config-section h4{font-size:13px;font-weight:700;margin-bottom:14px}
+/* Divider */
+.divider{height:1px;background:var(--border);margin:16px 0}
+/* Empty state */
+.empty-state{text-align:center;padding:48px 24px;color:var(--text-muted)}
+.empty-state p{font-size:14px;margin-top:8px}
+/* Scrollbar */
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(--text-muted)}
+/* Checkbox */
+.form-checkbox{display:flex;align-items:center;gap:8px;cursor:pointer}
+.form-checkbox input{width:15px;height:15px;accent-color:var(--green)}
+/* Section label */
+.section-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.section-top h3{font-size:15px;font-weight:700}
+/* Tooltip on copy */
+.copied-toast{position:fixed;bottom:24px;right:24px;background:var(--surface2);border:1px solid rgba(16,185,129,.3);border-radius:8px;padding:10px 18px;font-size:13px;color:var(--green);font-weight:600;z-index:9999;opacity:0;transform:translateY(8px);transition:all .2s;pointer-events:none}
+.copied-toast.show{opacity:1;transform:translateY(0)}
+  </style>
+</head>
+<body>
+<div class="admin-wrap">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-text">CalcNova</div>
+      <div class="logo-sub">Admin CMS</div>
+    </div>
+    <nav class="sidebar-nav">
+      <button class="nav-tab active" onclick="switchTab('articles')" id="tab-articles">
+        <span class="tab-emoji">📝</span> Articles
+      </button>
+      <button class="nav-tab" onclick="switchTab('tools')" id="tab-tools">
+        <span class="tab-emoji">🔧</span> Tools
+      </button>
+      <button class="nav-tab" onclick="switchTab('homepage')" id="tab-homepage">
+        <span class="tab-emoji">🏠</span> Homepage
+      </button>
+      <button class="nav-tab" onclick="switchTab('config')" id="tab-config">
+        <span class="tab-emoji">⚙️</span> Site Config
+      </button>
+    </nav>
+    <div class="sidebar-footer">
+      <div style="font-size:11px;color:var(--text-muted);text-align:center">CalcNova Admin v1.0</div>
+    </div>
+  </aside>
+
+  <!-- Main content -->
+  <main class="main" id="main-area">
+
+    <!-- ARTICLES PANEL -->
+    <div class="panel active" id="panel-articles">
+      <!-- List sub-view -->
+      <div class="subview active" id="articles-list-view">
+        <div class="main-header">
+          <h2>📝 Articles</h2>
+          <div class="header-actions">
+            <span class="dirty-pill" id="dirty-articles">● Unsaved Changes</span>
+            <button class="btn btn-save btn-sm" id="save-btn-articles" onclick="downloadSiteData()" style="display:none">💾 Save site-data.js</button>
+            <button class="btn btn-primary btn-sm" onclick="openNewArticle()">+ New Article</button>
+          </div>
+        </div>
+        <div class="search-bar">
+          <input class="search-input" type="text" placeholder="🔍 Search articles…" id="article-search" oninput="renderArticleList()">
+        </div>
+        <div class="panel-inner" style="overflow-y:auto">
+          <div class="list-container" id="article-list"></div>
+        </div>
+      </div>
+
+      <!-- New Article sub-view -->
+      <div class="subview" id="articles-new-view">
+        <div class="subview-header">
+          <button class="btn btn-secondary btn-sm" onclick="backToArticles()">← Back to Articles</button>
+          <h3>New Article</h3>
+        </div>
+        <div class="subview-body">
+          <div class="form-grid" style="margin-bottom:14px">
+            <div class="form-group">
+              <label class="form-label">Page Title (without " | CalcNova")</label>
+              <input class="form-input" id="na-title" type="text" placeholder="How Compound Interest Works">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Article ID</label>
+              <input class="form-input" id="na-id" type="text" placeholder="article-compound-interest">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Meta Description</label>
+              <input class="form-input" id="na-meta-desc" type="text" placeholder="SEO description…">
+            </div>
+            <div class="form-group">
+              <label class="form-label">URL Filename</label>
+              <input class="form-input" id="na-url" type="text" placeholder="article-compound-interest.html">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Badge Text</label>
+              <input class="form-input" id="na-badge" type="text" placeholder="📈 Finance Guide">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Emoji</label>
+              <input class="form-input" id="na-emoji" type="text" placeholder="📈">
+            </div>
+            <div class="form-group">
+              <label class="form-label">H1 Plain Text</label>
+              <input class="form-input" id="na-h1plain" type="text" placeholder="How to Calculate">
+            </div>
+            <div class="form-group">
+              <label class="form-label">H1 Gradient Word(s)</label>
+              <input class="form-input" id="na-h1gradient" type="text" placeholder="Compound Interest">
+            </div>
+            <div class="form-group full">
+              <label class="form-label">Subtitle</label>
+              <input class="form-input" id="na-subtitle" type="text" placeholder="Lead sentence for the article">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Date Published (YYYY-MM-DD)</label>
+              <input class="form-input" id="na-date" type="text" placeholder="2026-03-15">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Read Time</label>
+              <input class="form-input" id="na-readtime" type="text" placeholder="5 min">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Category</label>
+              <input class="form-input" id="na-category" type="text" placeholder="Finance">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Subcategory</label>
+              <input class="form-input" id="na-subcategory" type="text" placeholder="Investing">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Related Tool ID</label>
+              <input class="form-input" id="na-relatedtool" type="text" placeholder="compound-interest">
+            </div>
+            <div class="form-group full">
+              <label class="form-label">Disclaimer</label>
+              <input class="form-input" id="na-disclaimer" type="text" placeholder="For educational purposes only…">
+            </div>
+            <div class="form-group full">
+              <label class="form-label">Site Description (for site-data.js)</label>
+              <textarea class="form-textarea" id="na-description" placeholder="Short description shown in navigation and search…" style="min-height:60px"></textarea>
+            </div>
+          </div>
+          <div class="divider"></div>
+          <div style="margin-bottom:10px">
+            <div class="form-label" style="margin-bottom:8px">Article Body</div>
+            <div id="quill-editor-container-new">
+              <div id="quill-editor"></div>
+            </div>
+          </div>
+          <div class="divider"></div>
+          <div class="gen-section">
+            <h4>✅ CTA Section</h4>
+            <div class="form-grid">
+              <div class="form-group">
+                <label class="form-label">CTA Heading</label>
+                <input class="form-input" id="na-cta-title" type="text" placeholder="Ready to try it yourself?">
+              </div>
+              <div class="form-group">
+                <label class="form-label">CTA Button Text</label>
+                <input class="form-input" id="na-cta-btn" type="text" placeholder="Open Calculator →">
+              </div>
+              <div class="form-group full">
+                <label class="form-label">CTA Description</label>
+                <input class="form-input" id="na-cta-desc" type="text" placeholder="Short sentence about the calculator">
+              </div>
+              <div class="form-group full">
+                <label class="form-label">CTA Button URL</label>
+                <input class="form-input" id="na-cta-url" type="text" placeholder="compound-interest-calculator.html">
+              </div>
+            </div>
+          </div>
+          <div class="form-actions">
+            <button class="btn btn-primary" onclick="downloadNewArticle()">⬇ Download Article HTML</button>
+            <button class="btn btn-secondary" onclick="saveNewArticleToState()">💾 Add to site-data.js</button>
+            <button class="btn btn-secondary" onclick="backToArticles()">Cancel</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Edit Content sub-view -->
+      <div class="subview" id="articles-edit-view">
+        <div class="subview-header">
+          <button class="btn btn-secondary btn-sm" onclick="backToArticles()">← Back to Articles</button>
+          <h3 id="article-edit-title">Edit Article Content</h3>
+        </div>
+        <div class="subview-body">
+          <div class="upload-zone" id="article-upload-zone" onclick="document.getElementById('article-file-input').click()"
+            ondragover="event.preventDefault();this.classList.add('drag-over')"
+            ondragleave="this.classList.remove('drag-over')"
+            ondrop="handleArticleDrop(event)">
+            <input type="file" id="article-file-input" accept=".html" onchange="handleArticleFileInput(this)">
+            <div style="font-size:32px">📄</div>
+            <div style="font-size:14px;font-weight:600;color:var(--text-primary);margin-top:8px">Upload article HTML file</div>
+            <p>Drag and drop or click to browse · .html files only</p>
+          </div>
+          <div id="article-edit-form" style="display:none;margin-top:16px">
+            <div class="form-grid" style="margin-bottom:14px">
+              <div class="form-group">
+                <label class="form-label">Page Title</label>
+                <input class="form-input" id="ea-title" type="text">
+              </div>
+              <div class="form-group">
+                <label class="form-label">URL Filename</label>
+                <input class="form-input" id="ea-url" type="text" readonly style="opacity:.6">
+              </div>
+              <div class="form-group full">
+                <label class="form-label">Meta Description</label>
+                <input class="form-input" id="ea-meta-desc" type="text">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Badge Text</label>
+                <input class="form-input" id="ea-badge" type="text">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Date Published</label>
+                <input class="form-input" id="ea-date" type="text">
+              </div>
+              <div class="form-group">
+                <label class="form-label">H1 Plain Text</label>
+                <input class="form-input" id="ea-h1plain" type="text">
+              </div>
+              <div class="form-group">
+                <label class="form-label">H1 Gradient Word(s)</label>
+                <input class="form-input" id="ea-h1gradient" type="text">
+              </div>
+              <div class="form-group full">
+                <label class="form-label">Subtitle</label>
+                <input class="form-input" id="ea-subtitle" type="text">
+              </div>
+              <div class="form-group full">
+                <label class="form-label">Disclaimer</label>
+                <input class="form-input" id="ea-disclaimer" type="text">
+              </div>
+            </div>
+            <div class="divider"></div>
+            <div style="margin-bottom:10px">
+              <div class="form-label" style="margin-bottom:8px">Article Body</div>
+              <div id="quill-editor-container-edit"></div>
+            </div>
+            <div class="divider"></div>
+            <div class="gen-section">
+              <h4>✅ CTA Section</h4>
+              <div class="form-grid">
+                <div class="form-group">
+                  <label class="form-label">CTA Heading</label>
+                  <input class="form-input" id="ea-cta-title" type="text">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">CTA Button Text</label>
+                  <input class="form-input" id="ea-cta-btn" type="text">
+                </div>
+                <div class="form-group full">
+                  <label class="form-label">CTA Description</label>
+                  <input class="form-input" id="ea-cta-desc" type="text">
+                </div>
+                <div class="form-group full">
+                  <label class="form-label">CTA Button URL</label>
+                  <input class="form-input" id="ea-cta-url" type="text">
+                </div>
+              </div>
+            </div>
+            <div class="form-actions">
+              <button class="btn btn-primary" onclick="downloadEditedArticle()">⬇ Download Updated Article HTML</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TOOLS PANEL -->
+    <div class="panel" id="panel-tools">
+      <!-- List sub-view -->
+      <div class="subview active" id="tools-list-view">
+        <div class="main-header">
+          <h2>🔧 Tools</h2>
+          <div class="header-actions">
+            <span class="dirty-pill" id="dirty-tools">● Unsaved Changes</span>
+            <button class="btn btn-save btn-sm" id="save-btn-tools" onclick="downloadSiteData()" style="display:none">💾 Save site-data.js</button>
+          </div>
+        </div>
+        <div class="search-bar">
+          <input class="search-input" type="text" placeholder="🔍 Search tools…" id="tool-search" oninput="renderToolList()">
+        </div>
+        <div class="panel-inner" style="overflow-y:auto">
+          <div class="list-container" id="tool-list"></div>
+        </div>
+      </div>
+
+      <!-- Edit Content sub-view -->
+      <div class="subview" id="tools-edit-view">
+        <div class="subview-header">
+          <button class="btn btn-secondary btn-sm" onclick="backToTools()">← Back to Tools</button>
+          <h3 id="tool-edit-title">Edit Tool Content</h3>
+        </div>
+        <div class="subview-body">
+          <div class="upload-zone" id="tool-upload-zone" onclick="document.getElementById('tool-file-input').click()"
+            ondragover="event.preventDefault();this.classList.add('drag-over')"
+            ondragleave="this.classList.remove('drag-over')"
+            ondrop="handleToolDrop(event)">
+            <input type="file" id="tool-file-input" accept=".html" onchange="handleToolFileInput(this)">
+            <div style="font-size:32px">🔧</div>
+            <div style="font-size:14px;font-weight:600;color:var(--text-primary);margin-top:8px">Upload tool HTML file</div>
+            <p>Drag and drop or click to browse · .html files only</p>
+          </div>
+          <div id="tool-edit-form" style="display:none;margin-top:16px">
+            <div class="form-grid" style="margin-bottom:14px">
+              <div class="form-group">
+                <label class="form-label">Page Title</label>
+                <input class="form-input" id="et-title" type="text">
+              </div>
+              <div class="form-group">
+                <label class="form-label">URL Filename</label>
+                <input class="form-input" id="et-url" type="text" readonly style="opacity:.6">
+              </div>
+              <div class="form-group full">
+                <label class="form-label">Meta Description</label>
+                <input class="form-input" id="et-meta-desc" type="text">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Hero Title Plain</label>
+                <input class="form-input" id="et-hero-plain" type="text">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Hero Title Gradient</label>
+                <input class="form-input" id="et-hero-gradient" type="text">
+              </div>
+              <div class="form-group full">
+                <label class="form-label">Hero Description</label>
+                <textarea class="form-textarea" id="et-hero-desc" style="min-height:70px"></textarea>
+              </div>
+            </div>
+            <div class="divider"></div>
+            <div style="margin-bottom:14px">
+              <div class="section-top">
+                <div class="form-label">FAQ Entries (JSON-LD)</div>
+                <button class="btn btn-secondary btn-sm" onclick="addFaqEntry()">+ Add FAQ</button>
+              </div>
+              <div id="faq-list"></div>
+            </div>
+            <div class="form-actions">
+              <button class="btn btn-primary" onclick="downloadEditedTool()">⬇ Download Updated Tool HTML</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- HOMEPAGE PANEL -->
+    <div class="panel" id="panel-homepage">
+      <div class="main-header">
+        <h2>🏠 Homepage Generators</h2>
+      </div>
+      <div class="panel-inner" style="overflow-y:auto">
+
+        <!-- Hero -->
+        <div class="gen-section">
+          <h4>🦸 Hero Section</h4>
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">Badge Pill Text</label>
+              <input class="form-input" id="hp-badge" type="text" placeholder="✨ Free · No signup required">
+            </div>
+            <div class="form-group">
+              <label class="form-label">H1 Line 1 (plain)</label>
+              <input class="form-input" id="hp-h1plain" type="text" placeholder="Free calculators for">
+            </div>
+            <div class="form-group">
+              <label class="form-label">H1 Gradient Word</label>
+              <input class="form-input" id="hp-h1gradient" type="text" placeholder="every decision">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Primary Btn Text</label>
+              <input class="form-input" id="hp-btn1" type="text" placeholder="Explore All Tools →">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Secondary Btn Text</label>
+              <input class="form-input" id="hp-btn2" type="text" placeholder="Read Guides">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Secondary Btn URL</label>
+              <input class="form-input" id="hp-btn2url" type="text" placeholder="guides.html">
+            </div>
+            <div class="form-group full">
+              <label class="form-label">Description</label>
+              <textarea class="form-textarea" id="hp-desc" placeholder="Fast, free, and private…" style="min-height:60px"></textarea>
+            </div>
+          </div>
+          <button class="btn btn-primary" style="margin-top:12px" onclick="genHeroHtml()">Generate Hero HTML</button>
+          <div class="output-box" id="hp-hero-out" style="display:none">
+            <button class="copy-btn" onclick="copyOutput('hp-hero-out')">Copy</button>
+            <pre id="hp-hero-pre"></pre>
+          </div>
+        </div>
+
+        <!-- CTA -->
+        <div class="gen-section">
+          <h4>📣 CTA Banner</h4>
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">Heading</label>
+              <input class="form-input" id="hp-cta-heading" type="text" placeholder="Support CalcNova">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Button Text</label>
+              <input class="form-input" id="hp-cta-btn" type="text" placeholder="Buy us a coffee ☕">
+            </div>
+            <div class="form-group full">
+              <label class="form-label">Subtext</label>
+              <textarea class="form-textarea" id="hp-cta-sub" placeholder="All tools are free…" style="min-height:60px"></textarea>
+            </div>
+          </div>
+          <button class="btn btn-primary" style="margin-top:12px" onclick="genCtaHtml()">Generate CTA HTML</button>
+          <div class="output-box" id="hp-cta-out" style="display:none">
+            <button class="copy-btn" onclick="copyOutput('hp-cta-out')">Copy</button>
+            <pre id="hp-cta-pre"></pre>
+          </div>
+        </div>
+
+        <!-- Featured Articles -->
+        <div class="gen-section">
+          <h4>📚 Featured Articles Grid (3 cards)</h4>
+          <div id="feat-articles-fields"></div>
+          <button class="btn btn-primary" style="margin-top:12px" onclick="genFeatArticlesHtml()">Generate Articles Grid HTML</button>
+          <div class="output-box" id="hp-feat-out" style="display:none">
+            <button class="copy-btn" onclick="copyOutput('hp-feat-out')">Copy</button>
+            <pre id="hp-feat-pre"></pre>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- SITE CONFIG PANEL -->
+    <div class="panel" id="panel-config">
+      <div class="main-header">
+        <h2>⚙️ Site Config</h2>
+        <div class="header-actions">
+          <span class="dirty-pill" id="dirty-config">● Unsaved Changes</span>
+          <button class="btn btn-save btn-sm" id="save-btn-config" onclick="downloadSiteData()" style="display:none">💾 Save site-data.js</button>
+        </div>
+      </div>
+      <div class="panel-inner" style="overflow-y:auto">
+
+        <!-- URLs -->
+        <div class="config-section">
+          <h4>🌐 Site URLs</h4>
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">Site URL</label>
+              <input class="form-input" id="cfg-site-url" type="text" oninput="markDirty()">
+            </div>
+            <div class="form-group">
+              <label class="form-label">GitHub URL</label>
+              <input class="form-input" id="cfg-github-url" type="text" oninput="markDirty()">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Ko-fi URL</label>
+              <input class="form-input" id="cfg-kofi-url" type="text" oninput="markDirty()">
+            </div>
+          </div>
+          <div class="form-actions">
+            <button class="btn btn-primary" onclick="saveConfig()">Save URLs</button>
+          </div>
+        </div>
+
+        <!-- Categories -->
+        <div class="config-section">
+          <div class="section-top">
+            <h4 style="margin:0">📂 Categories</h4>
+            <button class="btn btn-secondary btn-sm" onclick="addCategory()">+ Add Category</button>
+          </div>
+          <div id="categories-list" style="margin-top:10px"></div>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- Toast -->
+<div class="copied-toast" id="copied-toast">Copied to clipboard!</div>
+
+  <script src="https://cdn.quilljs.com/1.3.7/quill.min.js"></script>
+  <script>
+/* ============================================================
+   CalcNova Admin — Main Script
+   ============================================================ */
+
+/* ── State ─────────────────────────────────────────────────── */
+var S = {
+  tools: [],
+  articles: [],
+  categories: [],
+  config: {},
+  dirty: false
+};
+
+/* Current Quill mode: 'new' | 'edit' */
+var quillMode = 'new';
+var quill = null;
+
+/* Tool edit state */
+var toolOriginalHtml = '';
+var toolOriginalFilename = '';
+var toolFaqs = [];
+
+/* Article edit state */
+var articleOriginalFilename = '';
+
+/* ── Helpers ─────────────────────────────────────────────────── */
+function esc(s) {
+  if (!s) return '';
+  return String(s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function val(id) {
+  var el = document.getElementById(id);
+  return el ? (el.value || '') : '';
+}
+
+function setVal(id, v) {
+  var el = document.getElementById(id);
+  if (el) el.value = v || '';
+}
+
+function markDirty() {
+  S.dirty = true;
+  document.querySelectorAll('.dirty-pill').forEach(function(el) {
+    el.classList.add('show');
+  });
+  document.querySelectorAll('.btn-save').forEach(function(el) {
+    el.style.display = 'inline-flex';
+    el.classList.add('highlight');
+  });
+}
+
+function showToast(msg) {
+  var t = document.getElementById('copied-toast');
+  t.textContent = msg || 'Copied!';
+  t.classList.add('show');
+  setTimeout(function() { t.classList.remove('show'); }, 2000);
+}
+
+function copyOutput(containerId) {
+  var pre = document.querySelector('#' + containerId + ' pre');
+  if (!pre) return;
+  navigator.clipboard.writeText(pre.textContent).then(function() {
+    showToast('Copied to clipboard!');
+  });
+}
+
+function catClass(cat) {
+  if (!cat) return '';
+  var c = String(cat).toLowerCase();
+  if (c === 'finance') return 'cat-finance';
+  if (c === 'health') return 'cat-health';
+  if (c === 'datetime') return 'cat-datetime';
+  if (c === 'tools') return 'cat-tools';
+  if (c === 'education') return 'cat-education';
+  if (c === 'guides' || c === 'articles') return 'cat-guides';
+  if (c === 'scuba') return 'cat-scuba';
+  return 'cat-tools';
+}
+
+function badgeHtml(badge) {
+  if (!badge) return '';
+  var cls = badge === 'popular' ? 'badge-popular' : 'badge-new';
+  return '<span class="badge ' + cls + '">' + esc(badge) + '</span>';
+}
+
+function catPillHtml(cat) {
+  if (!cat) return '';
+  return '<span class="cat-pill ' + catClass(cat) + '">' + esc(cat) + '</span>';
+}
+
+/* ── Tab navigation ─────────────────────────────────────────── */
+function switchTab(name) {
+  document.querySelectorAll('.panel').forEach(function(p) { p.classList.remove('active'); });
+  document.querySelectorAll('.nav-tab').forEach(function(t) { t.classList.remove('active'); });
+  var panel = document.getElementById('panel-' + name);
+  if (panel) panel.classList.add('active');
+  var tab = document.getElementById('tab-' + name);
+  if (tab) tab.classList.add('active');
+}
+
+/* ── Init ────────────────────────────────────────────────────── */
+window.addEventListener('DOMContentLoaded', function() {
+  initQuill();
+  buildFeatArticlesFields();
+
+  var script = document.createElement('script');
+  script.src = 'shared/site-data.js';
+  script.onload = function() {
+    if (typeof CALCNOVA_TOOLS !== 'undefined') {
+      S.tools = JSON.parse(JSON.stringify(CALCNOVA_TOOLS));
+    }
+    if (typeof CALCNOVA_ARTICLES !== 'undefined') {
+      S.articles = JSON.parse(JSON.stringify(CALCNOVA_ARTICLES));
+    }
+    if (typeof CALCNOVA_CATEGORIES !== 'undefined') {
+      S.categories = JSON.parse(JSON.stringify(CALCNOVA_CATEGORIES));
+    }
+    if (typeof CALCNOVA_CONFIG !== 'undefined') {
+      S.config = JSON.parse(JSON.stringify(CALCNOVA_CONFIG));
+    }
+    renderAll();
+  };
+  script.onerror = function() {
+    console.warn('site-data.js not loaded — starting empty');
+    renderAll();
+  };
+  document.head.appendChild(script);
+});
+
+function initQuill() {
+  quill = new Quill('#quill-editor', {
+    theme: 'snow',
+    modules: {
+      toolbar: [
+        [{ header: 2 }, { header: 3 }],
+        ['bold', 'italic'],
+        [{ list: 'ordered' }, { list: 'bullet' }],
+        ['link', 'blockquote'],
+        ['clean']
+      ]
+    }
+  });
+}
+
+function renderAll() {
+  renderArticleList();
+  renderToolList();
+  renderCategoriesList();
+  loadConfigFields();
+}
+
+/* ═══════════════════════════════════════════════════════════
+   ARTICLES
+   ═══════════════════════════════════════════════════════════ */
+
+function renderArticleList() {
+  var q = (val('article-search') || '').toLowerCase();
+  var container = document.getElementById('article-list');
+  if (!container) return;
+
+  var filtered = S.articles.filter(function(a) {
+    return !q || a.name.toLowerCase().indexOf(q) !== -1;
+  });
+
+  if (!filtered.length) {
+    container.innerHTML = '<div class="empty-state"><div style="font-size:32px">📭</div><p>No articles found.</p></div>';
+    return;
+  }
+
+  container.innerHTML = filtered.map(function(a, i) {
+    var realIdx = S.articles.indexOf(a);
+    return '<div class="list-row" id="article-row-' + realIdx + '">' +
+      '<div class="list-row-main">' +
+        '<span class="row-emoji">' + esc(a.emoji) + '</span>' +
+        '<div class="row-info">' +
+          '<div class="row-name">' + esc(a.name) + '</div>' +
+          '<div class="row-meta">' +
+            catPillHtml(a.category) +
+            ' &nbsp;' + esc(a.readTime || '') +
+            (a.datePublished ? ' · ' + esc(a.datePublished) : '') +
+          '</div>' +
+        '</div>' +
+        '<div class="row-actions">' +
+          '<button class="btn btn-secondary btn-sm" onclick="toggleArticleEdit(' + realIdx + ')">✏️ Edit Metadata</button>' +
+          '<button class="btn btn-secondary btn-sm" onclick="openArticleEditContent(' + realIdx + ')">📄 Edit Content</button>' +
+          '<button class="btn btn-danger btn-sm" onclick="deleteArticle(' + realIdx + ')">🗑️</button>' +
+        '</div>' +
+      '</div>' +
+      '<div class="inline-edit" id="article-edit-' + realIdx + '">' +
+        renderArticleEditForm(a, realIdx) +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+
+function renderArticleEditForm(a, idx) {
+  var catOpts = S.categories.map(function(c) {
+    return '<option value="' + esc(c.name) + '"' + (a.category === c.name ? ' selected' : '') + '>' + esc(c.name) + '</option>';
+  }).join('');
+
+  return '<div class="form-grid">' +
+    formInput('aem-name-' + idx, 'Name', a.name) +
+    formInput('aem-emoji-' + idx, 'Emoji', a.emoji) +
+    formInput('aem-url-' + idx, 'URL', a.url) +
+    formInput('aem-readtime-' + idx, 'Read Time', a.readTime) +
+    '<div class="form-group">' +
+      '<label class="form-label">Category</label>' +
+      '<select class="form-select" id="aem-category-' + idx + '">' + catOpts + '</select>' +
+    '</div>' +
+    formInput('aem-subcategory-' + idx, 'Subcategory', a.subcategory) +
+    formInput('aem-relatedtool-' + idx, 'Related Tool ID', a.relatedTool) +
+    formInput('aem-date-' + idx, 'Date Published', a.datePublished) +
+    '<div class="form-group full">' +
+      '<label class="form-label">Description</label>' +
+      '<textarea class="form-textarea" id="aem-desc-' + idx + '">' + esc(a.description) + '</textarea>' +
+    '</div>' +
+  '</div>' +
+  '<div class="form-actions">' +
+    '<button class="btn btn-primary" onclick="saveArticleEdit(' + idx + ')">Save</button>' +
+    '<button class="btn btn-secondary" onclick="toggleArticleEdit(' + idx + ')">Cancel</button>' +
+  '</div>';
+}
+
+function formInput(id, label, value) {
+  return '<div class="form-group">' +
+    '<label class="form-label">' + esc(label) + '</label>' +
+    '<input class="form-input" id="' + id + '" type="text" value="' + esc(value || '') + '">' +
+  '</div>';
+}
+
+function toggleArticleEdit(idx) {
+  var el = document.getElementById('article-edit-' + idx);
+  if (!el) return;
+  el.classList.toggle('open');
+}
+
+function saveArticleEdit(idx) {
+  var a = S.articles[idx];
+  if (!a) return;
+  a.name = val('aem-name-' + idx);
+  a.emoji = val('aem-emoji-' + idx);
+  a.url = val('aem-url-' + idx);
+  a.readTime = val('aem-readtime-' + idx);
+  a.category = val('aem-category-' + idx);
+  a.subcategory = val('aem-subcategory-' + idx);
+  a.relatedTool = val('aem-relatedtool-' + idx);
+  a.datePublished = val('aem-date-' + idx);
+  a.description = document.getElementById('aem-desc-' + idx).value || '';
+  markDirty();
+  renderArticleList();
+  showToast('Article saved!');
+}
+
+function deleteArticle(idx) {
+  var a = S.articles[idx];
+  if (!a) return;
+  if (!confirm('Delete "' + a.name + '"? This removes it from site-data.js. You should also delete the HTML file manually.')) return;
+  S.articles.splice(idx, 1);
+  markDirty();
+  renderArticleList();
+  showToast('Article deleted.');
+}
+
+function openArticleEditContent(idx) {
+  var a = S.articles[idx];
+  if (!a) return;
+  document.getElementById('article-edit-title').textContent = 'Edit: ' + a.name;
+  document.getElementById('article-file-input').value = '';
+  document.getElementById('article-edit-form').style.display = 'none';
+  document.getElementById('article-upload-zone').style.display = '';
+  showSubview('articles', 'edit');
+}
+
+function openNewArticle() {
+  clearNewArticleForm();
+  showSubview('articles', 'new');
+}
+
+function backToArticles() {
+  showSubview('articles', 'list');
+}
+
+function showSubview(panel, sub) {
+  var panelEl = document.getElementById('panel-' + panel);
+  if (!panelEl) return;
+  panelEl.querySelectorAll('.subview').forEach(function(sv) { sv.classList.remove('active'); });
+  var target = document.getElementById(panel + 's-' + sub + '-view') ||
+               document.getElementById(panel + '-' + sub + '-view');
+  if (!target) {
+    // Try alternate naming
+    target = document.getElementById(panel + 's-' + sub + '-view');
+  }
+  if (target) target.classList.add('active');
+}
+
+/* Article file parsing */
+function handleArticleFileInput(input) {
+  var file = input.files[0];
+  if (!file) return;
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    parseAndLoadArticle(e.target.result, file.name);
+  };
+  reader.readAsText(file);
+}
+
+function handleArticleDrop(event) {
+  event.preventDefault();
+  document.getElementById('article-upload-zone').classList.remove('drag-over');
+  var file = event.dataTransfer.files[0];
+  if (!file) return;
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    parseAndLoadArticle(e.target.result, file.name);
+  };
+  reader.readAsText(file);
+}
+
+function parseAndLoadArticle(htmlStr, filename) {
+  articleOriginalFilename = filename;
+  var parser = new DOMParser();
+  var doc = parser.parseFromString(htmlStr, 'text/html');
+
+  var titleEl = doc.querySelector('title');
+  var title = titleEl ? titleEl.textContent.replace(/\s*\|\s*CalcNova\s*$/, '').trim() : '';
+
+  var metaDescEl = doc.querySelector('meta[name="description"]');
+  var metaDesc = metaDescEl ? (metaDescEl.getAttribute('content') || '') : '';
+
+  var canonicalEl = doc.querySelector('link[rel="canonical"]');
+  var canonical = canonicalEl ? (canonicalEl.getAttribute('href') || '') : '';
+  var urlFile = canonical ? canonical.split('/').pop() : filename;
+
+  var badgeEl = doc.querySelector('.article-badge');
+  var badge = badgeEl ? badgeEl.textContent.trim() : '';
+
+  var h1El = doc.querySelector('h1');
+  var h1Plain = '', h1Gradient = '';
+  if (h1El) {
+    var spanEl = h1El.querySelector('span');
+    if (spanEl) {
+      h1Gradient = spanEl.textContent.trim();
+      var clone = h1El.cloneNode(true);
+      var spanClone = clone.querySelector('span');
+      if (spanClone) spanClone.remove();
+      h1Plain = clone.textContent.trim();
+    } else {
+      h1Plain = h1El.textContent.trim();
+    }
+  }
+
+  var subtitleEl = doc.querySelector('.subtitle');
+  var subtitle = subtitleEl ? subtitleEl.textContent.trim() : '';
+
+  // Date from JSON-LD
+  var date = '';
+  doc.querySelectorAll('script[type="application/ld+json"]').forEach(function(s) {
+    try {
+      var data = JSON.parse(s.textContent);
+      if (data.datePublished) date = data.datePublished;
+    } catch(e) {}
+  });
+
+  // Disclaimer from inline script
+  var disclaimer = '';
+  doc.querySelectorAll('script').forEach(function(s) {
+    var m = s.textContent.match(/disclaimer\s*:\s*['"]([^'"]+)['"]/);
+    if (m) disclaimer = m[1];
+  });
+
+  // Body HTML
+  var bodyEl = doc.querySelector('.article-body');
+  var bodyHtml = '';
+  if (bodyEl) {
+    var bodyClone = bodyEl.cloneNode(true);
+    var ctaInBody = bodyClone.querySelector('.cta-section');
+    if (ctaInBody) ctaInBody.remove();
+    bodyHtml = bodyClone.innerHTML;
+  }
+
+  // CTA
+  var ctaEl = doc.querySelector('.cta-section');
+  var ctaTitle = '', ctaDesc = '', ctaBtn = '', ctaUrl = '';
+  if (ctaEl) {
+    var ctaH2 = ctaEl.querySelector('h2');
+    var ctaP = ctaEl.querySelector('p');
+    var ctaBtnEl = ctaEl.querySelector('.cta-btn');
+    ctaTitle = ctaH2 ? ctaH2.textContent.trim() : '';
+    ctaDesc = ctaP ? ctaP.textContent.trim() : '';
+    ctaBtn = ctaBtnEl ? ctaBtnEl.textContent.trim() : '';
+    ctaUrl = ctaBtnEl ? (ctaBtnEl.getAttribute('href') || '') : '';
+  }
+
+  // Fill form
+  setVal('ea-title', title);
+  setVal('ea-url', urlFile);
+  setVal('ea-meta-desc', metaDesc);
+  setVal('ea-badge', badge);
+  setVal('ea-date', date);
+  setVal('ea-h1plain', h1Plain);
+  setVal('ea-h1gradient', h1Gradient);
+  setVal('ea-subtitle', subtitle);
+  setVal('ea-disclaimer', disclaimer);
+  setVal('ea-cta-title', ctaTitle);
+  setVal('ea-cta-desc', ctaDesc);
+  setVal('ea-cta-btn', ctaBtn);
+  setVal('ea-cta-url', ctaUrl);
+
+  // Load into Quill
+  if (quill) {
+    quill.clipboard.dangerouslyPasteHTML(bodyHtml || '');
+    // Move Quill editor into edit container if needed
+    moveQuillToEditView();
+  }
+
+  document.getElementById('article-upload-zone').style.display = 'none';
+  document.getElementById('article-edit-form').style.display = 'block';
+}
+
+function moveQuillToEditView() {
+  var editContainer = document.getElementById('quill-editor-container-edit');
+  var newContainer = document.getElementById('quill-editor-container-new');
+  var quillEl = document.getElementById('quill-editor');
+  if (!quillEl || !editContainer) return;
+  if (editContainer.contains(quillEl)) return;
+  editContainer.appendChild(quillEl.parentNode ? quillEl.parentNode : quillEl);
+  // Actually move the entire quill wrapper
+  var qlContainer = document.querySelector('.ql-container');
+  var qlToolbar = document.querySelector('.ql-toolbar');
+  if (qlContainer && qlToolbar) {
+    editContainer.appendChild(qlToolbar);
+    editContainer.appendChild(qlContainer);
+  }
+  quillMode = 'edit';
+}
+
+function moveQuillToNewView() {
+  var newContainer = document.getElementById('quill-editor-container-new');
+  var qlContainer = document.querySelector('.ql-container');
+  var qlToolbar = document.querySelector('.ql-toolbar');
+  if (qlContainer && qlToolbar && newContainer) {
+    newContainer.appendChild(qlToolbar);
+    newContainer.appendChild(qlContainer);
+  }
+  quillMode = 'new';
+}
+
+/* ── Article HTML generation ─────────────────────────────────── */
+function buildArticleHtml(fields) {
+  var siteUrl = (S.config && S.config.siteUrl) ? S.config.siteUrl : 'https://calcnova.co';
+  var title = fields.title || '';
+  var metaDesc = fields.metaDesc || '';
+  var urlFile = fields.url || '';
+  var badge = fields.badge || '';
+  var h1Plain = fields.h1Plain || '';
+  var h1Gradient = fields.h1Gradient || '';
+  var subtitle = fields.subtitle || '';
+  var date = fields.date || new Date().toISOString().slice(0,10);
+  var disclaimer = fields.disclaimer || '';
+  var bodyHtml = fields.bodyHtml || '';
+  var ctaTitle = fields.ctaTitle || '';
+  var ctaDesc = fields.ctaDesc || '';
+  var ctaBtn = fields.ctaBtn || '';
+  var ctaUrl = fields.ctaUrl || '';
+  var articleId = fields.id || urlFile.replace('.html','');
+
+  var fullTitle = title + ' | CalcNova';
+  var canonicalUrl = siteUrl + '/' + urlFile;
+
+  return '<!DOCTYPE html>\n' +
+'<html lang="en">\n' +
+'<head>\n' +
+'  <meta charset="UTF-8">\n' +
+'  <meta name="viewport" content="width=device-width,initial-scale=1">\n' +
+'  <title>' + esc(fullTitle) + '</title>\n' +
+'  <meta name="description" content="' + esc(metaDesc) + '">\n' +
+'  <link rel="canonical" href="' + esc(canonicalUrl) + '" />\n' +
+'  <meta property="og:title" content="' + esc(fullTitle) + '" />\n' +
+'  <meta property="og:description" content="' + esc(metaDesc) + '" />\n' +
+'  <meta property="og:type" content="article" />\n' +
+'  <meta property="og:url" content="' + esc(canonicalUrl) + '" />\n' +
+'  <meta property="og:site_name" content="CalcNova" />\n' +
+'  <script type="application/ld+json">\n' +
+'  {\n' +
+'    "@context": "https://schema.org",\n' +
+'    "@type": "Article",\n' +
+'    "headline": "' + esc(title) + '",\n' +
+'    "description": "' + esc(metaDesc) + '",\n' +
+'    "url": "' + esc(canonicalUrl) + '",\n' +
+'    "datePublished": "' + esc(date) + '",\n' +
+'    "dateModified": "' + esc(date) + '",\n' +
+'    "author": { "@type": "Organization", "name": "CalcNova", "url": "' + siteUrl + '/" },\n' +
+'    "publisher": { "@type": "Organization", "name": "CalcNova", "url": "' + siteUrl + '/" },\n' +
+'    "isPartOf": { "@type": "WebSite", "name": "CalcNova", "url": "' + siteUrl + '/" }\n' +
+'  }\n' +
+'  <\/script>\n' +
+'  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">\n' +
+'  <link rel="stylesheet" href="shared/nav.css">\n' +
+'  <style>\n' +
+getArticleStyles() +
+'  </style>\n' +
+'</head>\n' +
+'<body>\n' +
+'  <div class="app">\n' +
+'    <div class="article-hero">\n' +
+'      <div class="article-badge">' + esc(badge) + '</div>\n' +
+'      <h1>' + esc(h1Plain) + (h1Plain && h1Gradient ? ' ' : '') + (h1Gradient ? '<span>' + esc(h1Gradient) + '</span>' : '') + '</h1>\n' +
+'      <p class="subtitle">' + esc(subtitle) + '</p>\n' +
+'      <div class="article-meta">\n' +
+'        <span>Updated ' + formatDateDisplay(date) + '</span>\n' +
+'      </div>\n' +
+'    </div>\n' +
+'    <div class="article-body">\n' +
+bodyHtml + '\n' +
+(ctaTitle ? '      <div class="cta-section">\n' +
+'        <h2>' + esc(ctaTitle) + '</h2>\n' +
+'        <p>' + esc(ctaDesc) + '</p>\n' +
+'        <a href="' + esc(ctaUrl) + '" class="cta-btn">' + esc(ctaBtn) + '</a>\n' +
+'      </div>\n' : '') +
+'    </div>\n' +
+'  </div>\n' +
+'  <script>\n' +
+'    window.CALCNOVA_PAGE = {\n' +
+'      id: \'' + esc(articleId) + '\',\n' +
+'      disclaimer: \'' + esc(disclaimer).replace(/'/g, "\\'") + '\'\n' +
+'    };\n' +
+'  <\/script>\n' +
+'  <script src="shared/site-data.js"><\/script>\n' +
+'  <script src="shared/nav.js"><\/script>\n' +
+'</body>\n' +
+'</html>';
+}
+
+function formatDateDisplay(dateStr) {
+  if (!dateStr) return '';
+  try {
+    var d = new Date(dateStr + 'T00:00:00');
+    return d.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+  } catch(e) { return dateStr; }
+}
+
+function getArticleStyles() {
+  return [
+    '.app{position:relative;z-index:1;max-width:960px;margin:0 auto;padding:0 16px 60px}',
+    '.article-hero{padding:48px 0 36px;border-bottom:1px solid var(--border);margin-bottom:40px;max-width:720px}',
+    '.article-badge{display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,rgba(16,185,129,.1),rgba(99,102,241,.1));border:1px solid rgba(16,185,129,.25);border-radius:100px;padding:5px 14px;font-size:11px;font-weight:700;color:var(--green);letter-spacing:.5px;text-transform:uppercase;margin-bottom:16px}',
+    '.article-hero h1{font-size:38px;font-weight:800;letter-spacing:-.5px;line-height:1.15;margin-bottom:14px}',
+    '.article-hero h1 span{background:linear-gradient(135deg,var(--green),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}',
+    '.article-hero .subtitle{font-size:16px;color:var(--text-secondary);line-height:1.6;max-width:600px}',
+    '.article-meta{margin-top:16px;font-size:12px;color:var(--text-muted);font-weight:500;display:flex;align-items:center;gap:12px}',
+    '.article-body{max-width:720px;display:flex;flex-direction:column;gap:28px}',
+    '.article-body h2{font-size:24px;font-weight:800;letter-spacing:-.3px;margin-bottom:12px;color:var(--text-primary)}',
+    '.article-body h3{font-size:18px;font-weight:700;letter-spacing:-.2px;margin-bottom:8px;color:var(--text-primary)}',
+    '.article-body p{font-size:16px;color:var(--text-secondary);line-height:1.75}',
+    '.article-body ul,.article-body ol{padding-left:22px;display:flex;flex-direction:column;gap:8px}',
+    '.article-body li{font-size:16px;color:var(--text-secondary);line-height:1.7}',
+    '.article-body strong{color:var(--text-primary);font-weight:700}',
+    '.article-body a{color:var(--green);text-decoration:none}',
+    '.article-body a:hover{text-decoration:underline}',
+    '.article-body blockquote{border-left:3px solid var(--green);padding:12px 18px;background:rgba(16,185,129,.06);border-radius:0 8px 8px 0;margin:0}',
+    '.cta-section{background:linear-gradient(135deg,rgba(16,185,129,.08),rgba(99,102,241,.06));border:1px solid rgba(16,185,129,.2);border-radius:18px;padding:32px;text-align:center;margin-top:8px}',
+    '.cta-section h2{font-size:22px;margin-bottom:10px}',
+    '.cta-section p{max-width:500px;margin:0 auto 20px}',
+    '.cta-btn{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,var(--green),#059669);color:#fff !important;border-radius:100px;padding:12px 28px;font-size:14px;font-weight:700;text-decoration:none !important;font-family:var(--font);transition:all .15s;box-shadow:0 4px 14px rgba(16,185,129,.3)}',
+    '.cta-btn:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(16,185,129,.4)}',
+    '@media(max-width:640px){.article-hero h1{font-size:28px}}'
+  ].join('\n');
+}
+
+function downloadNewArticle() {
+  if (!quill) return;
+  var bodyHtml = quill.root.innerHTML;
+  var fields = {
+    title: val('na-title'),
+    id: val('na-id'),
+    metaDesc: val('na-meta-desc'),
+    url: val('na-url'),
+    badge: val('na-badge'),
+    h1Plain: val('na-h1plain'),
+    h1Gradient: val('na-h1gradient'),
+    subtitle: val('na-subtitle'),
+    date: val('na-date'),
+    disclaimer: val('na-disclaimer'),
+    bodyHtml: bodyHtml,
+    ctaTitle: val('na-cta-title'),
+    ctaDesc: val('na-cta-desc'),
+    ctaBtn: val('na-cta-btn'),
+    ctaUrl: val('na-cta-url')
+  };
+  var html = buildArticleHtml(fields);
+  var filename = fields.url || 'article-new.html';
+  downloadFile(html, filename);
+}
+
+function downloadEditedArticle() {
+  if (!quill) return;
+  var bodyHtml = quill.root.innerHTML;
+  var fields = {
+    title: val('ea-title'),
+    metaDesc: val('ea-meta-desc'),
+    url: val('ea-url'),
+    badge: val('ea-badge'),
+    h1Plain: val('ea-h1plain'),
+    h1Gradient: val('ea-h1gradient'),
+    subtitle: val('ea-subtitle'),
+    date: val('ea-date'),
+    disclaimer: val('ea-disclaimer'),
+    bodyHtml: bodyHtml,
+    ctaTitle: val('ea-cta-title'),
+    ctaDesc: val('ea-cta-desc'),
+    ctaBtn: val('ea-cta-btn'),
+    ctaUrl: val('ea-cta-url')
+  };
+  fields.id = (fields.url || '').replace('.html','');
+  var html = buildArticleHtml(fields);
+  var filename = articleOriginalFilename || fields.url || 'article-edited.html';
+  downloadFile(html, filename);
+}
+
+function saveNewArticleToState() {
+  var newArticle = {
+    id: val('na-id') || ('article-' + Date.now()),
+    name: val('na-title'),
+    emoji: val('na-emoji') || '📝',
+    url: val('na-url'),
+    description: val('na-description') || document.getElementById('na-description').value || '',
+    readTime: val('na-readtime') || '5 min',
+    category: val('na-category') || 'General',
+    subcategory: val('na-subcategory') || '',
+    relatedTool: val('na-relatedtool') || '',
+    datePublished: val('na-date') || new Date().toISOString().slice(0,10)
+  };
+  S.articles.unshift(newArticle);
+  markDirty();
+  showToast('Article added to site-data.js state!');
+  backToArticles();
+}
+
+function clearNewArticleForm() {
+  ['na-title','na-id','na-meta-desc','na-url','na-badge','na-emoji',
+   'na-h1plain','na-h1gradient','na-subtitle','na-date','na-readtime',
+   'na-category','na-subcategory','na-relatedtool','na-disclaimer',
+   'na-cta-title','na-cta-desc','na-cta-btn','na-cta-url'].forEach(function(id) {
+    setVal(id, '');
+  });
+  var descEl = document.getElementById('na-description');
+  if (descEl) descEl.value = '';
+  if (quill) {
+    quill.setContents([]);
+    moveQuillToNewView();
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   TOOLS
+   ═══════════════════════════════════════════════════════════ */
+
+function renderToolList() {
+  var q = (val('tool-search') || '').toLowerCase();
+  var container = document.getElementById('tool-list');
+  if (!container) return;
+
+  var filtered = S.tools.filter(function(t) {
+    return !q || t.name.toLowerCase().indexOf(q) !== -1;
+  });
+
+  if (!filtered.length) {
+    container.innerHTML = '<div class="empty-state"><div style="font-size:32px">📭</div><p>No tools found.</p></div>';
+    return;
+  }
+
+  container.innerHTML = filtered.map(function(t) {
+    var realIdx = S.tools.indexOf(t);
+    return '<div class="list-row" id="tool-row-' + realIdx + '">' +
+      '<div class="list-row-main">' +
+        '<span class="row-emoji">' + esc(t.emoji) + '</span>' +
+        '<div class="row-info">' +
+          '<div class="row-name">' + esc(t.name) + '</div>' +
+          '<div class="row-meta">' +
+            catPillHtml(t.category) +
+            (t.badge ? ' &nbsp;' + badgeHtml(t.badge) : '') +
+          '</div>' +
+        '</div>' +
+        '<div class="row-actions">' +
+          '<button class="btn btn-secondary btn-sm" onclick="toggleToolEdit(' + realIdx + ')">✏️ Edit Metadata</button>' +
+          '<button class="btn btn-secondary btn-sm" onclick="openToolEditContent(' + realIdx + ')">🔧 Edit Content</button>' +
+          '<button class="btn btn-danger btn-sm" onclick="deleteTool(' + realIdx + ')">🗑️</button>' +
+        '</div>' +
+      '</div>' +
+      '<div class="inline-edit" id="tool-edit-' + realIdx + '">' +
+        renderToolEditForm(t, realIdx) +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+
+function renderToolEditForm(t, idx) {
+  var catOpts = S.categories.map(function(c) {
+    return '<option value="' + esc(c.id) + '"' + (t.category === c.id ? ' selected' : '') + '>' + esc(c.name) + '</option>';
+  }).join('');
+  var badgeOpts = ['<option value="">none</option>',
+    '<option value="new"' + (t.badge === 'new' ? ' selected' : '') + '>new</option>',
+    '<option value="popular"' + (t.badge === 'popular' ? ' selected' : '') + '>popular</option>'
+  ].join('');
+
+  return '<div class="form-grid">' +
+    formInput('tem-name-' + idx, 'Name', t.name) +
+    formInput('tem-emoji-' + idx, 'Emoji', t.emoji) +
+    formInput('tem-url-' + idx, 'URL', t.url) +
+    '<div class="form-group">' +
+      '<label class="form-label">Category</label>' +
+      '<select class="form-select" id="tem-category-' + idx + '">' + catOpts + '</select>' +
+    '</div>' +
+    '<div class="form-group">' +
+      '<label class="form-label">Badge</label>' +
+      '<select class="form-select" id="tem-badge-' + idx + '">' + badgeOpts + '</select>' +
+    '</div>' +
+    formInput('tem-related-' + idx, 'Related Tool IDs (comma-separated)', (t.related || []).join(', ')) +
+    '<div class="form-group full">' +
+      '<label class="form-label">Description</label>' +
+      '<textarea class="form-textarea" id="tem-desc-' + idx + '">' + esc(t.description) + '</textarea>' +
+    '</div>' +
+  '</div>' +
+  '<div class="form-actions">' +
+    '<button class="btn btn-primary" onclick="saveToolEdit(' + idx + ')">Save</button>' +
+    '<button class="btn btn-secondary" onclick="toggleToolEdit(' + idx + ')">Cancel</button>' +
+  '</div>';
+}
+
+function toggleToolEdit(idx) {
+  var el = document.getElementById('tool-edit-' + idx);
+  if (!el) return;
+  el.classList.toggle('open');
+}
+
+function saveToolEdit(idx) {
+  var t = S.tools[idx];
+  if (!t) return;
+  t.name = val('tem-name-' + idx);
+  t.emoji = val('tem-emoji-' + idx);
+  t.url = val('tem-url-' + idx);
+  t.category = val('tem-category-' + idx);
+  t.badge = val('tem-badge-' + idx) || null;
+  var relStr = val('tem-related-' + idx);
+  t.related = relStr ? relStr.split(',').map(function(s) { return s.trim(); }).filter(Boolean) : [];
+  t.description = document.getElementById('tem-desc-' + idx).value || '';
+  markDirty();
+  renderToolList();
+  showToast('Tool saved!');
+}
+
+function deleteTool(idx) {
+  var t = S.tools[idx];
+  if (!t) return;
+  if (!confirm('Delete "' + t.name + '"? This removes it from site-data.js. You should also delete the HTML file manually.')) return;
+  S.tools.splice(idx, 1);
+  markDirty();
+  renderToolList();
+  showToast('Tool deleted.');
+}
+
+function openToolEditContent(idx) {
+  var t = S.tools[idx];
+  if (!t) return;
+  document.getElementById('tool-edit-title').textContent = 'Edit: ' + t.name;
+  document.getElementById('tool-file-input').value = '';
+  document.getElementById('tool-edit-form').style.display = 'none';
+  document.getElementById('tool-upload-zone').style.display = '';
+  showSubview('tools', 'edit');
+}
+
+function backToTools() {
+  showSubview('tools', 'list');
+}
+
+/* Tool file parsing */
+function handleToolFileInput(input) {
+  var file = input.files[0];
+  if (!file) return;
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    parseAndLoadTool(e.target.result, file.name);
+  };
+  reader.readAsText(file);
+}
+
+function handleToolDrop(event) {
+  event.preventDefault();
+  document.getElementById('tool-upload-zone').classList.remove('drag-over');
+  var file = event.dataTransfer.files[0];
+  if (!file) return;
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    parseAndLoadTool(e.target.result, file.name);
+  };
+  reader.readAsText(file);
+}
+
+function parseAndLoadTool(htmlStr, filename) {
+  toolOriginalHtml = htmlStr;
+  toolOriginalFilename = filename;
+
+  var parser = new DOMParser();
+  var doc = parser.parseFromString(htmlStr, 'text/html');
+
+  var titleEl = doc.querySelector('title');
+  var pageTitle = titleEl ? titleEl.textContent.replace(/\s*\|\s*CalcNova\s*$/, '').trim() : '';
+
+  var metaDescEl = doc.querySelector('meta[name="description"]');
+  var metaDesc = metaDescEl ? (metaDescEl.getAttribute('content') || '') : '';
+
+  var canonicalEl = doc.querySelector('link[rel="canonical"]');
+  var canonical = canonicalEl ? (canonicalEl.getAttribute('href') || '') : '';
+  var urlFile = canonical ? canonical.split('/').pop() : filename;
+
+  // Hero title
+  var heroTitleEl = doc.querySelector('.hero-title') || doc.querySelector('h1');
+  var heroPlain = '', heroGradient = '';
+  if (heroTitleEl) {
+    var spanEl = heroTitleEl.querySelector('span');
+    if (spanEl) {
+      heroGradient = spanEl.textContent.trim();
+      var clone = heroTitleEl.cloneNode(true);
+      var sc = clone.querySelector('span');
+      if (sc) sc.remove();
+      heroPlain = clone.textContent.trim();
+    } else {
+      heroPlain = heroTitleEl.textContent.trim();
+    }
+  }
+
+  var heroDescEl = doc.querySelector('.hero-desc');
+  var heroDesc = heroDescEl ? heroDescEl.textContent.trim() : '';
+
+  // FAQs from JSON-LD
+  toolFaqs = [];
+  doc.querySelectorAll('script[type="application/ld+json"]').forEach(function(s) {
+    try {
+      var data = JSON.parse(s.textContent);
+      // Handle array of schemas
+      var arr = Array.isArray(data) ? data : [data];
+      arr.forEach(function(item) {
+        if (item['@type'] === 'FAQPage' && item.mainEntity) {
+          toolFaqs = item.mainEntity.map(function(q) {
+            return {
+              question: q.name || '',
+              answer: (q.acceptedAnswer && q.acceptedAnswer.text) ? q.acceptedAnswer.text : ''
+            };
+          });
+        }
+      });
+    } catch(e) {}
+  });
+
+  setVal('et-title', pageTitle);
+  setVal('et-url', urlFile);
+  setVal('et-meta-desc', metaDesc);
+  setVal('et-hero-plain', heroPlain);
+  setVal('et-hero-gradient', heroGradient);
+  setVal('et-hero-desc', heroDesc);
+
+  renderFaqList();
+
+  document.getElementById('tool-upload-zone').style.display = 'none';
+  document.getElementById('tool-edit-form').style.display = 'block';
+}
+
+function renderFaqList() {
+  var container = document.getElementById('faq-list');
+  if (!container) return;
+  if (!toolFaqs.length) {
+    container.innerHTML = '<div style="color:var(--text-muted);font-size:13px;padding:10px 0">No FAQ entries found. Click "+ Add FAQ" to add one.</div>';
+    return;
+  }
+  container.innerHTML = toolFaqs.map(function(faq, i) {
+    return '<div class="faq-item" id="faq-item-' + i + '">' +
+      '<div class="faq-item-header">' +
+        '<span class="faq-num">FAQ ' + (i + 1) + '</span>' +
+        '<button class="btn btn-danger btn-sm" onclick="deleteFaq(' + i + ')">Delete</button>' +
+      '</div>' +
+      '<div class="form-group" style="margin-bottom:8px">' +
+        '<label class="form-label">Question</label>' +
+        '<input class="form-input" id="faq-q-' + i + '" type="text" value="' + esc(faq.question) + '">' +
+      '</div>' +
+      '<div class="form-group">' +
+        '<label class="form-label">Answer</label>' +
+        '<textarea class="form-textarea" id="faq-a-' + i + '" style="min-height:80px">' + esc(faq.answer) + '</textarea>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+
+function addFaqEntry() {
+  toolFaqs.push({ question: '', answer: '' });
+  renderFaqList();
+}
+
+function deleteFaq(idx) {
+  toolFaqs.splice(idx, 1);
+  renderFaqList();
+}
+
+function collectFaqs() {
+  var faqs = [];
+  for (var i = 0; i < toolFaqs.length; i++) {
+    var q = val('faq-q-' + i);
+    var a = document.getElementById('faq-a-' + i);
+    faqs.push({ question: q, answer: a ? a.value : '' });
+  }
+  return faqs;
+}
+
+function downloadEditedTool() {
+  if (!toolOriginalHtml) return;
+  var updatedFaqs = collectFaqs();
+  var newTitle = val('et-title');
+  var newMeta = val('et-meta-desc');
+  var heroPlain = val('et-hero-plain');
+  var heroGrad = val('et-hero-gradient');
+  var heroDesc = val('et-hero-desc');
+
+  var html = toolOriginalHtml;
+
+  // Replace title
+  html = html.replace(/<title>[^<]*<\/title>/, '<title>' + esc(newTitle) + ' | CalcNova</title>');
+
+  // Replace meta description
+  html = html.replace(/(<meta\s+name=["']description["']\s+content=["'])[^"']*(['"])/i,
+    function(match, p1, p2) { return p1 + esc(newMeta) + p2; });
+
+  // Replace hero title
+  var newHeroTitleHtml = esc(heroPlain) + (heroPlain && heroGrad ? ' ' : '') +
+    (heroGrad ? '<span>' + esc(heroGrad) + '</span>' : '');
+  html = html.replace(/(<(?:h1|div)[^>]*class=["'][^"']*hero-title[^"']*["'][^>]*>)[\s\S]*?(<\/(?:h1|div)>)/,
+    function(match, open, close) { return open + newHeroTitleHtml + close; });
+
+  // Replace hero desc
+  html = html.replace(/(<(?:p|div)[^>]*class=["'][^"']*hero-desc[^"']*["'][^>]*>)[\s\S]*?(<\/(?:p|div)>)/,
+    function(match, open, close) { return open + esc(heroDesc) + close; });
+
+  // Replace FAQPage JSON-LD
+  var newFaqJsonLd = JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: updatedFaqs.map(function(f) {
+      return {
+        '@type': 'Question',
+        name: f.question,
+        acceptedAnswer: { '@type': 'Answer', text: f.answer }
+      };
+    })
+  }, null, 8);
+
+  // Replace FAQ inside array or single JSON-LD block
+  html = html.replace(
+    /\{[\s]*"@context"\s*:\s*"https:\/\/schema\.org"[\s\S]*?"@type"\s*:\s*"FAQPage"[\s\S]*?\n\s*\}/,
+    function() { return newFaqJsonLd; }
+  );
+
+  var filename = toolOriginalFilename || 'tool-edited.html';
+  downloadFile(html, filename);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   HOMEPAGE
+   ═══════════════════════════════════════════════════════════ */
+
+function buildFeatArticlesFields() {
+  var container = document.getElementById('feat-articles-fields');
+  if (!container) return;
+  var html = '';
+  for (var i = 0; i < 3; i++) {
+    html += '<div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:10px">' +
+      '<div style="font-size:11px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.4px;margin-bottom:10px">Card ' + (i+1) + '</div>' +
+      '<div class="form-grid">' +
+        formInput('feat-emoji-' + i, 'Emoji', '') +
+        formInput('feat-url-' + i, 'URL', '') +
+        formInput('feat-title-' + i, 'Title', '') +
+        formInput('feat-time-' + i, 'Read Time', '') +
+        formInput('feat-cat-' + i, 'Category', '') +
+        '<div class="form-group full">' +
+          '<label class="form-label">Excerpt</label>' +
+          '<input class="form-input" id="feat-excerpt-' + i + '" type="text" placeholder="Short description…">' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+  }
+  container.innerHTML = html;
+}
+
+function genHeroHtml() {
+  var badge = val('hp-badge');
+  var h1plain = val('hp-h1plain');
+  var h1grad = val('hp-h1gradient');
+  var desc = val('hp-desc');
+  var btn1 = val('hp-btn1');
+  var btn2 = val('hp-btn2');
+  var btn2url = val('hp-btn2url');
+
+  var html =
+'<div class="hero">\n' +
+'  <div class="hero-badge">' + esc(badge) + '</div>\n' +
+'  <h1 class="hero-title">\n' +
+'    ' + esc(h1plain) + (h1plain && h1grad ? '\n    ' : '') +
+    (h1grad ? '<span class="gradient-text">' + esc(h1grad) + '</span>' : '') + '\n' +
+'  </h1>\n' +
+'  <p class="hero-desc">' + esc(desc) + '</p>\n' +
+'  <div class="hero-actions">\n' +
+'    <a href="tools.html" class="btn-hero-primary">' + esc(btn1) + '</a>\n' +
+(btn2 ? '    <a href="' + esc(btn2url) + '" class="btn-hero-secondary">' + esc(btn2) + '</a>\n' : '') +
+'  </div>\n' +
+'</div>';
+
+  document.getElementById('hp-hero-pre').textContent = html;
+  document.getElementById('hp-hero-out').style.display = 'block';
+}
+
+function genCtaHtml() {
+  var heading = val('hp-cta-heading');
+  var sub = val('hp-cta-sub');
+  var btn = val('hp-cta-btn');
+  var kofi = (S.config && S.config.kofiUrl) ? S.config.kofiUrl : 'https://ko-fi.com/calcnova';
+
+  var html =
+'<div class="cta-banner">\n' +
+'  <h2>' + esc(heading) + '</h2>\n' +
+'  <p>' + esc(sub) + '</p>\n' +
+'  <a href="' + esc(kofi) + '" target="_blank" rel="noopener" class="btn-cta">' + esc(btn) + '</a>\n' +
+'</div>';
+
+  document.getElementById('hp-cta-pre').textContent = html;
+  document.getElementById('hp-cta-out').style.display = 'block';
+}
+
+function genFeatArticlesHtml() {
+  var cards = '';
+  for (var i = 0; i < 3; i++) {
+    var emoji = val('feat-emoji-' + i);
+    var url = val('feat-url-' + i);
+    var title = val('feat-title-' + i);
+    var time = val('feat-time-' + i);
+    var cat = val('feat-cat-' + i);
+    var excerpt = val('feat-excerpt-' + i);
+    cards += '  <a href="' + esc(url) + '" class="article-card">\n' +
+'    <div class="card-emoji">' + esc(emoji) + '</div>\n' +
+'    <div class="card-meta">' + esc(cat) + ' · ' + esc(time) + '</div>\n' +
+'    <h3>' + esc(title) + '</h3>\n' +
+'    <p>' + esc(excerpt) + '</p>\n' +
+'  </a>\n';
+  }
+  var html =
+'<div class="articles-grid">\n' +
+cards +
+'</div>';
+
+  document.getElementById('hp-feat-pre').textContent = html;
+  document.getElementById('hp-feat-out').style.display = 'block';
+}
+
+/* ═══════════════════════════════════════════════════════════
+   SITE CONFIG
+   ═══════════════════════════════════════════════════════════ */
+
+function loadConfigFields() {
+  if (S.config) {
+    setVal('cfg-site-url', S.config.siteUrl || '');
+    setVal('cfg-github-url', S.config.githubUrl || '');
+    setVal('cfg-kofi-url', S.config.kofiUrl || '');
+  }
+  renderCategoriesList();
+}
+
+function saveConfig() {
+  S.config.siteUrl = val('cfg-site-url');
+  S.config.githubUrl = val('cfg-github-url');
+  S.config.kofiUrl = val('cfg-kofi-url');
+  markDirty();
+  showToast('Config saved!');
+}
+
+function renderCategoriesList() {
+  var container = document.getElementById('categories-list');
+  if (!container) return;
+  if (!S.categories.length) {
+    container.innerHTML = '<div class="empty-state"><p>No categories yet.</p></div>';
+    return;
+  }
+
+  container.innerHTML = S.categories.map(function(cat, i) {
+    return '<div class="cat-row" id="cat-row-' + i + '">' +
+      '<div class="cat-row-main">' +
+        '<div class="cat-reorder">' +
+          '<button onclick="moveCat(' + i + ',-1)" title="Move up">▲</button>' +
+          '<button onclick="moveCat(' + i + ',1)" title="Move down">▼</button>' +
+        '</div>' +
+        '<span style="font-size:20px">' + esc(cat.emoji) + '</span>' +
+        '<div style="flex:1">' +
+          '<div style="font-weight:600;font-size:13px">' + esc(cat.name) + '</div>' +
+          '<div style="font-size:11px;color:var(--text-muted)">' +
+            esc(cat.id) +
+            (cat.specialty ? ' · <span style="color:var(--green)">specialty</span>' : '') +
+          '</div>' +
+        '</div>' +
+        '<div style="display:flex;gap:6px">' +
+          '<button class="btn btn-secondary btn-sm" onclick="toggleCatEdit(' + i + ')">Edit</button>' +
+          '<button class="btn btn-danger btn-sm" onclick="deleteCat(' + i + ')">Delete</button>' +
+        '</div>' +
+      '</div>' +
+      '<div class="inline-edit" id="cat-edit-' + i + '">' +
+        renderCatEditForm(cat, i) +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+
+function renderCatEditForm(cat, idx) {
+  return '<div class="form-grid">' +
+    formInput('cem-id-' + idx, 'ID', cat.id) +
+    formInput('cem-name-' + idx, 'Name', cat.name) +
+    formInput('cem-emoji-' + idx, 'Emoji', cat.emoji) +
+    formInput('cem-class-' + idx, 'CSS Class', cat.cssClass) +
+    '<div class="form-group">' +
+      '<label class="form-label">Specialty</label>' +
+      '<label class="form-checkbox">' +
+        '<input type="checkbox" id="cem-specialty-' + idx + '"' + (cat.specialty ? ' checked' : '') + ' onchange="toggleLandingUrl(' + idx + ')">' +
+        '<span>Is a specialty category</span>' +
+      '</label>' +
+    '</div>' +
+    '<div class="form-group" id="cem-landing-group-' + idx + '"' + (!cat.specialty ? ' style="display:none"' : '') + '>' +
+      '<label class="form-label">Landing URL</label>' +
+      '<input class="form-input" id="cem-landing-' + idx + '" type="text" value="' + esc(cat.landingUrl || '') + '">' +
+    '</div>' +
+  '</div>' +
+  '<div class="form-actions">' +
+    '<button class="btn btn-primary" onclick="saveCatEdit(' + idx + ')">Save</button>' +
+    '<button class="btn btn-secondary" onclick="toggleCatEdit(' + idx + ')">Cancel</button>' +
+  '</div>';
+}
+
+function toggleLandingUrl(idx) {
+  var cb = document.getElementById('cem-specialty-' + idx);
+  var grp = document.getElementById('cem-landing-group-' + idx);
+  if (cb && grp) grp.style.display = cb.checked ? '' : 'none';
+}
+
+function toggleCatEdit(idx) {
+  var el = document.getElementById('cat-edit-' + idx);
+  if (!el) return;
+  el.classList.toggle('open');
+}
+
+function saveCatEdit(idx) {
+  var cat = S.categories[idx];
+  if (!cat) return;
+  cat.id = val('cem-id-' + idx);
+  cat.name = val('cem-name-' + idx);
+  cat.emoji = val('cem-emoji-' + idx);
+  cat.cssClass = val('cem-class-' + idx);
+  var specialtyEl = document.getElementById('cem-specialty-' + idx);
+  cat.specialty = specialtyEl ? specialtyEl.checked : false;
+  cat.landingUrl = cat.specialty ? val('cem-landing-' + idx) : undefined;
+  if (!cat.specialty) delete cat.landingUrl;
+  markDirty();
+  renderCategoriesList();
+  showToast('Category saved!');
+}
+
+function deleteCat(idx) {
+  var cat = S.categories[idx];
+  if (!cat) return;
+  if (!confirm('Delete category "' + cat.name + '"?')) return;
+  S.categories.splice(idx, 1);
+  markDirty();
+  renderCategoriesList();
+}
+
+function moveCat(idx, dir) {
+  var newIdx = idx + dir;
+  if (newIdx < 0 || newIdx >= S.categories.length) return;
+  var tmp = S.categories[idx];
+  S.categories[idx] = S.categories[newIdx];
+  S.categories[newIdx] = tmp;
+  markDirty();
+  renderCategoriesList();
+}
+
+function addCategory() {
+  S.categories.push({
+    id: 'new-category',
+    name: 'New Category',
+    emoji: '📂',
+    cssClass: 'new-category'
+  });
+  markDirty();
+  renderCategoriesList();
+  // Open the edit form for the new one
+  var idx = S.categories.length - 1;
+  setTimeout(function() { toggleCatEdit(idx); }, 50);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   SITE-DATA.JS GENERATION
+   ═══════════════════════════════════════════════════════════ */
+
+function downloadSiteData() {
+  var lines = [];
+  lines.push('/* CalcNova Site Data */');
+  lines.push('');
+  lines.push('var CALCNOVA_CONFIG = {');
+  lines.push('  siteUrl:   \'' + jsStr(S.config.siteUrl || '') + '\',');
+  lines.push('  githubUrl: \'' + jsStr(S.config.githubUrl || '') + '\',');
+  lines.push('  kofiUrl:   \'' + jsStr(S.config.kofiUrl || '') + '\'');
+  lines.push('};');
+  lines.push('');
+  lines.push('var CALCNOVA_CATEGORIES = [');
+  S.categories.forEach(function(c, i) {
+    var comma = i < S.categories.length - 1 ? ',' : '';
+    var obj = '  { id: \'' + jsStr(c.id) + '\', name: \'' + jsStr(c.name) + '\', emoji: \'' + jsStr(c.emoji) + '\', cssClass: \'' + jsStr(c.cssClass) + '\'';
+    if (c.specialty) {
+      obj += ', specialty: true, landingUrl: \'' + jsStr(c.landingUrl || '') + '\'';
+    }
+    obj += ' }' + comma;
+    lines.push(obj);
+  });
+  lines.push('];');
+  lines.push('');
+  lines.push('var CALCNOVA_TOOLS = [');
+  S.tools.forEach(function(t, i) {
+    var comma = i < S.tools.length - 1 ? ',' : '';
+    lines.push('  {');
+    lines.push('    id:          \'' + jsStr(t.id) + '\',');
+    lines.push('    name:        \'' + jsStr(t.name) + '\',');
+    lines.push('    emoji:       \'' + jsStr(t.emoji) + '\',');
+    lines.push('    category:    \'' + jsStr(t.category) + '\',');
+    lines.push('    url:         \'' + jsStr(t.url) + '\',');
+    lines.push('    description: \'' + jsStr(t.description) + '\',');
+    lines.push('    related:     [' + (t.related || []).map(function(r) { return '\'' + jsStr(r) + '\''; }).join(', ') + '],');
+    lines.push('    badge:       ' + (t.badge ? '\'' + jsStr(t.badge) + '\'' : 'null'));
+    lines.push('  }' + comma);
+  });
+  lines.push('];');
+  lines.push('');
+  lines.push('var CALCNOVA_ARTICLES = [');
+  S.articles.forEach(function(a, i) {
+    var comma = i < S.articles.length - 1 ? ',' : '';
+    lines.push('  {');
+    lines.push('    id:            \'' + jsStr(a.id) + '\',');
+    lines.push('    name:          \'' + jsStr(a.name) + '\',');
+    lines.push('    emoji:         \'' + jsStr(a.emoji) + '\',');
+    lines.push('    url:           \'' + jsStr(a.url) + '\',');
+    lines.push('    description:   \'' + jsStr(a.description) + '\',');
+    lines.push('    readTime:      \'' + jsStr(a.readTime) + '\',');
+    lines.push('    category:      \'' + jsStr(a.category) + '\',');
+    lines.push('    subcategory:   \'' + jsStr(a.subcategory) + '\',');
+    lines.push('    relatedTool:   \'' + jsStr(a.relatedTool) + '\',');
+    lines.push('    datePublished: \'' + jsStr(a.datePublished) + '\'');
+    lines.push('  }' + comma);
+  });
+  lines.push('];');
+  lines.push('');
+
+  var content = lines.join('\n');
+  downloadFile(content, 'site-data.js');
+  showToast('site-data.js downloaded!');
+}
+
+function jsStr(s) {
+  if (!s) return '';
+  return String(s)
+    .replace(/\\/g, '\\\\')
+    .replace(/'/g, "\\'")
+    .replace(/\n/g, '\\n')
+    .replace(/\r/g, '');
+}
+
+/* ═══════════════════════════════════════════════════════════
+   UTILITIES
+   ═══════════════════════════════════════════════════════════ */
+
+function downloadFile(content, filename) {
+  var blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = filename;
+  a.style.display = 'none';
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(function() {
+    URL.revokeObjectURL(a.href);
+    document.body.removeChild(a);
+  }, 100);
+}
+
+/* showSubview fallback — handle both naming conventions */
+(function() {
+  var orig = showSubview;
+  window.showSubview = function(panel, sub) {
+    var panelEl = document.getElementById('panel-' + panel);
+    if (!panelEl) return;
+    panelEl.querySelectorAll('.subview').forEach(function(sv) { sv.classList.remove('active'); });
+    // Try both possible ID patterns
+    var target =
+      document.getElementById(panel + 's-' + sub + '-view') ||
+      document.getElementById(panel + '-' + sub + '-view') ||
+      document.getElementById(panel + 's-' + sub + 'view') ||
+      document.getElementById(panel + '-' + sub + 'view');
+    if (target) target.classList.add('active');
+  };
+})();
+
+  </script>
+</body>
+</html>
