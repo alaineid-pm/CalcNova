@@ -27,9 +27,8 @@ var CALCNOVA_CONFIG = {
 var CALCNOVA_CATEGORIES = [
   { id: 'finance',      name: 'Finance',          emoji: '💰', cssClass: 'finance'      },
   { id: 'health',       name: 'Health & Fitness',  emoji: '💪', cssClass: 'health'       },
-  { id: 'math',         name: 'Math',              emoji: '🧮', cssClass: 'math'         },
-  { id: 'productivity', name: 'Productivity',      emoji: '⏱️', cssClass: 'productivity' },
-  { id: 'utility',      name: 'Utility',           emoji: '🔧', cssClass: 'utility'      },
+  { id: 'datetime',     name: 'Date & Time',       emoji: '📅', cssClass: 'datetime'     },
+  { id: 'tools',        name: 'Tools',             emoji: '🔧', cssClass: 'tools'        },
   { id: 'education',    name: 'Education',         emoji: '🎓', cssClass: 'education'    },
   { id: 'guides',       name: 'Guides',            emoji: '📝', cssClass: 'articles'     },
   { id: 'scuba',        name: 'Scuba Diving',      emoji: '🤿', cssClass: 'scuba',       specialty: true, landingUrl: 'scuba-diving-calculators.html' }
@@ -42,7 +41,9 @@ var CALCNOVA_CATEGORIES = [
 */
 var CALCNOVA_TOOLS = [
 
-  /* ── Finance ─────────────────────────────────────────── */
+  /* ── Finance ───────────────────────────────────────────
+     Investing / Growth → FIRE → Savings → Housing / Loans
+     → Debt → Income / Conversion                        */
   {
     id:          'compound-interest',
     name:        'Compound Interest Calculator',
@@ -50,7 +51,37 @@ var CALCNOVA_TOOLS = [
     category:    'finance',
     url:         'compound-interest-calculator.html',
     description: 'See how your money grows over time with compounding, contributions, and withdrawals.',
-    related:     ['savings-goal', 'fire-calculator', 'coast-fire'],
+    related:     ['investment-return', 'fire-calculator', 'savings-goal'],
+    badge:       'popular'
+  },
+  {
+    id:          'investment-return',
+    name:        'Investment Return Calculator',
+    emoji:       '📊',
+    category:    'finance',
+    url:         'investment-return-calculator.html',
+    description: 'Project your investment growth with contributions, fees, and inflation adjustment.',
+    related:     ['compound-interest', 'fire-calculator', 'inflation-calculator'],
+    badge:       'new'
+  },
+  {
+    id:          'inflation-calculator',
+    name:        'Inflation Calculator',
+    emoji:       '📉',
+    category:    'finance',
+    url:         'inflation-calculator.html',
+    description: 'See how inflation erodes purchasing power and what money is worth over time.',
+    related:     ['compound-interest', 'investment-return', 'savings-goal'],
+    badge:       'new'
+  },
+  {
+    id:          'fire-calculator',
+    name:        'FIRE Calculator',
+    emoji:       '🔥',
+    category:    'finance',
+    url:         'fire-calculator.html',
+    description: 'Model your path to financial independence and early retirement.',
+    related:     ['coast-fire', 'compound-interest', 'savings-goal'],
     badge:       'popular'
   },
   {
@@ -60,27 +91,7 @@ var CALCNOVA_TOOLS = [
     category:    'finance',
     url:         'coast-fire-calculator.html',
     description: 'Find your Coast FI number — how much to save today so your portfolio grows on its own.',
-    related:     ['fire-calculator', 'compound-interest', 'savings-goal'],
-    badge:       null
-  },
-  {
-    id:          'mortgage',
-    name:        'Mortgage Calculator',
-    emoji:       '🏠',
-    category:    'finance',
-    url:         'mortgage-calculator.html',
-    description: 'Calculate monthly payments, total interest, and full amortization schedule.',
-    related:     ['debt-payoff', 'savings-goal', 'compound-interest'],
-    badge:       null
-  },
-  {
-    id:          'rent-vs-buy',
-    name:        'Rent vs. Buy',
-    emoji:       '🏘️',
-    category:    'finance',
-    url:         'rent-vs-buy.html',
-    description: 'Compare the true long-term cost of renting versus buying a home.',
-    related:     ['mortgage', 'savings-goal', 'compound-interest'],
+    related:     ['fire-calculator', 'compound-interest', 'investment-return'],
     badge:       null
   },
   {
@@ -94,34 +105,14 @@ var CALCNOVA_TOOLS = [
     badge:       null
   },
   {
-    id:          'debt-payoff',
-    name:        'Debt Payoff Planner',
-    emoji:       '💳',
-    category:    'finance',
-    url:         'debt-payoff.html',
-    description: 'Snowball or avalanche — see the fastest path to becoming completely debt-free.',
-    related:     ['mortgage', 'savings-goal', 'emergency-fund'],
-    badge:       null
-  },
-  {
     id:          'emergency-fund',
     name:        'Emergency Fund Calculator',
     emoji:       '🛟',
     category:    'finance',
     url:         'emergency-fund.html',
     description: 'Calculate your ideal emergency fund size based on expenses and risk tolerance.',
-    related:     ['savings-goal', 'debt-payoff', 'net-worth-tracker'],
+    related:     ['savings-goal', 'net-worth-tracker', 'debt-payoff'],
     badge:       null
-  },
-  {
-    id:          'fire-calculator',
-    name:        'FIRE Calculator',
-    emoji:       '🔥',
-    category:    'finance',
-    url:         'fire-calculator.html',
-    description: 'Model your path to financial independence and early retirement.',
-    related:     ['coast-fire', 'compound-interest', 'savings-goal'],
-    badge:       'popular'
   },
   {
     id:          'net-worth-tracker',
@@ -134,24 +125,24 @@ var CALCNOVA_TOOLS = [
     badge:       null
   },
   {
-    id:          'salary-calculator',
-    name:        'Salary Converter',
-    emoji:       '💵',
+    id:          'mortgage',
+    name:        'Mortgage Calculator',
+    emoji:       '🏠',
     category:    'finance',
-    url:         'salary-calculator.html',
-    description: 'Convert salary between hourly, daily, weekly, monthly, and annual rates.',
-    related:     ['compound-interest', 'savings-goal', 'fire-calculator'],
-    badge:       'new'
+    url:         'mortgage-calculator.html',
+    description: 'Calculate monthly payments, total interest, and full amortization schedule.',
+    related:     ['rent-vs-buy', 'auto-loan', 'debt-payoff'],
+    badge:       null
   },
   {
-    id:          'inflation-calculator',
-    name:        'Inflation Calculator',
-    emoji:       '📉',
+    id:          'rent-vs-buy',
+    name:        'Rent vs. Buy',
+    emoji:       '🏘️',
     category:    'finance',
-    url:         'inflation-calculator.html',
-    description: 'See how inflation erodes purchasing power and what money is worth over time.',
-    related:     ['compound-interest', 'fire-calculator', 'savings-goal'],
-    badge:       'new'
+    url:         'rent-vs-buy.html',
+    description: 'Compare the true long-term cost of renting versus buying a home.',
+    related:     ['mortgage', 'savings-goal', 'compound-interest'],
+    badge:       null
   },
   {
     id:          'auto-loan',
@@ -164,27 +155,38 @@ var CALCNOVA_TOOLS = [
     badge:       'new'
   },
   {
+    id:          'debt-payoff',
+    name:        'Debt Payoff Planner',
+    emoji:       '💳',
+    category:    'finance',
+    url:         'debt-payoff.html',
+    description: 'Snowball or avalanche — see the fastest path to becoming completely debt-free.',
+    related:     ['mortgage', 'auto-loan', 'emergency-fund'],
+    badge:       null
+  },
+  {
+    id:          'salary-calculator',
+    name:        'Salary Converter',
+    emoji:       '💵',
+    category:    'finance',
+    url:         'salary-calculator.html',
+    description: 'Convert salary between hourly, daily, weekly, monthly, and annual rates.',
+    related:     ['currency-converter', 'compound-interest', 'fire-calculator'],
+    badge:       'new'
+  },
+  {
     id:          'currency-converter',
     name:        'Currency Converter',
     emoji:       '💱',
     category:    'finance',
     url:         'currency-converter.html',
     description: 'Convert between 30+ currencies with live exchange rates from the European Central Bank.',
-    related:     ['unit-converter', 'inflation-calculator', 'salary-calculator'],
-    badge:       'new'
-  },
-  {
-    id:          'investment-return',
-    name:        'Investment Return Calculator',
-    emoji:       '📊',
-    category:    'finance',
-    url:         'investment-return-calculator.html',
-    description: 'Project your investment growth with contributions, fees, and inflation adjustment.',
-    related:     ['compound-interest', 'fire-calculator', 'savings-goal'],
+    related:     ['salary-calculator', 'inflation-calculator', 'unit-converter'],
     badge:       'new'
   },
 
-  /* ── Health & Fitness ─────────────────────────────── */
+  /* ── Health & Fitness ──────────────────────────────────
+     Body metrics → Nutrition → Fitness → Wellness       */
   {
     id:          'bmi-calculator',
     name:        'BMI Calculator',
@@ -192,27 +194,7 @@ var CALCNOVA_TOOLS = [
     category:    'health',
     url:         'bmi-calculator.html',
     description: 'Calculate your Body Mass Index and understand what your result means.',
-    related:     ['calorie-calculator', 'ideal-weight-calculator', 'body-fat-calculator'],
-    badge:       'new'
-  },
-  {
-    id:          'calorie-calculator',
-    name:        'Calorie / TDEE Calculator',
-    emoji:       '🔥',
-    category:    'health',
-    url:         'calorie-calculator.html',
-    description: 'Find your Total Daily Energy Expenditure to manage weight and nutrition.',
-    related:     ['macro-calculator', 'bmi-calculator', 'ideal-weight-calculator'],
-    badge:       'new'
-  },
-  {
-    id:          'macro-calculator',
-    name:        'Macro Calculator',
-    emoji:       '🥗',
-    category:    'health',
-    url:         'macro-calculator.html',
-    description: 'Calculate your ideal macronutrient split for your fitness and diet goals.',
-    related:     ['calorie-calculator', 'bmi-calculator', 'body-fat-calculator'],
+    related:     ['body-fat-calculator', 'ideal-weight-calculator', 'calorie-calculator'],
     badge:       'new'
   },
   {
@@ -236,33 +218,33 @@ var CALCNOVA_TOOLS = [
     badge:       'new'
   },
   {
+    id:          'calorie-calculator',
+    name:        'Calorie / TDEE Calculator',
+    emoji:       '🔥',
+    category:    'health',
+    url:         'calorie-calculator.html',
+    description: 'Find your Total Daily Energy Expenditure to manage weight and nutrition.',
+    related:     ['macro-calculator', 'bmi-calculator', 'water-intake-calculator'],
+    badge:       'new'
+  },
+  {
+    id:          'macro-calculator',
+    name:        'Macro Calculator',
+    emoji:       '🥗',
+    category:    'health',
+    url:         'macro-calculator.html',
+    description: 'Calculate your ideal macronutrient split for your fitness and diet goals.',
+    related:     ['calorie-calculator', 'body-fat-calculator', 'water-intake-calculator'],
+    badge:       'new'
+  },
+  {
     id:          'water-intake-calculator',
     name:        'Water Intake Calculator',
     emoji:       '💧',
     category:    'health',
     url:         'water-intake-calculator.html',
     description: 'Calculate your recommended daily water intake based on weight and activity.',
-    related:     ['calorie-calculator', 'macro-calculator', 'bmi-calculator'],
-    badge:       'new'
-  },
-  {
-    id:          'due-date',
-    name:        'Pregnancy Due Date Calculator',
-    emoji:       '🤰',
-    category:    'health',
-    url:         'due-date-calculator.html',
-    description: 'Estimate your due date, current week, and key pregnancy milestones.',
-    related:     ['age-calculator', 'bmi-calculator', 'water-intake-calculator'],
-    badge:       'new'
-  },
-  {
-    id:          'sleep-calculator',
-    name:        'Sleep Calculator',
-    emoji:       '😴',
-    category:    'health',
-    url:         'sleep-calculator.html',
-    description: 'Find the best bedtime or wake-up time based on 90-minute sleep cycles.',
-    related:     ['water-intake-calculator', 'calorie-calculator', 'pomodoro'],
+    related:     ['calorie-calculator', 'macro-calculator', 'pace-calculator'],
     badge:       'new'
   },
   {
@@ -272,98 +254,67 @@ var CALCNOVA_TOOLS = [
     category:    'health',
     url:         'pace-calculator.html',
     description: 'Calculate running pace, finish time, or distance for any race from 5K to marathon.',
-    related:     ['calorie-calculator', 'bmi-calculator', 'water-intake-calculator'],
+    related:     ['calorie-calculator', 'water-intake-calculator', 'bmi-calculator'],
+    badge:       'new'
+  },
+  {
+    id:          'sleep-calculator',
+    name:        'Sleep Calculator',
+    emoji:       '😴',
+    category:    'health',
+    url:         'sleep-calculator.html',
+    description: 'Find the best bedtime or wake-up time based on 90-minute sleep cycles.',
+    related:     ['water-intake-calculator', 'calorie-calculator', 'due-date'],
+    badge:       'new'
+  },
+  {
+    id:          'due-date',
+    name:        'Pregnancy Due Date Calculator',
+    emoji:       '🤰',
+    category:    'health',
+    url:         'due-date-calculator.html',
+    description: 'Estimate your due date, current week, and key pregnancy milestones.',
+    related:     ['age-calculator', 'sleep-calculator', 'bmi-calculator'],
     badge:       'new'
   },
 
-  /* ── Math ────────────────────────────────────────── */
+  /* ── Date & Time ───────────────────────────────────────
+     Time zones → Date math                              */
   {
-    id:          'tip-calculator',
-    name:        'Tip Calculator',
-    emoji:       '🧾',
-    category:    'math',
-    url:         'tip-calculator.html',
-    description: 'Calculate tips and split the bill evenly between any number of people.',
-    related:     ['percentage-calculator', 'discount-calculator', 'gpa-calculator'],
-    badge:       'new'
-  },
-  {
-    id:          'gpa-calculator',
-    name:        'GPA Calculator',
-    emoji:       '🎓',
-    category:    'math',
-    url:         'gpa-calculator.html',
-    description: 'Calculate your GPA from grades and credit hours for any grading scale.',
-    related:     ['percentage-calculator', 'tip-calculator', 'discount-calculator'],
-    badge:       'new'
-  },
-  {
-    id:          'discount-calculator',
-    name:        'Discount Calculator',
-    emoji:       '🏷️',
-    category:    'math',
-    url:         'discount-calculator.html',
-    description: 'Find the sale price, discount amount, or original price from any two values.',
-    related:     ['percentage-calculator', 'tip-calculator', 'unit-converter'],
-    badge:       'new'
-  },
-
-  /* ── Productivity ────────────────────────────────────── */
-  {
-    id:          'meeting-planner',
-    name:        'Meeting Planner',
-    emoji:       '🤝',
-    category:    'productivity',
-    url:         'meeting-planner.html',
-    description: 'Find the best meeting times across multiple time zones for remote teams.',
-    related:     ['time-converter', 'world-clock', 'pomodoro'],
-    badge:       'new'
-  },
-  {
-    id:          'invoice-generator',
-    name:        'Invoice Generator',
-    emoji:       '🧾',
-    category:    'productivity',
-    url:         'invoice-generator.html',
-    description: 'Create professional invoices and download as PDF. Free, no sign-up.',
-    related:     ['salary-calculator', 'percentage-calculator', 'word-counter'],
-    badge:       'new'
+    id:          'world-clock',
+    name:        'World Clock',
+    emoji:       '🕐',
+    category:    'datetime',
+    url:         'world-clock.html',
+    description: 'See the current time in multiple cities and time zones simultaneously.',
+    related:     ['time-converter', 'meeting-planner', 'date-duration'],
+    badge:       null
   },
   {
     id:          'time-converter',
     name:        'Time Converter',
     emoji:       '🌍',
-    category:    'productivity',
+    category:    'datetime',
     url:         'timeconvertor.html',
     description: 'Convert times between any time zones. Find meeting overlaps for remote teams.',
-    related:     ['world-clock', 'date-duration', 'pomodoro'],
+    related:     ['world-clock', 'meeting-planner', 'date-duration'],
     badge:       null
   },
   {
-    id:          'pomodoro',
-    name:        'Pomodoro Timer',
-    emoji:       '🍅',
-    category:    'productivity',
-    url:         'pomodoro.html',
-    description: 'Stay focused with 25-minute work sessions and built-in break reminders.',
-    related:     ['time-converter', 'date-duration', 'word-counter'],
-    badge:       null
-  },
-  {
-    id:          'world-clock',
-    name:        'World Clock',
-    emoji:       '🕐',
-    category:    'productivity',
-    url:         'world-clock.html',
-    description: 'See the current time in multiple cities and time zones simultaneously.',
-    related:     ['time-converter', 'date-duration', 'age-calculator'],
-    badge:       null
+    id:          'meeting-planner',
+    name:        'Meeting Planner',
+    emoji:       '🤝',
+    category:    'datetime',
+    url:         'meeting-planner.html',
+    description: 'Find the best meeting times across multiple time zones for remote teams.',
+    related:     ['time-converter', 'world-clock', 'date-duration'],
+    badge:       'new'
   },
   {
     id:          'date-duration',
     name:        'Date Duration',
     emoji:       '📅',
-    category:    'productivity',
+    category:    'datetime',
     url:         'date-duration.html',
     description: 'Calculate the exact number of days, weeks, or months between any two dates.',
     related:     ['age-calculator', 'world-clock', 'time-converter'],
@@ -373,76 +324,128 @@ var CALCNOVA_TOOLS = [
     id:          'age-calculator',
     name:        'Age Calculator',
     emoji:       '🎂',
-    category:    'productivity',
+    category:    'datetime',
     url:         'age-calculator.html',
     description: 'Find your exact age in years, months, and days — plus days until your next birthday.',
-    related:     ['date-duration', 'world-clock', 'percentage-calculator'],
+    related:     ['date-duration', 'due-date', 'world-clock'],
     badge:       null
   },
 
-  /* ── Utility ─────────────────────────────────────────── */
+  /* ── Tools ─────────────────────────────────────────────
+     Work → Converters → Shopping → Generators           */
   {
-    id:          'password-generator',
-    name:        'Password Generator',
-    emoji:       '🔐',
-    category:    'utility',
-    url:         'password-generator.html',
-    description: 'Generate strong, random passwords with customizable length and character sets.',
-    related:     ['random-number', 'qr-code-generator', 'word-counter'],
+    id:          'pomodoro',
+    name:        'Pomodoro Timer',
+    emoji:       '🍅',
+    category:    'tools',
+    url:         'pomodoro.html',
+    description: 'Stay focused with 25-minute work sessions and built-in break reminders.',
+    related:     ['study-timer', 'word-counter', 'meeting-planner'],
+    badge:       null
+  },
+  {
+    id:          'invoice-generator',
+    name:        'Invoice Generator',
+    emoji:       '🧾',
+    category:    'tools',
+    url:         'invoice-generator.html',
+    description: 'Create professional invoices and download as PDF. Free, no sign-up.',
+    related:     ['salary-calculator', 'percentage-calculator', 'word-counter'],
     badge:       'new'
   },
   {
-    id:          'qr-code-generator',
-    name:        'QR Code Generator',
-    emoji:       '📲',
-    category:    'utility',
-    url:         'qr-code-generator.html',
-    description: 'Create QR codes for URLs, text, WiFi, email, and vCards. Download as PNG or SVG.',
-    related:     ['password-generator', 'word-counter', 'unit-converter'],
-    badge:       'new'
+    id:          'word-counter',
+    name:        'Word Counter',
+    emoji:       '✍️',
+    category:    'tools',
+    url:         'word-counter.html',
+    description: 'Count words, characters, sentences, and reading time as you type.',
+    related:     ['pomodoro', 'percentage-calculator', 'unit-converter'],
+    badge:       null
   },
   {
     id:          'unit-converter',
     name:        'Unit Converter',
     emoji:       '📏',
-    category:    'utility',
+    category:    'tools',
     url:         'unit-converter.html',
     description: 'Convert between hundreds of units: length, weight, temperature, volume, and more.',
-    related:     ['percentage-calculator', 'word-counter', 'random-number'],
+    related:     ['percentage-calculator', 'currency-converter', 'tip-calculator'],
     badge:       'popular'
   },
   {
     id:          'percentage-calculator',
     name:        'Percentage Calculator',
     emoji:       '🔢',
-    category:    'utility',
+    category:    'tools',
     url:         'percentage-calculator.html',
     description: 'Quickly calculate percentages, percentage change, and what percent of a total.',
-    related:     ['unit-converter', 'word-counter', 'random-number'],
+    related:     ['unit-converter', 'discount-calculator', 'tip-calculator'],
     badge:       null
+  },
+  {
+    id:          'tip-calculator',
+    name:        'Tip Calculator',
+    emoji:       '🧾',
+    category:    'tools',
+    url:         'tip-calculator.html',
+    description: 'Calculate tips and split the bill evenly between any number of people.',
+    related:     ['discount-calculator', 'percentage-calculator', 'unit-converter'],
+    badge:       'new'
+  },
+  {
+    id:          'discount-calculator',
+    name:        'Discount Calculator',
+    emoji:       '🏷️',
+    category:    'tools',
+    url:         'discount-calculator.html',
+    description: 'Find the sale price, discount amount, or original price from any two values.',
+    related:     ['tip-calculator', 'percentage-calculator', 'unit-converter'],
+    badge:       'new'
+  },
+  {
+    id:          'password-generator',
+    name:        'Password Generator',
+    emoji:       '🔐',
+    category:    'tools',
+    url:         'password-generator.html',
+    description: 'Generate strong, random passwords with customizable length and character sets.',
+    related:     ['qr-code-generator', 'random-number', 'word-counter'],
+    badge:       'new'
+  },
+  {
+    id:          'qr-code-generator',
+    name:        'QR Code Generator',
+    emoji:       '📲',
+    category:    'tools',
+    url:         'qr-code-generator.html',
+    description: 'Create QR codes for URLs, text, WiFi, email, and vCards. Download as PNG or SVG.',
+    related:     ['password-generator', 'random-number', 'word-counter'],
+    badge:       'new'
   },
   {
     id:          'random-number',
     name:        'Random Number Generator',
     emoji:       '🎲',
-    category:    'utility',
+    category:    'tools',
     url:         'random-number.html',
     description: 'Generate random numbers, pick random items from a list, or create unique IDs.',
-    related:     ['word-counter', 'percentage-calculator', 'unit-converter'],
-    badge:       null
-  },
-  {
-    id:          'word-counter',
-    name:        'Word Counter',
-    emoji:       '✍️',
-    category:    'utility',
-    url:         'word-counter.html',
-    description: 'Count words, characters, sentences, and reading time as you type.',
-    related:     ['random-number', 'percentage-calculator', 'unit-converter'],
+    related:     ['password-generator', 'qr-code-generator', 'percentage-calculator'],
     badge:       null
   },
 
-  /* ── Education ───────────────────────────────────────── */
+  /* ── Education ─────────────────────────────────────────
+     Grades → Study aids                                 */
+  {
+    id:          'gpa-calculator',
+    name:        'GPA Calculator',
+    emoji:       '🎓',
+    category:    'education',
+    url:         'gpa-calculator.html',
+    description: 'Calculate your GPA from grades and credit hours for any grading scale.',
+    related:     ['grade-calculator', 'study-timer', 'flashcard-maker'],
+    badge:       'new'
+  },
   {
     id:          'grade-calculator',
     name:        'Grade Calculator',
@@ -470,7 +473,7 @@ var CALCNOVA_TOOLS = [
     category:    'education',
     url:         'flashcard-maker.html',
     description: 'Create, study, and save flashcard decks right in your browser. No account needed.',
-    related:     ['study-timer', 'grade-calculator', 'gpa-calculator'],
+    related:     ['study-timer', 'gpa-calculator', 'grade-calculator'],
     badge:       'new'
   },
 
