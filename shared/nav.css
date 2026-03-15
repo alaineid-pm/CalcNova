@@ -345,20 +345,19 @@ body.dark .cn-search-expanded {
 }
 .icon-btn:hover { background: var(--bg); color: var(--text-primary); }
 
-/* Ko-fi button */
+/* Ko-fi button — icon only */
 .cn-kofi-btn {
-  display: inline-flex; align-items: center; gap: 5px;
-  height: 32px; border-radius: 100px;
-  padding: 0 12px;
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 32px; height: 32px; border-radius: 100px;
+  padding: 0;
   background: linear-gradient(135deg, #ff5e5b, #ff3f81);
   color: #fff; text-decoration: none;
-  font-size: 12px; font-weight: 700;
-  white-space: nowrap;
   transition: all .15s;
   box-shadow: 0 2px 8px rgba(232,93,4,.3);
+  flex-shrink: 0;
 }
 .cn-kofi-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(255,63,129,.4); }
-.cn-kofi-btn svg { width: 14px; height: 14px; flex-shrink: 0; }
+.cn-kofi-btn svg { width: 16px; height: 16px; flex-shrink: 0; }
 
 /* GitHub link — hidden */
 .cn-github-link { display: none !important; }
