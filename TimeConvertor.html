@@ -169,10 +169,11 @@
     .day-badge.yesterday { background: rgba(245,158,11,.1); color: var(--amber); border: 1px solid rgba(245,158,11,.2); }
     .day-badge.compact { font-size: 10px; padding: 1px 6px; }
     .hz-block-offset {
-      font-size: 8px; font-family: var(--mono); color: rgba(255,255,255,.5);
+      font-size: 10px; font-family: var(--mono); color: rgba(255,255,255,.75);
       position: absolute; bottom: 2px; left: 50%; transform: translateX(-50%);
       pointer-events: none; white-space: nowrap;
     }
+    .hz-block-offset.on-light { color: rgba(0,0,0,.5); }
 
     /* ── TIMELINE STRIP (Vertical card) ── */
     .timeline-strip-wrap { position: relative; }
@@ -186,7 +187,7 @@
     .timeline-strip-tick {
       font-size: 9px; color: var(--text-muted); font-family: var(--mono); font-weight: 500;
     }
-    .timeline-now { position: absolute; top: 0; bottom: 0; width: 2px; background: var(--red); z-index: 2; pointer-events: none; }
+    .timeline-now { position: absolute; top: 0; bottom: 0; width: 2px; background: var(--red); z-index: 2; pointer-events: none; box-shadow: 0 0 4px 1px rgba(239,68,68,.5); }
     .timeline-now::before {
       content: ''; position: absolute; top: -4px; left: 50%; transform: translateX(-50%);
       border-left: 4px solid transparent; border-right: 4px solid transparent; border-top: 4px solid var(--red);
@@ -265,13 +266,17 @@
     .hz-hour-block:hover { filter: brightness(1.15); }
     .hz-block-label {
       font-size: 10px; font-family: var(--mono); font-weight: 600;
-      color: rgba(255,255,255,.75); pointer-events: none; user-select: none;
+      color: rgba(255,255,255,.85); pointer-events: none; user-select: none;
       text-shadow: 0 1px 2px rgba(0,0,0,.3);
+    }
+    .hz-block-label.on-light {
+      color: rgba(0,0,0,.6); text-shadow: none;
     }
 
     .hz-now-line {
       position: absolute; top: 0; bottom: 0; width: 2px; background: var(--red);
       z-index: 20; pointer-events: none;
+      box-shadow: 0 0 4px 1px rgba(239,68,68,.5);
     }
     .hz-now-pill {
       position: absolute; top: -16px; left: 50%; transform: translateX(-50%);
@@ -294,12 +299,13 @@
       padding: 2px 8px; font-size: 10px; font-weight: 700; white-space: nowrap; z-index: 6;
     }
     .hz-day-boundary {
-      position: absolute; top: 0; bottom: 0; width: 0;
-      border-left: 1px dashed var(--border); z-index: 4; pointer-events: none;
+      position: absolute; top: 0; bottom: 0; width: 2px;
+      background: var(--text-muted); opacity: .35; z-index: 4; pointer-events: none;
     }
+    body.dark .hz-day-boundary { background: rgba(255,255,255,.35); opacity: 1; }
     .hz-day-label {
-      position: absolute; top: 2px; left: 4px;
-      font-size: 10px; color: var(--text-muted); white-space: nowrap;
+      position: absolute; top: 2px; left: 6px;
+      font-size: 10px; color: var(--text-muted); white-space: nowrap; font-weight: 600;
     }
     .hz-no-overlap {
       text-align: center; padding: 10px; font-size: 13px; color: var(--text-muted);
@@ -856,9 +862,9 @@ var CITIES = [
    TIME-OF-DAY PHASE COLORS
    ══════════════════════════════════════════════════════════════ */
 var PHASES = [
-  { name:"Sleep",      hours:[0,1,2,3,4,5,22,23],              light:"#312E81", dark:"#1E1B4B" },
-  { name:"Transition", hours:[6,7,18,19,20,21],                light:"#64748B", dark:"#475569" },
-  { name:"Work",       hours:[8,9,10,11,12,13,14,15,16,17],    light:"#10B981", dark:"#059669" }
+  { name:"Sleep",      hours:[0,1,2,3,4,5,22,23],              light:"#C8CDD3", dark:"#1a1e2b" },
+  { name:"Transition", hours:[6,7,18,19,20,21],                light:"#8BB89A", dark:"#3a6b52" },
+  { name:"Work",       hours:[8,9,10,11,12,13,14,15,16,17],    light:"#0D9668", dark:"#10B981" }
 ];
 
 function getPhase(hour) {
@@ -1366,13 +1372,14 @@ function renderHorizontal(now) {
       block.setAttribute('data-idx', idx);
       block.setAttribute('data-city-label', city.label);
       var lbl = document.createElement('span');
-      lbl.className = 'hz-block-label';
+      var isLightSleep = getPhase(localH).name === 'Sleep' && !document.body.classList.contains('dark');
+      lbl.className = 'hz-block-label' + (isLightSleep ? ' on-light' : '');
       lbl.textContent = formatHourShort(localH, state.clockFormat);
       block.appendChild(lbl);
       // Show minute offset indicator for non-integer hour offsets (e.g. UTC+5:30)
       if (offMinRemainder > 0) {
         var offInd = document.createElement('span');
-        offInd.className = 'hz-block-offset';
+        offInd.className = 'hz-block-offset' + (isLightSleep ? ' on-light' : '');
         offInd.textContent = ':' + (offMinRemainder < 10 ? '0' : '') + offMinRemainder;
         block.appendChild(offInd);
       }
