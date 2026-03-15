@@ -856,13 +856,9 @@ var CITIES = [
    TIME-OF-DAY PHASE COLORS
    ══════════════════════════════════════════════════════════════ */
 var PHASES = [
-  { name:"Sleep",     hours:[23,0,1,2,3,4,5],      light:"#312E81", dark:"#1E1B4B" },
-  { name:"Early",     hours:[6,7],                   light:"#7C3AED", dark:"#6D28D9" },
-  { name:"Morning",   hours:[8,9,10,11],             light:"#F59E0B", dark:"#D97706" },
-  { name:"Midday",    hours:[12,13],                 light:"#10B981", dark:"#059669" },
-  { name:"Afternoon", hours:[14,15,16],              light:"#F97316", dark:"#EA580C" },
-  { name:"Evening",   hours:[17,18,19],              light:"#EC4899", dark:"#DB2777" },
-  { name:"Night",     hours:[20,21,22],              light:"#3B82F6", dark:"#2563EB" }
+  { name:"Sleep",      hours:[0,1,2,3,4,5,22,23],              light:"#312E81", dark:"#1E1B4B" },
+  { name:"Transition", hours:[6,7,18,19,20,21],                light:"#64748B", dark:"#475569" },
+  { name:"Work",       hours:[8,9,10,11,12,13,14,15,16,17],    light:"#10B981", dark:"#059669" }
 ];
 
 function getPhase(hour) {
