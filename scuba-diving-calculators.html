@@ -306,6 +306,18 @@
         font-size: 15px;
       }
     }
+
+    /* ── SEO content ── */
+    .seo-section { background: var(--surface); border: 1px solid var(--border); border-radius: 18px; padding: 28px; margin-top: 40px; }
+    .seo-section h2 { font-size: 18px; font-weight: 800; margin: 0 0 12px; letter-spacing: -.3px; }
+    .seo-section h3 { font-size: 15px; font-weight: 700; margin: 20px 0 8px; color: var(--text-primary); }
+    .seo-section p { font-size: 14px; color: var(--text-secondary); line-height: 1.75; margin: 0 0 10px; }
+    .seo-section ul { padding-left: 18px; margin: 0 0 10px; }
+    .seo-section ul li { font-size: 14px; color: var(--text-secondary); line-height: 1.65; margin-bottom: 5px; }
+    .related-links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
+    .related-links a { display: inline-flex; align-items: center; gap: 6px; background: var(--surface); border: 1px solid var(--border); border-radius: 100px; padding: 6px 14px; font-size: 13px; font-weight: 600; color: var(--text-primary); text-decoration: none; transition: border-color .15s; }
+    .related-links a:hover { border-color: var(--green); color: var(--green); }
+    @media print { .seo-section { display: none !important; } }
   </style>
 </head>
 <body>
@@ -445,6 +457,39 @@
     </a>
 
   </div>
+
+  <!-- SEO content -->
+  <div class="seo-section">
+    <h2>Free Scuba Diving Calculators for Safer Dives</h2>
+    <p>This page is a hub for all CalcNova scuba and technical diving calculators. Each tool is designed to help recreational and technical divers plan safer, more efficient dives by handling the math behind gas management, buoyancy, and decompression planning.</p>
+
+    <h3>Why Use Dive Calculators?</h3>
+    <p>Even experienced divers benefit from digital tools: they eliminate arithmetic errors, let you quickly model multiple scenarios, and serve as a double-check before a dive briefing. The calculators here cover the most common dive planning needs — from a quick nitrox MOD check to full trimix blend calculations.</p>
+
+    <h3>Calculator Overview</h3>
+    <ul>
+      <li><strong>Nitrox / MOD Calculator:</strong> Find the Maximum Operating Depth for any EANx mix at your chosen PO₂ limit (1.4 or 1.6 ATA)</li>
+      <li><strong>Trimix Calculator:</strong> Calculate Equivalent Narcotic Depth and find the best He/O₂/N₂ blend for your target depth and narcosis limit</li>
+      <li><strong>Gas Blending Calculator:</strong> Partial pressure fill calculations for nitrox and trimix — fill from empty or top-up</li>
+      <li><strong>SAC / RMV Rate Calculator:</strong> Determine your Surface Air Consumption and Respiratory Minute Volume from a logged dive</li>
+      <li><strong>Tank Duration Calculator:</strong> Predict how long your cylinder will last at any depth based on your SAC/RMV rate</li>
+      <li><strong>Dive Weight / Buoyancy Calculator:</strong> Estimate the amount of lead ballast needed based on wetsuit thickness, tank type, and body weight</li>
+    </ul>
+
+    <h3>Disclaimer</h3>
+    <p>These calculators are educational tools only. Always validate dive plans with your trained dive computer, dive tables, or a qualified dive instructor. Never dive beyond your certification level.</p>
+
+    <h3>Other Useful Calculators</h3>
+    <div class="related-links">
+      <a href="nitrox-calculator.html">🤿 Nitrox / MOD</a>
+      <a href="trimix-calculator.html">🧪 Trimix</a>
+      <a href="gas-blending-calculator.html">⚗️ Gas Blending</a>
+      <a href="sac-rate-calculator.html">💨 SAC Rate</a>
+      <a href="tank-duration-calculator.html">🪣 Tank Duration</a>
+    </div>
+  </div>
+
+  <!-- nav.js injects footer here -->
 
 </div>
 

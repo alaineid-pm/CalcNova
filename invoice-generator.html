@@ -14,7 +14,7 @@
   <script type="application/ld+json">
   [{
     "@context": "https://schema.org",
-    "@type": "WebApplication",
+    "@type": "WebPage",
     "name": "Invoice Generator",
     "url": "https://calcnova.co/invoice-generator.html",
     "description": "Free online invoice generator — create professional invoices with line items, taxes, and discounts. Download as PDF or print. No account needed.",
@@ -167,6 +167,18 @@
     .edu-section a:hover { text-decoration: underline; }
     .edu-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin-bottom: 16px; }
     .edu-card .edu-card-label { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .5px; color: var(--green); margin-bottom: 10px; }
+
+    /* ── SEO content ── */
+    .seo-section { background: var(--surface); border: 1px solid var(--border); border-radius: 18px; padding: 28px; margin-top: 40px; }
+    .seo-section h2 { font-size: 18px; font-weight: 800; margin: 0 0 12px; letter-spacing: -.3px; }
+    .seo-section h3 { font-size: 15px; font-weight: 700; margin: 20px 0 8px; color: var(--text-primary); }
+    .seo-section p { font-size: 14px; color: var(--text-secondary); line-height: 1.75; margin: 0 0 10px; }
+    .seo-section ul { padding-left: 18px; margin: 0 0 10px; }
+    .seo-section ul li { font-size: 14px; color: var(--text-secondary); line-height: 1.65; margin-bottom: 5px; }
+    .related-links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
+    .related-links a { display: inline-flex; align-items: center; gap: 6px; background: var(--surface); border: 1px solid var(--border); border-radius: 100px; padding: 6px 14px; font-size: 13px; font-weight: 600; color: var(--text-primary); text-decoration: none; transition: border-color .15s; }
+    .related-links a:hover { border-color: var(--green); color: var(--green); }
+    @media print { .seo-section { display: none !important; } }
   </style>
 </head>
 <body>
@@ -389,6 +401,41 @@
       <p>Check out the <a href="salary-calculator.html">Salary Converter</a> to compare hourly vs. annual rates, or the <a href="percentage-calculator.html">Percentage Calculator</a> for quick markup calculations.</p>
     </div>
   </div>
+
+  <!-- SEO content -->
+  <div class="seo-section">
+    <h2>About the Free Invoice Generator</h2>
+    <p>Create professional invoices in seconds — no account, no subscription, no watermarks. Fill in your business details, client information, line items, and tax rate, then download a clean PDF ready to send. All data stays in your browser and is never uploaded to a server.</p>
+
+    <h3>What to Include on an Invoice</h3>
+    <ul>
+      <li><strong>Invoice number:</strong> A unique sequential identifier for your records (e.g., INV-2024-001)</li>
+      <li><strong>Issue date and due date:</strong> Standard payment terms are Net 15, Net 30, or Net 60</li>
+      <li><strong>Your business details:</strong> Name/company, address, phone, email, and tax ID if applicable</li>
+      <li><strong>Client details:</strong> Company name, billing address, and contact person</li>
+      <li><strong>Line items:</strong> Description, quantity, unit price, and subtotal for each service or product</li>
+      <li><strong>Tax and totals:</strong> Subtotal, tax rate, tax amount, and grand total</li>
+    </ul>
+
+    <h3>Invoice Payment Terms</h3>
+    <ul>
+      <li><strong>Net 30:</strong> Payment due 30 days after the invoice date — the most common B2B standard</li>
+      <li><strong>Net 15:</strong> Common for smaller invoices or established relationships</li>
+      <li><strong>Due on receipt:</strong> Immediate payment, often for new clients or deposits</li>
+      <li><strong>2/10 Net 30:</strong> 2% discount if paid within 10 days, otherwise full amount in 30</li>
+    </ul>
+
+    <h3>Related Tools</h3>
+    <div class="related-links">
+      <a href="percentage-calculator.html">% Percentage</a>
+      <a href="salary-calculator.html">💼 Salary Calculator</a>
+      <a href="tip-calculator.html">💰 Tip Calculator</a>
+      <a href="discount-calculator.html">🏷 Discount</a>
+      <a href="currency-converter.html">💱 Currency</a>
+    </div>
+  </div>
+
+  <!-- nav.js injects footer here -->
 
 </div><!-- /app -->
 

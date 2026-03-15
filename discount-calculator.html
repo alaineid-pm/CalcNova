@@ -18,16 +18,64 @@
 
   <!-- Structured Data -->
   <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "WebApplication",
-    "name": "Discount Calculator",
-    "url": "https://calcnova.co/discount-calculator.html",
-    "description": "Find the sale price, discount amount, or original price from any two values.",
-    "applicationCategory": "UtilitiesApplication",
-    "provider": { "@type": "Organization", "name": "CalcNova", "url": "https://calcnova.co" },
-    "offers": { "@type": "Offer", "price": "0" }
-  }
+  [
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": "Discount Calculator",
+      "url": "https://calcnova.co/discount-calculator.html",
+      "description": "Find the sale price, discount amount, or original price from any two values.",
+      "applicationCategory": "UtilitiesApplication",
+      "provider": { "@type": "Organization", "name": "CalcNova", "url": "https://calcnova.co" },
+      "offers": { "@type": "Offer", "price": "0" }
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How do you calculate a percentage discount?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "To calculate a percentage discount, multiply the original price by the discount percentage divided by 100. For example, a 25% discount on a $80 item is $80 × 0.25 = $20 off. The sale price is then $80 − $20 = $60. Alternatively, multiply the original price by (1 − discount rate): $80 × 0.75 = $60."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the difference between original price and sale price?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The original price (also called the list price or retail price) is the full price of an item before any discount is applied. The sale price is the reduced price after the discount has been subtracted. The difference between the two is the discount amount, which can also be expressed as a percentage of the original price to get the discount rate."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do you calculate the percentage savings on a purchase?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "To calculate percentage savings, subtract the sale price from the original price to get the amount saved, then divide that by the original price and multiply by 100. Formula: ((Original Price − Sale Price) / Original Price) × 100. For example, if an item was $50 and is now $35, the savings are ($50 − $35) / $50 × 100 = 30%."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do you find the original price if you know the sale price and discount percentage?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "To find the original price from the sale price and discount percentage, divide the sale price by (1 − discount rate). Formula: Original Price = Sale Price / (1 − Discount%). For example, if an item is on sale for $60 after a 25% discount, the original price is $60 / (1 − 0.25) = $60 / 0.75 = $80."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Do stacked discounts add up? Is 20% off plus 10% off the same as 30% off?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No, stacked discounts do not simply add together. A 20% discount followed by an additional 10% discount is not the same as 30% off. Each discount is applied sequentially to the reduced price. On a $100 item: 20% off gives $80, then 10% off $80 gives $72. The total saving is $28, which equals a combined 28% discount — not 30%. The formula for combined discount is: 1 − (1 − d1) × (1 − d2)."
+          }
+        }
+      ]
+    }
+  ]
   </script>
 
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -67,7 +115,7 @@
       padding: 38px 32px 32px;
       margin-bottom: 28px;
     }
-    .hero-title { font-size: 26px; font-weight: 800; letter-spacing: -.5px; margin: 0 0 0; }
+    .hero-title { font-size: 26px; font-weight: 800; letter-spacing: -.5px; margin: 0 0 0; padding: 0; }
     .hero-title span {
       background: linear-gradient(135deg, var(--green), var(--purple));
       -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
@@ -371,6 +419,17 @@
       .result-value { font-size: 28px; }
       .stats-grid { grid-template-columns: 1fr; }
     }
+    /* ── SEO content ── */
+    .seo-section { background: var(--surface); border: 1px solid var(--border); border-radius: 18px; padding: 28px; margin-top: 40px; }
+    .seo-section h2 { font-size: 18px; font-weight: 800; margin: 0 0 12px; letter-spacing: -.3px; }
+    .seo-section h3 { font-size: 15px; font-weight: 700; margin: 20px 0 8px; color: var(--text-primary); }
+    .seo-section p { font-size: 14px; color: var(--text-secondary); line-height: 1.75; margin: 0 0 10px; }
+    .seo-section ul { padding-left: 18px; margin: 0 0 10px; }
+    .seo-section ul li { font-size: 14px; color: var(--text-secondary); line-height: 1.65; margin-bottom: 5px; }
+    .related-links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
+    .related-links a { display: inline-flex; align-items: center; gap: 6px; background: var(--surface); border: 1px solid var(--border); border-radius: 100px; padding: 6px 14px; font-size: 13px; font-weight: 600; color: var(--text-primary); text-decoration: none; transition: border-color .15s; }
+    .related-links a:hover { border-color: var(--green); color: var(--green); }
+    @media print { .seo-section { display: none !important; } }
   </style>
 </head>
 <body>
@@ -378,7 +437,7 @@
   <!-- nav.js injects header here -->
 
   <div class="hero">
-    <div class="hero-title">Discount &amp; <span>Sale Price</span> Calculator</div>
+    <h1 class="hero-title">Discount &amp; <span>Sale Price</span> Calculator</h1>
     <div class="hero-desc">Find the sale price from a discount, reverse-calculate what discount was applied, or stack two discounts together. Includes optional sales tax.</div>
   </div>
 
@@ -503,6 +562,32 @@
     <div class="stat-card">
       <div class="stat-label">You Save</div>
       <div class="stat-value purple" id="stat-save-pct">—</div>
+    </div>
+  </div>
+
+  <!-- SEO content -->
+  <div class="seo-section">
+    <h2>How to Calculate Discounts and Sale Prices</h2>
+    <p>This calculator handles three common discount scenarios: find the sale price from an original price and percentage off, find the discount percentage from two prices, or find the original price from a sale price and percentage saved. Use it for shopping, pricing products, or quick financial calculations.</p>
+
+    <h3>Discount Formulas</h3>
+    <ul>
+      <li><strong>Sale price:</strong> Original price × (1 − discount %) = Sale price</li>
+      <li><strong>Discount amount:</strong> Original price × discount % = Savings</li>
+      <li><strong>Discount % from prices:</strong> (Original − Sale) ÷ Original × 100</li>
+      <li><strong>Original price from sale + %:</strong> Sale price ÷ (1 − discount %)</li>
+    </ul>
+
+    <h3>Stacked Discounts</h3>
+    <p>Important: two sequential discounts do not simply add. A 20% discount followed by a 10% discount equals 28% off, not 30%. The formula: combined discount = 1 − (1 − 0.20) × (1 − 0.10) = 1 − 0.80 × 0.90 = 28%. Retailers use this in tiered sales to make the combined discount appear larger than it is.</p>
+
+    <h3>Related Calculators</h3>
+    <div class="related-links">
+      <a href="percentage-calculator.html">% Percentage</a>
+      <a href="tip-calculator.html">💰 Tip Calculator</a>
+      <a href="currency-converter.html">💱 Currency</a>
+      <a href="inflation-calculator.html">📈 Inflation</a>
+      <a href="salary-calculator.html">💼 Salary</a>
     </div>
   </div>
 

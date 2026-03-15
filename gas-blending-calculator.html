@@ -22,13 +22,38 @@
     "@context": "https://schema.org",
     "@graph": [
       {
-        "@type": "WebApplication",
+        "@type": "WebPage",
         "name": "Gas Blending Calculator",
         "url": "https://calcnova.co/gas-blending-calculator.html",
         "description": "Calculate O₂ and helium pressures for nitrox and trimix partial pressure blending.",
         "applicationCategory": "UtilityApplication",
         "provider": { "@type": "Organization", "name": "CalcNova", "url": "https://calcnova.co" },
         "offers": { "@type": "Offer", "price": "0" }
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "What is partial pressure blending?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Partial pressure blending is a method of filling a scuba cylinder by sequentially adding individual gases (oxygen, helium, air) to reach target percentages. You calculate the pressure of each gas to add based on Dalton's Law: each gas contributes proportionally to the total pressure." }
+          },
+          {
+            "@type": "Question",
+            "name": "What is a safe oxygen partial pressure for diving?",
+            "acceptedAnswer": { "@type": "Answer", "text": "For bottom gas, the standard limit is PO₂ = 1.4 ATA (bar). A limit of 1.6 ATA is used only during decompression stops. Exceeding these limits risks CNS oxygen toxicity." }
+          },
+          {
+            "@type": "Question",
+            "name": "Why is helium used in trimix?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Helium is inert, has very low narcotic potency, and diffuses quickly. Adding helium to a diving mix reduces nitrogen narcosis at depth and allows technical divers to descend beyond 40m (130ft) while maintaining cognitive function." }
+          },
+          {
+            "@type": "Question",
+            "name": "What is the difference between nitrox and trimix blending?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Nitrox blending uses only oxygen and air (two components). Trimix blending adds helium as a third component. Trimix calculations require determining oxygen, helium, and nitrogen pressures separately to hit target percentages of all three gases." }
+          }
+        ]
       }
     ]
   }

@@ -269,6 +269,18 @@
     @media print {
       nav, footer, .ad-slot { display: none !important; }
     }
+
+    /* ── SEO content ── */
+    .seo-section { background: var(--surface); border: 1px solid var(--border); border-radius: 18px; padding: 28px; margin-top: 40px; }
+    .seo-section h2 { font-size: 18px; font-weight: 800; margin: 0 0 12px; letter-spacing: -.3px; }
+    .seo-section h3 { font-size: 15px; font-weight: 700; margin: 20px 0 8px; color: var(--text-primary); }
+    .seo-section p { font-size: 14px; color: var(--text-secondary); line-height: 1.75; margin: 0 0 10px; }
+    .seo-section ul { padding-left: 18px; margin: 0 0 10px; }
+    .seo-section ul li { font-size: 14px; color: var(--text-secondary); line-height: 1.65; margin-bottom: 5px; }
+    .related-links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
+    .related-links a { display: inline-flex; align-items: center; gap: 6px; background: var(--surface); border: 1px solid var(--border); border-radius: 100px; padding: 6px 14px; font-size: 13px; font-weight: 600; color: var(--text-primary); text-decoration: none; transition: border-color .15s; }
+    .related-links a:hover { border-color: var(--green); color: var(--green); }
+    @media print { .seo-section { display: none !important; } }
   </style>
 </head>
 <body>
@@ -462,6 +474,34 @@
     <div class="faq-item">
       <div class="faq-q" onclick="toggleFaq(this)">Can I use this calculator for midterms or other exams?</div>
       <div class="faq-a">Yes. This calculator works for any weighted exam — midterm, quiz, paper, or project — not just final exams. Enter your current grade excluding the component in question, set the weight to that component's weight, and enter your desired course grade. The required score you get is what you need on that specific component.</div>
+    </div>
+  </div>
+
+  <!-- SEO content -->
+  <div class="seo-section">
+    <h2>How to Use the Grade Calculator</h2>
+    <p>Enter your current grade (as a percentage or letter grade), your final exam weight, and your desired final grade to calculate what score you need on your final exam. You can also calculate a weighted average across multiple assignments or exams.</p>
+
+    <h3>Grade Scale Reference</h3>
+    <ul>
+      <li>A: 90–100% &nbsp;|&nbsp; A–: 90–92% &nbsp;|&nbsp; A: 93–96% &nbsp;|&nbsp; A+: 97–100%</li>
+      <li>B: 80–89% &nbsp;|&nbsp; C: 70–79% &nbsp;|&nbsp; D: 60–69% &nbsp;|&nbsp; F: Below 60%</li>
+    </ul>
+    <p>Note: grade cutoffs vary by institution. Some schools use a 7-point scale (A starts at 93%) while others use a 10-point scale (A starts at 90%).</p>
+
+    <h3>Weighted Average Grade Formula</h3>
+    <p>Weighted average = Σ(score × weight) ÷ Σ(weights). For example, if a midterm worth 30% scores 82% and a final worth 40% scores 91%, and homework worth 30% averages 95%: (82×0.30 + 91×0.40 + 95×0.30) ÷ 1.0 = 89.5%.</p>
+
+    <h3>What Do I Need on My Final Exam?</h3>
+    <p>Formula: Required final score = (target grade − current grade × (1 − final weight)) ÷ final weight. If you have an 85% going into a final worth 30%, and you need a 90% overall: (90 − 85×0.70) ÷ 0.30 = (90 − 59.5) ÷ 0.30 = 101.7% — you'd need extra credit!</p>
+
+    <h3>Related Calculators</h3>
+    <div class="related-links">
+      <a href="gpa-calculator.html">🎓 GPA Calculator</a>
+      <a href="percentage-calculator.html">% Percentage</a>
+      <a href="study-timer.html">📚 Study Timer</a>
+      <a href="flashcard-maker.html">🃏 Flashcard Maker</a>
+      <a href="pomodoro.html">⏱ Pomodoro Timer</a>
     </div>
   </div>
 
