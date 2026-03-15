@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CalcNova — Free Online Calculators & Productivity Tools</title>
-  <meta name="description" content="Free, fast, no-signup calculators for compound interest, Coast FIRE, time zones, and more. Plan your finances, boost productivity — all in one place.">
+  <title>CalcNova — Free Online Calculators, Health & Finance Tools</title>
+  <meta name="description" content="Free, fast, no-signup calculators for BMI, calories, mortgage, compound interest, tip splitting, GPA, and more. Finance, health, math, and productivity tools in one place.">
 
   <!-- Canonical -->
   <link rel="canonical" href="https://calcnova.co/">
@@ -87,22 +87,6 @@
     }
     .btn-secondary:hover { border-color: var(--green); color: var(--green); }
 
-    /* ── TRUST BAR ── */
-    .trust-bar {
-      display: flex; justify-content: center; gap: 32px; flex-wrap: wrap;
-      padding: 20px 0 8px;
-    }
-    .trust-item {
-      display: flex; align-items: center; gap: 8px;
-      font-size: 13px; font-weight: 600; color: var(--text-secondary);
-    }
-    .trust-icon {
-      width: 32px; height: 32px; border-radius: 8px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 16px;
-      background: linear-gradient(135deg, rgba(16,185,129,.1), rgba(99,102,241,.08));
-    }
-
     /* ── SECTION HEADERS ── */
     .section-header {
       display: flex; align-items: center; justify-content: space-between;
@@ -134,6 +118,7 @@
       text-decoration: none; color: inherit;
       transition: all .2s;
       display: flex; flex-direction: column;
+      position: relative;
     }
     .tool-card:hover {
       border-color: var(--green);
@@ -148,6 +133,8 @@
     .tool-card-icon.finance { background: linear-gradient(135deg, rgba(245,158,11,.15), rgba(245,158,11,.05)); }
     .tool-card-icon.productivity { background: linear-gradient(135deg, rgba(99,102,241,.15), rgba(99,102,241,.05)); }
     .tool-card-icon.utility { background: linear-gradient(135deg, rgba(16,185,129,.15), rgba(16,185,129,.05)); }
+    .tool-card-icon.health { background: linear-gradient(135deg, rgba(16,185,129,.15), rgba(99,102,241,.05)); }
+    .tool-card-icon.math { background: linear-gradient(135deg, rgba(99,102,241,.15), rgba(16,185,129,.05)); }
     .tool-card-title {
       font-size: 16px; font-weight: 800; margin-bottom: 6px;
     }
@@ -163,6 +150,12 @@
     .tool-card-badge .dot {
       width: 6px; height: 6px; border-radius: 50%; background: currentColor;
     }
+    .tool-card-arrow {
+      position: absolute; bottom: 18px; right: 18px;
+      font-size: 16px; color: var(--green);
+      opacity: 0; transition: opacity .2s, transform .2s;
+    }
+    .tool-card:hover .tool-card-arrow { opacity: 1; transform: translateX(3px); }
 
     /* ── ALL TOOLS GRID ── */
     .tools-directory {
@@ -237,26 +230,6 @@
       margin-top: 14px; font-size: 11px; color: var(--text-muted); font-weight: 600;
     }
 
-    /* ── WHY CALCNOVA ── */
-    .why-grid {
-      display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px;
-      margin-bottom: 40px;
-    }
-    .why-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 22px 18px;
-      text-align: center;
-    }
-    .why-icon {
-      width: 44px; height: 44px; border-radius: 12px; margin: 0 auto 12px;
-      display: flex; align-items: center; justify-content: center; font-size: 22px;
-      background: linear-gradient(135deg, rgba(16,185,129,.1), rgba(99,102,241,.08));
-    }
-    .why-title { font-size: 14px; font-weight: 800; margin-bottom: 4px; }
-    .why-desc { font-size: 12px; color: var(--text-secondary); line-height: 1.5; }
-
     /* ── CTA BANNER ── */
     .cta-banner {
       background: linear-gradient(135deg, rgba(16,185,129,.08), rgba(99,102,241,.08));
@@ -280,13 +253,10 @@
       .featured-grid { grid-template-columns: 1fr; }
       .tools-directory { grid-template-columns: 1fr; }
       .articles-grid { grid-template-columns: 1fr; }
-      .why-grid { grid-template-columns: repeat(2, 1fr); }
-      .trust-bar { gap: 16px; }
     }
     @media (max-width: 480px) {
       .home-hero { padding: 32px 8px 28px; }
       .home-hero h1 { font-size: 26px; }
-      .why-grid { grid-template-columns: 1fr; }
       .home-hero-actions { flex-direction: column; align-items: center; }
     }
   </style>
@@ -298,154 +268,71 @@
 
   <!-- ── HERO ── -->
   <section class="home-hero">
-    <div class="home-hero-badge">Free &middot; No sign-up &middot; Open source</div>
+    <div class="home-hero-badge">48 free tools &middot; No sign-up &middot; 100% private</div>
     <h1>Calculate. Plan.<br><span>Optimize.</span></h1>
     <p class="home-hero-desc">
-      Free, fast online calculators for your finances, time zones, and everyday math.
-      No accounts. No ads (yet). Just tools that work.
+      Free, fast online calculators for finance, health, productivity, and more.
+      Instant results, 100% private, works on any device.
     </p>
     <div class="home-hero-actions">
-      <a href="mortgage-calculator.html" class="btn-primary">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-        Try Mortgage Calculator
+      <a href="tools.html" class="btn-primary">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        Browse All Tools
       </a>
-      <a href="#all-tools" class="btn-secondary">Browse all tools</a>
+      <a href="mortgage-calculator.html" class="btn-secondary">Try Mortgage Calculator</a>
     </div>
   </section>
-
-  <!-- ── TRUST BAR ── -->
-  <div class="trust-bar">
-    <div class="trust-item"><div class="trust-icon">&#9889;</div> Instant results</div>
-    <div class="trust-item"><div class="trust-icon">&#128274;</div> 100% private</div>
-    <div class="trust-item"><div class="trust-icon">&#128241;</div> Works on any device</div>
-    <div class="trust-item"><div class="trust-icon">&#127768;</div> Dark mode built in</div>
-  </div>
 
   <!-- ── AD SLOT: Leaderboard ── -->
   <div class="ad-slot ad-slot--leaderboard" data-label="Ad space"></div>
 
   <!-- ── FEATURED TOOLS ── -->
   <div class="section-header">
-    <div class="section-title">Most Popular <span>Tools</span></div>
-    <a href="#all-tools" class="section-link">See all tools &rarr;</a>
+    <div class="section-title">Featured <span>Tools</span></div>
+    <a href="tools.html" class="section-link">See all tools &rarr;</a>
   </div>
   <div class="featured-grid">
-    <a href="mortgage-calculator.html" class="tool-card">
-      <div class="tool-card-icon finance">&#127968;</div>
-      <div class="tool-card-title">Mortgage Calculator</div>
-      <div class="tool-card-desc">Calculate your monthly mortgage payment, total interest paid, and full amortization schedule. Adjust down payment, rate, and term.</div>
-      <div class="tool-card-badge"><div class="dot"></div> Try it now</div>
-    </a>
-    <a href="percentage-calculator.html" class="tool-card">
-      <div class="tool-card-icon utility">&#128290;</div>
-      <div class="tool-card-title">Percentage Calculator</div>
-      <div class="tool-card-desc">Quickly find what percent of a number is, calculate percentage change, or work out the original value from a percentage.</div>
-      <div class="tool-card-badge"><div class="dot"></div> Try it now</div>
-    </a>
     <a href="compound-interest-calculator.html" class="tool-card">
       <div class="tool-card-icon finance">&#128200;</div>
       <div class="tool-card-title">Compound Interest Calculator</div>
       <div class="tool-card-desc">See how your money grows over time with compounding, contributions, and withdrawals. Export to CSV or print.</div>
-      <div class="tool-card-badge"><div class="dot"></div> Try it now</div>
+      <div class="tool-card-badge"><div class="dot"></div> Popular</div>
+      <span class="tool-card-arrow">&rarr;</span>
     </a>
-  </div>
-
-  <!-- ── MORE TOOLS ── -->
-  <div class="section-header">
-    <div class="section-title">More <span>Tools</span></div>
-    <a href="#all-tools" class="section-link">See all tools &rarr;</a>
-  </div>
-  <div class="featured-grid">
-    <a href="age-calculator.html" class="tool-card">
-      <div class="tool-card-icon utility">&#127874;</div>
-      <div class="tool-card-title">Age Calculator</div>
-      <div class="tool-card-desc">Find your exact age in years, months, and days. Calculate the days until your next birthday or between any two dates.</div>
-      <div class="tool-card-badge"><div class="dot"></div> Try it now</div>
+    <a href="bmi-calculator.html" class="tool-card">
+      <div class="tool-card-icon health">&#9878;&#65039;</div>
+      <div class="tool-card-title">BMI Calculator</div>
+      <div class="tool-card-desc">Calculate your Body Mass Index with a visual gauge, WHO category, and your healthy weight range. Supports metric and imperial units.</div>
+      <div class="tool-card-badge"><div class="dot"></div> Popular</div>
+      <span class="tool-card-arrow">&rarr;</span>
     </a>
-    <a href="debt-payoff.html" class="tool-card">
-      <div class="tool-card-icon finance">&#128179;</div>
-      <div class="tool-card-title">Debt Payoff Planner</div>
-      <div class="tool-card-desc">Snowball or avalanche? Enter your debts and see the fastest path to being debt-free with a clear payoff timeline.</div>
-      <div class="tool-card-badge"><div class="dot"></div> Try it now</div>
+    <a href="unit-converter.html" class="tool-card">
+      <div class="tool-card-icon utility">&#128259;</div>
+      <div class="tool-card-title">Unit Converter</div>
+      <div class="tool-card-desc">Convert between hundreds of units — length, weight, temperature, speed, volume, and more. Fast and accurate conversions.</div>
+      <div class="tool-card-badge"><div class="dot"></div> Popular</div>
+      <span class="tool-card-arrow">&rarr;</span>
     </a>
-    <a href="TimeConvertor.html" class="tool-card">
-      <div class="tool-card-icon productivity">&#127757;</div>
-      <div class="tool-card-title">World Time Converter</div>
-      <div class="tool-card-desc">Compare time zones visually, find meeting overlaps for remote teams, and see day/night at a glance across cities.</div>
-      <div class="tool-card-badge"><div class="dot"></div> Try it now</div>
+    <a href="sleep-calculator.html" class="tool-card">
+      <div class="tool-card-icon health">&#128564;</div>
+      <div class="tool-card-title">Sleep Calculator</div>
+      <div class="tool-card-desc">Find the best bedtime or wake-up time using 90-minute sleep cycles. Wake up refreshed, not groggy.</div>
+      <div class="tool-card-badge"><div class="dot"></div> New</div>
+      <span class="tool-card-arrow">&rarr;</span>
     </a>
-  </div>
-
-  <!-- ── AD SLOT: Rectangle ── -->
-  <div class="ad-slot ad-slot--rectangle" data-label="Ad space"></div>
-
-  <!-- ── WHY CALCNOVA ── -->
-  <div class="section-header">
-    <div class="section-title">Why <span>CalcNova</span>?</div>
-  </div>
-  <div class="why-grid">
-    <div class="why-card">
-      <div class="why-icon">&#128640;</div>
-      <div class="why-title">Instant</div>
-      <div class="why-desc">Results update as you type. No waiting, no reloading.</div>
-    </div>
-    <div class="why-card">
-      <div class="why-icon">&#128274;</div>
-      <div class="why-title">Private</div>
-      <div class="why-desc">Everything runs in your browser. Your data never leaves your device.</div>
-    </div>
-    <div class="why-card">
-      <div class="why-icon">&#127768;</div>
-      <div class="why-title">Dark Mode</div>
-      <div class="why-desc">Easy on the eyes. Every tool supports light and dark themes.</div>
-    </div>
-    <div class="why-card">
-      <div class="why-icon">&#128197;</div>
-      <div class="why-title">Export</div>
-      <div class="why-desc">Print or export your results to CSV. Take your data anywhere.</div>
-    </div>
-  </div>
-
-  <!-- ── ARTICLES ── -->
-  <div class="section-header" id="articles">
-    <div class="section-title">Guides &amp; <span>Articles</span></div>
-  </div>
-  <div class="articles-grid">
-    <a href="article-compound-interest.html" class="article-card">
-      <span class="article-card-icon">&#128200;</span>
-      <div class="article-card-title">How Compound Interest Actually Works (With Examples)</div>
-      <div class="article-card-excerpt">The complete beginner's guide to understanding how your money grows exponentially over time — and how to calculate it yourself.</div>
-      <div class="article-card-meta"><span>5 min read</span> &middot; <span>Finance</span></div>
+    <a href="auto-loan-calculator.html" class="tool-card">
+      <div class="tool-card-icon finance">&#128663;</div>
+      <div class="tool-card-title">Auto Loan Calculator</div>
+      <div class="tool-card-desc">Calculate monthly car payments, total interest, and see a full amortization schedule for your next vehicle purchase.</div>
+      <div class="tool-card-badge"><div class="dot"></div> New</div>
+      <span class="tool-card-arrow">&rarr;</span>
     </a>
-    <a href="article-coast-fire.html" class="article-card">
-      <span class="article-card-icon">&#127958;&#65039;</span>
-      <div class="article-card-title">What Is Coast FIRE? The Lazy Path to Retirement</div>
-      <div class="article-card-excerpt">Coast FIRE means saving enough early so you never need to invest another dollar. Learn the math, the formula, and whether it's right for you.</div>
-      <div class="article-card-meta"><span>7 min read</span> &middot; <span>FIRE Movement</span></div>
-    </a>
-    <a href="article-debt-snowball-vs-avalanche.html" class="article-card">
-      <span class="article-card-icon">&#128179;</span>
-      <div class="article-card-title">Debt Snowball vs. Avalanche: Which Strategy Wins?</div>
-      <div class="article-card-excerpt">Two popular methods for paying off debt — one saves more money, the other keeps you motivated. We compare both with real numbers.</div>
-      <div class="article-card-meta"><span>6 min read</span> &middot; <span>Debt</span></div>
-    </a>
-    <a href="article-emergency-fund.html" class="article-card">
-      <span class="article-card-icon">&#128735;</span>
-      <div class="article-card-title">How Much Emergency Fund Do I Need?</div>
-      <div class="article-card-excerpt">General guidance on building your safety net — how many months to save, where to keep it, and a step-by-step plan to get there.</div>
-      <div class="article-card-meta"><span>5 min read</span> &middot; <span>Finance</span></div>
-    </a>
-    <a href="article-time-zones-remote-teams.html" class="article-card">
-      <span class="article-card-icon">&#127757;</span>
-      <div class="article-card-title">Time Zones for Remote Teams: A Practical Guide</div>
-      <div class="article-card-excerpt">Tips and strategies for scheduling meetings, finding overlap hours, and communicating effectively across time zones.</div>
-      <div class="article-card-meta"><span>5 min read</span> &middot; <span>Productivity</span></div>
-    </a>
-    <a href="article-pomodoro-technique.html" class="article-card">
-      <span class="article-card-icon">&#127813;</span>
-      <div class="article-card-title">The Pomodoro Technique: A Complete Guide to Focused Work</div>
-      <div class="article-card-excerpt">Learn the 25-minute focus method that boosts productivity, reduces burnout, and helps you get more done with less stress.</div>
-      <div class="article-card-meta"><span>5 min read</span> &middot; <span>Productivity</span></div>
+    <a href="qr-code-generator.html" class="tool-card">
+      <div class="tool-card-icon utility">&#128242;</div>
+      <div class="tool-card-title">QR Code Generator</div>
+      <div class="tool-card-desc">Create QR codes for URLs, WiFi, email, phone, and vCards. Download as PNG or SVG instantly.</div>
+      <div class="tool-card-badge"><div class="dot"></div> New</div>
+      <span class="tool-card-arrow">&rarr;</span>
     </a>
   </div>
 
@@ -453,69 +340,43 @@
   <div class="section-header" id="all-tools">
     <div class="section-title">All <span>Tools</span></div>
   </div>
-  <div class="tools-directory">
-    <!-- Finance -->
-    <div class="dir-category">
-      <div class="dir-cat-header">
-        <div class="dir-cat-icon finance" style="background:linear-gradient(135deg,rgba(245,158,11,.15),rgba(245,158,11,.05))">&#128176;</div>
-        <div>
-          <div class="dir-cat-name">Finance</div>
-          <div class="dir-cat-count">8 tools</div>
-        </div>
-      </div>
-      <ul class="dir-list">
-        <li><a href="compound-interest-calculator.html" class="dir-item"><span class="dir-item-icon">&#128200;</span><span class="dir-item-label">Compound Interest</span></a></li>
-        <li><a href="coast-fire-calculator.html" class="dir-item"><span class="dir-item-icon">&#127958;&#65039;</span><span class="dir-item-label">Coast FIRE</span></a></li>
-        <li><a href="mortgage-calculator.html" class="dir-item"><span class="dir-item-icon">&#127968;</span><span class="dir-item-label">Mortgage</span></a></li>
-        <li><a href="savings-goal.html" class="dir-item"><span class="dir-item-icon">&#127919;</span><span class="dir-item-label">Savings Goal</span></a></li>
-        <li><a href="debt-payoff.html" class="dir-item"><span class="dir-item-icon">&#128179;</span><span class="dir-item-label">Debt Payoff</span></a></li>
-        <li><a href="emergency-fund.html" class="dir-item"><span class="dir-item-icon">&#128735;</span><span class="dir-item-label">Emergency Fund</span></a></li>
-        <li><a href="fire-calculator.html" class="dir-item"><span class="dir-item-icon">&#128293;</span><span class="dir-item-label">FIRE Calculator</span></a></li>
-        <li><a href="net-worth-tracker.html" class="dir-item"><span class="dir-item-icon">&#128202;</span><span class="dir-item-label">Net Worth Tracker</span></a></li>
-      </ul>
-    </div>
+  <!-- Generated from shared/site-data.js — edit that file to update -->
+  <div class="tools-directory" id="cn-tools-directory"></div>
 
-    <!-- Productivity -->
-    <div class="dir-category">
-      <div class="dir-cat-header">
-        <div class="dir-cat-icon productivity" style="background:linear-gradient(135deg,rgba(99,102,241,.15),rgba(99,102,241,.05))">&#9201;&#65039;</div>
-        <div>
-          <div class="dir-cat-name">Productivity</div>
-          <div class="dir-cat-count">5 tools</div>
-        </div>
-      </div>
-      <ul class="dir-list">
-        <li><a href="TimeConvertor.html" class="dir-item"><span class="dir-item-icon">&#127757;</span><span class="dir-item-label">Time Converter</span></a></li>
-        <li><a href="pomodoro.html" class="dir-item"><span class="dir-item-icon">&#127813;</span><span class="dir-item-label">Pomodoro Timer</span></a></li>
-        <li><a href="world-clock.html" class="dir-item"><span class="dir-item-icon">&#128336;</span><span class="dir-item-label">World Clock</span></a></li>
-        <li><a href="date-duration.html" class="dir-item"><span class="dir-item-icon">&#128197;</span><span class="dir-item-label">Date Duration</span></a></li>
-        <li><a href="age-calculator.html" class="dir-item"><span class="dir-item-icon">&#127874;</span><span class="dir-item-label">Age Calculator</span></a></li>
-      </ul>
-    </div>
+  <!-- ── AD SLOT: Rectangle ── -->
+  <div class="ad-slot ad-slot--rectangle" data-label="Ad space"></div>
 
-    <!-- Utility -->
-    <div class="dir-category">
-      <div class="dir-cat-header">
-        <div class="dir-cat-icon utility" style="background:linear-gradient(135deg,rgba(16,185,129,.15),rgba(16,185,129,.05))">&#128295;</div>
-        <div>
-          <div class="dir-cat-name">Utility</div>
-          <div class="dir-cat-count">4 tools</div>
-        </div>
-      </div>
-      <ul class="dir-list">
-        <li><a href="unit-converter.html" class="dir-item"><span class="dir-item-icon">&#128207;</span><span class="dir-item-label">Unit Converter</span></a></li>
-        <li><a href="percentage-calculator.html" class="dir-item"><span class="dir-item-icon">&#128290;</span><span class="dir-item-label">Percentage Calc</span></a></li>
-        <li><a href="random-number.html" class="dir-item"><span class="dir-item-icon">&#127922;</span><span class="dir-item-label">Random Number</span></a></li>
-        <li><a href="word-counter.html" class="dir-item"><span class="dir-item-icon">&#9997;&#65039;</span><span class="dir-item-label">Word Counter</span></a></li>
-      </ul>
-    </div>
+  <!-- ── ARTICLES ── -->
+  <div class="section-header" id="articles">
+    <div class="section-title">Guides &amp; <span>Articles</span></div>
+    <a href="guides.html" class="section-link">View all guides &rarr;</a>
+  </div>
+  <div class="articles-grid">
+    <a href="article-study-techniques.html" class="article-card">
+      <span class="article-card-icon">&#129504;</span>
+      <div class="article-card-title">How to Study Effectively: Science-Backed Techniques</div>
+      <div class="article-card-excerpt">Active recall, spaced repetition, and the Pomodoro method — research-backed strategies that actually move the needle on learning.</div>
+      <div class="article-card-meta"><span>7 min read</span> &middot; <span>Education</span></div>
+    </a>
+    <a href="article-inflation.html" class="article-card">
+      <span class="article-card-icon">&#128202;</span>
+      <div class="article-card-title">How Inflation Erodes Your Savings (And What to Do About It)</div>
+      <div class="article-card-excerpt">Real vs. nominal returns, purchasing power loss over time, and the strategies that actually beat inflation over the long run.</div>
+      <div class="article-card-meta"><span>6 min read</span> &middot; <span>Finance</span></div>
+    </a>
+    <a href="article-calories.html" class="article-card">
+      <span class="article-card-icon">&#128293;</span>
+      <div class="article-card-title">How to Calculate Calories for Weight Loss (Without Starving)</div>
+      <div class="article-card-excerpt">TDEE, calorie deficits, and why crash diets always fail — a practical guide to sustainable weight loss through smart calorie tracking.</div>
+      <div class="article-card-meta"><span>7 min read</span> &middot; <span>Health</span></div>
+    </a>
   </div>
 
   <!-- ── CTA BANNER ── -->
   <div class="cta-banner">
-    <h2>More tools launching every month</h2>
-    <p>CalcNova is growing. Bookmark us and check back for new calculators, planners, and guides — always free.</p>
-    <a href="mortgage-calculator.html" class="btn-primary">Start calculating</a>
+    <h2>Find the right calculator</h2>
+    <p>48+ free tools across 7 categories &mdash; always free, always private.</p>
+    <a href="tools.html" class="btn-primary">Browse All Tools</a>
   </div>
 
   <!-- nav.js injects footer here -->
@@ -525,6 +386,57 @@
 <script>
   window.CALCNOVA_PAGE = { id: '' };
 </script>
+<script src="shared/site-data.js"></script>
 <script src="shared/nav.js"></script>
+<script>
+/* Generate the "All Tools" directory from site-data.js */
+(function () {
+  var dir = document.getElementById('cn-tools-directory');
+  if (!dir || !window.CALCNOVA_TOOLS || !window.CALCNOVA_CATEGORIES) return;
+
+  var catBg = {
+    finance:      'linear-gradient(135deg,rgba(245,158,11,.15),rgba(245,158,11,.05))',
+    health:       'linear-gradient(135deg,rgba(16,185,129,.15),rgba(99,102,241,.05))',
+    math:         'linear-gradient(135deg,rgba(99,102,241,.15),rgba(99,102,241,.05))',
+    productivity: 'linear-gradient(135deg,rgba(99,102,241,.15),rgba(99,102,241,.05))',
+    utility:      'linear-gradient(135deg,rgba(16,185,129,.15),rgba(16,185,129,.05))',
+    education:    'linear-gradient(135deg,rgba(99,102,241,.15),rgba(245,158,11,.05))',
+    scuba:        'linear-gradient(135deg,rgba(6,182,212,.15),rgba(16,185,129,.05))'
+  };
+
+  var html = '';
+  CALCNOVA_CATEGORIES.filter(function (c) { return c.id !== 'guides'; }).forEach(function (cat) {
+    var tools = CALCNOVA_TOOLS.filter(function (t) { return t.category === cat.id; });
+    if (!tools.length) return;
+
+    var items = tools.map(function (tool) {
+      var badge = '';
+      if (tool.badge === 'popular') badge = '<span class="cn-badge cn-badge-popular">Popular</span>';
+      else if (tool.badge === 'new') badge = '<span class="cn-badge cn-badge-new">New</span>';
+      var tooltip = tool.description
+        ? '<span class="cn-tooltip">' + tool.description + '</span>'
+        : '';
+      return '<li>'
+        + '<a href="' + tool.url + '" class="dir-item cn-tooltip-wrap" title="' + tool.description + '">'
+        + '<span class="dir-item-icon">' + tool.emoji + '</span>'
+        + '<span class="dir-item-label">' + tool.name + badge + '</span>'
+        + tooltip
+        + '</a></li>';
+    }).join('');
+
+    html += '<div class="dir-category">'
+      + '<div class="dir-cat-header">'
+      + '<div class="dir-cat-icon" style="background:' + catBg[cat.id] + '">' + cat.emoji + '</div>'
+      + '<div>'
+      + '<div class="dir-cat-name">' + cat.name + '</div>'
+      + '<div class="dir-cat-count">' + tools.length + ' tools</div>'
+      + '</div></div>'
+      + '<ul class="dir-list">' + items + '</ul>'
+      + '</div>';
+  });
+
+  dir.innerHTML = html;
+})();
+</script>
 </body>
 </html>

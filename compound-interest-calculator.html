@@ -529,21 +529,21 @@
       <div class="form-group">
         <label class="form-label">Regular Contributions <span class="form-label-optional">(optional)</span></label>
         <div class="contrib-toggle-wrap">
-          <button class="contrib-btn active" id="cb-none" onclick="setContrib('none')">None</button>
-          <button class="contrib-btn" id="cb-deposits" onclick="setContrib('deposits')">Deposits</button>
+          <button class="contrib-btn" id="cb-none" onclick="setContrib('none')">None</button>
+          <button class="contrib-btn active" id="cb-deposits" onclick="setContrib('deposits')">Deposits</button>
           <button class="contrib-btn" id="cb-withdrawals" onclick="setContrib('withdrawals')">Withdrawals</button>
           <button class="contrib-btn" id="cb-both" onclick="setContrib('both')">Both</button>
         </div>
       </div>
 
-      <!-- Deposit section -->
-      <div class="contrib-section" id="section-deposits">
+      <!-- Deposit section (visible by default) -->
+      <div class="contrib-section visible" id="section-deposits">
         <div class="form-group">
           <label class="form-label">Deposit amount <span class="form-label-optional">(optional)</span></label>
           <div class="input-two-col">
             <div class="input-row has-prefix">
               <span class="input-prefix">$</span>
-              <input type="number" id="deposit-amount" value="500" min="0" step="50" />
+              <input type="number" id="deposit-amount" value="0" min="0" step="50" placeholder="0" />
             </div>
             <select id="deposit-freq">
               <option value="monthly">monthly</option>
@@ -568,7 +568,7 @@
           <div class="input-two-col">
             <div class="input-row has-prefix">
               <span class="input-prefix">$</span>
-              <input type="number" id="withdrawal-amount" value="200" min="0" step="50" />
+              <input type="number" id="withdrawal-amount" value="0" min="0" step="50" placeholder="0" />
             </div>
             <select id="withdrawal-freq">
               <option value="monthly">monthly</option>
@@ -772,7 +772,7 @@
   // ── State ──────────────────────────────────────────────────────────────────
   let showBalance = true, showInvested = true;
   let lastRows = [];
-  let contribMode = 'none'; // 'none' | 'deposits' | 'withdrawals' | 'both'
+  let contribMode = 'deposits'; // 'none' | 'deposits' | 'withdrawals' | 'both'
   const sym = '$';
 
   // Redraw chart when dark mode is toggled via shared nav
@@ -1200,6 +1200,7 @@
     disclaimer: 'This calculator is for educational purposes only and does not constitute financial advice. Always consult a qualified financial advisor for personalized guidance.'
   };
 </script>
+<script src="shared/site-data.js"></script>
 <script src="shared/nav.js"></script>
 </body>
 </html>
