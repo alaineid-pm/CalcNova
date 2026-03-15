@@ -180,7 +180,8 @@
     .timeline-strip { display: flex; height: 36px; border-radius: 8px; overflow: hidden; position: relative; cursor: pointer; }
     .timeline-block { flex: 1; position: relative; transition: filter .15s; }
     .timeline-block:hover { filter: brightness(1.15); }
-    .timeline-block + .timeline-block { border-left: 1px solid rgba(255,255,255,.12); }
+    .timeline-block + .timeline-block { border-left: 1px solid rgba(0,0,0,.08); }
+    body.dark .timeline-block + .timeline-block { border-left-color: rgba(255,255,255,.12); }
     .timeline-strip-ticks {
       display: flex; justify-content: space-between; margin-top: 3px; padding: 0 1px;
     }
@@ -258,12 +259,14 @@
     }
     .hz-timeline-row:last-of-type { border-bottom: none; }
     .hz-hour-block {
-      flex: 1; min-width: 0; position: relative; border-left: 1px solid rgba(255,255,255,.06);
+      flex: 1; min-width: 0; position: relative; border-left: 1px solid rgba(0,0,0,.08);
       transition: filter .15s; cursor: pointer; align-self: stretch; min-height: 100%;
       display: flex; align-items: center; justify-content: center; overflow: hidden;
     }
     .hz-hour-block:first-child { border-left: none; }
-    .hz-hour-block:hover { filter: brightness(1.15); }
+    body.dark .hz-hour-block { border-left-color: rgba(255,255,255,.06); }
+    .hz-hour-block:hover { filter: brightness(.93); }
+    body.dark .hz-hour-block:hover { filter: brightness(1.15); }
     .hz-block-label {
       font-size: 10px; font-family: var(--mono); font-weight: 600;
       color: rgba(255,255,255,.85); pointer-events: none; user-select: none;
@@ -862,9 +865,9 @@ var CITIES = [
    TIME-OF-DAY PHASE COLORS
    ══════════════════════════════════════════════════════════════ */
 var PHASES = [
-  { name:"Sleep",      hours:[0,1,2,3,4,5,22,23],              light:"#C8CDD3", dark:"#1a1e2b" },
-  { name:"Transition", hours:[6,7,18,19,20,21],                light:"#8BB89A", dark:"#3a6b52" },
-  { name:"Work",       hours:[8,9,10,11,12,13,14,15,16,17],    light:"#0D9668", dark:"#10B981" }
+  { name:"Sleep",      hours:[0,1,2,3,4,5,22,23],              light:"#5B6B8A", dark:"#1a1e2b" },
+  { name:"Transition", hours:[6,7,18,19,20,21],                light:"#A8B8CC", dark:"#2d3a50" },
+  { name:"Work",       hours:[8,9,10,11,12,13,14,15,16,17],    light:"#E6EBF0", dark:"#10B981" }
 ];
 
 function getPhase(hour) {
@@ -1372,14 +1375,14 @@ function renderHorizontal(now) {
       block.setAttribute('data-idx', idx);
       block.setAttribute('data-city-label', city.label);
       var lbl = document.createElement('span');
-      var isLightSleep = getPhase(localH).name === 'Sleep' && !document.body.classList.contains('dark');
-      lbl.className = 'hz-block-label' + (isLightSleep ? ' on-light' : '');
+      var isLightBg = getPhase(localH).name !== 'Sleep' && !document.body.classList.contains('dark');
+      lbl.className = 'hz-block-label' + (isLightBg ? ' on-light' : '');
       lbl.textContent = formatHourShort(localH, state.clockFormat);
       block.appendChild(lbl);
       // Show minute offset indicator for non-integer hour offsets (e.g. UTC+5:30)
       if (offMinRemainder > 0) {
         var offInd = document.createElement('span');
-        offInd.className = 'hz-block-offset' + (isLightSleep ? ' on-light' : '');
+        offInd.className = 'hz-block-offset' + (isLightBg ? ' on-light' : '');
         offInd.textContent = ':' + (offMinRemainder < 10 ? '0' : '') + offMinRemainder;
         block.appendChild(offInd);
       }
