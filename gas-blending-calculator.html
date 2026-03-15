@@ -603,7 +603,7 @@
     document.getElementById('btn-empty').classList.toggle('active', f === 'empty');
     document.getElementById('btn-topup').classList.toggle('active', f === 'topup');
     var topupEls = document.querySelectorAll('.section-topup');
-    topupEls.forEach(function(el) { el.style.display = f === 'topup' ? '' : 'none'; });
+    topupEls.forEach(function(el) { el.style.display = f === 'topup' ? 'flex' : 'none'; });
     updateTopupFields();
     document.getElementById('card-title-text').textContent = f === 'topup' ? 'Current Tank + Target Mix' : 'Target Mix';
     autoCalc();
@@ -612,7 +612,7 @@
   function updateTopupFields() {
     var showHeTopup = gas === 'trimix' && fill === 'topup';
     var heFields = document.querySelectorAll('.section-topup-he');
-    heFields.forEach(function(el) { el.style.display = showHeTopup ? '' : 'none'; });
+    heFields.forEach(function(el) { el.style.display = showHeTopup ? 'flex' : 'none'; });
   }
 
   /* ── Preset change handler ── */
