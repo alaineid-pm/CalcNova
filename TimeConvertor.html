@@ -1312,7 +1312,7 @@ function renderHorizontal(now) {
     var allWork = true;
     for (var ci = 0; ci < state.cities.length; ci++) {
       var offDiff = getTimezoneOffsetMinutes(state.cities[ci].id) - getTimezoneOffsetMinutes(state.homeCity);
-      var localH = ((oh + Math.round(offDiff / 60)) % 24 + 24) % 24;
+      var localH = ((oh + Math.floor(offDiff / 60)) % 24 + 24) % 24;
       if (localH < 8 || localH >= 20) { allWork = false; break; }
     }
     if (allWork) {
@@ -1360,7 +1360,7 @@ function renderHorizontal(now) {
 
     var offMinRemainder = Math.abs(offDiff) % 60;
     for (var h = 0; h < 24; h++) {
-      var localH = ((h + Math.round(offDiff / 60)) % 24 + 24) % 24;
+      var localH = ((h + Math.floor(offDiff / 60)) % 24 + 24) % 24;
       var block = document.createElement('div');
       block.className = 'hz-hour-block';
       block.style.background = phaseColor(localH);
@@ -1384,7 +1384,7 @@ function renderHorizontal(now) {
     }
 
     // Day boundary
-    var midnightHomeH = ((24 - Math.round(offDiff / 60)) % 24 + 24) % 24;
+    var midnightHomeH = ((24 - Math.floor(offDiff / 60)) % 24 + 24) % 24;
     if (midnightHomeH > 0 && midnightHomeH < 24) {
       var bdry = document.createElement('div');
       bdry.className = 'hz-day-boundary';
@@ -1810,7 +1810,14 @@ function initDelegatedListeners() {
     var offDiff = getTimezoneOffsetMinutes(tz) - getTimezoneOffsetMinutes(state.homeCity);
     var offMinRemainder = Math.abs(offDiff) % 60;
     var tooltipTime = formatHourLabel(localHour, state.clockFormat);
-    if (offMinRemainder > 0) tooltipTime = tooltipTime.replace(':00', ':' + (offMinRemainder < 10 ? '0' : '') + offMinRemainder);
+    if (offMinRemainder > 0) {
+      var minStr = ':' + (offMinRemainder < 10 ? '0' : '') + offMinRemainder;
+      if (state.clockFormat === '24h') {
+        tooltipTime = tooltipTime.replace(':00', minStr);
+      } else {
+        tooltipTime = tooltipTime.replace(/ /, minStr + ' ');
+      }
+    }
     showTooltip(cityLabel + ': ' + tooltipTime, e);
   });
   hzTimelineArea.addEventListener('mouseleave', function() {
