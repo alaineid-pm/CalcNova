@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>The Rule of 72: Estimate Doubling Time | CalcNova</title>
-  <meta name="description" content="The Rule of 72 lets you estimate how long it takes to double your money at any interest rate. Learn the formula, worked examples, when it breaks down, and how to use it for debt and inflation.">
+  <meta name="description" content="The Rule of 72 lets you estimate how long it takes to double your money at any interest rate. Learn the formula, worked examples, when it breaks down, and…">
   <link rel="canonical" href="https://calcnova.co/article-rule-of-72.html">
   <meta property="og:title" content="The Rule of 72: Estimate Doubling Time | CalcNova">
   <meta property="og:description" content="The Rule of 72 lets you estimate how long it takes to double your money at any interest rate. Learn the formula, worked examples, when it breaks down, and how to use it for debt and inflation.">
@@ -63,6 +63,7 @@
     .example-box p { margin-bottom: 10px; }
     .example-box .result { font-family: var(--mono); font-size: 15px; font-weight: 600; color: var(--text-primary); background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 12px 16px; margin-top: 12px; }
     .example-box .result .hl { color: var(--green); font-weight: 700; }
+    .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
     .comparison-table { width: 100%; border-collapse: collapse; font-size: 14px; margin: 12px 0; }
     .comparison-table th { text-align: left; font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: .5px; color: var(--text-muted); padding: 10px 14px; border-bottom: 2px solid var(--border); }
     .comparison-table td { padding: 10px 14px; color: var(--text-secondary); border-bottom: 1px solid var(--border); }
@@ -135,7 +136,7 @@
 
       <section>
         <h2>Rates vs. Doubling Times</h2>
-        <table class="comparison-table">
+        <div class="table-wrap"><table class="comparison-table">
           <thead>
             <tr>
               <th>Annual Rate</th>
@@ -197,6 +198,7 @@
             </tr>
           </tbody>
         </table>
+          </div>
         <p>The Rule of 72 is most accurate around 8%, which happens to be close to long-run stock market returns. It slightly overestimates doubling time at lower rates and slightly underestimates it at higher rates, but the error is never large enough to matter for planning purposes within the 2%–15% range.</p>
       </section>
 

@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Free Invoice Generator — Create & Download Professional Invoices | CalcNova</title>
-  <meta name="description" content="Free online invoice generator. Create professional invoices with line items, taxes, and discounts. Download as PDF or print. No sign-up required — all data stays in your browser." />
+  <title>Free Invoice Generator — Professional Invoices | CalcNova</title>
+  <meta name="description" content="Free online invoice generator. Create professional invoices with line items, taxes, and discounts. Download as PDF or print. No sign-up required — all data…" />
   <link rel="canonical" href="https://calcnova.co/invoice-generator.html" />
-  <meta property="og:title" content="Free Invoice Generator | CalcNova" />
+  <meta property="og:title" content="Free Invoice Generator — Professional Invoices | CalcNova" />
   <meta property="og:description" content="Create professional invoices online. Add line items, taxes, and discounts. Download as PDF or print. 100% free, no account needed." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://calcnova.co/invoice-generator.html" />
@@ -118,6 +118,7 @@
     .inv-bill-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; color: #10b981; margin-bottom: 6px; }
     .inv-bill-name { font-size: 14px; font-weight: 700; color: #1a1a1a; margin-bottom: 2px; }
     .inv-bill-info { font-size: 12px; color: #5a6478; line-height: 1.5; white-space: pre-line; }
+    .inv-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
     .inv-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
     .inv-table th { background: #f0f2f7; text-align: left; padding: 10px 12px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; color: #5a6478; }
     .inv-table td { padding: 10px 12px; font-size: 13px; border-bottom: 1px solid #e2e6ef; color: #1a1a1a; }
@@ -320,7 +321,7 @@
             <div id="prev-client-info" class="inv-bill-info"></div>
           </div>
         </div>
-        <table class="inv-table" id="prev-items-table">
+        <div class="inv-table-wrap"><table class="inv-table" id="prev-items-table">
           <thead><tr><th style="width:45%">Description</th><th class="num">Qty</th><th class="num">Unit Price</th><th class="num">Tax</th><th class="num">Total</th></tr></thead>
           <tbody id="prev-items-body"></tbody>
         </table>
