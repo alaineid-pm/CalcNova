@@ -440,10 +440,10 @@
         + '</div>';
     });
 
-    /* Guides column */
+    /* Guides column — show 8 most recent */
     var artLinks = ARTICLES.slice().sort(function (a, b) {
       return (b.datePublished || '').localeCompare(a.datePublished || '');
-    }).map(function (a) {
+    }).slice(0, 8).map(function (a) {
       return '<li><a href="' + esc(a.url) + '">' + esc(a.name) + '</a></li>';
     }).join('');
 
