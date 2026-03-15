@@ -334,7 +334,7 @@ var CALCNOVA_TOOLS = [
     name:        'Time Converter',
     emoji:       '🌍',
     category:    'productivity',
-    url:         'TimeConvertor.html',
+    url:         'timeconvertor.html',
     description: 'Convert times between any time zones. Find meeting overlaps for remote teams.',
     related:     ['world-clock', 'date-duration', 'pomodoro'],
     badge:       null
