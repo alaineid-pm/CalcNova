@@ -211,12 +211,44 @@ body.dark .cn-dropdown-panel {
 }
 .cn-dd-viewall:hover { color: var(--green); }
 
-/* Multi-column guides dropdown (when > 8 articles) */
-.cn-dropdown-panel.two-col ul {
+/* Guides dropdown: subcategory group containers */
+.cn-dd-subcatgroups {
+  display: block;
+}
+.cn-dd-subcatgroups.two-col {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 0 8px;
+  gap: 4px 8px;
+  min-width: 420px;
 }
+.cn-dd-subcat-group {
+  display: flex;
+  flex-direction: column;
+}
+/* Subcategory section header label */
+.cn-dd-subcat-header {
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .7px;
+  color: var(--text-muted);
+  padding: 10px 10px 3px;
+  pointer-events: none;
+}
+
+/* Subcat header inside dropdown (used by Guides & More) */
+.cn-dd-subcat-header {
+  font-family: var(--mono);
+  font-size: 10px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase;
+  color: var(--text-muted); padding: 10px 10px 4px;
+  list-style: none;
+}
+.cn-dd-cat-link {
+  display: block; color: var(--text-secondary); text-decoration: none;
+  font-family: var(--font); font-size: 12px; font-weight: 700; text-transform: none;
+  letter-spacing: 0;
+}
+.cn-dd-cat-link:hover { color: var(--green); }
 
 /* ── NAV ACTIONS (right side) ──────────────────────────────── */
 .cn-nav-actions {
@@ -313,20 +345,19 @@ body.dark .cn-search-expanded {
 }
 .icon-btn:hover { background: var(--bg); color: var(--text-primary); }
 
-/* Ko-fi button */
+/* Ko-fi button — muted icon, matches other nav icons */
 .cn-kofi-btn {
-  display: inline-flex; align-items: center; gap: 5px;
-  height: 32px; border-radius: 100px;
-  padding: 0 12px;
-  background: linear-gradient(135deg, #ff5e5b, #ff3f81);
-  color: #fff; text-decoration: none;
-  font-size: 12px; font-weight: 700;
-  white-space: nowrap;
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 36px; height: 36px; border-radius: 8px;
+  padding: 0;
+  background: none;
+  color: var(--text-secondary); text-decoration: none;
   transition: all .15s;
-  box-shadow: 0 2px 8px rgba(232,93,4,.3);
+  flex-shrink: 0;
+  cursor: pointer;
 }
-.cn-kofi-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(255,63,129,.4); }
-.cn-kofi-btn svg { width: 14px; height: 14px; flex-shrink: 0; }
+.cn-kofi-btn:hover { background: var(--bg); color: #ff3f81; }
+.cn-kofi-btn svg { width: 18px; height: 18px; flex-shrink: 0; }
 
 /* GitHub link — hidden */
 .cn-github-link { display: none !important; }

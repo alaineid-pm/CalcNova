@@ -85,8 +85,8 @@
   function buildNav() {
     var dropdowns = '';
 
-    /* Tool category dropdowns */
-    CATEGORIES.filter(function (c) { return c.id !== 'guides'; }).forEach(function (cat) {
+    /* Tool category dropdowns (non-specialty, non-guides) */
+    CATEGORIES.filter(function (c) { return c.id !== 'guides' && !c.specialty; }).forEach(function (cat) {
       var tools = TOOLS.filter(function (t) { return t.category === cat.id; });
       if (!tools.length) return;
 
@@ -115,6 +115,41 @@
         + '</div>';
     });
 
+    /* "More ▾" dropdown for specialty categories */
+    var specialtyCats = CATEGORIES.filter(function (c) { return c.specialty; });
+    if (specialtyCats.length) {
+      var isMoreActive = currentTool && specialtyCats.some(function (c) { return c.id === currentTool.category; });
+      var moreItems = '';
+      specialtyCats.forEach(function (cat) {
+        var tools = TOOLS.filter(function (t) { return t.category === cat.id; });
+        if (!tools.length) return;
+        var landingUrl = cat.landingUrl || ('index.html#' + cat.id);
+        moreItems += '<li class="cn-dd-subcat-header">'
+          + '<a href="' + esc(landingUrl) + '" class="cn-dd-cat-link">'
+          + cat.emoji + ' ' + esc(cat.name) + ' (' + tools.length + ' tools)'
+          + '</a></li>';
+        tools.forEach(function (tool) {
+          var isCurrent = tool.id === currentId;
+          moreItems += '<li>'
+            + '<a href="' + esc(tool.url) + '" class="cn-dd-item' + (isCurrent ? ' current' : '') + '"'
+            + (isCurrent ? ' aria-current="page"' : '')
+            + ' title="' + esc(tool.description) + '">'
+            + '<span class="cn-dd-icon">' + tool.emoji + '</span>'
+            + '<span class="cn-dd-label">' + esc(tool.name) + '</span>'
+            + '</a></li>';
+        });
+      });
+      dropdowns += '<div class="cn-dropdown-wrap align-right" data-cat="more">'
+        + '<button class="cn-dropdown-btn' + (isMoreActive ? ' cat-active' : '') + '" type="button" aria-haspopup="true" aria-expanded="false">'
+        + '<span>More</span>'
+        + SVG_CHEVRON
+        + '</button>'
+        + '<div class="cn-dropdown-panel" role="menu">'
+        + '<ul>' + moreItems + '</ul>'
+        + '</div>'
+        + '</div>';
+    }
+
     /* Guides / Articles dropdown */
     var sortedArticles = ARTICLES.slice().sort(function (a, b) {
       return (b.datePublished || '').localeCompare(a.datePublished || '');
@@ -125,29 +160,39 @@
     var useSubcats    = sortedArticles.length > 8;
     var guideItems    = '';
 
+    var guidePanelContent = '';
+
     if (useSubcats) {
+      /* Build subcategory groups: each group is a self-contained div so the
+         CSS grid places whole groups into columns, not individual items. */
       var subcats = {};
+      var subcatOrder = [];
       sortedArticles.forEach(function (a) {
         var sc = a.subcategory || a.category || 'Other';
-        if (!subcats[sc]) subcats[sc] = [];
+        if (!subcats[sc]) { subcats[sc] = []; subcatOrder.push(sc); }
         subcats[sc].push(a);
       });
-      Object.keys(subcats).forEach(function (sc) {
-        guideItems += '<li class="cn-dd-subcat-header">' + esc(sc) + '</li>';
-        subcats[sc].forEach(function (a) {
-          guideItems += '<li><a href="' + esc(a.url) + '" class="cn-dd-item' + (a.id === currentId ? ' current' : '') + '">'
+      var groupsHtml = '';
+      subcatOrder.forEach(function (sc) {
+        var links = subcats[sc].map(function (a) {
+          return '<a href="' + esc(a.url) + '" class="cn-dd-item' + (a.id === currentId ? ' current' : '') + '">'
             + '<span class="cn-dd-icon">' + a.emoji + '</span>'
             + '<span class="cn-dd-label">' + esc(a.name) + '</span>'
-            + '</a></li>';
-        });
+            + '</a>';
+        }).join('');
+        groupsHtml += '<div class="cn-dd-subcat-group">'
+          + '<div class="cn-dd-subcat-header">' + esc(sc) + '</div>'
+          + links
+          + '</div>';
       });
+      guidePanelContent = '<div class="cn-dd-subcatgroups' + (useMultiCol ? ' two-col' : '') + '">' + groupsHtml + '</div>';
     } else {
-      guideItems = sortedArticles.map(function (a) {
+      guidePanelContent = '<ul>' + sortedArticles.map(function (a) {
         return '<li><a href="' + esc(a.url) + '" class="cn-dd-item' + (a.id === currentId ? ' current' : '') + '">'
           + '<span class="cn-dd-icon">' + a.emoji + '</span>'
           + '<span class="cn-dd-label">' + esc(a.name) + '</span>'
           + '</a></li>';
-      }).join('');
+      }).join('') + '</ul>';
     }
 
     dropdowns += '<div class="cn-dropdown-wrap align-right" data-cat="guides">'
@@ -156,8 +201,8 @@
       + '<span>Guides</span>'
       + SVG_CHEVRON
       + '</button>'
-      + '<div class="cn-dropdown-panel' + (useMultiCol ? ' two-col' : '') + '" role="menu">'
-      + '<ul>' + guideItems + '</ul>'
+      + '<div class="cn-dropdown-panel" role="menu">'
+      + guidePanelContent
       + '<a href="guides.html" class="cn-dd-viewall">View all guides &rarr;</a>'
       + '</div>'
       + '</div>';
@@ -176,11 +221,11 @@
       +   '</div>'
       + '</div>'
       /* Ko-fi */
-      + '<a href="' + esc(SITE_CFG.kofiUrl || 'https://ko-fi.com/calcnova') + '" target="_blank" rel="noopener" class="cn-kofi-btn" title="Support CalcNova on Ko-fi">' + SVG_KOFI + 'Support</a>'
+      + '<a href="' + esc(SITE_CFG.kofiUrl || 'https://ko-fi.com/calcnova') + '" target="_blank" rel="noopener" class="cn-kofi-btn" title="Support CalcNova on Ko-fi" aria-label="Support CalcNova on Ko-fi">' + SVG_KOFI + '</a>'
       /* Dark mode */
-      + '<button class="icon-btn cn-dark-btn" id="darkBtn" type="button" title="Toggle dark mode">🌙</button>'
+      + '<button class="icon-btn cn-dark-btn" id="darkBtn" type="button" title="Toggle dark mode" aria-label="Switch to dark mode">🌙</button>'
       /* Hamburger */
-      + '<button class="cn-hamburger" id="cn-hamburger" type="button" aria-label="Open menu" aria-expanded="false">'
+      + '<button class="cn-hamburger" id="cn-hamburger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="cn-mobile-panel">'
       +   '<span></span><span></span><span></span>'
       + '</button>'
       + '</div>';
@@ -201,7 +246,7 @@
   function buildMobilePanel() {
     var accordions = '';
 
-    /* Tool categories */
+    /* Tool categories (all non-guides, including specialty) */
     CATEGORIES.filter(function (c) { return c.id !== 'guides'; }).forEach(function (cat) {
       var tools = TOOLS.filter(function (t) { return t.category === cat.id; });
       if (!tools.length) return;
@@ -265,7 +310,7 @@
       + '<div class="cn-mp-nav">' + accordions + '</div>'
       + '<div class="cn-mp-footer">'
       +   '<span class="cn-mp-footer-label">Dark mode</span>'
-      +   '<button class="icon-btn cn-dark-btn" id="darkBtn-mobile" type="button" title="Toggle dark mode">🌙</button>'
+      +   '<button class="icon-btn cn-dark-btn" id="darkBtn-mobile" type="button" title="Toggle dark mode" aria-label="Switch to dark mode">🌙</button>'
       + '</div>'
       + '</div>'
       + '<div class="cn-overlay" id="cn-overlay"></div>';
@@ -278,7 +323,10 @@
 
     if (currentTool) {
       var cat = CATEGORIES.find(function (c) { return c.id === currentTool.category; });
-      if (cat) { catName = cat.name; catAnchor = 'index.html#' + cat.id; }
+      if (cat) {
+        catName = cat.name;
+        catAnchor = cat.specialty && cat.landingUrl ? cat.landingUrl : 'index.html#' + cat.id;
+      }
       items = [
         { name: 'Home', url: 'index.html' },
         { name: catName, url: catAnchor },
@@ -315,9 +363,12 @@
     if (currentTool) {
       var cat = CATEGORIES.find(function (c) { return c.id === currentTool.category; });
       var catName = cat ? cat.name : currentTool.category;
+      var catUrl = (cat && cat.specialty && cat.landingUrl)
+        ? baseUrl + '/' + cat.landingUrl
+        : baseUrl + '/#' + currentTool.category;
       items = [
         { pos: 1, name: 'Home',    url: baseUrl + '/' },
-        { pos: 2, name: catName,   url: baseUrl + '/#' + currentTool.category },
+        { pos: 2, name: catName,   url: catUrl },
         { pos: 3, name: currentTool.name, url: baseUrl + '/' + currentTool.url }
       ];
     } else if (currentArticle) {
@@ -389,10 +440,10 @@
         + '</div>';
     });
 
-    /* Guides column */
+    /* Guides column — show 8 most recent */
     var artLinks = ARTICLES.slice().sort(function (a, b) {
       return (b.datePublished || '').localeCompare(a.datePublished || '');
-    }).map(function (a) {
+    }).slice(0, 8).map(function (a) {
       return '<li><a href="' + esc(a.url) + '">' + esc(a.name) + '</a></li>';
     }).join('');
 
@@ -741,6 +792,7 @@
   function updateDarkBtns(isDark) {
     document.querySelectorAll('.cn-dark-btn').forEach(function (btn) {
       btn.textContent = isDark ? '☀️' : '🌙';
+      btn.setAttribute('aria-label', isDark ? 'Switch to light mode' : 'Switch to dark mode');
     });
   }
 
