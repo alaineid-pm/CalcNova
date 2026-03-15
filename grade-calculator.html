@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Grade Calculator — What Do I Need on My Final Exam? | CalcNova</title>
-  <meta name="description" content="Free final exam grade calculator: enter your current grade, exam weight, and target grade to instantly see what score you need. Includes what-if table for all letter grades." />
+  <title>Grade Calculator — What Do I Need on My Final? | CalcNova</title>
+  <meta name="description" content="Free final exam grade calculator: enter your current grade, exam weight, and target grade to instantly see what score you need. Includes what-if table for…" />
   <link rel="canonical" href="https://calcnova.co/grade-calculator.html" />
-  <meta property="og:title" content="Grade Calculator — What Do I Need on My Final Exam? | CalcNova" />
+  <meta property="og:title" content="Grade Calculator — What Do I Need on My Final? | CalcNova" />
   <meta property="og:description" content="Calculate the exact final exam score you need to reach your target grade. Free, instant, no sign-up needed." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://calcnova.co/grade-calculator.html" />
@@ -192,7 +192,8 @@
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: 18px;
-      overflow: hidden;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
       margin-bottom: 16px;
     }
     .table-head-row {
@@ -456,23 +457,23 @@
 
     <h2>Frequently Asked Questions</h2>
     <div class="faq-item">
-      <div class="faq-q" onclick="toggleFaq(this)">How do I calculate what I need on my final exam?</div>
+      <div class="faq-q" role="button" tabindex="0" onclick="toggleFaq(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleFaq(this)}">How do I calculate what I need on my final exam?</div>
       <div class="faq-a">Use the formula: Required Score = (Target − Current × (1 − w)) ÷ w, where w is the exam weight as a decimal. For example, with a 72% current grade, a 25% final exam weight, and a target of 80%: Required = (80 − 72 × 0.75) ÷ 0.25 = (80 − 54) ÷ 0.25 = 26 ÷ 0.25 = 104%. That target is not achievable — the what-if table will show you the highest grade you can realistically earn.</div>
     </div>
     <div class="faq-item">
-      <div class="faq-q" onclick="toggleFaq(this)">What does it mean if I need over 100%?</div>
+      <div class="faq-q" role="button" tabindex="0" onclick="toggleFaq(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleFaq(this)}">What does it mean if I need over 100%?</div>
       <div class="faq-a">It means your target grade is mathematically impossible given your current standing. No exam score can bridge the gap. You should lower your target grade using the what-if table, or speak with your professor about extra credit opportunities or grade curves. This information is most useful when discovered early in the semester, not the week of finals.</div>
     </div>
     <div class="faq-item">
-      <div class="faq-q" onclick="toggleFaq(this)">How does a heavily weighted final affect my grade?</div>
+      <div class="faq-q" role="button" tabindex="0" onclick="toggleFaq(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleFaq(this)}">How does a heavily weighted final affect my grade?</div>
       <div class="faq-a">A heavily weighted final (40–50%) means your final exam performance can dramatically move your course grade in either direction. A student with a 70% course grade and a 50% final can still reach an A with a perfect exam score: Required = (90 − 70 × 0.50) ÷ 0.50 = (90 − 35) ÷ 0.50 = 110% — not possible. But they can reach a B (80%): Required = (80 − 35) ÷ 0.50 = 90%. High-weight finals create high stakes in both directions.</div>
     </div>
     <div class="faq-item">
-      <div class="faq-q" onclick="toggleFaq(this)">What is the difference between a weighted and unweighted GPA?</div>
+      <div class="faq-q" role="button" tabindex="0" onclick="toggleFaq(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleFaq(this)}">What is the difference between a weighted and unweighted GPA?</div>
       <div class="faq-a">An unweighted GPA uses a 4.0 scale where an A is always 4.0, regardless of course difficulty. A weighted GPA gives extra points for Advanced Placement (AP), International Baccalaureate (IB), or honors courses — an A in AP Calculus might be worth 5.0, not 4.0. College admissions offices typically recalculate GPA using their own systems, so the distinction matters mainly for high school class rank calculations.</div>
     </div>
     <div class="faq-item">
-      <div class="faq-q" onclick="toggleFaq(this)">Can I use this calculator for midterms or other exams?</div>
+      <div class="faq-q" role="button" tabindex="0" onclick="toggleFaq(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleFaq(this)}">Can I use this calculator for midterms or other exams?</div>
       <div class="faq-a">Yes. This calculator works for any weighted exam — midterm, quiz, paper, or project — not just final exams. Enter your current grade excluding the component in question, set the weight to that component's weight, and enter your desired course grade. The required score you get is what you need on that specific component.</div>
     </div>
   </div>

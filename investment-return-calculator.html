@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Investment Return Calculator — Compound Growth & Portfolio Projections | CalcNova</title>
+  <title>Investment Return Calculator — Compound Growth | CalcNova</title>
   <meta name="description" content="Calculate investment returns with compound interest, monthly contributions, inflation adjustment, and management fees. Includes year-by-year table and growth chart." />
   <link rel="canonical" href="https://calcnova.co/investment-return-calculator.html" />
-  <meta property="og:title" content="Investment Return Calculator — Compound Growth & Portfolio Projections | CalcNova" />
+  <meta property="og:title" content="Investment Return Calculator — Compound Growth | CalcNova" />
   <meta property="og:description" content="Project investment returns with compound interest, monthly contributions, inflation, and fees. Visual chart and year-by-year breakdown." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://calcnova.co/investment-return-calculator.html" />
@@ -533,6 +533,9 @@ function calculate() {
 
 // Auto-calculate on load with defaults
 document.addEventListener('DOMContentLoaded', () => setTimeout(calculate, 100));
+
+// Redraw chart when dark mode is toggled
+document.addEventListener('calcnova:darkchanged', function() { if (growthChart) calculate(); });
 </script>
 </body>
 </html>

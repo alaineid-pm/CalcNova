@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Pace Calculator — Running Pace, Time & Distance | CalcNova</title>
-  <meta name="description" content="Free running pace calculator. Calculate your pace, finish time, or distance for any race. Includes splits table and supports km, miles, 5K, 10K, half marathon, and marathon." />
+  <meta name="description" content="Free running pace calculator. Calculate your pace, finish time, or distance for any race. Includes splits table and supports km, miles, 5K, 10K, half…" />
   <link rel="canonical" href="https://calcnova.co/pace-calculator.html" />
   <meta property="og:title" content="Pace Calculator — Running Pace, Time & Distance | CalcNova" />
   <meta property="og:description" content="Calculate running pace, finish time, or distance. Supports km, miles, 5K, 10K, half marathon, and marathon with splits table." />
@@ -466,16 +466,18 @@ function distKm(val, unit) {
 
 function fmtPace(secPerKm) {
   if (!secPerKm || !isFinite(secPerKm)) return '—';
-  const m = Math.floor(secPerKm / 60);
-  const s = Math.round(secPerKm % 60);
+  let m = Math.floor(secPerKm / 60);
+  let s = Math.round(secPerKm % 60);
+  if (s === 60) { s = 0; m += 1; }
   return `${m}:${String(s).padStart(2, '0')}`;
 }
 
 function fmtTime(totalSec) {
   if (!totalSec || !isFinite(totalSec)) return '—';
   const h = Math.floor(totalSec / 3600);
-  const m = Math.floor((totalSec % 3600) / 60);
-  const s = Math.round(totalSec % 60);
+  let m = Math.floor((totalSec % 3600) / 60);
+  let s = Math.round(totalSec % 60);
+  if (s === 60) { s = 0; m += 1; }
   if (h > 0) return `${h}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
   return `${m}:${String(s).padStart(2,'0')}`;
 }
