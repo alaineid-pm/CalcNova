@@ -221,7 +221,7 @@
       +   '</div>'
       + '</div>'
       /* Ko-fi */
-      + '<a href="' + esc(SITE_CFG.kofiUrl || 'https://ko-fi.com/calcnova') + '" target="_blank" rel="noopener" class="cn-kofi-btn" title="Support CalcNova on Ko-fi">' + SVG_KOFI + 'Support</a>'
+      + '<a href="' + esc(SITE_CFG.kofiUrl || 'https://ko-fi.com/calcnova') + '" target="_blank" rel="noopener" class="cn-kofi-btn" title="Support CalcNova on Ko-fi" aria-label="Support CalcNova on Ko-fi">' + SVG_KOFI + '</a>'
       /* Dark mode */
       + '<button class="icon-btn cn-dark-btn" id="darkBtn" type="button" title="Toggle dark mode">🌙</button>'
       /* Hamburger */
@@ -440,10 +440,10 @@
         + '</div>';
     });
 
-    /* Guides column */
+    /* Guides column — show 8 most recent */
     var artLinks = ARTICLES.slice().sort(function (a, b) {
       return (b.datePublished || '').localeCompare(a.datePublished || '');
-    }).map(function (a) {
+    }).slice(0, 8).map(function (a) {
       return '<li><a href="' + esc(a.url) + '">' + esc(a.name) + '</a></li>';
     }).join('');
 
