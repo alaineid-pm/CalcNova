@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Rent vs. Buy: How to Decide If You Should Buy a Home | CalcNova</title>
+  <meta name="description" content="Should you rent or buy? Learn the 5% rule, unrecoverable costs, and the math of renting and investing the difference to make a smarter housing decision.">
+  <link rel="canonical" href="https://calcnova.co/article-rent-vs-buy.html">
+  <meta property="og:title" content="Rent vs. Buy: How to Decide If You Should Buy a Home | CalcNova">
+  <meta property="og:description" content="Should you rent or buy? Learn the 5% rule, unrecoverable costs, and the math of renting and investing the difference to make a smarter housing decision.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://calcnova.co/article-rent-vs-buy.html">
+  <meta property="og:site_name" content="CalcNova">
+  <script type="application/ld+json">
+  [{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Rent vs. Buy: How to Decide If You Should Buy a Home",
+    "description": "Should you rent or buy? Learn the 5% rule, unrecoverable costs, and the math of renting and investing the difference to make a smarter housing decision.",
+    "url": "https://calcnova.co/article-rent-vs-buy.html",
+    "datePublished": "2026-03-14",
+    "dateModified": "2026-03-14",
+    "publisher": { "@type": "Organization", "name": "CalcNova", "url": "https://calcnova.co/" },
+    "isPartOf": { "@type": "WebSite", "name": "CalcNova", "url": "https://calcnova.co/" }
+  }]
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="shared/nav.css">
+  <style>
+    .app { position: relative; z-index: 1; max-width: 960px; margin: 0 auto; padding: 0 16px 60px; }
+    .article-hero { padding: 48px 0 36px; border-bottom: 1px solid var(--border); margin-bottom: 40px; max-width: 720px; }
+    .article-badge { display: inline-flex; align-items: center; gap: 6px; background: linear-gradient(135deg, rgba(16,185,129,.1), rgba(99,102,241,.1)); border: 1px solid rgba(16,185,129,.25); border-radius: 100px; padding: 5px 14px; font-size: 11px; font-weight: 700; color: var(--green); letter-spacing: .5px; text-transform: uppercase; margin-bottom: 16px; }
+    .article-hero h1 { font-size: 38px; font-weight: 800; letter-spacing: -.5px; line-height: 1.15; margin-bottom: 14px; }
+    .article-hero h1 span { background: linear-gradient(135deg, var(--green), var(--purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .article-hero .subtitle { font-size: 16px; color: var(--text-secondary); line-height: 1.6; max-width: 600px; }
+    .article-meta { margin-top: 16px; font-size: 12px; color: var(--text-muted); font-weight: 500; display: flex; align-items: center; gap: 12px; }
+    .article-meta .dot { width: 3px; height: 3px; border-radius: 50%; background: var(--text-muted); }
+    .article-body { max-width: 720px; display: flex; flex-direction: column; gap: 28px; }
+    .article-body h2 { font-size: 24px; font-weight: 800; letter-spacing: -.3px; margin-bottom: 12px; color: var(--text-primary); }
+    .article-body h3 { font-size: 18px; font-weight: 700; letter-spacing: -.2px; margin-bottom: 8px; color: var(--text-primary); }
+    .article-body p { font-size: 16px; color: var(--text-secondary); line-height: 1.75; margin-bottom: 14px; }
+    .article-body p:last-child { margin-bottom: 0; }
+    .article-body ul, .article-body ol { padding-left: 0; list-style: none; display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; }
+    .article-body ul li, .article-body ol li { font-size: 16px; color: var(--text-secondary); line-height: 1.7; padding-left: 22px; position: relative; }
+    .article-body ul li::before { content: ''; position: absolute; left: 0; top: 10px; width: 6px; height: 6px; border-radius: 50%; background: linear-gradient(135deg, var(--green), var(--purple)); }
+    .article-body ol { counter-reset: ol-counter; }
+    .article-body ol li { counter-increment: ol-counter; }
+    .article-body ol li::before { content: counter(ol-counter); position: absolute; left: 0; top: 0; font-size: 13px; font-weight: 800; color: var(--green); font-family: var(--mono); }
+    .article-body a { color: var(--green); text-decoration: none; font-weight: 600; }
+    .article-body a:hover { text-decoration: underline; }
+    .article-body strong { color: var(--text-primary); font-weight: 700; }
+    .formula-box { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 24px 28px; text-align: center; }
+    .formula-box .formula { font-family: var(--mono); font-size: 20px; font-weight: 600; color: var(--text-primary); margin-bottom: 16px; letter-spacing: .5px; }
+    .formula-box .formula .hl { color: var(--green); }
+    .formula-box .legend { display: flex; flex-wrap: wrap; gap: 8px 20px; justify-content: center; font-size: 13px; color: var(--text-secondary); }
+    .formula-box .legend code { font-family: var(--mono); font-weight: 600; font-size: 12px; background: var(--bg); border: 1px solid var(--border); border-radius: 4px; padding: 1px 5px; }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 18px; padding: 24px 26px; }
+    .card-label { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .5px; color: var(--green); margin-bottom: 12px; }
+    .card h3 { margin-top: 0; }
+    .card p:last-child { margin-bottom: 0; }
+    .example-box { background: linear-gradient(135deg, rgba(16,185,129,.05), rgba(99,102,241,.03)); border: 1px solid rgba(16,185,129,.18); border-radius: 16px; padding: 24px 26px; }
+    .example-box .example-title { font-size: 14px; font-weight: 800; color: var(--green); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 10px; }
+    .example-box p { margin-bottom: 10px; }
+    .example-box .result { font-family: var(--mono); font-size: 15px; font-weight: 600; color: var(--text-primary); background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 12px 16px; margin-top: 12px; }
+    .example-box .result .hl { color: var(--green); font-weight: 700; }
+    .comparison-table { width: 100%; border-collapse: collapse; font-size: 14px; margin: 12px 0; }
+    .comparison-table th { text-align: left; font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: .5px; color: var(--text-muted); padding: 10px 14px; border-bottom: 2px solid var(--border); }
+    .comparison-table td { padding: 10px 14px; color: var(--text-secondary); border-bottom: 1px solid var(--border); }
+    .comparison-table tr:last-child td { border-bottom: none; }
+    .comparison-table .num { font-family: var(--mono); font-weight: 600; }
+    .comparison-table .hl { color: var(--green); font-weight: 700; }
+    .cta-section { background: linear-gradient(135deg, rgba(16,185,129,.08), rgba(99,102,241,.06)); border: 1px solid rgba(16,185,129,.2); border-radius: 18px; padding: 32px; text-align: center; margin-top: 8px; }
+    .cta-section h2 { font-size: 22px; margin-bottom: 10px; }
+    .cta-section p { max-width: 500px; margin: 0 auto 20px; }
+    .cta-btn { display: inline-flex; align-items: center; gap: 8px; background: linear-gradient(135deg, var(--green), #059669); color: #fff !important; border-radius: 100px; padding: 12px 28px; font-size: 14px; font-weight: 700; text-decoration: none !important; font-family: var(--font); transition: all .15s; box-shadow: 0 4px 14px rgba(16,185,129,.3); }
+    .cta-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(16,185,129,.4); }
+    @media print { body::before, header, .cn-nav, .cn-footer, .ad-slot, .cta-section { display: none !important; } .app { max-width: 100%; padding: 0; } }
+    @media (max-width: 640px) { .article-hero h1 { font-size: 28px; } .formula-box .formula { font-size: 15px; } .comparison-table { font-size: 12px; } .comparison-table th, .comparison-table td { padding: 8px 10px; } }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="article-hero">
+      <div class="article-badge">🏠 Finance Guide</div>
+      <h1>Rent vs. Buy: How to <span>Decide If You Should Buy a Home</span></h1>
+      <p class="subtitle">Buying a home is often called an investment, but that framing can be misleading. Here is the honest math behind renting versus buying so you can make the right call for your situation.</p>
+      <div class="article-meta"><span>7 min read</span><span class="dot"></span><span>Updated March 2026</span></div>
+    </div>
+    <div class="article-body">
+
+      <section>
+        <h2>The Question Everyone Gets Wrong</h2>
+        <p>The conventional wisdom is simple: renting is throwing money away, and buying is building equity. That framing is deeply flawed. Renters are not wasting money any more than someone buying car insurance is wasting money — they are paying for a service (housing) and, crucially, preserving capital that could be deployed elsewhere.</p>
+        <p>The real question is not "rent or buy?" but rather: <strong>what is the true cost of owning this home, and how does that compare to renting an equivalent place while investing the difference?</strong> Answering that question honestly requires understanding which costs are unrecoverable — money you spend and can never get back regardless of which path you choose.</p>
+      </section>
+
+      <section>
+        <h2>Unrecoverable Costs: The Key Concept</h2>
+        <p>Not all housing costs are equal. Some costs build equity or retain value; others vanish the moment you spend them. <strong>Unrecoverable costs</strong> are the ones you cannot get back when you sell or move. They are the true cost of your housing decision.</p>
+        <p>For renters, the unrecoverable cost is almost entirely the monthly rent payment. There is no equity being built, but there is also no maintenance bill, no property tax, and no interest charge hiding in the mortgage statement.</p>
+        <p>For homeowners, the unrecoverable costs are larger and less obvious than most people realize:</p>
+        <ul>
+          <li><strong>Mortgage interest</strong> — the portion of each payment that goes to the bank, not your equity</li>
+          <li><strong>Property taxes</strong> — typically 1–1.5% of the home's value per year, paid every year regardless of whether the house appreciates</li>
+          <li><strong>Maintenance and repairs</strong> — roofs, HVAC systems, appliances, landscaping; budget roughly 1% of value annually</li>
+          <li><strong>Home insurance</strong> — required by lenders and generally 0.5–1% of value per year</li>
+          <li><strong>Transaction costs</strong> — buying and selling a home costs 3–5% each way in agent commissions and closing costs; spread over a short ownership period, this is punishing</li>
+          <li><strong>Opportunity cost of the down payment</strong> — money sitting in home equity cannot be invested elsewhere</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>The 5% Rule</h2>
+        <p>Financial planner Ben Felix at PWL Capital popularized a simple framework for comparing ownership costs to rent. The <strong>5% Rule</strong> states that the total unrecoverable cost of owning a home is approximately 5% of the property's value per year.</p>
+        <div class="formula-box">
+          <div class="formula"><span class="hl">Annual Unrecoverable Cost</span> ≈ 5% × Property Value</div>
+          <div class="legend">
+            <span><code>~1%</code> property tax</span>
+            <span><code>~1%</code> maintenance &amp; insurance</span>
+            <span><code>~3%</code> cost of capital (mortgage interest or opportunity cost)</span>
+          </div>
+        </div>
+        <p>The cost of capital — the 3% component — applies whether you have a mortgage or own the home outright. If you borrowed money, you are paying interest. If you own it free and clear, that capital could otherwise be earning returns in a diversified portfolio. Either way, there is a real cost.</p>
+        <p>The 5% Rule gives you a useful benchmark: divide the annual unrecoverable cost by 12 to get a monthly figure. If you can rent a comparable property for less than that amount, renting is the financially superior choice. If rent exceeds 5% of the purchase price divided by 12, buying starts to look more attractive from a pure cost standpoint.</p>
+
+        <div class="example-box">
+          <div class="example-title">Example — Applying the 5% Rule</div>
+          <p>A home is listed at <strong>$500,000</strong>. Applying the 5% rule:</p>
+          <p>Annual unrecoverable cost = 5% × $500,000 = <strong>$25,000/year</strong>, or roughly <strong>$2,083/month</strong>.</p>
+          <div class="result">
+            If you can rent a comparable home for <span class="hl">less than $2,083/month</span>, renting is cheaper on an unrecoverable-cost basis.<br>
+            If comparable rent is <span class="hl">$2,500+/month</span>, buying becomes more cost-competitive.
+          </div>
+          <p style="margin-top:10px;">In many high-cost cities, rents are well below the 5% threshold, making renting the financially smarter choice even after accounting for equity appreciation.</p>
+        </div>
+      </section>
+
+      <section>
+        <h2>Rent and Invest the Difference</h2>
+        <p>One of the strongest arguments for renting is the ability to invest capital that would otherwise be locked in a down payment and illiquid home equity. A typical 20% down payment on a $500,000 home is $100,000. Invested in a diversified portfolio averaging 7% annual returns, that same $100,000 grows substantially over a decade.</p>
+        <p>Additionally, if your monthly rent is lower than the unrecoverable cost of owning, you can invest that monthly difference as well — a strategy sometimes called "rent and invest the difference." Over long time horizons, the compounding effect of those invested savings can rival or exceed the equity accumulated in a home. For more on how investment compounding works, see our <a href="compound-interest-calculator.html">compound interest calculator</a>.</p>
+        <p>This does not mean renting always wins — it depends on local price-to-rent ratios, your investment discipline, how long you plan to stay, and whether home prices in your market outpace general market returns.</p>
+      </section>
+
+      <section>
+        <h2>Rent vs. Buy Cost Comparison</h2>
+        <table class="comparison-table">
+          <thead>
+            <tr>
+              <th>Cost Category</th>
+              <th>Renter</th>
+              <th>Owner ($500K Home)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Monthly housing payment</td>
+              <td class="num">$1,800 (rent)</td>
+              <td class="num">$2,685 (mortgage P+I)</td>
+            </tr>
+            <tr>
+              <td>Property taxes (annual)</td>
+              <td class="num">$0</td>
+              <td class="num">$5,000–$7,500</td>
+            </tr>
+            <tr>
+              <td>Maintenance &amp; repairs (annual)</td>
+              <td class="num">$0</td>
+              <td class="num">$4,000–$6,000</td>
+            </tr>
+            <tr>
+              <td>Insurance (annual)</td>
+              <td class="num">~$200 (renters)</td>
+              <td class="num">$2,000–$3,000</td>
+            </tr>
+            <tr>
+              <td>Transaction costs (amortized)</td>
+              <td class="num">Low</td>
+              <td class="num">High if &lt;5 year stay</td>
+            </tr>
+            <tr>
+              <td>Opportunity cost of down payment</td>
+              <td class="num hl">$0 (capital invested)</td>
+              <td class="num">$7,000+/year (on $100K)</td>
+            </tr>
+            <tr>
+              <td>Builds equity?</td>
+              <td>No</td>
+              <td class="hl">Yes (slowly at first)</td>
+            </tr>
+          </tbody>
+        </table>
+        <p>Assumptions: $500,000 home, 20% down ($100,000), 6.5% mortgage rate, 30-year term, 1% property tax, 1% maintenance, 7% opportunity cost on invested capital. Rent based on a comparable unit in the same market.</p>
+      </section>
+
+      <section>
+        <h2>When Buying Makes Sense</h2>
+        <p>The math often favors renting in expensive markets and over short time horizons, but there are legitimate reasons to buy — financial and otherwise:</p>
+        <ul>
+          <li><strong>You plan to stay for at least 5–7 years.</strong> Transaction costs are brutal over short periods. The longer you stay, the more those costs get spread out and the more equity you accumulate.</li>
+          <li><strong>Local rent-to-price ratios favor buying.</strong> In some markets, rents are high relative to home prices, making ownership cheaper on a monthly unrecoverable-cost basis.</li>
+          <li><strong>You value stability and control.</strong> Homeownership provides protection from landlord decisions, rent increases, and forced moves. That is a real, if hard to quantify, benefit.</li>
+          <li><strong>You have strong mortgage-paying discipline.</strong> A mortgage forces savings in a way that purely voluntary investment contributions may not, for some people.</li>
+          <li><strong>Your local market has historically strong appreciation.</strong> In supply-constrained cities, home prices can outpace broader market returns, changing the calculus.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>When Renting Makes Sense</h2>
+        <ul>
+          <li><strong>You expect to move within 5 years.</strong> Transaction costs alone can wipe out all price appreciation if you sell too soon.</li>
+          <li><strong>Home prices are very high relative to rents.</strong> A price-to-annual-rent ratio above 20–25× generally signals an expensive market where renting is cheaper.</li>
+          <li><strong>You lack a substantial emergency fund.</strong> Owning a home without financial reserves is genuinely risky — one major repair can cascade into financial stress. Build your <a href="article-emergency-fund.html">emergency fund</a> first.</li>
+          <li><strong>Your income is unstable or you may need to relocate.</strong> Illiquidity is a hidden cost of homeownership; renting keeps your options open.</li>
+          <li><strong>You would be stretching financially to buy.</strong> Being "house poor" — spending so much on housing that you cannot save or invest meaningfully — is a poor trade-off even if the asset eventually appreciates.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>The Emotional Dimension</h2>
+        <p>Personal finance is personal. The numbers matter, but they are not everything. Owning a home brings genuine benefits that do not appear in spreadsheets: the ability to renovate and personalize your space, freedom from landlord interference, a sense of permanence, and roots in a community. For many people, these factors are worth a financial premium.</p>
+        <p>The mistake is not in valuing those things — it is in <em>pretending they are free</em>. Go in with honest numbers, understand what the homeownership premium actually costs you annually, and then decide whether the non-financial benefits justify the difference. That is a decision only you can make.</p>
+      </section>
+
+      <div class="cta-section">
+        <h2>Run the Numbers for Your Situation</h2>
+        <p>Enter your local home price, rent, down payment, and expected stay to see the true cost comparison for your specific market.</p>
+        <a href="rent-vs-buy.html" class="cta-btn">Try our Rent vs. Buy Calculator →</a>
+      </div>
+
+    </div>
+  </div>
+  <script>window.CALCNOVA_PAGE = { id: 'article-rent-vs-buy', disclaimer: 'This article is for educational purposes only and does not constitute financial advice.' };</script>
+  <script src="shared/site-data.js"></script>
+  <script src="shared/nav.js"></script>
+</body>
+</html>

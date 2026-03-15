@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Salary Calculator — Hourly to Annual Pay Converter | CalcNova</title>
+  <meta name="description" content="Convert between annual salary, monthly, biweekly, weekly, daily, and hourly pay. Free salary calculator with tax estimate. No sign-up required.">
+
+  <!-- Canonical -->
+  <link rel="canonical" href="https://calcnova.co/salary-calculator.html">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Salary Calculator — Hourly to Annual Pay Converter | CalcNova">
+  <meta property="og:description" content="Convert between annual salary, monthly, biweekly, weekly, daily, and hourly pay. Free salary calculator with tax estimate.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://calcnova.co/salary-calculator.html">
+  <meta property="og:site_name" content="CalcNova">
+
+  <!-- JSON-LD Structured Data -->
+  <script type="application/ld+json">
+  [
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": "Salary Calculator — Hourly to Annual Pay Converter",
+      "url": "https://calcnova.co/salary-calculator.html",
+      "description": "Convert between annual salary, monthly, biweekly, weekly, daily, and hourly pay with optional tax estimate.",
+      "isPartOf": {
+        "@type": "WebSite",
+        "name": "CalcNova",
+        "url": "https://calcnova.co/"
+      },
+      "breadcrumb": {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://calcnova.co/" },
+          { "@type": "ListItem", "position": 2, "name": "Salary Calculator", "item": "https://calcnova.co/salary-calculator.html" }
+        ]
+      }
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How do I convert an hourly rate to an annual salary?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Multiply your hourly rate by the number of hours you work per week, then multiply that by the number of weeks you work per year. For a standard 40-hour week and 52-week year: hourly × 40 × 52 = annual salary."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I convert an annual salary to an hourly rate?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Divide your annual salary by the number of weeks per year, then divide again by the number of hours per week. For a standard 40-hour, 52-week year: annual ÷ 52 ÷ 40 = hourly rate."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is biweekly pay?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Biweekly pay means you receive a paycheck every two weeks, resulting in 26 paychecks per year. Each biweekly payment equals your annual salary divided by 26."
+          }
+        }
+      ]
+    }
+  ]
+  </script>
+
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="shared/nav.css">
+  <style>
+    /* ── CSS VARIABLES ── */
+    :root {
+      --bg: #f0f2f7;
+      --surface: #ffffff;
+      --border: #e2e6ef;
+      --text-primary: #0f1623;
+      --text-secondary: #5a6478;
+      --text-muted: #9ba3b5;
+      --green: #10b981;
+      --purple: #6366f1;
+      --amber: #f59e0b;
+      --red: #ef4444;
+      --font: 'Plus Jakarta Sans', sans-serif;
+      --mono: 'JetBrains Mono', monospace;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text-primary);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── LAYOUT ── */
+    .app { position: relative; z-index: 1; max-width: 960px; margin: 0 auto; padding: 0 16px 60px; }
+
+    /* ── HERO ── */
+    .hero {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 38px 32px 32px;
+      margin-bottom: 28px;
+    }
+    .hero-title { font-size: 26px; font-weight: 800; letter-spacing: -.5px; margin: 0; padding: 0; }
+    .hero-title span {
+      background: linear-gradient(135deg, var(--green), var(--purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero-desc { font-size: 14px; color: var(--text-secondary); margin-top: 6px; line-height: 1.5; }
+
+    /* ── CARD ── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 22px;
+      margin-bottom: 28px;
+    }
+    .card-title {
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .card-title-dot { width: 6px; height: 6px; border-radius: 50%; }
+
+    /* ── FORM ── */
+    .form-group { margin-bottom: 14px; }
+    .form-label { font-size: 12px; font-weight: 600; color: var(--text-secondary); margin-bottom: 6px; display: block; }
+
+    .input-wrap { position: relative; }
+    .input-prefix {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      left: 12px;
+      font-family: var(--mono);
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-muted);
+      pointer-events: none;
+    }
+    .input-suffix {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      right: 12px;
+      font-family: var(--mono);
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-muted);
+      pointer-events: none;
+    }
+    .has-prefix input { padding-left: 26px; }
+    .has-suffix input { padding-right: 32px; }
+
+    input[type="number"], select {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text-primary);
+      font-family: var(--font);
+      font-size: 14px;
+      font-weight: 600;
+      padding: 9px 12px;
+      outline: none;
+      transition: border-color .2s, box-shadow .2s;
+      box-sizing: border-box;
+    }
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+    input[type="number"] { -moz-appearance: textfield; }
+    input[type="number"]:focus, select:focus {
+      border-color: var(--green);
+      box-shadow: 0 0 0 3px rgba(16,185,129,.12);
+    }
+    input.input-error { border-color: var(--red); }
+    input.input-error:focus { border-color: var(--red); box-shadow: 0 0 0 3px rgba(239,68,68,.12); }
+
+    select {
+      -webkit-appearance: none;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239ba3b5' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      padding-right: 32px;
+      cursor: pointer;
+    }
+
+    .input-row { display: flex; gap: 12px; }
+    .input-row .form-group { flex: 1; }
+
+    .error-msg {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--red);
+      margin-top: 4px;
+      display: none;
+    }
+    .error-msg.show { display: block; }
+
+    /* ── ACTION BUTTONS ── */
+    .action-row { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+    .action-btn {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 10px 18px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-family: var(--font);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all .15s;
+    }
+    .action-btn:hover { border-color: var(--green); color: var(--green); }
+    .action-btn svg { flex-shrink: 0; }
+
+    /* ── ANNUAL SUMMARY ── */
+    .annual-summary {
+      background: linear-gradient(135deg, rgba(16,185,129,.07), rgba(99,102,241,.07));
+      border: 1px solid rgba(16,185,129,.25);
+      border-radius: 16px;
+      padding: 24px 28px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .annual-summary-label {
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+    .annual-summary-value {
+      font-family: var(--mono);
+      font-size: 38px;
+      font-weight: 700;
+      color: var(--green);
+      letter-spacing: -1px;
+      line-height: 1;
+    }
+    .annual-summary-net {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin-top: 6px;
+    }
+    .annual-summary-net strong { color: var(--purple); }
+    .annual-summary-right {
+      text-align: right;
+    }
+    .annual-summary-hourly-label {
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+    .annual-summary-hourly-value {
+      font-family: var(--mono);
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -.5px;
+    }
+
+    /* ── CONVERSION TABLE ── */
+    .pay-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+    .pay-table thead th {
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      padding: 0 14px 12px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    .pay-table thead th:not(:first-child) { text-align: right; }
+    .pay-table tbody tr { border-bottom: 1px solid var(--border); transition: background .15s; }
+    .pay-table tbody tr:last-child { border-bottom: none; }
+    .pay-table tbody tr:hover { background: var(--bg); }
+    .pay-table tbody tr.active-row {
+      background: linear-gradient(90deg, rgba(16,185,129,.06), rgba(99,102,241,.04));
+    }
+    .pay-table tbody tr.active-row .period-cell { color: var(--green); }
+    .pay-table td {
+      padding: 13px 14px;
+      vertical-align: middle;
+    }
+    .period-cell {
+      font-weight: 700;
+      font-size: 13px;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .period-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      flex-shrink: 0;
+    }
+    .gross-cell {
+      font-family: var(--mono);
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-primary);
+      text-align: right;
+    }
+    .net-cell {
+      font-family: var(--mono);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--purple);
+      text-align: right;
+    }
+    .net-cell.hidden-col { color: var(--text-muted); font-weight: 500; font-size: 12px; }
+
+    /* ── WEEKS NOTE ── */
+    .weeks-note {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      background: rgba(245,158,11,.08);
+      border: 1px solid rgba(245,158,11,.25);
+      border-radius: 10px;
+      margin-top: 16px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--amber);
+    }
+    .weeks-note.hidden { display: none; }
+
+    /* ── TAX TOGGLE ── */
+    .tax-toggle-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 9px 16px;
+      font-family: var(--font);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all .15s;
+      margin-bottom: 18px;
+      width: 100%;
+      justify-content: space-between;
+    }
+    .tax-toggle-btn:hover { border-color: var(--amber); color: var(--amber); }
+    .tax-toggle-btn.active { border-color: var(--amber); color: var(--amber); background: rgba(245,158,11,.06); }
+    .tax-chevron { transition: transform .2s; }
+    .tax-toggle-btn.active .tax-chevron { transform: rotate(180deg); }
+
+    .tax-section { display: none; }
+    .tax-section.open { display: block; }
+
+    /* ── EMPTY STATE ── */
+    .empty-state {
+      text-align: center;
+      padding: 48px 24px;
+      color: var(--text-muted);
+    }
+    .empty-state-icon { font-size: 40px; margin-bottom: 12px; }
+    .empty-state p { font-size: 14px; font-weight: 600; }
+    .empty-state small { font-size: 12px; margin-top: 4px; display: block; }
+
+    /* ── TOAST ── */
+    #toast {
+      position: fixed;
+      bottom: 28px;
+      right: 24px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 18px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-primary);
+      box-shadow: 0 8px 28px rgba(0,0,0,.12);
+      opacity: 0;
+      transition: opacity .25s;
+      pointer-events: none;
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    #toast.show { opacity: 1; }
+
+    /* ── FAQ SECTION ── */
+    .faq-item { border-bottom: 1px solid var(--border); }
+    .faq-item:last-child { border-bottom: none; }
+    .faq-question {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 0;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-primary);
+      gap: 12px;
+      list-style: none;
+      user-select: none;
+    }
+    .faq-question::-webkit-details-marker { display: none; }
+    .faq-chevron { flex-shrink: 0; color: var(--text-muted); transition: transform .2s; }
+    details[open] .faq-chevron { transform: rotate(180deg); }
+    .faq-answer {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      padding-bottom: 16px;
+    }
+
+    /* ── PRINT ── */
+    @media print {
+      #cn-header, .action-row, #toast, .tax-toggle-btn, .faq-section { display: none !important; }
+      .card { box-shadow: none; border: 1px solid #ddd; }
+    }
+
+    /* ── SEO content ── */
+    .seo-section { background: var(--surface); border: 1px solid var(--border); border-radius: 18px; padding: 28px; margin-top: 40px; }
+    .seo-section h2 { font-size: 18px; font-weight: 800; margin: 0 0 12px; letter-spacing: -.3px; }
+    .seo-section h3 { font-size: 15px; font-weight: 700; margin: 20px 0 8px; color: var(--text-primary); }
+    .seo-section p { font-size: 14px; color: var(--text-secondary); line-height: 1.75; margin: 0 0 10px; }
+    .seo-section ul { padding-left: 18px; margin: 0 0 10px; }
+    .seo-section ul li { font-size: 14px; color: var(--text-secondary); line-height: 1.65; margin-bottom: 5px; }
+    .related-links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
+    .related-links a { display: inline-flex; align-items: center; gap: 6px; background: var(--surface); border: 1px solid var(--border); border-radius: 100px; padding: 6px 14px; font-size: 13px; font-weight: 600; color: var(--text-primary); text-decoration: none; transition: border-color .15s; }
+    .related-links a:hover { border-color: var(--green); color: var(--green); }
+    @media print { .seo-section { display: none !important; } }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 640px) {
+      .hero { padding: 24px 18px; }
+      .card { padding: 16px; }
+      .input-row { flex-direction: column; }
+      .annual-summary { padding: 20px; flex-direction: column; }
+      .annual-summary-right { text-align: left; }
+      .annual-summary-value { font-size: 28px; }
+      .pay-table { font-size: 13px; }
+      .pay-table thead th, .pay-table td { padding: 11px 10px; }
+      .period-icon { display: none; }
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+
+  <!-- HERO -->
+  <div class="hero">
+    <h1 class="hero-title">Salary &amp; <span>Pay Converter</span></h1>
+    <div class="hero-desc">Convert between hourly, daily, weekly, biweekly, monthly, and annual pay — instantly. Add a tax rate to see your take-home pay at every period.</div>
+  </div>
+
+  <!-- ACTION BUTTONS -->
+  <div class="action-row">
+    <button class="action-btn" id="btn-copy" aria-label="Copy results">
+      <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+      Copy
+    </button>
+    <button class="action-btn" id="btn-print" aria-label="Print results">
+      <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+      Print
+    </button>
+    <button class="action-btn" id="btn-reset" aria-label="Reset inputs">
+      <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+      Reset
+    </button>
+  </div>
+
+  <!-- INPUTS CARD -->
+  <div class="card">
+    <div class="card-title">
+      <span class="card-title-dot" style="background:var(--green);"></span>
+      Pay Information
+    </div>
+
+    <div class="input-row">
+      <div class="form-group">
+        <label class="form-label" for="pay-amount">Pay Amount</label>
+        <div class="input-wrap has-prefix">
+          <span class="input-prefix">$</span>
+          <input type="number" id="pay-amount" min="0" step="0.01" placeholder="60000" value="">
+        </div>
+        <div class="error-msg" id="err-amount">Please enter a positive pay amount.</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="pay-period">Pay Period</label>
+        <select id="pay-period">
+          <option value="annual">Annual</option>
+          <option value="monthly">Monthly</option>
+          <option value="biweekly">Biweekly</option>
+          <option value="weekly">Weekly</option>
+          <option value="daily">Daily</option>
+          <option value="hourly">Hourly</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="input-row">
+      <div class="form-group">
+        <label class="form-label" for="hours-per-week">Hours per Week</label>
+        <div class="input-wrap has-suffix">
+          <input type="number" id="hours-per-week" min="1" max="168" step="0.5" placeholder="40" value="40">
+          <span class="input-suffix">hrs</span>
+        </div>
+        <div class="error-msg" id="err-hours">Must be between 1 and 168 hours.</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="weeks-per-year">Weeks per Year</label>
+        <div class="input-wrap has-suffix">
+          <input type="number" id="weeks-per-year" min="1" max="52" step="1" placeholder="52" value="52">
+          <span class="input-suffix">wks</span>
+        </div>
+        <div class="error-msg" id="err-weeks">Must be between 1 and 52 weeks.</div>
+      </div>
+    </div>
+
+    <!-- Tax Toggle -->
+    <button class="tax-toggle-btn" id="tax-toggle" type="button">
+      <span style="display:flex;align-items:center;gap:8px;">
+        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 7H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+        Add Tax Estimate (optional)
+      </span>
+      <svg class="tax-chevron" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+    </button>
+
+    <div class="tax-section" id="tax-section">
+      <div class="form-group">
+        <label class="form-label" for="tax-rate">Marginal Tax Rate (%)</label>
+        <div class="input-wrap has-suffix">
+          <input type="number" id="tax-rate" min="0" max="100" step="0.1" placeholder="25">
+          <span class="input-suffix">%</span>
+        </div>
+        <div class="error-msg" id="err-tax">Must be between 0% and 100%.</div>
+      </div>
+      <div style="font-size:12px;color:var(--text-muted);margin-top:-6px;margin-bottom:12px;line-height:1.5;">
+        Enter your effective or marginal tax rate for a simplified after-tax estimate. Actual taxes depend on your deductions, filing status, and location.
+      </div>
+    </div>
+  </div>
+
+  <!-- ANNUAL SUMMARY -->
+  <div class="annual-summary" id="annual-summary" style="display:none;">
+    <div>
+      <div class="annual-summary-label">Annual Gross Salary</div>
+      <div class="annual-summary-value" id="sum-annual">—</div>
+      <div class="annual-summary-net" id="sum-annual-net" style="display:none;">
+        After tax: <strong id="sum-annual-net-val">—</strong>
+      </div>
+    </div>
+    <div class="annual-summary-right">
+      <div class="annual-summary-hourly-label">Hourly Rate</div>
+      <div class="annual-summary-hourly-value" id="sum-hourly">—</div>
+    </div>
+  </div>
+
+  <!-- RESULTS TABLE CARD -->
+  <div class="card" id="results-card">
+    <div class="card-title">
+      <span class="card-title-dot" style="background:var(--purple);"></span>
+      Pay Breakdown
+    </div>
+
+    <!-- Empty state -->
+    <div class="empty-state" id="empty-state">
+      <div class="empty-state-icon">💼</div>
+      <p>Enter a pay amount above to see your breakdown</p>
+      <small>All periods will update instantly as you type</small>
+    </div>
+
+    <!-- Table -->
+    <div id="table-wrap" style="display:none; overflow-x:auto;">
+      <table class="pay-table" id="pay-table">
+        <thead>
+          <tr>
+            <th>Period</th>
+            <th id="th-gross">Gross</th>
+            <th id="th-net">Net (After Tax)</th>
+          </tr>
+        </thead>
+        <tbody id="pay-tbody">
+          <!-- rows injected by JS -->
+        </tbody>
+      </table>
+
+      <div class="weeks-note" id="weeks-note" style="display:none;">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <span id="weeks-note-text"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- FAQ CARD -->
+  <div class="card faq-section">
+    <div class="card-title">
+      <span class="card-title-dot" style="background:var(--amber);"></span>
+      Frequently Asked Questions
+    </div>
+
+    <details class="faq-item">
+      <summary class="faq-question">
+        How is the annual salary calculated from an hourly rate?
+        <svg class="faq-chevron" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </summary>
+      <div class="faq-answer">
+        Annual salary = hourly rate × hours per week × weeks per year. For a standard 40-hour, 52-week schedule: $28.85/hr × 40 × 52 = $60,000. Change the hours or weeks fields above to match your actual schedule.
+      </div>
+    </details>
+
+    <details class="faq-item">
+      <summary class="faq-question">
+        What is the difference between biweekly and semimonthly pay?
+        <svg class="faq-chevron" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </summary>
+      <div class="faq-answer">
+        Biweekly pay means you are paid every two weeks — 26 times per year. Semimonthly pay means you are paid twice a month — 24 times per year. This calculator uses biweekly (26 payments), which is the more common payroll frequency in the US.
+      </div>
+    </details>
+
+    <details class="faq-item">
+      <summary class="faq-question">
+        How is the daily pay rate calculated?
+        <svg class="faq-chevron" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </summary>
+      <div class="faq-answer">
+        Daily rate = hourly rate × (hours per week ÷ 5). This assumes a 5-day work week. For a standard 8-hour day: $28.85/hr × 8 = $230.77/day. If you work a compressed schedule (e.g., 4×10), adjust your hours per week accordingly.
+      </div>
+    </details>
+
+    <details class="faq-item">
+      <summary class="faq-question">
+        Is the tax estimate accurate?
+        <svg class="faq-chevron" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </summary>
+      <div class="faq-answer">
+        The tax estimate is a simplified calculation — it multiplies your gross pay by your entered tax rate and subtracts the result. Real-world taxes depend on your filing status, deductions, credits, FICA taxes, state/local taxes, and more. For accurate tax planning, consult a tax professional or use a dedicated tax calculator.
+      </div>
+    </details>
+
+    <details class="faq-item">
+      <summary class="faq-question">
+        What does "weeks per year" mean and why would I change it?
+        <svg class="faq-chevron" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </summary>
+      <div class="faq-answer">
+        By default, a full year is 52 weeks. If you take unpaid time off — for example, 2 weeks of unpaid leave — you would set weeks per year to 50. This affects the annual total for hourly workers who are only paid when they work. Salaried employees typically receive the same annual amount regardless of time off.
+      </div>
+    </details>
+  </div>
+
+  <!-- SEO content -->
+  <div class="seo-section">
+    <h2>How to Use the Salary Calculator</h2>
+    <p>Enter your pay amount, select your pay period (hourly, weekly, biweekly, monthly, or annual), and set your hours per week and weeks per year. The calculator instantly converts your pay to every period. Add a tax rate to see take-home estimates.</p>
+
+    <h3>Understanding Pay Periods</h3>
+    <ul>
+      <li><strong>Annual:</strong> Total gross compensation for the year — the number on your offer letter.</li>
+      <li><strong>Monthly:</strong> Annual ÷ 12. Most budgets are built around monthly cash flow.</li>
+      <li><strong>Biweekly:</strong> Annual ÷ 26. The most common US payroll schedule — 26 paychecks per year.</li>
+      <li><strong>Weekly:</strong> Annual ÷ 52. Common for hourly workers paid each Friday.</li>
+      <li><strong>Hourly:</strong> Annual ÷ weeks per year ÷ hours per week. The base unit for hourly employment.</li>
+    </ul>
+
+    <h3>Hourly to Salary Conversion Tips</h3>
+    <ul>
+      <li>A quick rule: multiply your hourly rate by 2,000 (40 hrs × 50 weeks) for an approximate annual salary</li>
+      <li>$15/hr ≈ $31,200/yr | $20/hr ≈ $41,600/yr | $25/hr ≈ $52,000/yr | $50/hr ≈ $104,000/yr</li>
+      <li>For salaried workers, divide annual by 2,080 (40 hrs × 52 weeks) to find the hourly equivalent</li>
+      <li>Adjust weeks per year if you take unpaid leave — e.g., 50 weeks if you take 2 weeks unpaid</li>
+    </ul>
+
+    <h3>Related Calculators</h3>
+    <div class="related-links">
+      <a href="tax-bracket-calculator.html">🧾 Tax Brackets</a>
+      <a href="budget-calculator.html">💰 Budget</a>
+      <a href="inflation-calculator.html">📈 Inflation</a>
+      <a href="percentage-calculator.html">% Percentage</a>
+      <a href="fire-calculator.html">🔥 FIRE Calculator</a>
+    </div>
+  </div>
+
+</div><!-- /.app -->
+
+<div id="toast"><span style="color:var(--green);font-size:15px;">✓</span> <span id="toast-msg">Copied!</span></div>
+
+<script>window.CALCNOVA_PAGE = { id: 'salary-calculator' };</script>
+<script src="shared/site-data.js"></script>
+<script src="shared/nav.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  /* ── DOM REFS ── */
+  var elAmount   = document.getElementById('pay-amount');
+  var elPeriod   = document.getElementById('pay-period');
+  var elHours    = document.getElementById('hours-per-week');
+  var elWeeks    = document.getElementById('weeks-per-year');
+  var elTaxRate  = document.getElementById('tax-rate');
+  var elTaxToggle = document.getElementById('tax-toggle');
+  var elTaxSec   = document.getElementById('tax-section');
+
+  var elSummary     = document.getElementById('annual-summary');
+  var elSumAnnual   = document.getElementById('sum-annual');
+  var elSumHourly   = document.getElementById('sum-hourly');
+  var elSumAnnualNet    = document.getElementById('sum-annual-net');
+  var elSumAnnualNetVal = document.getElementById('sum-annual-net-val');
+
+  var elEmptyState = document.getElementById('empty-state');
+  var elTableWrap  = document.getElementById('table-wrap');
+  var elTbody      = document.getElementById('pay-tbody');
+  var elThNet      = document.getElementById('th-net');
+  var elWeeksNote  = document.getElementById('weeks-note');
+  var elWeeksNoteText = document.getElementById('weeks-note-text');
+
+  var elErrAmount = document.getElementById('err-amount');
+  var elErrHours  = document.getElementById('err-hours');
+  var elErrWeeks  = document.getElementById('err-weeks');
+  var elErrTax    = document.getElementById('err-tax');
+
+  var elBtnCopy  = document.getElementById('btn-copy');
+  var elBtnPrint = document.getElementById('btn-print');
+  var elBtnReset = document.getElementById('btn-reset');
+
+  var elToast    = document.getElementById('toast');
+  var elToastMsg = document.getElementById('toast-msg');
+
+  var toastTimer = null;
+
+  /* ── PERIOD CONFIG ── */
+  var PERIODS = [
+    { key: 'hourly',    label: 'Hourly',    icon: '⏱', bg: 'rgba(16,185,129,.1)',  color: '#10b981' },
+    { key: 'daily',     label: 'Daily',     icon: '📅', bg: 'rgba(99,102,241,.1)', color: '#6366f1' },
+    { key: 'weekly',    label: 'Weekly',    icon: '📆', bg: 'rgba(245,158,11,.1)', color: '#f59e0b' },
+    { key: 'biweekly',  label: 'Biweekly',  icon: '🗓', bg: 'rgba(239,68,68,.1)',  color: '#ef4444' },
+    { key: 'monthly',   label: 'Monthly',   icon: '📊', bg: 'rgba(16,185,129,.1)', color: '#10b981' },
+    { key: 'annual',    label: 'Annual',    icon: '💰', bg: 'rgba(99,102,241,.1)', color: '#6366f1' }
+  ];
+
+  /* ── FORMATTING ── */
+  function fmt(n) {
+    if (!isFinite(n)) return '—';
+    return '$' + n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+
+  /* ── TAX TOGGLE ── */
+  elTaxToggle.addEventListener('click', function () {
+    var isOpen = elTaxSec.classList.contains('open');
+    elTaxSec.classList.toggle('open', !isOpen);
+    elTaxToggle.classList.toggle('active', !isOpen);
+    if (isOpen) {
+      elTaxRate.value = '';
+    }
+    calculate();
+  });
+
+  /* ── CALCULATION ── */
+  function calculate() {
+    clearErrors();
+
+    var rawAmount = parseFloat(elAmount.value);
+    var period    = elPeriod.value;
+    var hours     = parseFloat(elHours.value);
+    var weeks     = parseFloat(elWeeks.value);
+    var taxStr    = elTaxRate.value.trim();
+    var taxRate   = taxStr !== '' ? parseFloat(taxStr) : NaN;
+
+    /* Validate */
+    var valid = true;
+
+    if (isNaN(rawAmount) || rawAmount <= 0) {
+      if (elAmount.value !== '') {
+        showError(elErrAmount, elAmount);
+        valid = false;
+      } else {
+        showEmpty();
+        return;
+      }
+    }
+
+    if (isNaN(hours) || hours < 1 || hours > 168) {
+      showError(elErrHours, elHours);
+      valid = false;
+    }
+
+    if (isNaN(weeks) || weeks < 1 || weeks > 52) {
+      showError(elErrWeeks, elWeeks);
+      valid = false;
+    }
+
+    if (taxStr !== '' && (isNaN(taxRate) || taxRate < 0 || taxRate > 100)) {
+      showError(elErrTax, elTaxRate);
+      valid = false;
+    }
+
+    if (!valid) { showEmpty(); return; }
+
+    /* Convert input to hourly */
+    var hoursPerDay = hours / 5;
+    var hourly;
+
+    switch (period) {
+      case 'annual':    hourly = rawAmount / (weeks * hours);      break;
+      case 'monthly':   hourly = (rawAmount * 12) / (weeks * hours); break;
+      case 'biweekly':  hourly = rawAmount / (hours * 2);           break;
+      case 'weekly':    hourly = rawAmount / hours;                 break;
+      case 'daily':     hourly = rawAmount / hoursPerDay;           break;
+      case 'hourly':    hourly = rawAmount;                         break;
+      default:          hourly = rawAmount / (weeks * hours);
+    }
+
+    /* Derive all periods */
+    var daily    = hourly * hoursPerDay;
+    var weekly   = hourly * hours;
+    var biweekly = weekly * 2;
+    var annual   = weekly * weeks;
+    var monthly  = annual / 12;
+
+    var values = {
+      hourly:   hourly,
+      daily:    daily,
+      weekly:   weekly,
+      biweekly: biweekly,
+      monthly:  monthly,
+      annual:   annual
+    };
+
+    /* Tax */
+    var hasTax = !isNaN(taxRate) && taxStr !== '';
+    var multiplier = hasTax ? (1 - taxRate / 100) : NaN;
+
+    /* ── Update annual summary ── */
+    elSummary.style.display = 'flex';
+    elSumAnnual.textContent = fmt(annual);
+    elSumHourly.textContent = fmt(hourly) + '/hr';
+
+    if (hasTax) {
+      elSumAnnualNet.style.display = 'block';
+      elSumAnnualNetVal.textContent = fmt(annual * multiplier);
+    } else {
+      elSumAnnualNet.style.display = 'none';
+    }
+
+    /* ── Update table ── */
+    elEmptyState.style.display = 'none';
+    elTableWrap.style.display  = 'block';
+
+    /* Net column header */
+    if (hasTax) {
+      elThNet.textContent = 'Net (After Tax)';
+      elThNet.style.color = '';
+    } else {
+      elThNet.textContent = 'Net (After Tax)';
+      elThNet.style.color = 'var(--text-muted)';
+    }
+
+    /* Build rows */
+    var html = '';
+    PERIODS.forEach(function (p) {
+      var isActive = (p.key === period) ? ' active-row' : '';
+      var gross = values[p.key];
+      var netVal = hasTax ? (gross * multiplier) : NaN;
+
+      var netDisplay = hasTax
+        ? '<span class="net-cell">' + fmt(netVal) + '</span>'
+        : '<span class="net-cell hidden-col">—</span>';
+
+      html += '<tr class="' + isActive + '">'
+        + '<td><div class="period-cell">'
+        + '<span class="period-icon" style="background:' + p.bg + ';color:' + p.color + ';">' + p.icon + '</span>'
+        + p.label
+        + '</div></td>'
+        + '<td class="gross-cell">' + fmt(gross) + '</td>'
+        + '<td>' + netDisplay + '</td>'
+        + '</tr>';
+    });
+
+    elTbody.innerHTML = html;
+
+    /* ── Weeks note ── */
+    if (weeks < 52) {
+      var unpaid = 52 - weeks;
+      elWeeksNote.style.display = 'flex';
+      elWeeksNoteText.textContent =
+        'Based on ' + weeks + ' working week' + (weeks !== 1 ? 's' : '') +
+        ' (' + unpaid + ' week' + (unpaid !== 1 ? 's' : '') + ' unpaid time off per year).';
+    } else {
+      elWeeksNote.style.display = 'none';
+    }
+  }
+
+  /* ── VALIDATION HELPERS ── */
+  function clearErrors() {
+    [elErrAmount, elErrHours, elErrWeeks, elErrTax].forEach(function (el) {
+      el.classList.remove('show');
+    });
+    [elAmount, elHours, elWeeks, elTaxRate].forEach(function (el) {
+      el.classList.remove('input-error');
+    });
+  }
+
+  function showError(msgEl, inputEl) {
+    msgEl.classList.add('show');
+    inputEl.classList.add('input-error');
+  }
+
+  function showEmpty() {
+    elSummary.style.display = 'none';
+    elEmptyState.style.display = 'block';
+    elTableWrap.style.display  = 'none';
+    elWeeksNote.style.display  = 'none';
+  }
+
+  /* ── LIVE INPUT LISTENERS ── */
+  [elAmount, elPeriod, elHours, elWeeks, elTaxRate].forEach(function (el) {
+    el.addEventListener('input', calculate);
+    el.addEventListener('change', calculate);
+  });
+
+  /* ── COPY ── */
+  elBtnCopy.addEventListener('click', function () {
+    var rows = elTbody.querySelectorAll('tr');
+    if (!rows.length) { showToast('Nothing to copy yet.'); return; }
+
+    var hasTax = document.getElementById('tax-section').classList.contains('open')
+                  && elTaxRate.value.trim() !== '';
+
+    var lines = ['Period\tGross' + (hasTax ? '\tNet (After Tax)' : '')];
+    rows.forEach(function (row) {
+      var cells = row.querySelectorAll('td');
+      var period = cells[0].textContent.trim();
+      var gross  = cells[1].textContent.trim();
+      var net    = cells[2].textContent.trim();
+      lines.push(period + '\t' + gross + (hasTax ? '\t' + net : ''));
+    });
+
+    var text = 'Salary/Pay Breakdown\n' +
+               '====================\n' +
+               'Annual: ' + elSumAnnual.textContent + '\n' +
+               'Hourly: ' + elSumHourly.textContent + '\n\n' +
+               lines.join('\n');
+
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(function () {
+        showToast('Copied!');
+      }).catch(function () {
+        fallbackCopy(text);
+      });
+    } else {
+      fallbackCopy(text);
+    }
+  });
+
+  function fallbackCopy(text) {
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand('copy'); showToast('Copied!'); }
+    catch (e) { showToast('Copy failed — try manually.'); }
+    document.body.removeChild(ta);
+  }
+
+  /* ── PRINT ── */
+  elBtnPrint.addEventListener('click', function () {
+    window.print();
+  });
+
+  /* ── RESET ── */
+  elBtnReset.addEventListener('click', function () {
+    elAmount.value = '';
+    elPeriod.value = 'annual';
+    elHours.value  = '40';
+    elWeeks.value  = '52';
+    elTaxRate.value = '';
+    elTaxSec.classList.remove('open');
+    elTaxToggle.classList.remove('active');
+    clearErrors();
+    showEmpty();
+  });
+
+  /* ── TOAST ── */
+  function showToast(msg) {
+    elToastMsg.textContent = msg;
+    elToast.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () {
+      elToast.classList.remove('show');
+    }, 2500);
+  }
+
+  /* ── INIT ── */
+  showEmpty();
+
+})();
+</script>
+</body>
+</html>

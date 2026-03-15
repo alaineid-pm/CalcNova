@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Tip Calculator — Split Bills &amp; Calculate Tips | CalcNova</title>
+  <meta name="description" content="Calculate the tip amount, total bill, and per-person share in seconds. Supports any tip percentage and bill splitting among multiple people. Free, no signup.">
+
+  <!-- Canonical -->
+  <link rel="canonical" href="https://calcnova.co/tip-calculator.html">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Tip Calculator — Split Bills &amp; Calculate Tips | CalcNova">
+  <meta property="og:description" content="Calculate tip amount and split the bill among multiple people instantly. Free, no signup required.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://calcnova.co/tip-calculator.html">
+  <meta property="og:site_name" content="CalcNova">
+
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  [
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": "Tip Calculator",
+      "url": "https://calcnova.co/tip-calculator.html",
+      "description": "Calculate tips and split the bill evenly between any number of people.",
+      "applicationCategory": "UtilitiesApplication",
+      "provider": { "@type": "Organization", "name": "CalcNova", "url": "https://calcnova.co" },
+      "offers": { "@type": "Offer", "price": "0" }
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What percentage should you tip at a restaurant?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "In the United States, the standard tip at a sit-down restaurant is 15–20% of the pre-tax bill. A 15% tip is considered the minimum for adequate service, 18% is common for good service, and 20% or more is customary for excellent service. For buffet-style dining or counter service, 10% or a small dollar amount is typical."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How can you calculate a tip quickly in your head?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "An easy mental math trick: to find 10% of the bill, simply move the decimal point one place to the left. For a 20% tip, double that number. For a 15% tip, take the 10% figure and add half of it. For example, on a $48 bill, 10% is $4.80, so a 20% tip is $9.60 and a 15% tip is $4.80 + $2.40 = $7.20."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Should you tip on the pre-tax or post-tax amount?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Tipping etiquette in the US generally considers tipping on the pre-tax subtotal to be correct, since the service is based on the food and drink ordered rather than the tax added by the government. However, tipping on the post-tax total is also widely practiced and results in a slightly larger tip. The difference is usually small, so either approach is acceptable."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How much should you tip at a bar?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "At a bar, the standard practice in the US is to tip $1–2 per drink for simple orders like a beer or a well drink, or 15–20% of the total tab for more complex cocktails or table service. Running a tab and tipping at the end as a percentage is common when ordering multiple rounds. Tipping per drink is more typical when ordering individually at the bar."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do you split a bill evenly between multiple people?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "To split a bill evenly, first add the tip to the total bill to get the grand total, then divide that amount by the number of people. For example, if the bill is $120 and you add an 18% tip ($21.60), the grand total is $141.60. Split between 4 people, each person owes $141.60 ÷ 4 = $35.40. A tip calculator like this one handles the math instantly."
+          }
+        }
+      ]
+    }
+  ]
+  </script>
+
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="shared/nav.css">
+  <style>
+    .app { position: relative; z-index: 1; max-width: 960px; margin: 0 auto; padding: 0 16px 60px; }
+
+    /* Hero */
+    .hero {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 38px 32px 32px;
+      margin-bottom: 28px;
+    }
+    .hero-title { font-size: 26px; font-weight: 800; letter-spacing: -.5px; margin: 0; padding: 0; }
+    .hero-title span {
+      background: linear-gradient(135deg, var(--green), var(--purple));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .hero-desc { font-size: 14px; color: var(--text-secondary); margin-top: 6px; line-height: 1.5; }
+
+    /* Card */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 22px;
+      margin-bottom: 28px;
+    }
+    .card-title {
+      font-family: var(--mono);
+      font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
+      color: var(--text-muted); margin-bottom: 18px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .card-title-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); }
+
+    /* Form */
+    .form-group { margin-bottom: 16px; }
+    .form-group:last-child { margin-bottom: 0; }
+    .form-label { font-size: 12px; font-weight: 600; color: var(--text-secondary); margin-bottom: 6px; display: block; }
+
+    .input-with-prefix {
+      display: flex;
+      align-items: center;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .input-with-prefix:focus-within {
+      border-color: var(--green);
+      box-shadow: 0 0 0 3px rgba(16,185,129,.12);
+    }
+    .input-prefix {
+      font-family: var(--mono);
+      font-size: 14px; font-weight: 700;
+      color: var(--text-muted);
+      padding: 0 4px 0 12px;
+      flex-shrink: 0;
+    }
+    .input-suffix {
+      font-family: var(--mono);
+      font-size: 14px; font-weight: 700;
+      color: var(--text-muted);
+      padding: 0 12px 0 4px;
+      flex-shrink: 0;
+    }
+    .input-with-prefix input[type="number"] {
+      flex: 1;
+      background: transparent;
+      border: none;
+      border-radius: 0;
+      padding: 9px 4px;
+      box-shadow: none !important;
+    }
+    .input-with-prefix input[type="number"]:focus {
+      border-color: transparent;
+      box-shadow: none;
+    }
+
+    input[type="number"] {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text-primary);
+      font-family: var(--font);
+      font-size: 14px;
+      font-weight: 600;
+      padding: 9px 12px;
+      outline: none;
+      transition: border-color .2s, box-shadow .2s;
+      box-sizing: border-box;
+      -moz-appearance: textfield;
+    }
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+    input[type="number"]:focus {
+      border-color: var(--green);
+      box-shadow: 0 0 0 3px rgba(16,185,129,.12);
+    }
+
+    /* Tip quick-select buttons */
+    .tip-btn-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+    .tip-btn {
+      flex: 1;
+      min-width: 52px;
+      background: var(--bg);
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      font-family: var(--font);
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-secondary);
+      padding: 8px 6px;
+      cursor: pointer;
+      transition: all .15s;
+      text-align: center;
+    }
+    .tip-btn:hover { border-color: var(--green); color: var(--green); }
+    .tip-btn.active {
+      background: var(--green);
+      border-color: var(--green);
+      color: #fff;
+      box-shadow: 0 2px 8px rgba(16,185,129,.3);
+    }
+
+    /* Two-column input row */
+    .input-row-2 { display: flex; gap: 14px; }
+    .input-row-2 .form-group { flex: 1; }
+
+    /* Toggle switch */
+    .toggle-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 14px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      cursor: pointer;
+      transition: border-color .2s;
+    }
+    .toggle-row:hover { border-color: var(--green); }
+    .toggle-label-wrap { flex: 1; }
+    .toggle-label-text {
+      font-size: 13px; font-weight: 600; color: var(--text-primary);
+    }
+    .toggle-label-sub {
+      font-size: 11px; color: var(--text-muted); margin-top: 2px;
+    }
+    .toggle-switch {
+      position: relative;
+      width: 40px; height: 22px;
+      flex-shrink: 0;
+    }
+    .toggle-switch input { opacity: 0; width: 0; height: 0; }
+    .toggle-slider {
+      position: absolute;
+      inset: 0;
+      background: var(--border);
+      border-radius: 100px;
+      transition: background .2s;
+      cursor: pointer;
+    }
+    .toggle-slider::before {
+      content: '';
+      position: absolute;
+      left: 3px; top: 3px;
+      width: 16px; height: 16px;
+      border-radius: 50%;
+      background: white;
+      transition: transform .2s;
+      box-shadow: 0 1px 3px rgba(0,0,0,.2);
+    }
+    .toggle-switch input:checked + .toggle-slider { background: var(--green); }
+    .toggle-switch input:checked + .toggle-slider::before { transform: translateX(18px); }
+
+    /* Main result card */
+    .result-card {
+      background: linear-gradient(135deg, rgba(16,185,129,.08), rgba(99,102,241,.08));
+      border: 1.5px solid rgba(16,185,129,.3);
+      border-radius: 20px;
+      padding: 32px 28px 28px;
+      margin-bottom: 28px;
+      position: relative;
+      overflow: hidden;
+    }
+    .result-card::before {
+      content: '';
+      position: absolute; top: -40px; right: -40px;
+      width: 140px; height: 140px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--green), var(--purple));
+      opacity: .07;
+    }
+    .result-card::after {
+      content: '';
+      position: absolute; bottom: -30px; left: -30px;
+      width: 90px; height: 90px;
+      border-radius: 50%;
+      background: var(--purple);
+      opacity: .05;
+    }
+    .result-card.hidden { display: none; }
+
+    .result-main-label {
+      font-family: var(--mono);
+      font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
+      color: var(--text-muted); text-align: center; margin-bottom: 4px;
+    }
+    .result-main-value {
+      font-family: var(--mono); font-size: 52px; font-weight: 800;
+      background: linear-gradient(135deg, var(--green), var(--purple));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+      line-height: 1.1; text-align: center; margin-bottom: 6px;
+    }
+    .result-main-sub {
+      font-size: 13px; color: var(--text-secondary);
+      text-align: center; margin-bottom: 24px;
+    }
+    .result-main-sub .hl { color: var(--green); font-weight: 700; }
+
+    /* Stats grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      position: relative;
+      z-index: 1;
+    }
+    .stat-card {
+      background: rgba(255,255,255,.7);
+      border: 1px solid rgba(255,255,255,.9);
+      border-radius: 12px;
+      padding: 14px 12px;
+      text-align: center;
+    }
+    .stat-label {
+      font-family: var(--mono);
+      font-size: 9px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase;
+      color: var(--text-muted); margin-bottom: 6px;
+    }
+    .stat-value {
+      font-family: var(--mono);
+      font-size: 16px; font-weight: 800;
+      color: var(--text-primary);
+    }
+
+    /* Generous tip note */
+    .generous-note {
+      display: none;
+      margin-top: 14px;
+      text-align: center;
+      font-size: 13px; font-weight: 600;
+      color: var(--amber);
+      background: rgba(245,158,11,.08);
+      border: 1px solid rgba(245,158,11,.25);
+      border-radius: 10px;
+      padding: 8px 14px;
+    }
+    .generous-note.visible { display: block; }
+
+    /* Adjusted tip note */
+    .adjusted-note {
+      display: none;
+      margin-top: 12px;
+      text-align: center;
+      font-size: 12px; color: var(--text-muted);
+      font-family: var(--mono);
+    }
+    .adjusted-note.visible { display: block; }
+    .adjusted-note .hl { color: var(--purple); font-weight: 700; }
+
+    /* Comparison table */
+    .compare-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 22px;
+      margin-bottom: 28px;
+    }
+    .compare-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+    .compare-col {
+      background: var(--bg);
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      padding: 16px 12px;
+      text-align: center;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .compare-col.highlight {
+      border-color: rgba(16,185,129,.4);
+      background: linear-gradient(135deg, rgba(16,185,129,.05), rgba(99,102,241,.05));
+      box-shadow: 0 2px 12px rgba(16,185,129,.1);
+    }
+    .compare-pct {
+      font-family: var(--mono);
+      font-size: 18px; font-weight: 800;
+      color: var(--text-primary); margin-bottom: 10px;
+    }
+    .compare-pct.highlight { color: var(--green); }
+    .compare-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+    .compare-row:last-child { margin-bottom: 0; }
+    .compare-row-label {
+      font-size: 11px; font-weight: 600; color: var(--text-muted);
+    }
+    .compare-row-val {
+      font-family: var(--mono);
+      font-size: 13px; font-weight: 700; color: var(--text-primary);
+    }
+
+    /* Action row */
+    .action-row {
+      display: flex; gap: 10px; margin-bottom: 28px; flex-wrap: wrap;
+    }
+    .action-btn {
+      display: flex; align-items: center; gap: 7px;
+      padding: 10px 18px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-family: var(--font); font-size: 13px; font-weight: 600;
+      color: var(--text-secondary);
+      cursor: pointer; transition: all .15s;
+    }
+    .action-btn:hover {
+      border-color: var(--green); color: var(--green);
+      background: linear-gradient(135deg, rgba(16,185,129,.04), rgba(99,102,241,.04));
+    }
+    .action-btn svg { width: 15px; height: 15px; flex-shrink: 0; }
+
+    /* Toast */
+    #toast {
+      position: fixed; bottom: 28px; right: 24px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 18px;
+      font-size: 13px; font-weight: 600; color: var(--text-primary);
+      box-shadow: 0 8px 28px rgba(0,0,0,.12);
+      opacity: 0; transition: opacity .25s;
+      pointer-events: none; z-index: 9999;
+      display: flex; align-items: center; gap: 8px;
+    }
+    #toast.show { opacity: 1; }
+
+    /* Responsive */
+    @media (max-width: 700px) {
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 560px) {
+      .hero { padding: 24px 18px 20px; }
+      .hero-title { font-size: 21px; }
+      .card { padding: 16px; }
+      .result-main-value { font-size: 38px; }
+      .compare-grid { grid-template-columns: 1fr; }
+      .input-row-2 { flex-direction: column; }
+    }
+    @media (max-width: 400px) {
+      .tip-btn { min-width: 42px; font-size: 12px; }
+    }
+
+    @media print {
+      #cn-header, .action-row, #toast, .tip-btn-row { display: none !important; }
+      .app { padding: 0; max-width: 100%; }
+      .hero { border: none; padding: 12px 0 8px; margin-bottom: 10px; }
+      .card, .result-card, .compare-card { page-break-inside: avoid; }
+      .result-card.hidden { display: block !important; }
+      body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+
+  <div class="hero">
+    <h1 class="hero-title">Tip <span>Calculator</span></h1>
+    <div class="hero-desc">Calculate the tip, total bill, and per-person split in seconds. Adjust tip percentage, number of people, and optionally round up — all updated live.</div>
+  </div>
+
+  <!-- Inputs card -->
+  <div class="card">
+    <div class="card-title"><div class="card-title-dot"></div>Bill Details</div>
+
+    <div class="form-group">
+      <label class="form-label" for="billAmount">Bill Amount</label>
+      <div class="input-with-prefix">
+        <span class="input-prefix" id="currencySymbol">$</span>
+        <input type="number" id="billAmount" placeholder="0.00" min="0" step="0.01">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Tip Percentage</label>
+      <div class="tip-btn-row" id="tipBtnRow">
+        <button class="tip-btn" data-tip="10" type="button">10%</button>
+        <button class="tip-btn active" data-tip="15" type="button">15%</button>
+        <button class="tip-btn" data-tip="18" type="button">18%</button>
+        <button class="tip-btn" data-tip="20" type="button">20%</button>
+        <button class="tip-btn" data-tip="25" type="button">25%</button>
+        <button class="tip-btn" data-tip="custom" type="button">Custom</button>
+      </div>
+      <div class="input-with-prefix">
+        <input type="number" id="tipPct" placeholder="15" min="0" step="0.1" value="15">
+        <span class="input-suffix">%</span>
+      </div>
+    </div>
+
+    <div class="input-row-2">
+      <div class="form-group">
+        <label class="form-label" for="numPeople">Number of People</label>
+        <input type="number" id="numPeople" placeholder="1" min="1" step="1" value="1">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="toggle-row" for="roundUpToggle">
+        <div class="toggle-label-wrap">
+          <div class="toggle-label-text">Round up per person</div>
+          <div class="toggle-label-sub">Rounds each person's share up to the nearest dollar</div>
+        </div>
+        <div class="toggle-switch">
+          <input type="checkbox" id="roundUpToggle">
+          <span class="toggle-slider"></span>
+        </div>
+      </label>
+    </div>
+  </div>
+
+  <!-- Main result card -->
+  <div class="result-card hidden" id="resultCard">
+    <div class="result-main-label">Tip Amount</div>
+    <div class="result-main-value" id="tipAmountVal">—</div>
+    <div class="result-main-sub" id="resultSub"></div>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-label">Total Bill</div>
+        <div class="stat-value" id="statTotalBill">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Per Person Total</div>
+        <div class="stat-value" id="statPerPersonTotal">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Per Person Tip</div>
+        <div class="stat-value" id="statPerPersonTip">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Effective Tip %</div>
+        <div class="stat-value" id="statEffectivePct">—</div>
+      </div>
+    </div>
+
+    <div class="generous-note" id="generousNote">Generous tip! 🎉</div>
+    <div class="adjusted-note" id="adjustedNote"></div>
+  </div>
+
+  <!-- Action row -->
+  <div class="action-row">
+    <button class="action-btn" id="copyBtn" type="button">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+      </svg>
+      Copy Summary
+    </button>
+    <button class="action-btn" id="printBtn" type="button">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="6 9 6 2 18 2 18 9"/>
+        <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
+        <rect x="6" y="14" width="12" height="8"/>
+      </svg>
+      Print Results
+    </button>
+  </div>
+
+  <!-- Quick comparison card -->
+  <div class="compare-card" id="compareCard">
+    <div class="card-title"><div class="card-title-dot" style="background:var(--purple)"></div>Tip Comparison</div>
+    <div class="compare-grid">
+      <div class="compare-col" id="cmp15">
+        <div class="compare-pct">15%</div>
+        <div class="compare-row"><span class="compare-row-label">Tip</span><span class="compare-row-val" id="cmp15tip">—</span></div>
+        <div class="compare-row"><span class="compare-row-label">Total</span><span class="compare-row-val" id="cmp15total">—</span></div>
+      </div>
+      <div class="compare-col" id="cmp18">
+        <div class="compare-pct">18%</div>
+        <div class="compare-row"><span class="compare-row-label">Tip</span><span class="compare-row-val" id="cmp18tip">—</span></div>
+        <div class="compare-row"><span class="compare-row-label">Total</span><span class="compare-row-val" id="cmp18total">—</span></div>
+      </div>
+      <div class="compare-col" id="cmp20">
+        <div class="compare-pct">20%</div>
+        <div class="compare-row"><span class="compare-row-label">Tip</span><span class="compare-row-val" id="cmp20tip">—</span></div>
+        <div class="compare-row"><span class="compare-row-label">Total</span><span class="compare-row-val" id="cmp20total">—</span></div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /.app -->
+
+<div id="toast"><span style="color:var(--green);font-size:15px;">✓</span> <span id="toast-msg">Copied!</span></div>
+
+<script>window.CALCNOVA_PAGE = { id: 'tip-calculator' };</script>
+<script src="shared/site-data.js"></script>
+<script src="shared/nav.js"></script>
+<script>
+(function() {
+  'use strict';
+
+  // ─── Currency symbol from locale ────────────────────────────────────────────
+  var currencySymbol = '$';
+  try {
+    var locale = navigator.language || 'en-US';
+    // Determine currency code from locale region
+    var region = locale.split('-')[1] || 'US';
+    var localeMap = {
+      'GB': '£', 'IE': '€', 'DE': '€', 'FR': '€', 'ES': '€', 'IT': '€',
+      'PT': '€', 'NL': '€', 'BE': '€', 'AT': '€', 'FI': '€', 'GR': '€',
+      'JP': '¥', 'CN': '¥', 'KR': '₩', 'IN': '₹', 'BR': 'R$',
+      'RU': '₽', 'CH': 'Fr', 'SE': 'kr', 'NO': 'kr', 'DK': 'kr',
+      'AU': 'A$', 'CA': 'C$', 'NZ': 'NZ$', 'SG': 'S$', 'HK': 'HK$',
+      'MX': '$', 'ZA': 'R', 'TH': '฿', 'PL': 'zł', 'CZ': 'Kč',
+    };
+    currencySymbol = localeMap[region] || '$';
+  } catch (e) { /* fallback to $ */ }
+  document.getElementById('currencySymbol').textContent = currencySymbol;
+
+  // ─── State ────────────────────────────────────────────────────────────────
+  var activeTip = 15; // numeric value currently selected
+  var lastCalc = null;
+
+  // ─── DOM ─────────────────────────────────────────────────────────────────
+  var billInput    = document.getElementById('billAmount');
+  var tipInput     = document.getElementById('tipPct');
+  var peopleInput  = document.getElementById('numPeople');
+  var roundToggle  = document.getElementById('roundUpToggle');
+  var resultCard   = document.getElementById('resultCard');
+  var tipAmountVal = document.getElementById('tipAmountVal');
+  var resultSub    = document.getElementById('resultSub');
+  var statTotal    = document.getElementById('statTotalBill');
+  var statPerTotal = document.getElementById('statPerPersonTotal');
+  var statPerTip   = document.getElementById('statPerPersonTip');
+  var statEff      = document.getElementById('statEffectivePct');
+  var generousNote = document.getElementById('generousNote');
+  var adjustedNote = document.getElementById('adjustedNote');
+
+  // ─── Formatting ──────────────────────────────────────────────────────────
+  function fmtCurrency(n) {
+    if (!isFinite(n)) return currencySymbol + '—';
+    return currencySymbol + n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  }
+
+  function fmtPct(n, decimals) {
+    decimals = decimals === undefined ? 1 : decimals;
+    return n.toFixed(decimals) + '%';
+  }
+
+  // ─── Tip quick-select buttons ─────────────────────────────────────────────
+  var tipBtns = document.querySelectorAll('.tip-btn');
+
+  tipBtns.forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      tipBtns.forEach(function(b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+      var tipVal = btn.dataset.tip;
+      if (tipVal === 'custom') {
+        tipInput.focus();
+        tipInput.select();
+      } else {
+        activeTip = parseFloat(tipVal);
+        tipInput.value = activeTip;
+        calculate();
+      }
+    });
+  });
+
+  // Sync tip input → active button state
+  tipInput.addEventListener('input', function() {
+    var val = parseFloat(tipInput.value);
+    var matched = false;
+    tipBtns.forEach(function(btn) {
+      btn.classList.remove('active');
+      if (btn.dataset.tip !== 'custom' && parseFloat(btn.dataset.tip) === val) {
+        btn.classList.add('active');
+        matched = true;
+      }
+    });
+    if (!matched) {
+      // Activate the Custom button
+      tipBtns.forEach(function(btn) {
+        if (btn.dataset.tip === 'custom') btn.classList.add('active');
+      });
+    }
+    activeTip = isNaN(val) ? 0 : val;
+    calculate();
+  });
+
+  // ─── Highlight comparison column matching current tip% ───────────────────
+  function updateCompareHighlight(tipPct) {
+    ['cmp15','cmp18','cmp20'].forEach(function(id) {
+      document.getElementById(id).classList.remove('highlight');
+      document.getElementById(id).querySelector('.compare-pct').classList.remove('highlight');
+    });
+    if (tipPct === 15) {
+      document.getElementById('cmp15').classList.add('highlight');
+      document.getElementById('cmp15').querySelector('.compare-pct').classList.add('highlight');
+    } else if (tipPct === 18) {
+      document.getElementById('cmp18').classList.add('highlight');
+      document.getElementById('cmp18').querySelector('.compare-pct').classList.add('highlight');
+    } else if (tipPct === 20) {
+      document.getElementById('cmp20').classList.add('highlight');
+      document.getElementById('cmp20').querySelector('.compare-pct').classList.add('highlight');
+    }
+  }
+
+  // ─── Main calculation ─────────────────────────────────────────────────────
+  function calculate() {
+    var bill   = parseFloat(billInput.value);
+    var tipPct = parseFloat(tipInput.value);
+    var people = parseInt(peopleInput.value, 10);
+    var roundUp = roundToggle.checked;
+
+    // Guard — need a valid bill at minimum
+    if (!isFinite(bill) || bill < 0 || isNaN(bill)) {
+      resultCard.classList.add('hidden');
+      updateComparison(NaN);
+      lastCalc = null;
+      return;
+    }
+    if (isNaN(tipPct) || tipPct < 0) tipPct = 0;
+    if (isNaN(people) || people < 1) people = 1;
+
+    // Core calculations
+    var tipAmount    = bill * (tipPct / 100);
+    var totalBill    = bill + tipAmount;
+    var perPersonTotal = totalBill / people;
+    var perPersonTip   = tipAmount / people;
+
+    // Round-up logic
+    var adjTipAmount   = tipAmount;
+    var adjTotal       = totalBill;
+    var adjPerTotal    = perPersonTotal;
+    var adjPerTip      = perPersonTip;
+    var adjTipPct      = tipPct;
+
+    if (roundUp && people > 0) {
+      adjPerTotal  = Math.ceil(perPersonTotal);
+      adjTotal     = adjPerTotal * people;
+      adjTipAmount = adjTotal - bill;
+      adjPerTip    = adjTipAmount / people;
+      adjTipPct    = bill > 0 ? (adjTipAmount / bill) * 100 : 0;
+    }
+
+    // Effective tip pct to display
+    var displayTipPct = roundUp ? adjTipPct : tipPct;
+
+    // Update main result
+    resultCard.classList.remove('hidden');
+    tipAmountVal.textContent = fmtCurrency(roundUp ? adjTipAmount : tipAmount);
+
+    var subText = 'on a ' + fmtCurrency(bill) + ' bill';
+    if (people > 1) {
+      subText += ' · ' + people + ' people';
+    }
+    resultSub.textContent = subText;
+
+    statTotal.textContent    = fmtCurrency(roundUp ? adjTotal : totalBill);
+    statPerTotal.textContent = fmtCurrency(roundUp ? adjPerTotal : perPersonTotal);
+    statPerTip.textContent   = fmtCurrency(roundUp ? adjPerTip : perPersonTip);
+    statEff.textContent      = isFinite(displayTipPct) ? fmtPct(displayTipPct, 1) : '—';
+
+    // Generous tip note
+    if (tipPct > 100) {
+      generousNote.classList.add('visible');
+    } else {
+      generousNote.classList.remove('visible');
+    }
+
+    // Adjusted tip% note for round-up
+    if (roundUp && bill > 0 && adjTipPct !== tipPct) {
+      adjustedNote.innerHTML = 'Rounded up: effective tip is <span class="hl">' + fmtPct(adjTipPct, 2) + '</span> (vs. ' + fmtPct(tipPct, 1) + ' entered)';
+      adjustedNote.classList.add('visible');
+    } else {
+      adjustedNote.classList.remove('visible');
+    }
+
+    // Comparison columns
+    updateComparison(bill);
+    updateCompareHighlight(tipPct);
+
+    // Store for copy
+    lastCalc = {
+      bill: bill,
+      tipPct: tipPct,
+      people: people,
+      roundUp: roundUp,
+      tipAmount: roundUp ? adjTipAmount : tipAmount,
+      totalBill: roundUp ? adjTotal : totalBill,
+      perPersonTotal: roundUp ? adjPerTotal : perPersonTotal,
+      perPersonTip: roundUp ? adjPerTip : perPersonTip,
+      effectiveTipPct: displayTipPct,
+    };
+  }
+
+  // ─── Comparison grid ──────────────────────────────────────────────────────
+  function updateComparison(bill) {
+    var pcts = [
+      { pct: 15, tipEl: document.getElementById('cmp15tip'), totalEl: document.getElementById('cmp15total') },
+      { pct: 18, tipEl: document.getElementById('cmp18tip'), totalEl: document.getElementById('cmp18total') },
+      { pct: 20, tipEl: document.getElementById('cmp20tip'), totalEl: document.getElementById('cmp20total') },
+    ];
+
+    pcts.forEach(function(row) {
+      if (!isFinite(bill) || isNaN(bill)) {
+        row.tipEl.textContent   = '—';
+        row.totalEl.textContent = '—';
+      } else {
+        var tip   = bill * (row.pct / 100);
+        var total = bill + tip;
+        row.tipEl.textContent   = fmtCurrency(tip);
+        row.totalEl.textContent = fmtCurrency(total);
+      }
+    });
+  }
+
+  // ─── Live updates ─────────────────────────────────────────────────────────
+  [billInput, peopleInput].forEach(function(el) {
+    el.addEventListener('input', calculate);
+  });
+  roundToggle.addEventListener('change', calculate);
+
+  // ─── Copy summary ─────────────────────────────────────────────────────────
+  document.getElementById('copyBtn').addEventListener('click', function() {
+    if (!lastCalc) {
+      showToast('Enter a bill amount first');
+      return;
+    }
+    var r = lastCalc;
+    var lines = [
+      'CalcNova — Tip Calculator',
+      '─────────────────────────',
+      'Bill Amount:      ' + fmtCurrency(r.bill),
+      'Tip Percentage:   ' + fmtPct(r.tipPct, 1),
+      'Number of People: ' + r.people,
+      '─────────────────────────',
+      'Tip Amount:       ' + fmtCurrency(r.tipAmount),
+      'Total Bill:       ' + fmtCurrency(r.totalBill),
+      'Per Person Total: ' + fmtCurrency(r.perPersonTotal),
+      'Per Person Tip:   ' + fmtCurrency(r.perPersonTip),
+    ];
+    if (r.roundUp) {
+      lines.push('Effective Tip %:  ' + fmtPct(r.effectiveTipPct, 2) + ' (rounded up)');
+    }
+    lines.push('─────────────────────────');
+    lines.push('calcnova.com');
+
+    navigator.clipboard.writeText(lines.join('\n'))
+      .then(function() { showToast('Summary copied!'); })
+      .catch(function() { showToast('Copy failed — try again'); });
+  });
+
+  // ─── Print ────────────────────────────────────────────────────────────────
+  document.getElementById('printBtn').addEventListener('click', function() {
+    window.print();
+  });
+
+  // ─── Toast ───────────────────────────────────────────────────────────────
+  var toastTimer;
+  function showToast(msg) {
+    var toast = document.getElementById('toast');
+    document.getElementById('toast-msg').textContent = msg;
+    toast.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function() {
+      toast.classList.remove('show');
+    }, 2400);
+  }
+
+  // ─── Initial render ───────────────────────────────────────────────────────
+  updateComparison(NaN);
+
+})();
+</script>
+</body>
+</html>

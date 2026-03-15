@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Currency Converter | CalcNova</title>
+  <meta name="description" content="Convert currencies with live exchange rates from the European Central Bank. See real-time rates for USD, EUR, GBP, JPY, CAD, AUD and 25 more currencies." />
+  <link rel="canonical" href="https://calcnova.co/currency-converter.html" />
+  <meta property="og:title" content="Currency Converter | CalcNova" /><meta property="og:description" content="Convert between 30 major currencies with live rates from the European Central Bank. Free, fast, and accurate." /><meta property="og:type" content="website" /><meta property="og:url" content="https://calcnova.co/currency-converter.html" /><meta property="og:site_name" content="CalcNova" />
+  <script type="application/ld+json">[{"@context":"https://schema.org","@type":"WebPage","name":"Currency Converter","url":"https://calcnova.co/currency-converter.html","description":"Convert between 30 major currencies using live exchange rates sourced from the European Central Bank via the Frankfurter API.","applicationCategory":"UtilityApplication","operatingSystem":"Any","isPartOf":{"@type":"WebSite","name":"CalcNova","url":"https://calcnova.co/"}},{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How current are the exchange rates?","acceptedAnswer":{"@type":"Answer","text":"Rates are sourced from the European Central Bank via the Frankfurter API. The ECB publishes rates once per business day at approximately 16:00 CET. Rates are cached in your browser for your session to avoid unnecessary API calls. The \"Rates as of [date]\" note tells you exactly when the current rates were published. On weekends and holidays, the most recent business day's rates are shown."}},{"@type":"Question","name":"Why might the rate I get at my bank be different?","acceptedAnswer":{"@type":"Answer","text":"The rate shown here is the mid-market (interbank) rate — the theoretical midpoint between buy and sell prices. Banks and exchange services add a margin (spread) and sometimes flat fees on top of this rate to make a profit. Depending on your provider and the currency pair, you might receive a rate that is 0.5% to 5% (or more, for airport kiosks) worse than the mid-market rate."}},{"@type":"Question","name":"What happens if the API is unavailable?","acceptedAnswer":{"@type":"Answer","text":"If the Frankfurter API cannot be reached — for example, due to a network error or service outage — the converter will display an error message. We do not show stale or cached rates from previous sessions as a fallback, because outdated exchange rates could lead to incorrect financial decisions. In this case, try refreshing the page after a few minutes."}},{"@type":"Question","name":"What is the Frankfurter API?","acceptedAnswer":{"@type":"Answer","text":"Frankfurter is an open-source API for currency exchange rate data published by the European Central Bank. It is available at api.frankfurter.app and provides historical and current rates for approximately 32 currencies. It is free to use, does not require an API key for basic usage, and sources its data directly from the ECB's published reference rates."}},{"@type":"Question","name":"Why is my currency not listed?","acceptedAnswer":{"@type":"Answer","text":"This converter includes the 30 most widely traded and commonly used currencies from the Frankfurter/ECB dataset. Some currencies with limited trading volume or less international use are not included. If you need a currency not listed here, a service like Open Exchange Rates or XE.com covers a broader range of currencies including many emerging market and exotic currencies."}}]}]</script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="shared/nav.css" />
+  <style>
+    .app { max-width: 960px; margin: 0 auto; padding: 0 16px 60px; }
+
+    .page-header { text-align: center; padding: 40px 0 32px; }
+    .page-header h1 { font-size: clamp(1.6rem, 4vw, 2.4rem); font-weight: 800; color: var(--text-primary); margin: 0 0 10px; }
+    .page-header p { color: var(--text-secondary); font-size: 1rem; margin: 0 auto; max-width: 560px; }
+
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 28px; margin-bottom: 20px; }
+    .card h2 { font-size: 1.1rem; font-weight: 700; color: var(--text-primary); margin: 0 0 20px; }
+
+    /* Converter inputs */
+    .converter-grid {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 14px;
+      align-items: end;
+      margin-bottom: 24px;
+    }
+    @media (max-width: 580px) {
+      .converter-grid { grid-template-columns: 1fr; }
+      .swap-col { display: flex; justify-content: center; }
+    }
+
+    .input-group { display: flex; flex-direction: column; gap: 6px; }
+    .input-group label { font-size: 0.8rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; }
+
+    .amount-input {
+      padding: 13px 16px;
+      border: 1px solid var(--border);
+      border-radius: 12px 12px 0 0;
+      background: var(--bg);
+      color: var(--text-primary);
+      font-family: var(--mono);
+      font-size: 1.3rem;
+      font-weight: 700;
+      outline: none;
+      width: 100%;
+      box-sizing: border-box;
+      transition: border-color 0.15s;
+      border-bottom: none;
+    }
+    .amount-input:focus { border-color: var(--green); }
+
+    .currency-search-wrap { position: relative; }
+    .currency-search {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 9px 14px;
+      border: 1px solid var(--border);
+      border-radius: 0 0 0 0;
+      background: var(--surface);
+      color: var(--text-secondary);
+      font-family: var(--font);
+      font-size: 0.82rem;
+      outline: none;
+      border-top: none;
+      border-bottom: none;
+    }
+    .currency-search:focus { border-color: var(--green); }
+
+    .currency-select {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      border-radius: 0 0 12px 12px;
+      background: var(--surface);
+      color: var(--text-primary);
+      font-family: var(--font);
+      font-size: 0.95rem;
+      font-weight: 600;
+      outline: none;
+      cursor: pointer;
+      border-top: none;
+      height: 130px;
+    }
+    .currency-select:focus { border-color: var(--green); }
+
+    /* Combined border on focus for the stacked inputs */
+    .input-stack:focus-within .amount-input,
+    .input-stack:focus-within .currency-search,
+    .input-stack:focus-within .currency-select { border-color: var(--green); }
+
+    .swap-col { display: flex; align-items: center; justify-content: center; padding-bottom: 6px; }
+    .swap-btn {
+      width: 48px; height: 48px;
+      border-radius: 50%;
+      border: 2px solid var(--border);
+      background: var(--surface);
+      color: var(--text-primary);
+      font-size: 1.3rem;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.15s;
+      flex-shrink: 0;
+    }
+    .swap-btn:hover { border-color: var(--green); color: var(--green); transform: rotate(180deg); }
+
+    .convert-btn {
+      width: 100%;
+      padding: 14px;
+      background: var(--green);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      font-family: var(--font);
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: opacity 0.15s;
+    }
+    .convert-btn:hover { opacity: 0.9; }
+    .convert-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    /* Rate display */
+    .rates-bar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    .rates-bar .rate-pill {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      font-family: var(--mono);
+    }
+    .rates-bar .rate-pill strong { color: var(--text-primary); }
+    .rates-bar .rate-dot { color: var(--text-muted); }
+    .rates-bar .rate-date { font-size: 0.78rem; color: var(--text-muted); margin-left: auto; }
+
+    /* Result hero */
+    .result-hero {
+      text-align: center;
+      padding: 36px 20px;
+      background: linear-gradient(135deg, rgba(16,185,129,0.08) 0%, rgba(99,102,241,0.08) 100%);
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      margin-bottom: 20px;
+    }
+    .result-hero .from-amount { font-size: 1.1rem; color: var(--text-muted); margin-bottom: 6px; }
+    .result-hero .to-amount { font-size: clamp(2rem, 6vw, 3.2rem); font-weight: 800; color: var(--green); font-family: var(--mono); margin-bottom: 4px; }
+    .result-hero .to-currency { font-size: 1rem; color: var(--text-secondary); }
+
+    /* Comparison table */
+    .comparison-table { width: 100%; border-collapse: collapse; }
+    .comparison-table th { text-align: left; font-size: 0.8rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; padding: 8px 12px; border-bottom: 1px solid var(--border); }
+    .comparison-table td { padding: 11px 12px; font-size: 0.9rem; color: var(--text-secondary); border-bottom: 1px solid var(--border); }
+    .comparison-table td.amount-col { font-family: var(--mono); font-weight: 600; color: var(--text-primary); }
+    .comparison-table tr:last-child td { border-bottom: none; }
+    .comparison-table tr:hover td { background: var(--bg); }
+
+    /* States */
+    .loading-state { text-align: center; padding: 40px; color: var(--text-muted); font-size: 0.95rem; }
+    .loading-spinner { display: inline-block; width: 22px; height: 22px; border: 3px solid var(--border); border-top-color: var(--green); border-radius: 50%; animation: spin 0.8s linear infinite; margin-bottom: 12px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .error-state {
+      text-align: center; padding: 28px; color: var(--red);
+      background: rgba(239,68,68,0.06); border: 1px solid rgba(239,68,68,0.2);
+      border-radius: 12px; font-size: 0.9rem;
+    }
+
+    /* Disclaimer */
+    .disclaimer {
+      background: rgba(99,102,241,0.06);
+      border: 1px solid rgba(99,102,241,0.2);
+      border-radius: 12px;
+      padding: 14px 18px;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+    }
+    .disclaimer .d-icon { font-size: 1.1rem; flex-shrink: 0; }
+
+    /* Educational */
+    .edu-section { margin-top: 40px; }
+    .edu-section h2 { font-size: 1.4rem; font-weight: 800; color: var(--text-primary); margin: 0 0 16px; }
+    .edu-section h3 { font-size: 1.05rem; font-weight: 700; color: var(--text-primary); margin: 28px 0 10px; }
+    .edu-section p { color: var(--text-secondary); line-height: 1.75; margin: 0 0 14px; font-size: 0.95rem; }
+    .edu-section ul { color: var(--text-secondary); line-height: 1.8; margin: 0 0 14px; padding-left: 20px; font-size: 0.95rem; }
+    .edu-section li { margin-bottom: 6px; }
+
+    .faq-item { border: 1px solid var(--border); border-radius: 12px; margin-bottom: 10px; overflow: hidden; }
+    .faq-q { padding: 16px 20px; font-weight: 600; font-size: 0.95rem; color: var(--text-primary); cursor: pointer; display: flex; justify-content: space-between; align-items: center; background: var(--surface); user-select: none; }
+    .faq-q:hover { background: var(--bg); }
+    .faq-q .arrow { transition: transform 0.2s; font-size: 0.8rem; color: var(--text-muted); }
+    .faq-q.open .arrow { transform: rotate(180deg); }
+    .faq-a { display: none; padding: 0 20px 16px; color: var(--text-secondary); font-size: 0.9rem; line-height: 1.75; background: var(--surface); }
+    .faq-a.open { display: block; }
+
+    #resultArea { display: none; }
+  </style>
+</head>
+<body>
+<div class="app">
+
+  <div class="page-header">
+    <h1>Currency Converter</h1>
+    <p>Live exchange rates for 30 major currencies, sourced from the European Central Bank. Free, fast, and accurate.</p>
+  </div>
+
+  <div class="card">
+    <div id="ratesStatus">
+      <div class="loading-state">
+        <div class="loading-spinner"></div><br>Loading exchange rates&hellip;
+      </div>
+    </div>
+
+    <div id="converterForm" style="display:none;">
+      <div class="rates-bar" id="ratesBar">
+        <span class="rate-pill" id="ratePill1"></span>
+        <span class="rate-dot">·</span>
+        <span class="rate-pill" id="ratePill2"></span>
+        <span class="rate-date" id="rateDate"></span>
+      </div>
+
+      <div class="converter-grid">
+        <div class="input-group">
+          <label>Amount</label>
+          <div class="input-stack">
+            <input type="number" class="amount-input" id="amountInput" value="100" min="0" step="any" oninput="onAmountChange()" />
+            <input type="text" class="currency-search" id="fromSearch" placeholder="Filter currencies..." oninput="filterCurrencies('from')" />
+            <select class="currency-select" id="fromSelect" size="4" onchange="onFromChange()"></select>
+          </div>
+        </div>
+
+        <div class="swap-col">
+          <button class="swap-btn" onclick="swapCurrencies()" title="Swap currencies">⇄</button>
+        </div>
+
+        <div class="input-group">
+          <label>Convert To</label>
+          <div class="input-stack">
+            <div class="amount-input" id="resultDisplay" style="cursor:default;color:var(--green);">—</div>
+            <input type="text" class="currency-search" id="toSearch" placeholder="Filter currencies..." oninput="filterCurrencies('to')" />
+            <select class="currency-select" id="toSelect" size="4" onchange="onToChange()"></select>
+          </div>
+        </div>
+      </div>
+
+      <button class="convert-btn" onclick="convert()">Convert</button>
+    </div>
+  </div>
+
+  <div id="resultArea">
+    <div class="result-hero">
+      <div class="from-amount" id="heroFrom">—</div>
+      <div class="to-amount" id="heroTo">—</div>
+      <div class="to-currency" id="heroCurrency">—</div>
+    </div>
+
+    <div class="card">
+      <h2>Quick Comparison</h2>
+      <table class="comparison-table" id="compTable">
+        <thead><tr><th id="compFromHeader">Amount</th><th id="compToHeader">Converted</th></tr></thead>
+        <tbody id="compBody"></tbody>
+      </table>
+    </div>
+
+    <div class="disclaimer">
+      <span class="d-icon">ℹ</span>
+      <span>Exchange rates are indicative and sourced from the European Central Bank via the Frankfurter API. Rates are updated on business days. Actual rates at your bank, credit card provider, or foreign exchange service may differ due to fees, spreads, and timing.</span>
+    </div>
+  </div>
+
+  <!-- Educational -->
+  <div class="edu-section">
+    <h2>Understanding Currency Exchange Rates</h2>
+
+    <h3>What Is an Exchange Rate?</h3>
+    <p>An exchange rate is the price of one currency expressed in terms of another. When you see EUR/USD = 1.08, it means 1 euro buys 1.08 US dollars. Exchange rates float continuously on the foreign exchange (forex) market — the largest financial market in the world, with daily trading volume exceeding $7 trillion. Rates change second by second during trading hours, driven by the forces of supply and demand across banks, corporations, hedge funds, and central banks worldwide.</p>
+    <p>The rate shown in this tool is the mid-market rate (also called the interbank rate), which is the midpoint between the buy and sell prices used between large financial institutions. It is the fairest reference rate, but it is not necessarily the rate you will receive when converting money as a consumer or business.</p>
+
+    <h3>Bid, Ask, and the Spread</h3>
+    <p>When a bank or exchange service quotes a currency, they actually quote two prices: the <em>bid</em> (the price at which they will buy the foreign currency from you) and the <em>ask</em> (the price at which they will sell foreign currency to you). The difference between these two prices is called the <em>spread</em>, and it is the primary way currency providers make money.</p>
+    <p>For example, if EUR/USD mid-market is 1.08, a bank might offer to sell you euros at 1.065 (they get dollars from you at a worse rate than mid-market) and buy euros from you at 1.095. The wider the spread, the more you pay. Airport kiosks and hotel front desks typically charge enormous spreads — sometimes 5–10% away from the mid-market rate. Online brokers and specialist services like Wise (formerly TransferWise), Revolut, and Interactive Brokers offer spreads much closer to mid-market.</p>
+
+    <h3>Why Rates Differ Between Providers</h3>
+    <p>Beyond the spread, several other factors cause the rate you receive to differ from the mid-market rate you see here:</p>
+    <ul>
+      <li><strong>Flat fees:</strong> Some providers charge a fixed transaction fee in addition to the spread. A $5 flat fee on a $50 exchange is equivalent to a 10% surcharge.</li>
+      <li><strong>Markup:</strong> Many banks and card networks charge a "foreign transaction fee" of 1–3% on top of the exchange rate used.</li>
+      <li><strong>Timing:</strong> The rate used for a credit card transaction is typically the rate at the time of settlement (1–2 business days after the transaction), not the rate at the time of purchase.</li>
+      <li><strong>Dynamic currency conversion (DCC):</strong> When paying abroad, merchants may offer to charge you in your home currency. This is almost always a bad deal — the rate offered is typically 3–7% worse than what your card would give you. Always choose to pay in the local currency.</li>
+    </ul>
+
+    <h3>The European Central Bank Rate</h3>
+    <p>The rates in this tool come from the European Central Bank (ECB) via the Frankfurter API. The ECB publishes reference exchange rates against the euro every business day at around 16:00 CET, based on a data-sharing arrangement with central banks across Europe and beyond. These are genuine interbank reference rates, not commercial rates. They are widely used by accountants, finance teams, and software applications as a reliable, neutral benchmark.</p>
+    <p>Because they are only published on European business days, the rate you see may be up to a few days old on weekends and public holidays. The date shown next to the rate tells you exactly which day's rate is being used.</p>
+
+    <h3>When Is the Best Time to Exchange Currency?</h3>
+    <p>Trying to time the currency market is generally a losing game for individuals. Rates are set by global macro forces — interest rate expectations, inflation data, political events, trade flows — that even professional currency traders struggle to predict. Here are more actionable tips:</p>
+    <ul>
+      <li><strong>Use a specialist service</strong> rather than a bank or airport for large exchanges. Services like Wise, Revolut, and OFX typically offer rates 3–5% closer to mid-market than high-street banks.</li>
+      <li><strong>Avoid airport and hotel exchanges</strong> unless absolutely necessary — the convenience premium is significant.</li>
+      <li><strong>For travel,</strong> a no-foreign-transaction-fee credit card often beats even specialist services for small purchases, as it uses the Visa or Mastercard wholesale rate which is very close to mid-market.</li>
+      <li><strong>For large transfers</strong> (e.g., buying property abroad), consider setting a rate alert with a currency broker and using a forward contract to lock in a rate when it reaches an acceptable level.</li>
+      <li><strong>For business payments,</strong> invoicing in your own currency shifts the currency risk to your customer; alternatively, maintain accounts in multiple currencies to reduce the number of conversions needed.</li>
+    </ul>
+
+    <h3>Major Currency Pairs</h3>
+    <p>The forex market has a hierarchy of currency pairs. The "majors" — EUR/USD, USD/JPY, GBP/USD, USD/CHF, USD/CAD, AUD/USD, and NZD/USD — account for the majority of global trading volume and have the tightest spreads. "Minor" pairs (crosses not involving the USD) have slightly wider spreads. "Exotic" pairs involving currencies from emerging markets tend to have much wider spreads and higher volatility.</p>
+    <p>This converter supports 30 currencies representing major and several important regional currencies. All rates are expressed relative to EUR as the base currency (since the ECB rates are EUR-based), then cross-rates are calculated mathematically for non-EUR pairs.</p>
+
+    <h2 style="margin-top:40px;">Frequently Asked Questions</h2>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">How current are the exchange rates? <span class="arrow">▼</span></div>
+      <div class="faq-a">Rates are sourced from the European Central Bank via the Frankfurter API. The ECB publishes rates once per business day at approximately 16:00 CET. Rates are cached in your browser for your session to avoid unnecessary API calls. The "Rates as of [date]" note tells you exactly when the current rates were published. On weekends and holidays, the most recent business day's rates are shown.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">Why might the rate I get at my bank be different? <span class="arrow">▼</span></div>
+      <div class="faq-a">The rate shown here is the mid-market (interbank) rate — the theoretical midpoint between buy and sell prices. Banks and exchange services add a margin (spread) and sometimes flat fees on top of this rate to make a profit. Depending on your provider and the currency pair, you might receive a rate that is 0.5% to 5% (or more, for airport kiosks) worse than the mid-market rate. This calculator is best used as a reference point to understand the "true" value of a conversion before you shop around for the best deal.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">What happens if the API is unavailable? <span class="arrow">▼</span></div>
+      <div class="faq-a">If the Frankfurter API cannot be reached — for example, due to a network error or service outage — the converter will display an error message. We do not show stale or cached rates from previous sessions as a fallback, because outdated exchange rates could lead to incorrect financial decisions. In this case, try refreshing the page after a few minutes.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">What is the Frankfurter API? <span class="arrow">▼</span></div>
+      <div class="faq-a">Frankfurter is an open-source API for currency exchange rate data published by the European Central Bank. It is available at api.frankfurter.app and provides historical and current rates for approximately 32 currencies. It is free to use, does not require an API key for basic usage, and sources its data directly from the ECB's published reference rates. The ECB has published these rates since 1999.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">Why is my currency not listed? <span class="arrow">▼</span></div>
+      <div class="faq-a">This converter includes the 30 most widely traded and commonly used currencies from the Frankfurter/ECB dataset. Some currencies with limited trading volume or less international use are not included. If you need a currency not listed here, a service like Open Exchange Rates or XE.com covers a broader range of currencies including many emerging market and exotic currencies.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">How are cross-rates calculated? <span class="arrow">▼</span></div>
+      <div class="faq-a">When you convert between two currencies neither of which is the base currency (EUR), the calculator performs a cross-rate calculation using EUR as an intermediary. For example, to find USD/JPY, it divides the JPY/EUR rate by the USD/EUR rate. This is the standard method and produces rates equivalent to the direct market rate for major pairs. For exotic pairs, small rounding differences may be slightly amplified, but the result is accurate to 4–5 significant figures for practical purposes.</div>
+    </div>
+
+  </div>
+
+</div>
+
+<script>window.CALCNOVA_PAGE = { id: 'currency-converter' };</script>
+<script src="shared/site-data.js"></script>
+<script src="shared/nav.js"></script>
+<script>
+
+const CURRENCIES = [
+  { code: 'USD', name: 'US Dollar' },
+  { code: 'EUR', name: 'Euro' },
+  { code: 'GBP', name: 'British Pound' },
+  { code: 'JPY', name: 'Japanese Yen' },
+  { code: 'CAD', name: 'Canadian Dollar' },
+  { code: 'AUD', name: 'Australian Dollar' },
+  { code: 'CHF', name: 'Swiss Franc' },
+  { code: 'CNY', name: 'Chinese Yuan' },
+  { code: 'HKD', name: 'Hong Kong Dollar' },
+  { code: 'NZD', name: 'New Zealand Dollar' },
+  { code: 'SEK', name: 'Swedish Krona' },
+  { code: 'NOK', name: 'Norwegian Krone' },
+  { code: 'DKK', name: 'Danish Krone' },
+  { code: 'SGD', name: 'Singapore Dollar' },
+  { code: 'MXN', name: 'Mexican Peso' },
+  { code: 'BRL', name: 'Brazilian Real' },
+  { code: 'INR', name: 'Indian Rupee' },
+  { code: 'KRW', name: 'South Korean Won' },
+  { code: 'TRY', name: 'Turkish Lira' },
+  { code: 'ZAR', name: 'South African Rand' },
+  { code: 'AED', name: 'UAE Dirham' },
+  { code: 'SAR', name: 'Saudi Riyal' },
+  { code: 'PLN', name: 'Polish Zloty' },
+  { code: 'THB', name: 'Thai Baht' },
+  { code: 'IDR', name: 'Indonesian Rupiah' },
+  { code: 'HUF', name: 'Hungarian Forint' },
+  { code: 'CZK', name: 'Czech Koruna' },
+  { code: 'ILS', name: 'Israeli Shekel' },
+  { code: 'PHP', name: 'Philippine Peso' },
+  { code: 'CLP', name: 'Chilean Peso' },
+];
+
+// Rates stored as EUR-based (1 EUR = X currency)
+let ratesFromEUR = {};
+let rateDate = '';
+let fromCurrency = 'USD';
+let toCurrency = 'EUR';
+
+async function fetchRates(base) {
+  // Check sessionStorage
+  const cacheKey = `fx_${base}`;
+  const cached = sessionStorage.getItem(cacheKey);
+  if (cached) {
+    const parsed = JSON.parse(cached);
+    return parsed;
+  }
+
+  const res = await fetch(`https://api.frankfurter.app/latest?from=EUR`);
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  const data = await res.json();
+  // Add EUR itself
+  data.rates['EUR'] = 1;
+  sessionStorage.setItem(cacheKey, JSON.stringify(data));
+  return data;
+}
+
+async function loadRates() {
+  const statusEl = document.getElementById('ratesStatus');
+  try {
+    const data = await fetchRates('EUR');
+    ratesFromEUR = data.rates;
+    rateDate = data.date;
+
+    // Check all currencies are present, filter out missing ones
+    statusEl.style.display = 'none';
+    document.getElementById('converterForm').style.display = 'block';
+
+    populateSelects();
+    updateRatesBar();
+    convert();
+  } catch (e) {
+    statusEl.innerHTML = `<div class="error-state"><strong>Could not load exchange rates.</strong><br>The Frankfurter API may be temporarily unavailable. Please try refreshing the page.<br><small style="opacity:0.7;margin-top:6px;display:block;">${e.message}</small></div>`;
+  }
+}
+
+function getRate(from, to) {
+  // Convert via EUR
+  const fromInEUR = from === 'EUR' ? 1 : (1 / ratesFromEUR[from]);
+  const toFromEUR = ratesFromEUR[to] || 1;
+  return fromInEUR * toFromEUR;
+}
+
+function formatAmount(amount, currency) {
+  const decimals = ['JPY', 'KRW', 'IDR', 'CLP', 'HUF'].includes(currency) ? 0 : 2;
+  return new Intl.NumberFormat('en-US', {
+    minimumFractionDigits: decimals,
+    maximumFractionDigits: decimals,
+  }).format(amount);
+}
+
+function populateSelects() {
+  const fromEl = document.getElementById('fromSelect');
+  const toEl = document.getElementById('toSelect');
+
+  const available = CURRENCIES.filter(c => ratesFromEUR[c.code] !== undefined || c.code === 'EUR');
+
+  function buildOptions(selected) {
+    return available.map(c =>
+      `<option value="${c.code}"${c.code === selected ? ' selected' : ''}>${c.code} — ${c.name}</option>`
+    ).join('');
+  }
+
+  fromEl.innerHTML = buildOptions(fromCurrency);
+  toEl.innerHTML = buildOptions(toCurrency);
+}
+
+function filterCurrencies(side) {
+  const searchEl = document.getElementById(side + 'Search');
+  const selectEl = document.getElementById(side + 'Select');
+  const q = searchEl.value.toLowerCase();
+  const current = side === 'from' ? fromCurrency : toCurrency;
+
+  const available = CURRENCIES.filter(c => ratesFromEUR[c.code] !== undefined || c.code === 'EUR');
+  const filtered = available.filter(c =>
+    c.code.toLowerCase().includes(q) || c.name.toLowerCase().includes(q)
+  );
+
+  selectEl.innerHTML = filtered.map(c =>
+    `<option value="${c.code}"${c.code === current ? ' selected' : ''}>${c.code} — ${c.name}</option>`
+  ).join('');
+}
+
+function updateRatesBar() {
+  const rate = getRate(fromCurrency, toCurrency);
+  const inverse = getRate(toCurrency, fromCurrency);
+  document.getElementById('ratePill1').innerHTML = `<strong>1 ${fromCurrency}</strong> = ${formatAmount(rate, toCurrency)} ${toCurrency}`;
+  document.getElementById('ratePill2').innerHTML = `<strong>1 ${toCurrency}</strong> = ${formatAmount(inverse, fromCurrency)} ${fromCurrency}`;
+  document.getElementById('rateDate').textContent = `Rates as of ${rateDate}`;
+}
+
+function onFromChange() {
+  fromCurrency = document.getElementById('fromSelect').value;
+  updateRatesBar();
+  convert();
+}
+
+function onToChange() {
+  toCurrency = document.getElementById('toSelect').value;
+  updateRatesBar();
+  convert();
+}
+
+function onAmountChange() {
+  convert();
+}
+
+function swapCurrencies() {
+  [fromCurrency, toCurrency] = [toCurrency, fromCurrency];
+  populateSelects();
+  updateRatesBar();
+  convert();
+}
+
+function convert() {
+  const amountStr = document.getElementById('amountInput').value;
+  const amount = parseFloat(amountStr);
+  if (isNaN(amount) || amount < 0) {
+    document.getElementById('resultDisplay').textContent = '—';
+    return;
+  }
+
+  const rate = getRate(fromCurrency, toCurrency);
+  const result = amount * rate;
+
+  document.getElementById('resultDisplay').textContent = formatAmount(result, toCurrency) + ' ' + toCurrency;
+
+  // Hero
+  document.getElementById('heroFrom').textContent = `${formatAmount(amount, fromCurrency)} ${fromCurrency}`;
+  document.getElementById('heroTo').textContent = formatAmount(result, toCurrency);
+  document.getElementById('heroCurrency').textContent = toCurrency + ' — ' + (CURRENCIES.find(c => c.code === toCurrency)?.name || '');
+
+  // Comparison table
+  const steps = [1, 5, 10, 50, 100, 500, 1000];
+  document.getElementById('compFromHeader').textContent = fromCurrency;
+  document.getElementById('compToHeader').textContent = toCurrency;
+  const tbody = document.getElementById('compBody');
+  tbody.innerHTML = steps.map(s => `
+    <tr>
+      <td class="amount-col">${formatAmount(s, fromCurrency)} ${fromCurrency}</td>
+      <td class="amount-col">${formatAmount(s * rate, toCurrency)} ${toCurrency}</td>
+    </tr>
+  `).join('');
+
+  document.getElementById('resultArea').style.display = 'block';
+}
+
+function toggleFaq(el) {
+  el.classList.toggle('open');
+  el.nextElementSibling.classList.toggle('open');
+}
+
+// Load rates on page load
+loadRates();
+</script>
+</body>
+</html>

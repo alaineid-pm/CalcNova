@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>The Rule of 72: Estimate Doubling Time | CalcNova</title>
+  <meta name="description" content="The Rule of 72 lets you estimate how long it takes to double your money at any interest rate. Learn the formula, worked examples, when it breaks down, and how to use it for debt and inflation.">
+  <link rel="canonical" href="https://calcnova.co/article-rule-of-72.html">
+  <meta property="og:title" content="The Rule of 72: Estimate Doubling Time | CalcNova">
+  <meta property="og:description" content="The Rule of 72 lets you estimate how long it takes to double your money at any interest rate. Learn the formula, worked examples, when it breaks down, and how to use it for debt and inflation.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://calcnova.co/article-rule-of-72.html">
+  <meta property="og:site_name" content="CalcNova">
+  <script type="application/ld+json">
+  [{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "The Rule of 72: Estimate Doubling Time",
+    "description": "The Rule of 72 lets you estimate how long it takes to double your money at any interest rate. Learn the formula, worked examples, when it breaks down, and how to use it for debt and inflation.",
+    "url": "https://calcnova.co/article-rule-of-72.html",
+    "datePublished": "2026-03-14",
+    "dateModified": "2026-03-14",
+    "publisher": { "@type": "Organization", "name": "CalcNova", "url": "https://calcnova.co/" },
+    "isPartOf": { "@type": "WebSite", "name": "CalcNova", "url": "https://calcnova.co/" }
+  }]
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="shared/nav.css">
+  <style>
+    .app { position: relative; z-index: 1; max-width: 960px; margin: 0 auto; padding: 0 16px 60px; }
+    .article-hero { padding: 48px 0 36px; border-bottom: 1px solid var(--border); margin-bottom: 40px; max-width: 720px; }
+    .article-badge { display: inline-flex; align-items: center; gap: 6px; background: linear-gradient(135deg, rgba(16,185,129,.1), rgba(99,102,241,.1)); border: 1px solid rgba(16,185,129,.25); border-radius: 100px; padding: 5px 14px; font-size: 11px; font-weight: 700; color: var(--green); letter-spacing: .5px; text-transform: uppercase; margin-bottom: 16px; }
+    .article-hero h1 { font-size: 38px; font-weight: 800; letter-spacing: -.5px; line-height: 1.15; margin-bottom: 14px; }
+    .article-hero h1 span { background: linear-gradient(135deg, var(--green), var(--purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .article-hero .subtitle { font-size: 16px; color: var(--text-secondary); line-height: 1.6; max-width: 600px; }
+    .article-meta { margin-top: 16px; font-size: 12px; color: var(--text-muted); font-weight: 500; display: flex; align-items: center; gap: 12px; }
+    .article-meta .dot { width: 3px; height: 3px; border-radius: 50%; background: var(--text-muted); }
+    .article-body { max-width: 720px; display: flex; flex-direction: column; gap: 28px; }
+    .article-body h2 { font-size: 24px; font-weight: 800; letter-spacing: -.3px; margin-bottom: 12px; color: var(--text-primary); }
+    .article-body h3 { font-size: 18px; font-weight: 700; letter-spacing: -.2px; margin-bottom: 8px; color: var(--text-primary); }
+    .article-body p { font-size: 16px; color: var(--text-secondary); line-height: 1.75; margin-bottom: 14px; }
+    .article-body p:last-child { margin-bottom: 0; }
+    .article-body ul, .article-body ol { padding-left: 0; list-style: none; display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; }
+    .article-body ul li, .article-body ol li { font-size: 16px; color: var(--text-secondary); line-height: 1.7; padding-left: 22px; position: relative; }
+    .article-body ul li::before { content: ''; position: absolute; left: 0; top: 10px; width: 6px; height: 6px; border-radius: 50%; background: linear-gradient(135deg, var(--green), var(--purple)); }
+    .article-body ol { counter-reset: ol-counter; }
+    .article-body ol li { counter-increment: ol-counter; }
+    .article-body ol li::before { content: counter(ol-counter); position: absolute; left: 0; top: 0; font-size: 13px; font-weight: 800; color: var(--green); font-family: var(--mono); }
+    .article-body a { color: var(--green); text-decoration: none; font-weight: 600; }
+    .article-body a:hover { text-decoration: underline; }
+    .article-body strong { color: var(--text-primary); font-weight: 700; }
+    .formula-box { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 24px 28px; text-align: center; }
+    .formula-box .formula { font-family: var(--mono); font-size: 20px; font-weight: 600; color: var(--text-primary); margin-bottom: 16px; letter-spacing: .5px; }
+    .formula-box .formula .hl { color: var(--green); }
+    .formula-box .legend { display: flex; flex-wrap: wrap; gap: 8px 20px; justify-content: center; font-size: 13px; color: var(--text-secondary); }
+    .formula-box .legend code { font-family: var(--mono); font-weight: 600; font-size: 12px; background: var(--bg); border: 1px solid var(--border); border-radius: 4px; padding: 1px 5px; }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 18px; padding: 24px 26px; }
+    .card-label { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .5px; color: var(--green); margin-bottom: 12px; }
+    .card h3 { margin-top: 0; }
+    .card p:last-child { margin-bottom: 0; }
+    .example-box { background: linear-gradient(135deg, rgba(16,185,129,.05), rgba(99,102,241,.03)); border: 1px solid rgba(16,185,129,.18); border-radius: 16px; padding: 24px 26px; }
+    .example-box .example-title { font-size: 14px; font-weight: 800; color: var(--green); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 10px; }
+    .example-box p { margin-bottom: 10px; }
+    .example-box .result { font-family: var(--mono); font-size: 15px; font-weight: 600; color: var(--text-primary); background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 12px 16px; margin-top: 12px; }
+    .example-box .result .hl { color: var(--green); font-weight: 700; }
+    .comparison-table { width: 100%; border-collapse: collapse; font-size: 14px; margin: 12px 0; }
+    .comparison-table th { text-align: left; font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: .5px; color: var(--text-muted); padding: 10px 14px; border-bottom: 2px solid var(--border); }
+    .comparison-table td { padding: 10px 14px; color: var(--text-secondary); border-bottom: 1px solid var(--border); }
+    .comparison-table tr:last-child td { border-bottom: none; }
+    .comparison-table .num { font-family: var(--mono); font-weight: 600; }
+    .comparison-table .hl { color: var(--green); font-weight: 700; }
+    .cta-section { background: linear-gradient(135deg, rgba(16,185,129,.08), rgba(99,102,241,.06)); border: 1px solid rgba(16,185,129,.2); border-radius: 18px; padding: 32px; text-align: center; margin-top: 8px; }
+    .cta-section h2 { font-size: 22px; margin-bottom: 10px; }
+    .cta-section p { max-width: 500px; margin: 0 auto 20px; }
+    .cta-btn { display: inline-flex; align-items: center; gap: 8px; background: linear-gradient(135deg, var(--green), #059669); color: #fff !important; border-radius: 100px; padding: 12px 28px; font-size: 14px; font-weight: 700; text-decoration: none !important; font-family: var(--font); transition: all .15s; box-shadow: 0 4px 14px rgba(16,185,129,.3); }
+    .cta-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(16,185,129,.4); }
+    .cta-btn-secondary { display: inline-flex; align-items: center; gap: 8px; background: transparent; color: var(--green) !important; border: 2px solid var(--green); border-radius: 100px; padding: 10px 26px; font-size: 14px; font-weight: 700; text-decoration: none !important; font-family: var(--font); transition: all .15s; margin-left: 12px; }
+    .cta-btn-secondary:hover { background: rgba(16,185,129,.08); }
+    @media print { body::before, header, .cn-nav, .cn-footer, .ad-slot, .cta-section { display: none !important; } .app { max-width: 100%; padding: 0; } }
+    @media (max-width: 640px) { .article-hero h1 { font-size: 28px; } .formula-box .formula { font-size: 15px; } .comparison-table { font-size: 12px; } .comparison-table th, .comparison-table td { padding: 8px 10px; } .cta-btn-secondary { margin-left: 0; margin-top: 10px; } }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="article-hero">
+      <div class="article-badge">📐 Finance Guide</div>
+      <h1>The Rule of 72: <span>Estimate Doubling Time</span></h1>
+      <p class="subtitle">One of the most useful mental shortcuts in all of finance. In seconds, the Rule of 72 tells you how long it takes to double your money — or how quickly debt and inflation can double what you owe.</p>
+      <div class="article-meta"><span>5 min read</span><span class="dot"></span><span>Updated March 2026</span></div>
+    </div>
+    <div class="article-body">
+
+      <section>
+        <h2>What Is the Rule of 72?</h2>
+        <p>The Rule of 72 is a simple mathematical shortcut for estimating how long it takes an investment to double in value at a fixed annual rate of return. Divide 72 by the annual interest rate (expressed as a whole number), and the result is the approximate number of years to double your money.</p>
+        <p>It requires no calculator, no spreadsheet, and no finance degree. Yet it gives results surprisingly close to the exact answer for rates in the range most investors and savers encounter. The rule dates back at least to Luca Pacioli's 1494 mathematical text and remains one of the most practical tools in personal finance.</p>
+      </section>
+
+      <section>
+        <h2>The Formula</h2>
+        <div class="formula-box">
+          <div class="formula"><span class="hl">Years to Double</span> = 72 ÷ Annual Rate (%)</div>
+          <div class="legend">
+            <span><code>72</code> = the constant (works best for rates 2%–15%)</span>
+            <span><code>Annual Rate</code> = percentage, not decimal (use 8, not 0.08)</span>
+          </div>
+        </div>
+        <p>The rule also works in reverse: if you know how many years you want to double your money in, divide 72 by that number of years to find the required annual return. Want to double in 9 years? You need roughly 72 ÷ 9 = <strong>8% per year</strong>.</p>
+      </section>
+
+      <section>
+        <h2>Worked Examples at Various Rates</h2>
+
+        <div class="example-box" style="margin-bottom: 16px;">
+          <div class="example-title">Example — Savings Account at 4%</div>
+          <p>A high-yield savings account earns <strong>4% APY</strong>. How long until your balance doubles?</p>
+          <div class="result">72 ÷ 4 = <span class="hl">18 years</span></div>
+          <p style="margin-top:10px;">Exact answer using the compound interest formula: 17.67 years. The Rule of 72 is off by only 0.33 years — well within any practical planning range.</p>
+        </div>
+
+        <div class="example-box" style="margin-bottom: 16px;">
+          <div class="example-title">Example — Index Fund at 8%</div>
+          <p>A diversified index fund averages <strong>8% annual returns</strong>. How often does the portfolio double?</p>
+          <div class="result">72 ÷ 8 = <span class="hl">9 years</span></div>
+          <p style="margin-top:10px;">Invest $10,000 at age 25 and let it grow: $20,000 by 34, $40,000 by 43, $80,000 by 52, and $160,000 by 61. No additional contributions required.</p>
+        </div>
+
+        <div class="example-box">
+          <div class="example-title">Example — Credit Card Debt at 24%</div>
+          <p>A credit card charges <strong>24% APR</strong>. If you make no payments, how long until the balance doubles?</p>
+          <div class="result">72 ÷ 24 = <span class="hl">3 years</span></div>
+          <p style="margin-top:10px;">A $5,000 balance becomes $10,000 in just three years. This is why high-interest debt must be treated as a financial emergency — the same compounding that builds wealth works with devastating speed against borrowers.</p>
+        </div>
+      </section>
+
+      <section>
+        <h2>Rates vs. Doubling Times</h2>
+        <table class="comparison-table">
+          <thead>
+            <tr>
+              <th>Annual Rate</th>
+              <th>Rule of 72 (years)</th>
+              <th>Exact Answer (years)</th>
+              <th>Error</th>
+              <th>Common Context</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="num">2%</td>
+              <td class="num">36.0</td>
+              <td class="num">35.0</td>
+              <td class="num">+1.0</td>
+              <td>Savings account, CDs</td>
+            </tr>
+            <tr>
+              <td class="num">4%</td>
+              <td class="num">18.0</td>
+              <td class="num">17.7</td>
+              <td class="num">+0.3</td>
+              <td>High-yield savings, bonds</td>
+            </tr>
+            <tr>
+              <td class="num">6%</td>
+              <td class="num">12.0</td>
+              <td class="num">11.9</td>
+              <td class="num">+0.1</td>
+              <td>Conservative portfolio</td>
+            </tr>
+            <tr>
+              <td class="num hl">8%</td>
+              <td class="num hl">9.0</td>
+              <td class="num hl">9.0</td>
+              <td class="num hl">0.0</td>
+              <td>Broad market index</td>
+            </tr>
+            <tr>
+              <td class="num">10%</td>
+              <td class="num">7.2</td>
+              <td class="num">7.3</td>
+              <td class="num">−0.1</td>
+              <td>Aggressive equities</td>
+            </tr>
+            <tr>
+              <td class="num">12%</td>
+              <td class="num">6.0</td>
+              <td class="num">6.1</td>
+              <td class="num">−0.1</td>
+              <td>High-growth stocks</td>
+            </tr>
+            <tr>
+              <td class="num">24%</td>
+              <td class="num">3.0</td>
+              <td class="num">3.2</td>
+              <td class="num">−0.2</td>
+              <td>Credit card debt</td>
+            </tr>
+          </tbody>
+        </table>
+        <p>The Rule of 72 is most accurate around 8%, which happens to be close to long-run stock market returns. It slightly overestimates doubling time at lower rates and slightly underestimates it at higher rates, but the error is never large enough to matter for planning purposes within the 2%–15% range.</p>
+      </section>
+
+      <section>
+        <h2>When the Rule Breaks Down</h2>
+        <p>At very high interest rates — above 20–25% — the Rule of 72 starts to produce meaningfully inaccurate results. For precise work at extreme rates, use the <strong>Rule of 69.3</strong> instead, which is derived from the natural logarithm:</p>
+        <div class="formula-box">
+          <div class="formula"><span class="hl">Exact Years to Double</span> = ln(2) ÷ ln(1 + r) ≈ <span class="hl">69.3</span> ÷ Rate (%)</div>
+          <div class="legend">
+            <span><code>ln</code> = natural logarithm</span>
+            <span><code>69.3</code> = more mathematically precise constant</span>
+            <span><code>72</code> = easier to divide mentally, nearly as accurate for typical rates</span>
+          </div>
+        </div>
+        <p>72 was chosen over 69.3 for one simple reason: it has more integer divisors (1, 2, 3, 4, 6, 8, 9, 12, 18, 24, 36, 72), making mental arithmetic cleaner. At the rates most savers and investors encounter, the difference is negligible.</p>
+        <p>The rule also assumes <strong>compound interest</strong> and a <strong>constant rate</strong>. For simple interest loans, or assets with highly variable returns, the approximation is less applicable — though it still provides a useful ballpark.</p>
+      </section>
+
+      <section>
+        <h2>The Rule of 115: Tripling Time</h2>
+        <p>Need to estimate how long it takes for money to <em>triple</em>? Use the same logic with a different constant: divide <strong>115</strong> by the annual rate.</p>
+        <div class="formula-box">
+          <div class="formula"><span class="hl">Years to Triple</span> = 115 ÷ Annual Rate (%)</div>
+          <div class="legend">
+            <span>At 8%: 115 ÷ 8 = <code>~14.4 years</code></span>
+            <span>At 6%: 115 ÷ 6 = <code>~19.2 years</code></span>
+          </div>
+        </div>
+        <p>Similarly, dividing <strong>144</strong> by the rate gives a rough estimate for quadrupling time. These extended rules are less commonly used, but they illustrate how the same mental math framework scales to other growth multiples.</p>
+      </section>
+
+      <section>
+        <h2>Using It for Inflation</h2>
+        <p>The Rule of 72 is equally useful for understanding the corrosive effect of inflation. Divide 72 by the inflation rate to find how many years it takes for prices to double — or equivalently, for the purchasing power of your cash to be cut in half.</p>
+        <ul>
+          <li>At <strong>3% inflation</strong>: 72 ÷ 3 = <strong>24 years</strong> to halve purchasing power</li>
+          <li>At <strong>4% inflation</strong>: 72 ÷ 4 = <strong>18 years</strong> to halve purchasing power</li>
+          <li>At <strong>7% inflation</strong> (as seen in 2022): 72 ÷ 7 = roughly <strong>10 years</strong> to halve purchasing power</li>
+        </ul>
+        <p>This is why holding large amounts of cash long-term is a losing strategy. Inflation silently erodes the real value of every dollar sitting idle. A dollar in a savings account earning 1% during a 4% inflation period loses purchasing power every single year. For more on this topic, see our full guide on <a href="article-inflation.html">how inflation erodes your savings</a>.</p>
+      </section>
+
+      <section>
+        <h2>The Rule of 72 for Debt</h2>
+        <div class="card">
+          <div class="card-label">💡 Key Insight</div>
+          <h3>Debt compounds against you just as powerfully as investments compound for you.</h3>
+          <p>If you carry a balance on a credit card at 20% APR and make only minimum payments that barely cover the interest, the outstanding balance effectively doubles every 3.6 years. A $3,000 balance could become $6,000 in less than four years, $12,000 in less than eight.</p>
+          <p>This framing can change how urgently you treat high-interest debt. It is not just a monthly expense — it is an investment in reverse, compounding at 15–30% per year against your net worth. Eliminating that debt is equivalent to earning a guaranteed, tax-free return equal to the interest rate. For a complete framework on which debts to tackle first, read our article on <a href="article-compound-interest.html">how compound interest works</a>.</p>
+        </div>
+      </section>
+
+      <div class="cta-section">
+        <h2>See the Exact Numbers</h2>
+        <p>The Rule of 72 gives you a fast estimate. Our calculators give you the precise figures with charts and year-by-year breakdowns.</p>
+        <a href="compound-interest-calculator.html" class="cta-btn">Compound Interest Calculator →</a>
+        <a href="investment-return-calculator.html" class="cta-btn-secondary">Investment Return Calculator →</a>
+      </div>
+
+    </div>
+  </div>
+  <script>window.CALCNOVA_PAGE = { id: 'article-rule-of-72', disclaimer: 'This article is for educational purposes only and does not constitute financial advice.' };</script>
+  <script src="shared/site-data.js"></script>
+  <script src="shared/nav.js"></script>
+</body>
+</html>

@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Discount Calculator — Sale Price &amp; Savings Calculator | CalcNova</title>
+  <meta name="description" content="Calculate sale prices, discount percentages, and savings. Three modes: find sale price, find discount %, or calculate double discounts.">
+
+  <!-- Canonical -->
+  <link rel="canonical" href="https://calcnova.co/discount-calculator.html">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Discount Calculator — Sale Price &amp; Savings Calculator | CalcNova">
+  <meta property="og:description" content="Calculate sale prices, discount percentages, and savings in seconds. Three modes: find sale price, find discount %, or double discounts.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://calcnova.co/discount-calculator.html">
+  <meta property="og:site_name" content="CalcNova">
+
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  [
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": "Discount Calculator",
+      "url": "https://calcnova.co/discount-calculator.html",
+      "description": "Find the sale price, discount amount, or original price from any two values.",
+      "applicationCategory": "UtilitiesApplication",
+      "provider": { "@type": "Organization", "name": "CalcNova", "url": "https://calcnova.co" },
+      "offers": { "@type": "Offer", "price": "0" }
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How do you calculate a percentage discount?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "To calculate a percentage discount, multiply the original price by the discount percentage divided by 100. For example, a 25% discount on a $80 item is $80 × 0.25 = $20 off. The sale price is then $80 − $20 = $60. Alternatively, multiply the original price by (1 − discount rate): $80 × 0.75 = $60."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the difference between original price and sale price?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The original price (also called the list price or retail price) is the full price of an item before any discount is applied. The sale price is the reduced price after the discount has been subtracted. The difference between the two is the discount amount, which can also be expressed as a percentage of the original price to get the discount rate."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do you calculate the percentage savings on a purchase?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "To calculate percentage savings, subtract the sale price from the original price to get the amount saved, then divide that by the original price and multiply by 100. Formula: ((Original Price − Sale Price) / Original Price) × 100. For example, if an item was $50 and is now $35, the savings are ($50 − $35) / $50 × 100 = 30%."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do you find the original price if you know the sale price and discount percentage?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "To find the original price from the sale price and discount percentage, divide the sale price by (1 − discount rate). Formula: Original Price = Sale Price / (1 − Discount%). For example, if an item is on sale for $60 after a 25% discount, the original price is $60 / (1 − 0.25) = $60 / 0.75 = $80."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Do stacked discounts add up? Is 20% off plus 10% off the same as 30% off?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No, stacked discounts do not simply add together. A 20% discount followed by an additional 10% discount is not the same as 30% off. Each discount is applied sequentially to the reduced price. On a $100 item: 20% off gives $80, then 10% off $80 gives $72. The total saving is $28, which equals a combined 28% discount — not 30%. The formula for combined discount is: 1 − (1 − d1) × (1 − d2)."
+          }
+        }
+      ]
+    }
+  ]
+  </script>
+
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="shared/nav.css">
+  <style>
+    :root {
+      --bg: #f0f2f7;
+      --surface: #ffffff;
+      --border: #e2e6ef;
+      --text-primary: #0f1623;
+      --text-secondary: #5a6478;
+      --text-muted: #9ba3b5;
+      --green: #10b981;
+      --purple: #6366f1;
+      --amber: #f59e0b;
+      --red: #ef4444;
+      --font: 'Plus Jakarta Sans', sans-serif;
+      --mono: 'JetBrains Mono', monospace;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      font-family: var(--font);
+      color: var(--text-primary);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .app { position: relative; z-index: 1; max-width: 960px; margin: 0 auto; padding: 0 16px 60px; }
+
+    .hero {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 38px 32px 32px;
+      margin-bottom: 28px;
+    }
+    .hero-title { font-size: 26px; font-weight: 800; letter-spacing: -.5px; margin: 0 0 0; padding: 0; }
+    .hero-title span {
+      background: linear-gradient(135deg, var(--green), var(--purple));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .hero-desc { font-size: 14px; color: var(--text-secondary); margin-top: 6px; line-height: 1.5; }
+
+    /* Segmented control */
+    .seg-control {
+      display: flex;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 4px;
+      margin-bottom: 28px;
+      gap: 4px;
+    }
+    .seg-btn {
+      flex: 1;
+      background: none;
+      border: none;
+      border-radius: 9px;
+      padding: 10px 8px;
+      font-family: var(--font);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all .2s;
+      text-align: center;
+      line-height: 1.3;
+    }
+    .seg-btn:hover { color: var(--text-primary); }
+    .seg-btn.active {
+      background: var(--surface);
+      color: var(--text-primary);
+      box-shadow: 0 1px 4px rgba(0,0,0,.08);
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 22px;
+      margin-bottom: 28px;
+    }
+    .card-title {
+      font-family: var(--mono);
+      font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
+      color: var(--text-muted); margin-bottom: 18px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .card-title-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+
+    .form-group { margin-bottom: 14px; }
+    .form-group:last-child { margin-bottom: 0; }
+    .form-label { font-size: 12px; font-weight: 600; color: var(--text-secondary); margin-bottom: 6px; display: block; }
+
+    .input-row { display: flex; gap: 12px; align-items: flex-end; }
+    .input-row .form-group { flex: 1; margin-bottom: 0; }
+
+    input[type="number"] {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text-primary);
+      font-family: var(--font);
+      font-size: 14px;
+      font-weight: 600;
+      padding: 9px 12px;
+      outline: none;
+      transition: border-color .2s, box-shadow .2s;
+      box-sizing: border-box;
+      -moz-appearance: textfield;
+    }
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+    input[type="number"]:focus {
+      border-color: var(--green);
+      box-shadow: 0 0 0 3px rgba(16,185,129,.12);
+    }
+    input[type="number"].input-error {
+      border-color: var(--red);
+      box-shadow: 0 0 0 3px rgba(239,68,68,.10);
+    }
+
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 18px 0;
+    }
+
+    .tax-section { margin-top: 6px; }
+    .tax-label-row {
+      display: flex; align-items: center; gap: 8px;
+      margin-bottom: 8px;
+    }
+    .tax-label-row .form-label { margin-bottom: 0; }
+    .optional-badge {
+      font-family: var(--mono);
+      font-size: 9px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+      color: var(--text-muted);
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 2px 6px;
+    }
+
+    .error-msg {
+      background: rgba(239,68,68,.08);
+      border: 1px solid rgba(239,68,68,.25);
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--red);
+      margin-top: 14px;
+      display: none;
+      align-items: center;
+      gap: 8px;
+    }
+    .error-msg.visible { display: flex; }
+
+    /* Result card */
+    .result-card {
+      background: linear-gradient(135deg, rgba(16,185,129,.08), rgba(99,102,241,.08));
+      border: 1.5px solid rgba(16,185,129,.3);
+      border-radius: 20px;
+      padding: 32px 28px 28px;
+      margin-bottom: 28px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .result-card::before {
+      content: '';
+      position: absolute; top: -40px; right: -40px;
+      width: 120px; height: 120px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--green), var(--purple));
+      opacity: .07;
+      pointer-events: none;
+    }
+    .result-card::after {
+      content: '';
+      position: absolute; bottom: -30px; left: -30px;
+      width: 80px; height: 80px;
+      border-radius: 50%;
+      background: var(--purple);
+      opacity: .05;
+      pointer-events: none;
+    }
+    .result-card.hidden { display: none; }
+
+    .result-label {
+      font-family: var(--mono);
+      font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
+      color: var(--text-muted); margin-bottom: 8px;
+    }
+    .result-value {
+      font-family: var(--mono); font-size: 48px; font-weight: 800;
+      background: linear-gradient(135deg, var(--green), var(--purple));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+      line-height: 1.1; margin-bottom: 10px;
+      word-break: break-all;
+    }
+    .result-sub {
+      font-size: 14px; color: var(--text-secondary); margin-bottom: 4px; font-weight: 500;
+    }
+    .result-formula {
+      font-size: 12px; color: var(--text-secondary); font-family: var(--mono);
+      line-height: 1.6; margin-top: 14px;
+      background: rgba(255,255,255,.6);
+      border: 1px solid rgba(16,185,129,.15);
+      border-radius: 10px;
+      padding: 10px 14px;
+      text-align: left;
+    }
+    .result-formula .hl  { color: var(--green);  font-weight: 700; }
+    .result-formula .hlp { color: var(--purple); font-weight: 700; }
+    .result-formula .hla { color: var(--amber);  font-weight: 700; }
+
+    /* Stats grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 12px;
+      margin-bottom: 28px;
+    }
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px 18px;
+    }
+    .stat-label {
+      font-family: var(--mono);
+      font-size: 9px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase;
+      color: var(--text-muted); margin-bottom: 6px;
+    }
+    .stat-value {
+      font-family: var(--mono);
+      font-size: 20px; font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1.1;
+    }
+    .stat-value.green  { color: var(--green); }
+    .stat-value.purple { color: var(--purple); }
+    .stat-value.amber  { color: var(--amber); }
+    .stat-value.red    { color: var(--red); }
+
+    /* Tax result row */
+    .tax-result-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 12px;
+      padding: 10px 16px;
+      background: rgba(245,158,11,.08);
+      border: 1px solid rgba(245,158,11,.25);
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--amber);
+      font-family: var(--mono);
+    }
+    .tax-result-row.hidden { display: none; }
+
+    /* Action row */
+    .action-row {
+      display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap;
+    }
+    .action-btn {
+      display: flex; align-items: center; gap: 7px;
+      padding: 10px 18px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-family: var(--font); font-size: 13px; font-weight: 600;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all .15s;
+      text-decoration: none;
+    }
+    .action-btn:hover {
+      border-color: var(--green); color: var(--green);
+      background: linear-gradient(135deg, rgba(16,185,129,.04), rgba(99,102,241,.04));
+    }
+    .action-btn svg { width: 15px; height: 15px; flex-shrink: 0; }
+
+    /* Toast */
+    #toast {
+      position: fixed; bottom: 28px; right: 24px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 18px;
+      font-size: 13px; font-weight: 600;
+      color: var(--text-primary);
+      box-shadow: 0 8px 28px rgba(0,0,0,.12);
+      opacity: 0; transition: opacity .25s;
+      pointer-events: none; z-index: 9999;
+      display: flex; align-items: center; gap: 8px;
+    }
+    #toast.show { opacity: 1; }
+
+    /* Special result states */
+    .free-badge {
+      display: inline-block;
+      font-size: 32px;
+      margin-bottom: 4px;
+    }
+    .special-note {
+      font-size: 13px;
+      color: var(--text-secondary);
+      font-style: italic;
+      margin-top: 6px;
+    }
+
+    @media print {
+      #cn-header, .action-row, #toast, .seg-control, .tax-section { display: none !important; }
+      .app { padding: 0; max-width: 100%; }
+      .hero { border: none; padding: 12px 0 8px; margin-bottom: 10px; }
+      .card, .result-card, .stat-card { page-break-inside: avoid; }
+      .result-card.hidden { display: none !important; }
+    }
+
+    @media (max-width: 640px) {
+      .hero { padding: 24px 18px; }
+      .hero-title { font-size: 22px; }
+      .card { padding: 16px; }
+      .seg-btn { font-size: 11px; padding: 8px 4px; }
+      .result-value { font-size: 36px; }
+      .input-row { flex-direction: column; gap: 14px; }
+      .input-row .form-group { width: 100%; }
+      .stats-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 380px) {
+      .result-value { font-size: 28px; }
+      .stats-grid { grid-template-columns: 1fr; }
+    }
+    /* ── SEO content ── */
+    .seo-section { background: var(--surface); border: 1px solid var(--border); border-radius: 18px; padding: 28px; margin-top: 40px; }
+    .seo-section h2 { font-size: 18px; font-weight: 800; margin: 0 0 12px; letter-spacing: -.3px; }
+    .seo-section h3 { font-size: 15px; font-weight: 700; margin: 20px 0 8px; color: var(--text-primary); }
+    .seo-section p { font-size: 14px; color: var(--text-secondary); line-height: 1.75; margin: 0 0 10px; }
+    .seo-section ul { padding-left: 18px; margin: 0 0 10px; }
+    .seo-section ul li { font-size: 14px; color: var(--text-secondary); line-height: 1.65; margin-bottom: 5px; }
+    .related-links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
+    .related-links a { display: inline-flex; align-items: center; gap: 6px; background: var(--surface); border: 1px solid var(--border); border-radius: 100px; padding: 6px 14px; font-size: 13px; font-weight: 600; color: var(--text-primary); text-decoration: none; transition: border-color .15s; }
+    .related-links a:hover { border-color: var(--green); color: var(--green); }
+    @media print { .seo-section { display: none !important; } }
+  </style>
+</head>
+<body>
+<div class="app">
+  <!-- nav.js injects header here -->
+
+  <div class="hero">
+    <h1 class="hero-title">Discount &amp; <span>Sale Price</span> Calculator</h1>
+    <div class="hero-desc">Find the sale price from a discount, reverse-calculate what discount was applied, or stack two discounts together. Includes optional sales tax.</div>
+  </div>
+
+  <!-- Segmented control -->
+  <div class="seg-control" id="segControl" role="tablist" aria-label="Calculator mode">
+    <button class="seg-btn active" data-mode="sale"   type="button" role="tab" aria-selected="true">Sale Price</button>
+    <button class="seg-btn"        data-mode="find"   type="button" role="tab" aria-selected="false">Find Discount %</button>
+    <button class="seg-btn"        data-mode="double" type="button" role="tab" aria-selected="false">Double Discount</button>
+  </div>
+
+  <!-- Input card -->
+  <div class="card">
+    <div class="card-title">
+      <div class="card-title-dot" style="background:var(--green);"></div>
+      Inputs
+    </div>
+
+    <!-- MODE 1: Sale Price -->
+    <div class="mode-panel" id="panel-sale">
+      <div class="input-row">
+        <div class="form-group">
+          <label class="form-label" for="sale-original">Original Price ($)</label>
+          <input type="number" id="sale-original" placeholder="e.g. 120.00" min="0" step="any" autocomplete="off">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="sale-discount">Discount (%)</label>
+          <input type="number" id="sale-discount" placeholder="e.g. 25" min="0" step="any" autocomplete="off">
+        </div>
+      </div>
+    </div>
+
+    <!-- MODE 2: Find Discount % -->
+    <div class="mode-panel" id="panel-find" style="display:none;">
+      <div class="input-row">
+        <div class="form-group">
+          <label class="form-label" for="find-original">Original Price ($)</label>
+          <input type="number" id="find-original" placeholder="e.g. 120.00" min="0" step="any" autocomplete="off">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="find-sale">Sale Price ($)</label>
+          <input type="number" id="find-sale" placeholder="e.g. 90.00" min="0" step="any" autocomplete="off">
+        </div>
+      </div>
+    </div>
+
+    <!-- MODE 3: Double Discount -->
+    <div class="mode-panel" id="panel-double" style="display:none;">
+      <div class="input-row">
+        <div class="form-group">
+          <label class="form-label" for="dbl-original">Original Price ($)</label>
+          <input type="number" id="dbl-original" placeholder="e.g. 200.00" min="0" step="any" autocomplete="off">
+        </div>
+      </div>
+      <div class="input-row" style="margin-top:14px;">
+        <div class="form-group">
+          <label class="form-label" for="dbl-disc1">First Discount (%)</label>
+          <input type="number" id="dbl-disc1" placeholder="e.g. 20" min="0" step="any" autocomplete="off">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="dbl-disc2">Second Discount (%)</label>
+          <input type="number" id="dbl-disc2" placeholder="e.g. 10" min="0" step="any" autocomplete="off">
+        </div>
+      </div>
+    </div>
+
+    <!-- Optional Sales Tax -->
+    <hr class="divider">
+    <div class="tax-section">
+      <div class="tax-label-row">
+        <label class="form-label" for="sales-tax">Sales Tax (%)</label>
+        <span class="optional-badge">Optional</span>
+      </div>
+      <input type="number" id="sales-tax" placeholder="e.g. 8.5" min="0" max="100" step="any" autocomplete="off">
+    </div>
+
+    <!-- Error -->
+    <div class="error-msg" id="errorMsg" role="alert">
+      <span aria-hidden="true">&#9888;</span>
+      <span id="errorText"></span>
+    </div>
+  </div>
+
+  <!-- Result card -->
+  <div class="result-card hidden" id="resultCard" aria-live="polite">
+    <div class="result-label" id="resultLabel">Sale Price</div>
+    <div class="free-badge hidden" id="freeBadge" aria-hidden="true">🎉</div>
+    <div class="result-value" id="resultValue">—</div>
+    <div class="result-sub" id="resultSub"></div>
+    <div class="tax-result-row hidden" id="taxResultRow">
+      <span>&#9654;</span>
+      <span id="taxResultText"></span>
+    </div>
+    <div class="result-formula" id="resultFormula"></div>
+  </div>
+
+  <!-- Action buttons -->
+  <div class="action-row" id="actionRow" style="display:none;">
+    <button class="action-btn" id="copyBtn" type="button">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+      Copy Summary
+    </button>
+    <button class="action-btn" id="printBtn" type="button">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+      Print Results
+    </button>
+  </div>
+
+  <!-- Stats grid -->
+  <div class="stats-grid hidden" id="statsGrid">
+    <div class="stat-card">
+      <div class="stat-label">Original Price</div>
+      <div class="stat-value" id="stat-original">—</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label" id="stat-main-label">Sale Price</div>
+      <div class="stat-value green" id="stat-main">—</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Savings</div>
+      <div class="stat-value amber" id="stat-savings">—</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">You Save</div>
+      <div class="stat-value purple" id="stat-save-pct">—</div>
+    </div>
+  </div>
+
+  <!-- nav.js injects footer here -->
+</div>
+
+<div id="toast"><span style="color:var(--green);font-size:15px;">✓</span> <span id="toast-msg">Copied!</span></div>
+
+<script>window.CALCNOVA_PAGE = { id: 'discount-calculator' };</script>
+<script src="shared/site-data.js"></script>
+<script src="shared/nav.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  // ── State ──────────────────────────────────────────────────────────────────
+  var mode = 'sale';
+  var lastResult = null;
+
+  // ── DOM refs ───────────────────────────────────────────────────────────────
+  var segBtns      = document.querySelectorAll('.seg-btn');
+  var panels       = document.querySelectorAll('.mode-panel');
+  var resultCard   = document.getElementById('resultCard');
+  var resultLabel  = document.getElementById('resultLabel');
+  var resultValue  = document.getElementById('resultValue');
+  var resultSub    = document.getElementById('resultSub');
+  var resultFormula= document.getElementById('resultFormula');
+  var freeBadge    = document.getElementById('freeBadge');
+  var taxResultRow = document.getElementById('taxResultRow');
+  var taxResultTxt = document.getElementById('taxResultText');
+  var errorMsg     = document.getElementById('errorMsg');
+  var errorText    = document.getElementById('errorText');
+  var statsGrid    = document.getElementById('statsGrid');
+  var actionRow    = document.getElementById('actionRow');
+  var statOriginal = document.getElementById('stat-original');
+  var statMain     = document.getElementById('stat-main');
+  var statMainLbl  = document.getElementById('stat-main-label');
+  var statSavings  = document.getElementById('stat-savings');
+  var statSavePct  = document.getElementById('stat-save-pct');
+
+  // ── Helpers ────────────────────────────────────────────────────────────────
+  function fmtMoney(n) {
+    if (!isFinite(n)) return String(n);
+    return '$' + n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  }
+
+  function fmtPct(n) {
+    if (!isFinite(n)) return String(n);
+    // Up to 4 sig decimal places, strip trailing zeros
+    var s = parseFloat(n.toFixed(4)).toString();
+    return s + '%';
+  }
+
+  function fmtNum(n) {
+    if (!isFinite(n)) return String(n);
+    var s = parseFloat(n.toFixed(4)).toString();
+    return s.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  }
+
+  // ── Error helpers ──────────────────────────────────────────────────────────
+  function showError(msg) {
+    errorText.textContent = msg;
+    errorMsg.classList.add('visible');
+    resultCard.classList.add('hidden');
+    statsGrid.classList.add('hidden');
+    actionRow.style.display = 'none';
+    lastResult = null;
+  }
+
+  function clearError() {
+    errorMsg.classList.remove('visible');
+  }
+
+  function hideAll() {
+    resultCard.classList.add('hidden');
+    statsGrid.classList.add('hidden');
+    actionRow.style.display = 'none';
+    lastResult = null;
+  }
+
+  // ── Mode switch ────────────────────────────────────────────────────────────
+  function switchMode(m) {
+    mode = m;
+    segBtns.forEach(function (b) {
+      var active = b.dataset.mode === m;
+      b.classList.toggle('active', active);
+      b.setAttribute('aria-selected', active ? 'true' : 'false');
+    });
+    panels.forEach(function (p) {
+      p.style.display = p.id === 'panel-' + m ? '' : 'none';
+    });
+    clearError();
+    calculate();
+  }
+
+  segBtns.forEach(function (btn) {
+    btn.addEventListener('click', function () { switchMode(btn.dataset.mode); });
+  });
+
+  // ── Calculation ────────────────────────────────────────────────────────────
+  function calculate() {
+    clearError();
+
+    var taxRaw = document.getElementById('sales-tax').value;
+    var taxPct = taxRaw !== '' ? parseFloat(taxRaw) : NaN;
+    var hasTax = !isNaN(taxPct) && taxPct >= 0;
+
+    if (mode === 'sale') {
+      calcSalePrice(hasTax, taxPct);
+    } else if (mode === 'find') {
+      calcFindDiscount(hasTax, taxPct);
+    } else {
+      calcDoubleDiscount(hasTax, taxPct);
+    }
+  }
+
+  function calcSalePrice(hasTax, taxPct) {
+    var origRaw  = document.getElementById('sale-original').value;
+    var discRaw  = document.getElementById('sale-discount').value;
+
+    if (origRaw === '' || discRaw === '') { hideAll(); return; }
+
+    var orig = parseFloat(origRaw);
+    var disc = parseFloat(discRaw);
+
+    if (isNaN(orig) || isNaN(disc)) { hideAll(); return; }
+    if (orig < 0)  { showError('Original price cannot be negative.'); return; }
+
+    // Allow disc > 100 (store pays you), handle disc === 100 (free)
+    var salePrice = orig * (1 - disc / 100);
+    var savings   = orig - salePrice;
+    var payPct    = 100 - disc; // % of original you pay
+
+    var mainLabel, mainDisplay, subText, formulaHtml, specialState;
+
+    if (disc === 100) {
+      specialState = 'free';
+      mainLabel    = 'Sale Price';
+      mainDisplay  = 'FREE';
+      subText      = 'You save ' + fmtMoney(orig) + ' — it\'s completely free!';
+      formulaHtml  =
+        '<span class="hl">$' + fmtNum(orig) + '</span> &times; (1 &minus; <span class="hlp">100</span>/100) = <span class="hl">$0.00</span><br>' +
+        'Savings = <span class="hla">' + fmtMoney(savings) + '</span>';
+    } else if (disc > 100) {
+      specialState = 'overpay';
+      mainLabel    = 'Sale Price';
+      mainDisplay  = fmtMoney(salePrice);
+      subText      = 'Store pays you ' + fmtMoney(Math.abs(salePrice)) + '! (discount exceeds original price)';
+      formulaHtml  =
+        '<span class="hl">$' + fmtNum(orig) + '</span> &times; (1 &minus; <span class="hlp">' + fmtNum(disc) + '</span>/100) = <span class="hl">' + fmtMoney(salePrice) + '</span><br>' +
+        'You pay <span class="hlp">' + fmtPct(payPct) + '</span> of original price';
+    } else {
+      specialState = 'normal';
+      mainLabel    = 'Sale Price';
+      mainDisplay  = fmtMoney(salePrice);
+      subText      = 'You save ' + fmtMoney(savings) + ' — paying ' + fmtPct(payPct) + ' of original price';
+      formulaHtml  =
+        '<span class="hl">$' + fmtNum(orig) + '</span> &times; (1 &minus; <span class="hlp">' + fmtNum(disc) + '</span>/100) = <span class="hl">' + fmtMoney(salePrice) + '</span><br>' +
+        'Savings = <span class="hla">$' + fmtNum(orig) + '</span> &minus; <span class="hl">' + fmtMoney(salePrice) + '</span> = <span class="hla">' + fmtMoney(savings) + '</span>';
+    }
+
+    showResult({
+      label: mainLabel,
+      display: mainDisplay,
+      sub: subText,
+      formula: formulaHtml,
+      special: specialState,
+      orig: orig,
+      salePrice: disc <= 100 ? salePrice : null,
+      savings: disc <= 100 ? savings : null,
+      discountPct: disc,
+      hasTax: hasTax,
+      taxPct: taxPct,
+      taxBase: salePrice,
+      statMainLabel: 'Sale Price'
+    });
+  }
+
+  function calcFindDiscount(hasTax, taxPct) {
+    var origRaw  = document.getElementById('find-original').value;
+    var saleRaw  = document.getElementById('find-sale').value;
+
+    if (origRaw === '' || saleRaw === '') { hideAll(); return; }
+
+    var orig = parseFloat(origRaw);
+    var sale = parseFloat(saleRaw);
+
+    if (isNaN(orig) || isNaN(sale)) { hideAll(); return; }
+    if (orig < 0 || sale < 0) { showError('Prices cannot be negative.'); return; }
+    if (orig === 0) { showError('Original price cannot be zero.'); return; }
+    if (sale > orig) { showError('Sale price cannot be greater than the original price.'); return; }
+
+    var disc     = ((orig - sale) / orig) * 100;
+    var savings  = orig - sale;
+
+    var formulaHtml =
+      '((<span class="hla">$' + fmtNum(orig) + '</span> &minus; <span class="hl">$' + fmtNum(sale) + '</span>) / <span class="hla">$' + fmtNum(orig) + '</span>) &times; 100<br>' +
+      '= <span class="hlp">' + fmtPct(disc) + '</span> discount | Savings = <span class="hla">' + fmtMoney(savings) + '</span>';
+
+    showResult({
+      label: 'Discount',
+      display: fmtPct(disc),
+      sub: 'You saved ' + fmtMoney(savings) + ' on a ' + fmtMoney(orig) + ' item',
+      formula: formulaHtml,
+      special: 'normal',
+      orig: orig,
+      salePrice: sale,
+      savings: savings,
+      discountPct: disc,
+      hasTax: hasTax,
+      taxPct: taxPct,
+      taxBase: sale,
+      statMainLabel: 'Discount %'
+    });
+  }
+
+  function calcDoubleDiscount(hasTax, taxPct) {
+    var origRaw  = document.getElementById('dbl-original').value;
+    var disc1Raw = document.getElementById('dbl-disc1').value;
+    var disc2Raw = document.getElementById('dbl-disc2').value;
+
+    if (origRaw === '' || disc1Raw === '' || disc2Raw === '') { hideAll(); return; }
+
+    var orig  = parseFloat(origRaw);
+    var disc1 = parseFloat(disc1Raw);
+    var disc2 = parseFloat(disc2Raw);
+
+    if (isNaN(orig) || isNaN(disc1) || isNaN(disc2)) { hideAll(); return; }
+    if (orig < 0)  { showError('Original price cannot be negative.'); return; }
+    if (disc1 < 0 || disc2 < 0) { showError('Discounts cannot be negative.'); return; }
+
+    var afterFirst   = orig  * (1 - disc1 / 100);
+    var finalPrice   = afterFirst * (1 - disc2 / 100);
+    var totalSavings = orig - finalPrice;
+    var equivDisc    = (1 - (1 - disc1 / 100) * (1 - disc2 / 100)) * 100;
+
+    var formulaHtml =
+      'Step 1: <span class="hla">$' + fmtNum(orig) + '</span> &times; (1 &minus; <span class="hl">' + fmtNum(disc1) + '</span>/100) = <span class="hl">' + fmtMoney(afterFirst) + '</span><br>' +
+      'Step 2: <span class="hl">' + fmtMoney(afterFirst) + '</span> &times; (1 &minus; <span class="hlp">' + fmtNum(disc2) + '</span>/100) = <span class="hlp">' + fmtMoney(finalPrice) + '</span><br>' +
+      'Equivalent single discount: 1 &minus; (1 &minus; ' + fmtNum(disc1) + '/100) &times; (1 &minus; ' + fmtNum(disc2) + '/100) = <span class="hla">' + fmtPct(equivDisc) + '</span>';
+
+    var subParts = [
+      'After 1st discount: ' + fmtMoney(afterFirst),
+      'Equivalent single discount: ' + fmtPct(equivDisc)
+    ];
+
+    showResult({
+      label: 'Final Price',
+      display: fmtMoney(finalPrice),
+      sub: subParts.join(' · '),
+      formula: formulaHtml,
+      special: 'normal',
+      orig: orig,
+      salePrice: finalPrice,
+      savings: totalSavings,
+      discountPct: equivDisc,
+      hasTax: hasTax,
+      taxPct: taxPct,
+      taxBase: finalPrice,
+      statMainLabel: 'Final Price'
+    });
+  }
+
+  // ── Show result ────────────────────────────────────────────────────────────
+  function showResult(r) {
+    resultCard.classList.remove('hidden');
+
+    resultLabel.textContent = r.label;
+
+    // Special state: free
+    if (r.special === 'free') {
+      freeBadge.classList.remove('hidden');
+      resultValue.style.fontSize = '36px';
+    } else {
+      freeBadge.classList.add('hidden');
+      resultValue.style.fontSize = '';
+    }
+
+    resultValue.textContent = r.display;
+    resultSub.textContent   = r.sub;
+    resultFormula.innerHTML = r.formula;
+
+    // Tax row
+    if (r.hasTax && r.taxBase !== null && isFinite(r.taxBase)) {
+      var withTax = r.taxBase * (1 + r.taxPct / 100);
+      taxResultRow.classList.remove('hidden');
+      taxResultTxt.textContent =
+        'With ' + fmtPct(r.taxPct) + ' sales tax: ' + fmtMoney(withTax) + ' total';
+    } else {
+      taxResultRow.classList.add('hidden');
+    }
+
+    // Stats
+    statsGrid.classList.remove('hidden');
+    statOriginal.textContent = fmtMoney(r.orig);
+    statMainLbl.textContent  = r.statMainLabel;
+
+    if (r.statMainLabel === 'Discount %') {
+      statMain.textContent = fmtPct(r.discountPct);
+    } else {
+      statMain.textContent = r.salePrice !== null ? fmtMoney(r.salePrice) : '—';
+    }
+
+    statSavings.textContent = r.savings !== null ? fmtMoney(r.savings) : '—';
+
+    if (r.discountPct !== null && isFinite(r.discountPct)) {
+      statSavePct.textContent = fmtPct(Math.min(r.discountPct, 100));
+    } else {
+      statSavePct.textContent = '—';
+    }
+
+    // Actions
+    actionRow.style.display = 'flex';
+
+    // Store for copy
+    lastResult = r;
+  }
+
+  // ── Live calculation ───────────────────────────────────────────────────────
+  document.querySelectorAll('input[type="number"]').forEach(function (el) {
+    el.addEventListener('input', calculate);
+  });
+
+  // ── Copy summary ───────────────────────────────────────────────────────────
+  document.getElementById('copyBtn').addEventListener('click', function () {
+    if (!lastResult) { showToast('No results to copy yet.'); return; }
+
+    var r = lastResult;
+    var lines = ['CalcNova — Discount & Sale Price Calculator', ''];
+
+    if (mode === 'sale') {
+      lines.push('Mode: Sale Price');
+      lines.push('Original Price: ' + fmtMoney(r.orig));
+      lines.push('Discount: ' + fmtPct(r.discountPct));
+      lines.push('Sale Price: ' + (r.salePrice !== null ? fmtMoney(r.salePrice) : r.display));
+      if (r.savings !== null) lines.push('Savings: ' + fmtMoney(r.savings));
+    } else if (mode === 'find') {
+      lines.push('Mode: Find Discount %');
+      lines.push('Original Price: ' + fmtMoney(r.orig));
+      lines.push('Sale Price: ' + fmtMoney(r.salePrice));
+      lines.push('Discount: ' + fmtPct(r.discountPct));
+      lines.push('Savings: ' + fmtMoney(r.savings));
+    } else {
+      lines.push('Mode: Double Discount');
+      lines.push('Original Price: ' + fmtMoney(r.orig));
+      lines.push('Final Price: ' + fmtMoney(r.salePrice));
+      lines.push('Total Savings: ' + fmtMoney(r.savings));
+      lines.push('Equivalent Single Discount: ' + fmtPct(r.discountPct));
+    }
+
+    if (r.hasTax && r.taxBase !== null && isFinite(r.taxBase)) {
+      var withTax = r.taxBase * (1 + r.taxPct / 100);
+      lines.push('');
+      lines.push('Sales Tax (' + fmtPct(r.taxPct) + '): + ' + fmtMoney(withTax - r.taxBase));
+      lines.push('Total with Tax: ' + fmtMoney(withTax));
+    }
+
+    lines.push('');
+    lines.push('Calculated at CalcNova.com');
+
+    navigator.clipboard.writeText(lines.join('\n'))
+      .then(function () { showToast('Summary copied!'); })
+      .catch(function () { showToast('Copy failed — try again.'); });
+  });
+
+  // ── Print ──────────────────────────────────────────────────────────────────
+  document.getElementById('printBtn').addEventListener('click', function () {
+    window.print();
+  });
+
+  // ── Toast ──────────────────────────────────────────────────────────────────
+  var toastTimer;
+  function showToast(msg) {
+    var toast = document.getElementById('toast');
+    document.getElementById('toast-msg').textContent = msg;
+    clearTimeout(toastTimer);
+    toast.classList.add('show');
+    toastTimer = setTimeout(function () { toast.classList.remove('show'); }, 2400);
+  }
+
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Due Date Calculator | CalcNova</title>
+  <meta name="description" content="Calculate your pregnancy due date using LMP, conception date, or IVF transfer date. See your current week, trimester, and key milestone dates." />
+  <link rel="canonical" href="https://calcnova.co/due-date-calculator.html" />
+  <meta property="og:title" content="Pregnancy Due Date Calculator | CalcNova" /><meta property="og:description" content="Calculate your estimated due date using LMP, conception date, or IVF transfer. See milestones, trimester progress, and countdown." /><meta property="og:type" content="website" /><meta property="og:url" content="https://calcnova.co/due-date-calculator.html" /><meta property="og:site_name" content="CalcNova" />
+  <script type="application/ld+json">[{"@context":"https://schema.org","@type":"WebPage","name":"Pregnancy Due Date Calculator","url":"https://calcnova.co/due-date-calculator.html","description":"Calculate your estimated due date using LMP, conception date, or IVF transfer date. See trimester progress and key milestones.","applicationCategory":"UtilityApplication","operatingSystem":"Any","isPartOf":{"@type":"WebSite","name":"CalcNova","url":"https://calcnova.co/"}},{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How accurate is this due date calculator?","acceptedAnswer":{"@type":"Answer","text":"This calculator uses the same Naegele's rule formula used in clinical practice. For women with a regular 28-day cycle, it is as accurate as any LMP-based calculation. However, LMP-based due dates carry an inherent uncertainty of about ±2 weeks because ovulation timing varies. A first-trimester ultrasound provides a more precise estimate. Consider the date produced here as a working estimate until confirmed by your healthcare provider."}},{"@type":"Question","name":"What if I don't know my last period date?","acceptedAnswer":{"@type":"Answer","text":"If you are unsure of your LMP, try the conception date method if you tracked ovulation, or use an estimated LMP based on when you think your last period started. If you have had an early ultrasound, your provider will have assigned a gestational age from which you can back-calculate the LMP equivalent. When in doubt, an ultrasound scan is the most reliable dating method."}},{"@type":"Question","name":"Does cycle length really affect the due date?","acceptedAnswer":{"@type":"Answer","text":"Yes. Naegele's rule assumes a 28-day cycle with ovulation on day 14. If your cycle is 35 days, ovulation likely occurs around day 21 — 7 days later than assumed. This means conception happened 7 days later, and the due date should be shifted forward by 7 days. This calculator automatically applies this adjustment. For very irregular cycles, ultrasound dating is more reliable than any formula."}},{"@type":"Question","name":"What is the difference between gestational age and fetal age?","acceptedAnswer":{"@type":"Answer","text":"Gestational age (or menstrual age) is counted from the first day of your last menstrual period — this is the standard used by healthcare providers. Fetal age (or conceptual age) is counted from fertilisation, which is approximately 2 weeks after the LMP. So at 10 weeks gestational age, the fetus is about 8 weeks old in terms of development. Healthcare providers always use gestational age."}},{"@type":"Question","name":"What does \"full term\" mean?","acceptedAnswer":{"@type":"Answer","text":"Full term now refers specifically to 39 weeks 0 days through 40 weeks 6 days. The terminology was updated by ACOG to reflect research showing better outcomes for babies born in this window. Births at 37–38 weeks 6 days are classified as \"early term,\" 39–40 weeks 6 days as \"full term,\" 41 weeks 0 days to 41 weeks 6 days as \"late term,\" and 42 weeks or beyond as \"post-term.\""}}]}]</script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="shared/nav.css" />
+  <style>
+    .app { max-width: 960px; margin: 0 auto; padding: 0 16px 60px; }
+
+    .page-header { text-align: center; padding: 40px 0 32px; }
+    .page-header h1 { font-size: clamp(1.6rem, 4vw, 2.4rem); font-weight: 800; color: var(--text-primary); margin: 0 0 10px; }
+    .page-header p { color: var(--text-secondary); font-size: 1rem; margin: 0; max-width: 560px; margin: 0 auto; }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px;
+      margin-bottom: 20px;
+    }
+
+    .card h2 { font-size: 1.1rem; font-weight: 700; color: var(--text-primary); margin: 0 0 20px; }
+
+    .radio-group { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; }
+    .radio-btn { display: flex; align-items: center; gap: 8px; padding: 10px 16px; border: 1px solid var(--border); border-radius: 10px; cursor: pointer; font-size: 0.9rem; color: var(--text-secondary); transition: all 0.15s; background: var(--bg); }
+    .radio-btn:hover { border-color: var(--green); color: var(--text-primary); }
+    .radio-btn input[type="radio"] { accent-color: var(--green); width: 16px; height: 16px; }
+    .radio-btn.active { border-color: var(--green); background: rgba(16,185,129,0.08); color: var(--text-primary); font-weight: 600; }
+
+    .ivf-sub { display: flex; gap: 10px; margin-bottom: 20px; padding-left: 8px; }
+    .ivf-sub .radio-btn { font-size: 0.85rem; padding: 8px 14px; }
+
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+    @media (max-width: 560px) { .form-row { grid-template-columns: 1fr; } }
+
+    .form-group { display: flex; flex-direction: column; gap: 6px; }
+    .form-group label { font-size: 0.85rem; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em; }
+    .form-group input[type="date"],
+    .form-group input[type="number"] {
+      padding: 11px 14px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: var(--bg);
+      color: var(--text-primary);
+      font-family: var(--font);
+      font-size: 0.95rem;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    .form-group input:focus { border-color: var(--green); }
+
+    .calc-btn {
+      width: 100%;
+      padding: 14px;
+      background: var(--green);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      font-family: var(--font);
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: opacity 0.15s;
+    }
+    .calc-btn:hover { opacity: 0.9; }
+
+    /* Results */
+    #results { display: none; }
+
+    .due-date-hero {
+      text-align: center;
+      padding: 32px 20px;
+      background: linear-gradient(135deg, rgba(16,185,129,0.1) 0%, rgba(99,102,241,0.1) 100%);
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      margin-bottom: 20px;
+    }
+    .due-date-hero .label { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
+    .due-date-hero .date-big { font-size: clamp(1.8rem, 5vw, 2.8rem); font-weight: 800; color: var(--green); margin-bottom: 4px; font-family: var(--font); }
+    .due-date-hero .star-sign { font-size: 0.95rem; color: var(--text-muted); }
+
+    .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 20px; }
+    @media (max-width: 560px) { .stats-grid { grid-template-columns: 1fr 1fr; } }
+
+    .stat-box { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 16px; text-align: center; }
+    .stat-box .s-label { font-size: 0.75rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
+    .stat-box .s-value { font-size: 1.3rem; font-weight: 800; color: var(--text-primary); }
+    .stat-box .s-sub { font-size: 0.78rem; color: var(--text-muted); margin-top: 2px; }
+
+    /* Trimester progress */
+    .trimester-bar-wrap { margin-bottom: 20px; }
+    .trimester-bar-wrap h3 { font-size: 0.9rem; font-weight: 700; color: var(--text-secondary); margin: 0 0 10px; }
+    .t-bar-outer { position: relative; height: 28px; border-radius: 14px; overflow: hidden; background: var(--bg); border: 1px solid var(--border); }
+    .t-seg { position: absolute; top: 0; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 0.72rem; font-weight: 700; color: rgba(255,255,255,0.9); }
+    .t-seg-1 { left: 0; width: 30%; background: rgba(99,102,241,0.7); border-radius: 14px 0 0 14px; }
+    .t-seg-2 { left: 30%; width: 35%; background: rgba(16,185,129,0.65); }
+    .t-seg-3 { left: 65%; width: 35%; background: rgba(245,158,11,0.65); border-radius: 0 14px 14px 0; }
+    .t-marker { position: absolute; top: 0; height: 100%; width: 3px; background: #fff; border-radius: 2px; transform: translateX(-50%); box-shadow: 0 0 0 2px rgba(0,0,0,0.3); transition: left 0.4s ease; }
+    .t-week-labels { display: flex; justify-content: space-between; font-size: 0.72rem; color: var(--text-muted); margin-top: 4px; padding: 0 2px; }
+
+    /* Milestones */
+    .milestones { display: flex; flex-direction: column; gap: 10px; }
+    .milestone { display: flex; align-items: center; gap: 14px; padding: 14px 16px; border: 1px solid var(--border); border-radius: 12px; background: var(--bg); }
+    .milestone .m-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+    .milestone .m-text { flex: 1; }
+    .milestone .m-name { font-size: 0.9rem; font-weight: 600; color: var(--text-primary); }
+    .milestone .m-week { font-size: 0.8rem; color: var(--text-muted); }
+    .milestone .m-date { font-size: 0.9rem; font-weight: 600; color: var(--text-secondary); font-family: var(--mono); white-space: nowrap; }
+    .milestone.past .m-dot { background: var(--text-muted); }
+    .milestone.past .m-name { color: var(--text-muted); }
+    .milestone.current .m-dot { background: var(--green); }
+    .milestone.future .m-dot { background: var(--purple); }
+
+    /* Countdown */
+    .countdown-box { text-align: center; padding: 20px; background: var(--bg); border: 1px solid var(--border); border-radius: 12px; }
+    .countdown-box .c-num { font-size: 2.5rem; font-weight: 800; color: var(--purple); font-family: var(--mono); }
+    .countdown-box .c-label { font-size: 0.85rem; color: var(--text-muted); font-weight: 500; }
+
+    /* Disclaimer */
+    .disclaimer {
+      background: rgba(245,158,11,0.08);
+      border: 1px solid rgba(245,158,11,0.3);
+      border-radius: 12px;
+      padding: 14px 18px;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin-bottom: 20px;
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+    }
+    .disclaimer .d-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 1px; }
+
+    /* Educational */
+    .edu-section { margin-top: 40px; }
+    .edu-section h2 { font-size: 1.4rem; font-weight: 800; color: var(--text-primary); margin: 0 0 16px; }
+    .edu-section h3 { font-size: 1.05rem; font-weight: 700; color: var(--text-primary); margin: 28px 0 10px; }
+    .edu-section p { color: var(--text-secondary); line-height: 1.75; margin: 0 0 14px; font-size: 0.95rem; }
+    .edu-section ul { color: var(--text-secondary); line-height: 1.8; margin: 0 0 14px; padding-left: 20px; font-size: 0.95rem; }
+    .edu-section li { margin-bottom: 6px; }
+
+    .faq-item { border: 1px solid var(--border); border-radius: 12px; margin-bottom: 10px; overflow: hidden; }
+    .faq-q { padding: 16px 20px; font-weight: 600; font-size: 0.95rem; color: var(--text-primary); cursor: pointer; display: flex; justify-content: space-between; align-items: center; background: var(--surface); user-select: none; }
+    .faq-q:hover { background: var(--bg); }
+    .faq-q .arrow { transition: transform 0.2s; font-size: 0.8rem; color: var(--text-muted); }
+    .faq-q.open .arrow { transform: rotate(180deg); }
+    .faq-a { display: none; padding: 0 20px 16px; color: var(--text-secondary); font-size: 0.9rem; line-height: 1.75; background: var(--surface); }
+    .faq-a.open { display: block; }
+  </style>
+</head>
+<body>
+<div class="app">
+
+  <div class="page-header">
+    <h1>Pregnancy Due Date Calculator</h1>
+    <p>Estimate your due date, current week, trimester, and key milestones using your LMP, conception date, or IVF transfer date.</p>
+  </div>
+
+  <div class="card">
+    <h2>Calculation Method</h2>
+
+    <div class="radio-group" id="methodGroup">
+      <label class="radio-btn active" id="lbl-lmp">
+        <input type="radio" name="method" value="lmp" checked onchange="onMethodChange()" /> Last Menstrual Period (LMP)
+      </label>
+      <label class="radio-btn" id="lbl-conception">
+        <input type="radio" name="method" value="conception" onchange="onMethodChange()" /> Conception Date
+      </label>
+      <label class="radio-btn" id="lbl-ivf">
+        <input type="radio" name="method" value="ivf" onchange="onMethodChange()" /> IVF Transfer
+      </label>
+    </div>
+
+    <div id="ivfSub" style="display:none;">
+      <div class="ivf-sub" id="ivfSubGroup">
+        <label class="radio-btn active" id="lbl-ivf3">
+          <input type="radio" name="ivfType" value="3" checked onchange="onIvfChange()" /> 3-Day Embryo
+        </label>
+        <label class="radio-btn" id="lbl-ivf5">
+          <input type="radio" name="ivfType" value="5" checked onchange="onIvfChange()" /> 5-Day Embryo (Blastocyst)
+        </label>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label id="dateLabel">Date of Last Menstrual Period</label>
+        <input type="date" id="mainDate" onchange="calculate()" />
+      </div>
+      <div class="form-group" id="cycleGroup">
+        <label>Cycle Length (days)</label>
+        <input type="number" id="cycleLength" value="28" min="20" max="45" oninput="calculate()" />
+      </div>
+    </div>
+
+  </div>
+
+  <div id="results">
+
+    <div class="due-date-hero">
+      <div class="label">Estimated Due Date</div>
+      <div class="date-big" id="dueDateBig">—</div>
+      <div class="star-sign" id="starSign"></div>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-box">
+        <div class="s-label">Current Week</div>
+        <div class="s-value" id="statWeek">—</div>
+        <div class="s-sub" id="statDay">— days</div>
+      </div>
+      <div class="stat-box">
+        <div class="s-label">Trimester</div>
+        <div class="s-value" id="statTrimester">—</div>
+        <div class="s-sub" id="statTrimSub">—</div>
+      </div>
+      <div class="stat-box">
+        <div class="s-label">Countdown</div>
+        <div class="s-value" id="statCountdown">—</div>
+        <div class="s-sub">days to go</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="trimester-bar-wrap">
+        <h3>Pregnancy Progress</h3>
+        <div class="t-bar-outer">
+          <div class="t-seg t-seg-1">1st Tri</div>
+          <div class="t-seg t-seg-2">2nd Trimester</div>
+          <div class="t-seg t-seg-3">3rd Trimester</div>
+          <div class="t-marker" id="tMarker" style="left:0%"></div>
+        </div>
+        <div class="t-week-labels"><span>Week 1</span><span>Week 13</span><span>Week 27</span><span>Week 40</span></div>
+      </div>
+
+      <h2 style="margin-top:20px;">Key Milestones</h2>
+      <div class="milestones" id="milestones"></div>
+    </div>
+
+    <div class="disclaimer">
+      <span class="d-icon">⚠</span>
+      <span><strong>Important:</strong> This is an estimate only. Due dates calculated by this tool are based on Naegele's rule and similar formulas. Only your healthcare provider can confirm your due date — typically with an ultrasound in the first trimester. Please consult your doctor or midwife for personalised medical advice.</span>
+    </div>
+
+  </div>
+
+  <!-- Educational Section -->
+  <div class="edu-section">
+    <h2>Understanding Pregnancy Due Dates</h2>
+
+    <h3>Naegele's Rule: The Foundation of Due Date Calculation</h3>
+    <p>The most widely used method for estimating a due date is Naegele's rule, developed by German obstetrician Franz Karl Naegele in the 19th century. The formula is straightforward: take the first day of your last menstrual period (LMP), add one year, subtract three months, and add seven days. This is mathematically equivalent to adding 280 days (40 weeks) to the LMP date.</p>
+    <p>The formula assumes a standard 28-day menstrual cycle with ovulation occurring on day 14. If your cycle is longer or shorter, the due date shifts accordingly — which is why this calculator adjusts the result based on your entered cycle length.</p>
+
+    <h3>How Gestational Age Is Calculated</h3>
+    <p>Gestational age is measured in weeks from the first day of your last menstrual period — not from the date of conception. This convention exists because the LMP is an observable event, while the actual conception date is rarely known with precision. Ovulation and fertilisation typically occur around two weeks after the LMP, so by the time a pregnancy test turns positive at around 4 weeks gestational age, the embryo is actually only about 2 weeks old in terms of true fetal age.</p>
+    <p>This distinction matters when comparing notes with your healthcare provider. When they say "you are 8 weeks pregnant," they mean 8 weeks from your LMP — sometimes called 8 weeks gestational age or 8 weeks pregnant.</p>
+
+    <h3>Conception Date Method</h3>
+    <p>If you know your approximate conception date — for example, from tracking ovulation with basal body temperature, ovulation predictor kits, or fertility monitoring — you can calculate your due date by adding 266 days (38 weeks) to that date. This skips the LMP-to-ovulation estimation and goes directly to true fetal age, typically giving a similar result to the LMP method for women with a 28-day cycle.</p>
+
+    <h3>IVF Transfer Date Method</h3>
+    <p>For pregnancies achieved through in vitro fertilisation, the transfer date provides a precise anchor point. For a 3-day embryo transfer (cleavage stage), the due date is 263 days after the transfer. For a 5-day embryo transfer (blastocyst), it is 261 days after transfer. These figures account for the fact that the embryo's developmental clock started at fertilisation, which occurred before the transfer.</p>
+
+    <h3>The Three Trimesters Explained</h3>
+    <p>Pregnancy is divided into three trimesters, each representing a distinct phase of fetal development:</p>
+    <ul>
+      <li><strong>First Trimester (Weeks 1–12):</strong> The most critical period for organ formation. The heart begins beating around week 6, and by the end of the first trimester all major organs are present in rudimentary form. Miscarriage risk is highest in this period, which is why the 12-week scan is so significant — it marks the transition to a much lower-risk phase.</li>
+      <li><strong>Second Trimester (Weeks 13–26):</strong> Often called the "golden period." Morning sickness typically eases, energy returns, and the pregnancy becomes visible. The 20-week anatomy scan checks fetal structure and can detect many abnormalities. You may feel fetal movements (quickening) for the first time around weeks 18–22.</li>
+      <li><strong>Third Trimester (Weeks 27–40+):</strong> Rapid growth and organ maturation. The baby gains most of its birth weight during this period. Viability — the ability to survive outside the womb with medical support — is generally reached around 24 weeks, with outcomes improving significantly week by week from 28 weeks onward.</li>
+    </ul>
+
+    <h3>Key Milestone Dates</h3>
+    <p>Several dates carry particular significance during pregnancy:</p>
+    <ul>
+      <li><strong>12-Week Nuchal Translucency Scan:</strong> Screens for chromosomal conditions including Down syndrome. Combined with blood tests (combined first trimester screening), it provides a risk assessment. This scan also confirms gestational age and checks for multiple pregnancies.</li>
+      <li><strong>20-Week Anatomy Scan:</strong> A detailed structural survey of the fetus. Sonographers assess brain, heart, spine, kidneys, limbs, and face. Placenta position is also checked — a low-lying placenta (placenta praevia) at this point requires monitoring.</li>
+      <li><strong>24 Weeks — Viability:</strong> The threshold at which a baby born prematurely has a reasonable chance of survival with intensive neonatal care. Survival rates increase steeply from this point.</li>
+      <li><strong>37 Weeks — Full Term:</strong> Previously considered full term at 37 weeks, guidelines now describe 39–40 weeks as optimal. Babies born 37–38 weeks are "early term" and may face slightly higher risks than those born at 39–40 weeks.</li>
+    </ul>
+
+    <h3>Why Your Due Date May Change</h3>
+    <p>It is common for healthcare providers to adjust your due date after an early ultrasound. This is because ultrasound measurements of the embryo or fetus (particularly crown-rump length in the first trimester) are more accurate than LMP dates, especially if your cycle is irregular or you are uncertain of your LMP. The earlier the ultrasound, the more precise the gestational age estimate — first-trimester dating is accurate to within about 5–7 days, while second-trimester dating has a margin of about 2 weeks.</p>
+    <p>Only about 5% of babies are born on their exact due date. Most births occur within two weeks before or after the due date. If you reach 41–42 weeks, your provider may discuss induction of labour to reduce risks associated with post-term pregnancy.</p>
+
+    <h2 style="margin-top:40px;">Frequently Asked Questions</h2>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">How accurate is this due date calculator? <span class="arrow">▼</span></div>
+      <div class="faq-a">This calculator uses the same Naegele's rule formula used in clinical practice. For women with a regular 28-day cycle, it is as accurate as any LMP-based calculation. However, LMP-based due dates carry an inherent uncertainty of about ±2 weeks because ovulation timing varies. A first-trimester ultrasound provides a more precise estimate. Consider the date produced here as a working estimate until confirmed by your healthcare provider.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">What if I don't know my last period date? <span class="arrow">▼</span></div>
+      <div class="faq-a">If you are unsure of your LMP, try the conception date method if you tracked ovulation, or use an estimated LMP based on when you think your last period started. If you have had an early ultrasound, your provider will have assigned a gestational age from which you can back-calculate the LMP equivalent. When in doubt, an ultrasound scan is the most reliable dating method.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">Does cycle length really affect the due date? <span class="arrow">▼</span></div>
+      <div class="faq-a">Yes. Naegele's rule assumes a 28-day cycle with ovulation on day 14. If your cycle is 35 days, ovulation likely occurs around day 21 — 7 days later than assumed. This means conception happened 7 days later, and the due date should be shifted forward by 7 days. This calculator automatically applies this adjustment. For very irregular cycles, ultrasound dating is more reliable than any formula.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">What is the difference between gestational age and fetal age? <span class="arrow">▼</span></div>
+      <div class="faq-a">Gestational age (or menstrual age) is counted from the first day of your last menstrual period — this is the standard used by healthcare providers. Fetal age (or conceptual age) is counted from fertilisation, which is approximately 2 weeks after the LMP. So at 10 weeks gestational age, the fetus is about 8 weeks old in terms of development. Healthcare providers always use gestational age, so when discussing weeks with your doctor, they mean gestational weeks.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">What does "full term" mean? <span class="arrow">▼</span></div>
+      <div class="faq-a">Full term now refers specifically to 39 weeks 0 days through 40 weeks 6 days. The terminology was updated by the American College of Obstetricians and Gynecologists (ACOG) to reflect research showing better outcomes for babies born in this window. Births at 37–38 weeks 6 days are now classified as "early term," 39–40 weeks 6 days as "full term," 41 weeks 0 days to 41 weeks 6 days as "late term," and 42 weeks or beyond as "post-term."</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">Can twins have a different due date calculation? <span class="arrow">▼</span></div>
+      <div class="faq-a">The LMP-based due date calculation is the same regardless of whether you are carrying one baby or multiples. However, twin and higher-order pregnancies are typically delivered earlier than singleton pregnancies. Uncomplicated dichorionic-diamniotic (DCDA) twins are generally offered delivery at 37 weeks; monochorionic-diamniotic (MCDA) twins at 36 weeks; and monochorionic-monoamniotic (MCMA) twins even earlier. Your provider will set a personalised plan based on your specific situation.</div>
+    </div>
+
+  </div>
+
+</div>
+
+<script>window.CALCNOVA_PAGE = { id: 'due-date' };</script>
+<script src="shared/site-data.js"></script>
+<script src="shared/nav.js"></script>
+<script>
+
+function onMethodChange() {
+  const method = document.querySelector('input[name="method"]:checked').value;
+  document.querySelectorAll('.radio-btn').forEach(el => {
+    const inp = el.querySelector('input[name="method"]');
+    if (inp) el.classList.toggle('active', inp.checked);
+  });
+  document.getElementById('ivfSub').style.display = method === 'ivf' ? 'block' : 'none';
+  document.getElementById('cycleGroup').style.display = method === 'lmp' ? 'flex' : 'none';
+  const labels = { lmp: 'Date of Last Menstrual Period', conception: 'Conception Date', ivf: 'IVF Transfer Date' };
+  document.getElementById('dateLabel').textContent = labels[method];
+}
+
+function onIvfChange() {
+  document.querySelectorAll('#ivfSubGroup .radio-btn').forEach(el => {
+    const inp = el.querySelector('input[name="ivfType"]');
+    if (inp) el.classList.toggle('active', inp.checked);
+  });
+}
+
+function addDays(date, days) {
+  const d = new Date(date);
+  d.setDate(d.getDate() + days);
+  return d;
+}
+
+function formatDate(date) {
+  return date.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+}
+
+function formatDateShort(date) {
+  return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+}
+
+function getStarSign(date) {
+  const m = date.getMonth() + 1;
+  const d = date.getDate();
+  if ((m === 3 && d >= 21) || (m === 4 && d <= 19)) return 'Aries ♈';
+  if ((m === 4 && d >= 20) || (m === 5 && d <= 20)) return 'Taurus ♉';
+  if ((m === 5 && d >= 21) || (m === 6 && d <= 20)) return 'Gemini ♊';
+  if ((m === 6 && d >= 21) || (m === 7 && d <= 22)) return 'Cancer ♋';
+  if ((m === 7 && d >= 23) || (m === 8 && d <= 22)) return 'Leo ♌';
+  if ((m === 8 && d >= 23) || (m === 9 && d <= 22)) return 'Virgo ♍';
+  if ((m === 9 && d >= 23) || (m === 10 && d <= 22)) return 'Libra ♎';
+  if ((m === 10 && d >= 23) || (m === 11 && d <= 21)) return 'Scorpio ♏';
+  if ((m === 11 && d >= 22) || (m === 12 && d <= 21)) return 'Sagittarius ♐';
+  if ((m === 12 && d >= 22) || (m === 1 && d <= 19)) return 'Capricorn ♑';
+  if ((m === 1 && d >= 20) || (m === 2 && d <= 18)) return 'Aquarius ♒';
+  return 'Pisces ♓';
+}
+
+function calculate() {
+  const dateVal = document.getElementById('mainDate').value;
+  if (!dateVal) return;
+
+  const inputDate = new Date(dateVal + 'T00:00:00');
+  const method = document.querySelector('input[name="method"]:checked').value;
+  const cycleLen = parseInt(document.getElementById('cycleLength').value) || 28;
+
+  let lmpEquivalent;
+  let dueDate;
+
+  if (method === 'lmp') {
+    lmpEquivalent = inputDate;
+    dueDate = addDays(inputDate, 280 + (cycleLen - 28));
+  } else if (method === 'conception') {
+    lmpEquivalent = addDays(inputDate, -14);
+    dueDate = addDays(inputDate, 266);
+  } else {
+    const ivfType = document.querySelector('input[name="ivfType"]:checked').value;
+    const offsetDays = ivfType === '3' ? 263 : 261;
+    dueDate = addDays(inputDate, offsetDays);
+    lmpEquivalent = addDays(dueDate, -280);
+  }
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const daysSinceLmp = Math.floor((today - lmpEquivalent) / 86400000);
+  const currentWeek = Math.floor(daysSinceLmp / 7);
+  const currentDayInWeek = daysSinceLmp % 7;
+  const daysRemaining = Math.ceil((dueDate - today) / 86400000);
+
+  let trimester, trimSub;
+  if (currentWeek < 13) { trimester = '1st'; trimSub = 'Weeks 1–12'; }
+  else if (currentWeek < 27) { trimester = '2nd'; trimSub = 'Weeks 13–26'; }
+  else { trimester = '3rd'; trimSub = 'Weeks 27–40'; }
+
+  // Update hero
+  document.getElementById('dueDateBig').textContent = formatDate(dueDate);
+  document.getElementById('starSign').textContent = 'Zodiac sign: ' + getStarSign(dueDate);
+
+  // Stats
+  document.getElementById('statWeek').textContent = currentWeek > 0 ? `Week ${currentWeek}` : '—';
+  document.getElementById('statDay').textContent = currentWeek > 0 ? `Day ${currentDayInWeek + 1} of 7` : 'Not yet started';
+  document.getElementById('statTrimester').textContent = trimester;
+  document.getElementById('statTrimSub').textContent = trimSub;
+  document.getElementById('statCountdown').textContent = daysRemaining > 0 ? daysRemaining : '—';
+
+  // Progress bar
+  const pct = Math.min(Math.max((daysSinceLmp / 280) * 100, 0), 100);
+  document.getElementById('tMarker').style.left = pct + '%';
+
+  // Milestones
+  const milestoneData = [
+    { name: '12-Week Scan (Nuchal)', week: 12, color: '#6366f1' },
+    { name: '20-Week Anatomy Scan', week: 20, color: '#10b981' },
+    { name: 'Viability Milestone', week: 24, color: '#f59e0b' },
+    { name: 'Full Term', week: 37, color: '#10b981' },
+    { name: 'Estimated Due Date', week: 40, color: '#6366f1' },
+  ];
+
+  const mContainer = document.getElementById('milestones');
+  mContainer.innerHTML = '';
+  milestoneData.forEach(m => {
+    const mDate = addDays(lmpEquivalent, m.week * 7);
+    const isPast = mDate < today;
+    const isCurrent = !isPast && currentWeek <= m.week && currentWeek >= m.week - 1;
+    const cls = isPast ? 'past' : (isCurrent ? 'current' : 'future');
+
+    const el = document.createElement('div');
+    el.className = `milestone ${cls}`;
+    el.innerHTML = `
+      <div class="m-dot" style="background:${isPast ? '#6b7280' : m.color}"></div>
+      <div class="m-text">
+        <div class="m-name">${m.name}</div>
+        <div class="m-week">Week ${m.week}${isPast ? ' — passed' : ''}</div>
+      </div>
+      <div class="m-date">${formatDateShort(mDate)}</div>
+    `;
+    mContainer.appendChild(el);
+  });
+
+  document.getElementById('results').style.display = 'block';
+}
+
+function toggleFaq(el) {
+  const answer = el.nextElementSibling;
+  el.classList.toggle('open');
+  answer.classList.toggle('open');
+}
+
+// Set default date to today for convenience
+document.addEventListener('DOMContentLoaded', () => {
+  const today = new Date();
+  const yyyy = today.getFullYear();
+  const mm = String(today.getMonth() + 1).padStart(2, '0');
+  const dd = String(today.getDate()).padStart(2, '0');
+  // Leave blank so user must enter it — a past date is required
+});
+</script>
+</body>
+</html>

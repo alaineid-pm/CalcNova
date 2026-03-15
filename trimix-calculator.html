@@ -1,0 +1,1581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trimix / Narcosis Calculator — Equivalent Narcotic Depth &amp; Best Mix | CalcNova</title>
+  <meta name="description" content="Free trimix calculator for technical divers. Calculate Equivalent Narcotic Depth (END) for any trimix blend, or find the best trimix for your planned depth and narcosis limit.">
+
+  <!-- Canonical -->
+  <link rel="canonical" href="https://calcnova.co/trimix-calculator.html">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Trimix / Narcosis Calculator — Equivalent Narcotic Depth &amp; Best Mix | CalcNova">
+  <meta property="og:description" content="Free trimix calculator for technical divers. Calculate Equivalent Narcotic Depth (END) for any trimix blend, or find the best trimix for your planned depth and narcosis limit.">
+  <meta property="og:url" content="https://calcnova.co/trimix-calculator.html">
+  <meta property="og:site_name" content="CalcNova">
+
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebPage",
+        "name": "Trimix / Narcosis Calculator",
+        "url": "https://calcnova.co/trimix-calculator.html",
+        "description": "Calculate Equivalent Narcotic Depth for any trimix blend, or find the best trimix for your planned depth and narcosis limit.",
+        "applicationCategory": "UtilitiesApplication",
+        "operatingSystem": "Any",
+        "provider": { "@type": "Organization", "name": "CalcNova", "url": "https://calcnova.co" },
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "What is trimix?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Trimix is a breathing gas mixture of oxygen, helium, and nitrogen used in technical scuba diving. The helium reduces narcosis at depth by displacing nitrogen and oxygen, which are the narcotic gases."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "What is Equivalent Narcotic Depth (END)?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Equivalent Narcotic Depth (END) is the depth at which a diver breathing air would experience the same level of narcosis as when breathing a trimix at the actual dive depth. A lower END means less narcosis effect."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Is oxygen narcotic?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "There is scientific debate about whether oxygen is narcotic. The conservative approach — used by most technical training agencies — treats oxygen as narcotic when calculating END. This calculator uses the conservative method (O2 treated as narcotic)."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "What depth do I need trimix?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Most technical divers begin considering trimix beyond 40m (130ft), where narcosis on air becomes significant. It becomes essential for dives beyond 60m (200ft). Your training agency and personal tolerance will guide the threshold."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "What is a hypoxic trimix?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "A hypoxic trimix has an FO2 below 21% (often 10–18%), which is insufficient to support consciousness at the surface. These mixes are used at depth and require a travel gas and oxygen-rich bottom gas management plan."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Can I use this calculator without training?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "This calculator is a planning aid only. Trimix diving requires advanced technical training and certification. Never dive beyond your certification level, and always plan with a qualified technical dive instructor."
+            }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="shared/nav.css">
+
+  <style>
+    /* ── Base ── */
+    .app {
+      position: relative;
+      z-index: 1;
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 0 16px 60px;
+    }
+
+    /* ── Hero ── */
+    .pill-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: linear-gradient(135deg, rgba(16,185,129,.1), rgba(99,102,241,.1));
+      border: 1px solid rgba(16,185,129,.25);
+      border-radius: 100px;
+      padding: 6px 14px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--green);
+      letter-spacing: .4px;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+    .hero {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 32px 28px 26px;
+      margin-bottom: 24px;
+    }
+    .hero-title {
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: -.5px;
+      line-height: 1.25;
+      margin-bottom: 8px;
+    }
+    .hero-title span {
+      background: linear-gradient(135deg, var(--green), var(--purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero-desc {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      max-width: 640px;
+    }
+
+    /* ── Breadcrumbs ── */
+    .cn-breadcrumbs { margin-bottom: 16px; }
+
+    /* ── Safety Disclaimer ── */
+    .safety-disclaimer {
+      background: linear-gradient(135deg, rgba(245,158,11,.08), rgba(245,158,11,.04));
+      border: 1.5px solid rgba(245,158,11,.35);
+      border-radius: 14px;
+      padding: 16px 20px;
+      font-size: 13.5px;
+      color: var(--text-secondary);
+      line-height: 1.55;
+      margin-bottom: 28px;
+    }
+    .safety-disclaimer strong { color: #d97706; }
+    body.dark .safety-disclaimer {
+      background: linear-gradient(135deg, rgba(245,158,11,.1), rgba(245,158,11,.05));
+      border-color: rgba(245,158,11,.3);
+    }
+    body.dark .safety-disclaimer strong { color: #fbbf24; }
+
+    /* ── Unit Toggle ── */
+    .unit-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+    .unit-label {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: .6px;
+    }
+    .unit-toggle {
+      display: inline-flex;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 3px;
+    }
+    .unit-btn {
+      padding: 7px 20px;
+      border: none;
+      border-radius: 8px;
+      font-family: var(--font);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      background: none;
+      cursor: pointer;
+      transition: all .15s;
+    }
+    .unit-btn.active {
+      background: var(--surface);
+      color: var(--text-primary);
+      box-shadow: 0 1px 4px rgba(0,0,0,.08);
+    }
+
+    /* ── Segmented Tabs ── */
+    .tabs-wrap {
+      margin-bottom: 24px;
+    }
+    .tabs {
+      display: flex;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 4px;
+      gap: 4px;
+    }
+    .tab-btn {
+      flex: 1;
+      padding: 10px 12px;
+      border: none;
+      border-radius: 9px;
+      font-family: var(--font);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      background: none;
+      cursor: pointer;
+      transition: all .15s;
+      text-align: center;
+      line-height: 1.35;
+    }
+    .tab-btn.active {
+      background: var(--surface);
+      color: var(--text-primary);
+      box-shadow: 0 2px 8px rgba(0,0,0,.07);
+    }
+    .tab-btn .tab-sub {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--text-muted);
+      display: block;
+      margin-top: 1px;
+    }
+    .tab-btn.active .tab-sub { color: var(--text-secondary); }
+
+    /* ── Mode Panel ── */
+    .mode-panel { display: none; }
+    .mode-panel.active { display: block; }
+
+    /* ── Card ── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 22px;
+      margin-bottom: 20px;
+    }
+    .card-title {
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .card-title-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    /* ── Form ── */
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+    .form-row-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+    .form-row-3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+    .form-group { display: flex; flex-direction: column; gap: 6px; }
+    .form-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .form-label .label-hint {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--text-muted);
+    }
+    .input-wrap { position: relative; }
+    input[type="number"] {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text-primary);
+      font-family: var(--font);
+      font-size: 15px;
+      font-weight: 600;
+      padding: 10px 12px;
+      outline: none;
+      transition: border-color .2s, box-shadow .2s;
+      box-sizing: border-box;
+      -moz-appearance: textfield;
+    }
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+    input[type="number"]:focus {
+      border-color: var(--green);
+      box-shadow: 0 0 0 3px rgba(16,185,129,.12);
+    }
+    input[type="number"].input-error {
+      border-color: var(--red);
+      box-shadow: 0 0 0 3px rgba(239,68,68,.10);
+    }
+    .input-unit {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-muted);
+      pointer-events: none;
+      font-family: var(--mono);
+    }
+    input[type="number"].has-unit { padding-right: 36px; }
+
+    /* ── Error ── */
+    .error-box {
+      background: rgba(239,68,68,.08);
+      border: 1px solid rgba(239,68,68,.25);
+      border-radius: 10px;
+      padding: 11px 14px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--red);
+      margin-top: 4px;
+      display: none;
+      line-height: 1.5;
+    }
+    .error-box.show { display: block; }
+
+    .warning-box {
+      background: rgba(245,158,11,.08);
+      border: 1px solid rgba(245,158,11,.25);
+      border-radius: 10px;
+      padding: 11px 14px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #d97706;
+      margin-top: 4px;
+      display: none;
+      line-height: 1.5;
+    }
+    .warning-box.show { display: block; }
+    body.dark .warning-box { color: #fbbf24; }
+
+    /* ── Calculate Button ── */
+    .calc-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: linear-gradient(135deg, var(--green), #059669);
+      border: none;
+      border-radius: 12px;
+      color: #fff;
+      font-family: var(--font);
+      font-size: 15px;
+      font-weight: 700;
+      padding: 13px 28px;
+      cursor: pointer;
+      transition: all .2s;
+      letter-spacing: .1px;
+      width: 100%;
+      justify-content: center;
+      margin-top: 4px;
+    }
+    .calc-btn:hover { opacity: .9; transform: translateY(-1px); box-shadow: 0 6px 20px rgba(16,185,129,.3); }
+    .calc-btn:active { transform: translateY(0); }
+
+    /* ── Result Card ── */
+    .result-card {
+      background: linear-gradient(135deg, rgba(16,185,129,.07), rgba(99,102,241,.07));
+      border: 1.5px solid rgba(16,185,129,.28);
+      border-radius: 20px;
+      padding: 28px 24px;
+      margin-bottom: 20px;
+      position: relative;
+      overflow: hidden;
+      display: none;
+    }
+    .result-card.show { display: block; }
+    .result-card::before {
+      content: '';
+      position: absolute;
+      top: -50px; right: -50px;
+      width: 130px; height: 130px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--green), var(--purple));
+      opacity: .06;
+    }
+    .result-card::after {
+      content: '';
+      position: absolute;
+      bottom: -35px; left: -35px;
+      width: 90px; height: 90px;
+      border-radius: 50%;
+      background: var(--purple);
+      opacity: .05;
+    }
+
+    .result-mix-label {
+      font-family: var(--mono);
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--green);
+      margin-bottom: 4px;
+    }
+    .result-context {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.55;
+      margin-bottom: 20px;
+    }
+
+    .result-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      position: relative;
+      z-index: 1;
+    }
+    .result-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px 16px;
+    }
+    .result-item-label {
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+    .result-item-value {
+      font-family: var(--mono);
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1;
+    }
+    .result-item-value.green { color: var(--green); }
+    .result-item-value.amber { color: #f59e0b; }
+    .result-item-value.red { color: var(--red); }
+    .result-item-sub {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 3px;
+    }
+
+    .result-breakdown {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+      position: relative;
+      z-index: 1;
+    }
+    .breakdown-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: 100px;
+      font-size: 13px;
+      font-weight: 700;
+      font-family: var(--mono);
+    }
+    .breakdown-pill.o2 { background: rgba(16,185,129,.12); color: var(--green); border: 1px solid rgba(16,185,129,.25); }
+    .breakdown-pill.he { background: rgba(99,102,241,.12); color: var(--purple); border: 1px solid rgba(99,102,241,.25); }
+    .breakdown-pill.n2 { background: rgba(59,130,246,.12); color: #3b82f6; border: 1px solid rgba(59,130,246,.25); }
+
+    /* ── Action Buttons ── */
+    .action-row {
+      display: flex;
+      gap: 10px;
+      margin-top: 18px;
+      position: relative;
+      z-index: 1;
+    }
+    .action-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 9px 18px;
+      border-radius: 10px;
+      font-family: var(--font);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all .15s;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text-secondary);
+    }
+    .action-btn:hover {
+      border-color: var(--green);
+      color: var(--text-primary);
+    }
+    .action-btn.copied {
+      border-color: var(--green);
+      color: var(--green);
+    }
+
+    /* ── Standard Mixes Table ── */
+    .table-section { margin-bottom: 48px; }
+    .table-section h2 {
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: -.3px;
+      margin-bottom: 14px;
+    }
+    .table-wrap {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13.5px;
+    }
+    thead tr {
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+    }
+    thead th {
+      padding: 12px 16px;
+      text-align: left;
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+    tbody tr {
+      border-bottom: 1px solid var(--border);
+      transition: background .12s;
+    }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: rgba(16,185,129,.03); }
+    tbody td {
+      padding: 12px 16px;
+      color: var(--text-secondary);
+    }
+    tbody td:first-child {
+      font-family: var(--mono);
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    /* ── SEO Content ── */
+    .seo-content {
+      margin-top: 48px;
+    }
+    .seo-section {
+      margin-bottom: 40px;
+    }
+    .seo-section h2 {
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -.3px;
+      margin-bottom: 14px;
+    }
+    .seo-section h3 {
+      font-size: 17px;
+      font-weight: 700;
+      margin-bottom: 10px;
+      margin-top: 22px;
+    }
+    .seo-section p {
+      font-size: 15px;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      margin-bottom: 14px;
+    }
+    .seo-section ul {
+      margin: 0 0 14px 0;
+      padding-left: 20px;
+    }
+    .seo-section li {
+      font-size: 15px;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      margin-bottom: 6px;
+    }
+    .seo-section a {
+      color: var(--green);
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .seo-section a:hover { text-decoration: underline; }
+
+    /* Training path */
+    .training-path {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      margin: 18px 0;
+    }
+    .training-step {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 16px 18px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 0;
+      position: relative;
+    }
+    .training-step:first-child { border-radius: 14px 14px 0 0; }
+    .training-step:last-child { border-radius: 0 0 14px 14px; }
+    .training-step:not(:last-child) { border-bottom: none; }
+    .training-step-num {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--green), var(--purple));
+      color: #fff;
+      font-size: 12px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .training-step-title {
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .training-step-desc {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.55;
+    }
+
+    /* FAQ */
+    .faq-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .faq-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+    .faq-question {
+      width: 100%;
+      text-align: left;
+      padding: 16px 18px;
+      background: none;
+      border: none;
+      font-family: var(--font);
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-primary);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .faq-question:hover { color: var(--green); }
+    .faq-chevron {
+      font-size: 16px;
+      color: var(--text-muted);
+      transition: transform .2s;
+      flex-shrink: 0;
+    }
+    .faq-item.open .faq-chevron { transform: rotate(180deg); }
+    .faq-answer {
+      display: none;
+      padding: 0 18px 16px;
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.65;
+    }
+    .faq-item.open .faq-answer { display: block; }
+
+    /* Related links */
+    .related-links {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 16px;
+    }
+    .related-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 16px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      text-decoration: none;
+      color: var(--text-primary);
+      font-size: 13.5px;
+      font-weight: 600;
+      transition: all .2s;
+    }
+    .related-link:hover {
+      border-color: var(--green);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(16,185,129,.1);
+    }
+    .related-link-icon { font-size: 20px; flex-shrink: 0; }
+    .related-link-arrow { margin-left: auto; font-size: 14px; color: var(--text-muted); }
+    .related-link:hover .related-link-arrow { color: var(--green); }
+
+    /* ── Responsive ── */
+    @media (max-width: 720px) {
+      .form-row { grid-template-columns: 1fr 1fr; }
+      .form-row-3 { grid-template-columns: 1fr 1fr; }
+      .result-grid { grid-template-columns: 1fr 1fr; }
+      .related-links { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 540px) {
+      .form-row { grid-template-columns: 1fr; }
+      .form-row-2 { grid-template-columns: 1fr; }
+      .form-row-3 { grid-template-columns: 1fr; }
+      .result-grid { grid-template-columns: 1fr 1fr; }
+      .hero { padding: 22px 18px 20px; }
+      .hero-title { font-size: 22px; }
+      .result-mix-label { font-size: 24px; }
+      .tabs { flex-direction: column; }
+      .tab-btn { text-align: left; }
+    }
+    @media (max-width: 380px) {
+      .result-grid { grid-template-columns: 1fr; }
+      .action-row { flex-direction: column; }
+    }
+
+    /* ── Print ── */
+    @media print {
+      .hero, .tabs-wrap, .card, .action-row, .safety-disclaimer { break-inside: avoid; }
+      .result-card { display: block !important; }
+      .calc-btn, .action-row { display: none; }
+      body { background: white; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- Breadcrumbs -->
+  <nav class="cn-breadcrumbs" aria-label="Breadcrumb">
+    <ol class="cn-bc-list">
+      <li class="cn-bc-item"><a href="index.html">Home</a></li>
+      <li class="cn-bc-sep" aria-hidden="true">›</li>
+      <li class="cn-bc-item"><a href="scuba-diving-calculators.html">Scuba Diving</a></li>
+      <li class="cn-bc-sep" aria-hidden="true">›</li>
+      <li class="cn-bc-item cn-bc-current" aria-current="page">Trimix Calculator</li>
+    </ol>
+  </nav>
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="pill-badge">🧪 Technical Diving</div>
+    <h1 class="hero-title">Trimix / Narcosis <span>Calculator</span></h1>
+    <p class="hero-desc">Calculate Equivalent Narcotic Depth for any trimix blend, or find the ideal mix for your target depth and narcosis limit. Uses the conservative method — O₂ treated as narcotic.</p>
+  </div>
+
+  <!-- Safety Disclaimer -->
+  <div class="safety-disclaimer">
+    🦺 <strong>Safety Notice:</strong> This calculator is a planning aid only and is NOT a substitute for proper technical dive training, certification, and planning with qualified instructors. Trimix diving requires advanced technical training. Always verify calculations with your dive computer, buddy, and instructor before any dive. Never exceed your training level.
+  </div>
+
+  <!-- Unit Toggle -->
+  <div class="unit-row">
+    <span class="unit-label">Units</span>
+    <div class="unit-toggle">
+      <button class="unit-btn active" id="btn-metric" onclick="setUnit('metric')">Metric (m / bar)</button>
+      <button class="unit-btn" id="btn-imperial" onclick="setUnit('imperial')">Imperial (ft / psi)</button>
+    </div>
+  </div>
+
+  <!-- Mode Tabs -->
+  <div class="tabs-wrap">
+    <div class="tabs" role="tablist">
+      <button class="tab-btn active" id="tab-end" role="tab" aria-selected="true" aria-controls="panel-end" onclick="switchMode('end')">
+        Mode 1 — END from Mix
+        <span class="tab-sub">Given a trimix blend, find the narcotic depth</span>
+      </button>
+      <button class="tab-btn" id="tab-best" role="tab" aria-selected="false" aria-controls="panel-best" onclick="switchMode('best')">
+        Mode 2 — Best Mix for Depth
+        <span class="tab-sub">Given target depth &amp; END, find the right blend</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ── MODE 1: END from Mix ── -->
+  <div class="mode-panel active" id="panel-end" role="tabpanel">
+    <div class="card">
+      <div class="card-title">
+        <span class="card-title-dot" style="background:var(--green)"></span>
+        Inputs — Mix &amp; Depth
+      </div>
+
+      <div class="form-row" id="end-form-row">
+        <div class="form-group">
+          <label class="form-label" for="end-fo2">FO₂ — Oxygen <span class="label-hint">(fraction)</span></label>
+          <div class="input-wrap">
+            <input type="number" id="end-fo2" min="1" max="99" step="1" value="18" class="has-unit" placeholder="18" oninput="calcEND()">
+            <span class="input-unit">%</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="end-fhe">FHe — Helium</label>
+          <div class="input-wrap">
+            <input type="number" id="end-fhe" min="0" max="99" step="1" value="45" class="has-unit" placeholder="45" oninput="calcEND()">
+            <span class="input-unit">%</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="end-depth">Planned Depth</label>
+          <div class="input-wrap">
+            <input type="number" id="end-depth" min="1" max="330" step="1" value="60" class="has-unit" placeholder="60" oninput="calcEND()">
+            <span class="input-unit" id="end-depth-unit">m</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="error-box" id="end-error"></div>
+    </div>
+
+    <!-- Result -->
+    <div class="result-card" id="end-result">
+      <div class="result-mix-label" id="end-mix-label">TMx 18/45</div>
+      <div class="result-context" id="end-context"></div>
+
+      <div class="result-breakdown" id="end-breakdown"></div>
+
+      <div class="result-grid" id="end-grid"></div>
+
+      <div class="action-row">
+        <button class="action-btn" id="end-copy-btn" onclick="copyResult('end')">
+          <span>📋</span> Copy Result
+        </button>
+        <button class="action-btn" onclick="window.print()">
+          <span>🖨️</span> Print
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── MODE 2: Best Mix ── -->
+  <div class="mode-panel" id="panel-best" role="tabpanel">
+    <div class="card">
+      <div class="card-title">
+        <span class="card-title-dot" style="background:var(--purple)"></span>
+        Inputs — Target Depth &amp; Limits
+      </div>
+
+      <div class="form-row-3">
+        <div class="form-group">
+          <label class="form-label" for="best-depth">Planned Depth</label>
+          <div class="input-wrap">
+            <input type="number" id="best-depth" min="1" max="330" step="1" value="60" class="has-unit" placeholder="60" oninput="calcBest()">
+            <span class="input-unit" id="best-depth-unit">m</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="best-end">Target END <span class="label-hint">(narcosis limit)</span></label>
+          <div class="input-wrap">
+            <input type="number" id="best-end" min="1" max="100" step="1" value="30" class="has-unit" placeholder="30" oninput="calcBest()">
+            <span class="input-unit" id="best-end-unit">m</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="best-po2">PO₂ Limit</label>
+          <div class="input-wrap">
+            <input type="number" id="best-po2" min="0.1" max="2.0" step="0.05" value="1.4" class="has-unit" placeholder="1.4" oninput="calcBest()">
+            <span class="input-unit">bar</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="error-box" id="best-error"></div>
+      <div class="warning-box" id="best-warning"></div>
+    </div>
+
+    <!-- Result -->
+    <div class="result-card" id="best-result" style="border-color:rgba(99,102,241,.35); background:linear-gradient(135deg,rgba(99,102,241,.07),rgba(16,185,129,.07));">
+      <div class="result-mix-label" id="best-mix-label" style="color:var(--purple)">TMx 18/45</div>
+      <div class="result-context" id="best-context"></div>
+
+      <div class="result-breakdown" id="best-breakdown"></div>
+
+      <div class="result-grid" id="best-grid"></div>
+
+      <div class="action-row">
+        <button class="action-btn" id="best-copy-btn" onclick="copyResult('best')">
+          <span>📋</span> Copy Result
+        </button>
+        <button class="action-btn" onclick="window.print()">
+          <span>🖨️</span> Print
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Standard Mixes Table ── -->
+  <div class="table-section">
+    <h2>Standard Trimix Reference</h2>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Mix</th>
+            <th>FO₂</th>
+            <th>FHe</th>
+            <th>FN₂</th>
+            <th>MOD (PO₂ 1.4)</th>
+            <th>END at 60m</th>
+          </tr>
+        </thead>
+        <tbody id="ref-table-body">
+          <!-- filled by JS so depths can switch between m/ft -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ── SEO Content ── -->
+  <div class="seo-content">
+
+    <div class="seo-section">
+      <h2>What is Trimix?</h2>
+      <p>Trimix is a breathing gas consisting of three components: <strong>oxygen (O₂)</strong>, <strong>helium (He)</strong>, and <strong>nitrogen (N₂)</strong>. It is the standard gas choice for technical divers venturing beyond 40–50 metres (130–165 ft), where breathing air or nitrox becomes dangerous due to nitrogen narcosis and oxygen toxicity.</p>
+      <p>The helium fraction replaces some of the nitrogen and oxygen in the mix. Because helium is essentially non-narcotic at recreational and technical diving pressures, replacing these gases reduces narcosis at depth. The result is a clearer head, better decision-making, and improved safety margins on deep technical dives.</p>
+      <p>Trimix comes in several categories:</p>
+      <ul>
+        <li><strong>Normoxic trimix</strong> — FO₂ of 21% or higher. Breathable at the surface, suitable as a bottom gas from recreational depths down to around 60m.</li>
+        <li><strong>Hypoxic trimix</strong> — FO₂ below 21% (commonly 18%, 15%, or lower). These mixes have insufficient oxygen to support consciousness at the surface and are only suitable at depth. They require a travel gas and careful gas management.</li>
+        <li><strong>Heliox</strong> — A two-component mix of helium and oxygen with no nitrogen at all, used for very deep saturation and closed-circuit rebreather diving.</li>
+      </ul>
+      <p>Common trimix blends used in technical diving include TMx 21/35 (normoxic, suitable to ~50m), TMx 18/45 (hypoxic, typical for 60–80m dives), TMx 15/55, and TMx 10/70 for very deep dives beyond 100m.</p>
+    </div>
+
+    <div class="seo-section">
+      <h2>Understanding Narcosis</h2>
+      <p>Nitrogen narcosis — sometimes called "rapture of the deep" or the Martini Effect — is an altered state of consciousness caused by breathing inert gases under pressure. It is similar in effect to alcohol intoxication and affects cognitive function, reaction time, and decision-making at depth.</p>
+      <p>The exact mechanism is not fully understood, but narcosis follows the Meyer-Overton correlation: the more lipid-soluble a gas, the more narcotic it tends to be. Nitrogen is moderately narcotic; helium has essentially no narcotic effect at depths achievable by scuba divers. This is why helium is added to the mix.</p>
+      <p>Some divers notice narcosis as shallow as 20m (66ft), while others may tolerate it well to 40m (130ft) on air. Individual variation is large, and narcosis can be unpredictable — cold, stress, fatigue, and CO₂ build-up can all worsen the effect. The accepted rule of thumb is that the effects of narcosis roughly double with every additional 10m of depth.</p>
+      <h3>Is oxygen narcotic?</h3>
+      <p>This is a debated topic. Some agencies (such as NOAA) historically treated only nitrogen as narcotic. However, a growing body of evidence and the conservative approach adopted by most modern technical agencies — including PADI TecRec, SSI, IANTD, and GUE — treats <strong>oxygen as narcotic</strong> for END calculations. This calculator uses the conservative (O₂-narcotic) method, which most professional dive planners and computers use.</p>
+    </div>
+
+    <div class="seo-section">
+      <h2>Equivalent Narcotic Depth (END) Explained</h2>
+      <p>Equivalent Narcotic Depth (END) is the hypothetical depth at which a diver breathing air would experience the same narcotic load as the diver breathing the trimix at the actual depth. It provides a simple way to quantify and compare the narcosis effect of different gas mixes.</p>
+      <p>For example: a diver breathing TMx 18/45 at 60m has an END of approximately 28m. That means the narcotic experience at 60m on that mix feels the same as diving to 28m on air — a much more comfortable and manageable state.</p>
+      <h3>The Formula</h3>
+      <p>Using the conservative O₂-narcotic method:</p>
+      <ul>
+        <li>Narcotic fraction = FO₂ + FN₂ = 1 − FHe (as decimals)</li>
+        <li>ATA at depth = (depth_m / 10) + 1</li>
+        <li>END (m) = (narcotic_fraction × ATA − 1) × 10</li>
+      </ul>
+      <p>A lower END means less narcosis. The practical target for most technical divers is an END of 30m (100ft) or less at the planned bottom depth. Some divers are comfortable to 40m (130ft) END; very conservative divers target 25m (82ft).</p>
+    </div>
+
+    <div class="seo-section">
+      <h2>How to Pick the Right Trimix</h2>
+      <p>Choosing the right trimix blend requires balancing three constraints: narcosis limits, oxygen toxicity limits, and the practicalities of gas blending and decompression.</p>
+      <h3>Step 1 — Set your END target</h3>
+      <p>Most technical training agencies recommend an END of no more than 30m (100ft) for bottom gas. Some divers use 35m (115ft) as a limit if they have significant deep air experience. For very deep dives (80m+), 25m END or lower may be appropriate.</p>
+      <h3>Step 2 — Set your PO₂ limit</h3>
+      <p>For bottom gas, a PO₂ of 1.4 bar is the standard limit used during the working portion of a dive. 1.6 bar is the absolute ceiling and is sometimes used for decompression stops. This calculator defaults to 1.4 bar — the widely recommended standard.</p>
+      <h3>Step 3 — Use Mode 2 of this calculator</h3>
+      <p>Enter your planned depth, target END, and PO₂ limit. The calculator will output the recommended FO₂ and FHe percentages, the FN₂, and the MOD for both common PO₂ limits. You can then confirm the mix with your gas blender and technical instructor.</p>
+      <h3>Step 4 — Consider decompression gas</h3>
+      <p>Trimix bottom gases require careful decompression planning. You will typically need one or more decompression gases (e.g., 50% nitrox at 21m, 100% O₂ at 6m) planned in advance. Gas blending calculations for these can be done with the <a href="gas-blending-calculator.html">Gas Blending Calculator</a>.</p>
+    </div>
+
+    <div class="seo-section">
+      <h2>Trimix Training Path</h2>
+      <p>Trimix diving requires formal technical training and certification. The typical progression is:</p>
+      <div class="training-path">
+        <div class="training-step">
+          <div class="training-step-num">1</div>
+          <div>
+            <div class="training-step-title">Open Water + Advanced Open Water</div>
+            <div class="training-step-desc">Foundation recreational certifications. Introduces controlled ascents, dive planning, and basic buoyancy.</div>
+          </div>
+        </div>
+        <div class="training-step">
+          <div class="training-step-num">2</div>
+          <div>
+            <div class="training-step-title">Advanced Nitrox (AN)</div>
+            <div class="training-step-desc">Covers EANx theory, oxygen toxicity management, MOD calculations, and limited decompression using nitrox gases. Required prerequisite for most trimix courses.</div>
+          </div>
+        </div>
+        <div class="training-step">
+          <div class="training-step-num">3</div>
+          <div>
+            <div class="training-step-title">Decompression Procedures (DP)</div>
+            <div class="training-step-desc">Systematic decompression diving with multiple gas switches. Introduces decompression theory, dive planning software, and multi-stop decompression.</div>
+          </div>
+        </div>
+        <div class="training-step">
+          <div class="training-step-num">4</div>
+          <div>
+            <div class="training-step-title">Trimix (normoxic)</div>
+            <div class="training-step-desc">Introduces helium-based gases, END calculations, narcosis management, and normoxic trimix planning. Dives typically to 60–75m with normoxic blends (FO₂ ≥ 21%).</div>
+          </div>
+        </div>
+        <div class="training-step">
+          <div class="training-step-num">5</div>
+          <div>
+            <div class="training-step-title">Advanced / Hypoxic Trimix</div>
+            <div class="training-step-desc">Full hypoxic trimix diving, complex decompression, multiple gas switches, and dives to 100m+. Requires significant logged technical dive experience and excellent buoyancy.</div>
+          </div>
+        </div>
+      </div>
+      <p style="margin-top:16px;">Major agencies offering trimix courses include PADI TecRec, SSI Xtend, IANTD, TDI, and GUE. Always complete your training with an experienced and active technical instructor.</p>
+    </div>
+
+    <div class="seo-section">
+      <h2>Frequently Asked Questions</h2>
+      <div class="faq-list">
+        <div class="faq-item">
+          <button class="faq-question" onclick="toggleFAQ(this)">
+            What depth do I need trimix?
+            <span class="faq-chevron">▾</span>
+          </button>
+          <div class="faq-answer">
+            Most technical divers begin considering trimix beyond 40m (130ft), where narcosis on air becomes significant for many individuals. Trimix is strongly recommended beyond 60m (200ft) and is effectively essential for dives deeper than 80m (260ft). However, individual narcosis tolerance varies — some divers benefit from trimix at shallower depths. Your training agency, instructor, and personal experience should guide the decision.
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question" onclick="toggleFAQ(this)">
+            What is a hypoxic trimix and why is it used?
+            <span class="faq-chevron">▾</span>
+          </button>
+          <div class="faq-answer">
+            A hypoxic trimix has an FO₂ below 21% — insufficient oxygen to support life at the surface. It is used because deep dives require a PO₂ limit of 1.4 bar, which at 80m+ means FO₂ below 16–18%. Hypoxic mixes allow you to reduce narcosis (with more He) while keeping PO₂ within safe limits. These mixes require a breathable travel gas from the surface to the point where the bottom gas becomes safe to breathe (typically around 20–30m descent depth).
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question" onclick="toggleFAQ(this)">
+            Why does this calculator treat oxygen as narcotic?
+            <span class="faq-chevron">▾</span>
+          </button>
+          <div class="faq-answer">
+            The conservative approach — used by PADI TecRec, TDI, GUE, IANTD, and most modern technical agencies — treats oxygen as narcotic because experimental evidence suggests it does contribute to narcosis. Since the cost of the conservative approach is simply adding a little more helium, it is widely considered best practice for safety. This calculator uses this method exclusively.
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question" onclick="toggleFAQ(this)">
+            What is the Martini Effect?
+            <span class="faq-chevron">▾</span>
+          </button>
+          <div class="faq-answer">
+            The Martini Effect is a rule of thumb suggesting that every 10m of depth on air is equivalent to drinking one dry martini on an empty stomach. While useful as a conceptual illustration, it is not a precise physiological measurement — narcosis varies significantly between individuals, dive conditions, stress levels, and experience. Never rely on this rule for serious dive planning.
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question" onclick="toggleFAQ(this)">
+            Can I build up a tolerance to narcosis?
+            <span class="faq-chevron">▾</span>
+          </button>
+          <div class="faq-answer">
+            Divers can develop a degree of acclimatisation to narcosis through regular deep air diving experience, but this is not reliable and should not be used as a safety margin. Narcosis can be unpredictable — a diver who handled 40m air comfortably last week may be significantly impaired this week due to fatigue, cold, CO₂ build-up, or stress. Trimix provides a more reliable and predictable solution for deep technical diving.
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question" onclick="toggleFAQ(this)">
+            How accurate are these calculations?
+            <span class="faq-chevron">▾</span>
+          </button>
+          <div class="faq-answer">
+            The mathematical formulas used here are standard industry calculations used by major technical training agencies and dive planning software. However, these are theoretical values based on ideal gas behaviour. Always cross-check with your dive computer, planning software (such as V-Planner, GAP, or MultiDeco), your gas blender, and your technical instructor before any dive.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="seo-section">
+      <h2>Related Calculators &amp; Guides</h2>
+      <div class="related-links">
+        <a href="nitrox-calculator.html" class="related-link">
+          <span class="related-link-icon">🫧</span>
+          <span>Nitrox / MOD Calculator</span>
+          <span class="related-link-arrow">→</span>
+        </a>
+        <a href="gas-blending-calculator.html" class="related-link">
+          <span class="related-link-icon">⚗️</span>
+          <span>Gas Blending Calculator</span>
+          <span class="related-link-arrow">→</span>
+        </a>
+        <a href="article-trimix.html" class="related-link">
+          <span class="related-link-icon">📖</span>
+          <span>Introduction to Trimix</span>
+          <span class="related-link-arrow">→</span>
+        </a>
+      </div>
+    </div>
+
+  </div><!-- /seo-content -->
+
+</div><!-- /app -->
+
+<script>
+  // ── State ──────────────────────────────────────────────
+  let unit = 'metric'; // 'metric' | 'imperial'
+  let currentMode = 'end'; // 'end' | 'best'
+
+  // Last computed results (for copy)
+  let lastEndResult = null;
+  let lastBestResult = null;
+
+  // ── Unit helpers ──────────────────────────────────────
+  function mToFt(m) { return m * 3.28084; }
+  function ftToM(ft) { return ft / 3.28084; }
+  function depthLabel() { return unit === 'metric' ? 'm' : 'ft'; }
+
+  function setUnit(u) {
+    unit = u;
+    document.getElementById('btn-metric').classList.toggle('active', u === 'metric');
+    document.getElementById('btn-imperial').classList.toggle('active', u === 'imperial');
+
+    // Update depth unit labels
+    ['end-depth-unit', 'best-depth-unit', 'best-end-unit'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = depthLabel();
+    });
+
+    // Convert depth input values
+    const endDepthEl = document.getElementById('end-depth');
+    const bestDepthEl = document.getElementById('best-depth');
+    const bestEndEl = document.getElementById('best-end');
+
+    if (u === 'imperial') {
+      endDepthEl.value = Math.round(mToFt(parseFloat(endDepthEl.value) || 60));
+      bestDepthEl.value = Math.round(mToFt(parseFloat(bestDepthEl.value) || 60));
+      bestEndEl.value = Math.round(mToFt(parseFloat(bestEndEl.value) || 30));
+      endDepthEl.max = 1080;
+      bestDepthEl.max = 1080;
+      bestEndEl.max = 330;
+    } else {
+      endDepthEl.value = Math.round(ftToM(parseFloat(endDepthEl.value) || 197));
+      bestDepthEl.value = Math.round(ftToM(parseFloat(bestDepthEl.value) || 197));
+      bestEndEl.value = Math.round(ftToM(parseFloat(bestEndEl.value) || 100));
+      endDepthEl.max = 330;
+      bestDepthEl.max = 330;
+      bestEndEl.max = 100;
+    }
+
+    // Update reference table
+    buildRefTable();
+
+    // Re-run current calculation if results are visible
+    if (currentMode === 'end' && lastEndResult) calcEND();
+    if (currentMode === 'best' && lastBestResult) calcBest();
+  }
+
+  // ── Mode switching ────────────────────────────────────
+  function switchMode(mode) {
+    currentMode = mode;
+    document.getElementById('tab-end').classList.toggle('active', mode === 'end');
+    document.getElementById('tab-best').classList.toggle('active', mode === 'best');
+    document.getElementById('tab-end').setAttribute('aria-selected', mode === 'end');
+    document.getElementById('tab-best').setAttribute('aria-selected', mode === 'best');
+    document.getElementById('panel-end').classList.toggle('active', mode === 'end');
+    document.getElementById('panel-best').classList.toggle('active', mode === 'best');
+  }
+
+  // ── Formula helpers ───────────────────────────────────
+  function toMetres(val) {
+    return unit === 'metric' ? val : ftToM(val);
+  }
+  function fromMetres(m) {
+    return unit === 'metric' ? m : mToFt(m);
+  }
+  function fmt(val, dp = 1) {
+    return parseFloat(val.toFixed(dp));
+  }
+
+  // ── Mode 1: END from Mix ──────────────────────────────
+  function calcEND() {
+    const fo2 = parseFloat(document.getElementById('end-fo2').value);
+    const fhe = parseFloat(document.getElementById('end-fhe').value);
+    const depthInput = parseFloat(document.getElementById('end-depth').value);
+    const errorEl = document.getElementById('end-error');
+
+    // Validate
+    errorEl.classList.remove('show');
+    document.getElementById('end-fo2').classList.remove('input-error');
+    document.getElementById('end-fhe').classList.remove('input-error');
+    document.getElementById('end-depth').classList.remove('input-error');
+
+    let errors = [];
+    if (isNaN(fo2) || fo2 <= 0) { errors.push('FO₂ must be greater than 0%.'); document.getElementById('end-fo2').classList.add('input-error'); }
+    if (isNaN(fhe) || fhe < 0) { errors.push('FHe must be 0% or greater.'); document.getElementById('end-fhe').classList.add('input-error'); }
+    if (!isNaN(fo2) && !isNaN(fhe) && fo2 + fhe > 100) {
+      errors.push('FO₂ + FHe cannot exceed 100%.');
+      document.getElementById('end-fo2').classList.add('input-error');
+      document.getElementById('end-fhe').classList.add('input-error');
+    }
+    if (isNaN(depthInput) || depthInput <= 0) { errors.push('Planned depth must be greater than 0.'); document.getElementById('end-depth').classList.add('input-error'); }
+
+    if (errors.length) {
+      errorEl.innerHTML = errors.join('<br>');
+      errorEl.classList.add('show');
+      document.getElementById('end-result').classList.remove('show');
+      return;
+    }
+
+    const depth_m = toMetres(depthInput);
+    const fn2 = 100 - fo2 - fhe;
+    const fo2_dec = fo2 / 100;
+    const fn2_dec = fn2 / 100;
+    const fhe_dec = fhe / 100;
+    const narcotic_fraction = fo2_dec + fn2_dec; // = 1 - fhe_dec
+    const ata = depth_m / 10 + 1;
+
+    const end_m = (narcotic_fraction * ata - 1) * 10;
+    const end_display = unit === 'metric' ? fmt(end_m) : fmt(mToFt(end_m));
+
+    const po2 = fo2_dec * ata;
+    const mod14_m = ((1.4 / fo2_dec) - 1) * 10;
+    const mod16_m = ((1.6 / fo2_dec) - 1) * 10;
+    const mod14_display = unit === 'metric' ? fmt(mod14_m) : fmt(mToFt(mod14_m));
+    const mod16_display = unit === 'metric' ? fmt(mod16_m) : fmt(mToFt(mod16_m));
+
+    const mixLabel = `TMx ${fo2}/${fhe}`;
+    const depthStr = `${depthInput}${depthLabel()}`;
+    const endStr = `${end_display}${depthLabel()}`;
+
+    // Store for copy
+    lastEndResult = { mixLabel, fo2, fhe, fn2, po2, end_display, mod14_display, mod16_display, ata, depth_m, depthInput, depthStr, endStr };
+
+    // Render
+    document.getElementById('end-mix-label').textContent = mixLabel;
+    document.getElementById('end-context').textContent =
+      `This mix at ${depthStr} feels narcotically equivalent to air at ${endStr}`;
+
+    // Breakdown pills
+    document.getElementById('end-breakdown').innerHTML =
+      `<span class="breakdown-pill o2">O₂ ${fo2}%</span>` +
+      `<span class="breakdown-pill he">He ${fhe}%</span>` +
+      `<span class="breakdown-pill n2">N₂ ${fn2}%</span>`;
+
+    // Result grid
+    let po2Color = po2 <= 1.4 ? 'green' : po2 <= 1.6 ? 'amber' : 'red';
+    document.getElementById('end-grid').innerHTML =
+      `<div class="result-item">
+        <div class="result-item-label">END</div>
+        <div class="result-item-value green">${end_display}<span style="font-size:14px;font-weight:500"> ${depthLabel()}</span></div>
+        <div class="result-item-sub">Equivalent narcotic depth</div>
+      </div>
+      <div class="result-item">
+        <div class="result-item-label">PO₂ at Depth</div>
+        <div class="result-item-value ${po2Color}">${fmt(po2, 2)}<span style="font-size:14px;font-weight:500"> bar</span></div>
+        <div class="result-item-sub">${po2 <= 1.4 ? 'Within limit' : po2 <= 1.6 ? 'Near limit' : 'Exceeds limit!'}</div>
+      </div>
+      <div class="result-item">
+        <div class="result-item-label">ATA at Depth</div>
+        <div class="result-item-value">${fmt(ata, 2)}</div>
+        <div class="result-item-sub">Absolute pressure</div>
+      </div>
+      <div class="result-item">
+        <div class="result-item-label">MOD (PO₂ 1.4)</div>
+        <div class="result-item-value">${mod14_display}<span style="font-size:14px;font-weight:500"> ${depthLabel()}</span></div>
+        <div class="result-item-sub">Max operating depth</div>
+      </div>
+      <div class="result-item">
+        <div class="result-item-label">MOD (PO₂ 1.6)</div>
+        <div class="result-item-value">${mod16_display}<span style="font-size:14px;font-weight:500"> ${depthLabel()}</span></div>
+        <div class="result-item-sub">Absolute ceiling</div>
+      </div>
+      <div class="result-item">
+        <div class="result-item-label">Narcotic Fraction</div>
+        <div class="result-item-value">${fmt(narcotic_fraction * 100, 1)}<span style="font-size:14px;font-weight:500">%</span></div>
+        <div class="result-item-sub">O₂ + N₂ (conservative)</div>
+      </div>`;
+
+    document.getElementById('end-result').classList.add('show');
+  }
+
+  // ── Mode 2: Best Mix ──────────────────────────────────
+  function calcBest() {
+    const depthInput = parseFloat(document.getElementById('best-depth').value);
+    const endInput = parseFloat(document.getElementById('best-end').value);
+    const po2Limit = parseFloat(document.getElementById('best-po2').value);
+    const errorEl = document.getElementById('best-error');
+    const warningEl = document.getElementById('best-warning');
+
+    errorEl.classList.remove('show');
+    warningEl.classList.remove('show');
+    document.getElementById('best-depth').classList.remove('input-error');
+    document.getElementById('best-end').classList.remove('input-error');
+    document.getElementById('best-po2').classList.remove('input-error');
+
+    let errors = [];
+    if (isNaN(depthInput) || depthInput <= 0) { errors.push('Planned depth must be greater than 0.'); document.getElementById('best-depth').classList.add('input-error'); }
+    if (isNaN(endInput) || endInput <= 0) { errors.push('Target END must be greater than 0.'); document.getElementById('best-end').classList.add('input-error'); }
+    if (isNaN(po2Limit) || po2Limit <= 0 || po2Limit > 2.0) { errors.push('PO₂ limit must be between 0.1 and 2.0 bar.'); document.getElementById('best-po2').classList.add('input-error'); }
+
+    if (errors.length) {
+      errorEl.innerHTML = errors.join('<br>');
+      errorEl.classList.add('show');
+      document.getElementById('best-result').classList.remove('show');
+      return;
+    }
+
+    const depth_m = toMetres(depthInput);
+    const end_m = toMetres(endInput);
+    const ata = depth_m / 10 + 1;
+
+    // Best FO2: floor to nearest whole %
+    const best_fo2_raw = (po2Limit / ata) * 100;
+    const best_fo2 = Math.floor(best_fo2_raw);
+
+    // FHe: 1 - max narcotic fraction, ceiling
+    const end_ata = end_m / 10 + 1;
+    const max_narcotic_fraction = end_ata / ata;
+    const fhe_raw = (1 - max_narcotic_fraction) * 100;
+    const fhe = Math.ceil(fhe_raw);
+
+    const fn2 = 100 - best_fo2 - fhe;
+
+    // Validation of derived values
+    if (fn2 < 0) {
+      errorEl.innerHTML = '❌ Impossible mix — the required FHe exceeds what\'s possible. Try a shallower END limit or deeper depth.';
+      errorEl.classList.add('show');
+      document.getElementById('best-result').classList.remove('show');
+      return;
+    }
+
+    let warnings = [];
+    if (best_fo2 < 16) {
+      warnings.push('⚠️ Very low oxygen fraction (' + best_fo2 + '%). Hypoxic risk — only for use with proper technical training. A suitable travel gas is required from the surface.');
+    }
+
+    if (warnings.length) {
+      warningEl.innerHTML = warnings.join('<br>');
+      warningEl.classList.add('show');
+    }
+
+    // Compute actual END at depth with this mix
+    const fn2_dec = fn2 / 100;
+    const fo2_dec = best_fo2 / 100;
+    const narcotic_fraction = fo2_dec + fn2_dec;
+    const actual_end_m = (narcotic_fraction * ata - 1) * 10;
+    const actual_end_display = unit === 'metric' ? fmt(actual_end_m) : fmt(mToFt(actual_end_m));
+
+    const mod14_m = ((1.4 / fo2_dec) - 1) * 10;
+    const mod16_m = ((1.6 / fo2_dec) - 1) * 10;
+    const mod14_display = unit === 'metric' ? fmt(mod14_m) : fmt(mToFt(mod14_m));
+    const mod16_display = unit === 'metric' ? fmt(mod16_m) : fmt(mToFt(mod16_m));
+
+    const po2_at_depth = fo2_dec * ata;
+    const mixLabel = `TMx ${best_fo2}/${fhe}`;
+
+    lastBestResult = { mixLabel, best_fo2, fhe, fn2, po2_at_depth, actual_end_display, mod14_display, mod16_display, depthInput };
+
+    // Render
+    document.getElementById('best-mix-label').textContent = mixLabel;
+    document.getElementById('best-context').textContent =
+      `Recommended blend for ${depthInput}${depthLabel()} with target END ≤ ${endInput}${depthLabel()} at PO₂ limit ${po2Limit} bar`;
+
+    document.getElementById('best-breakdown').innerHTML =
+      `<span class="breakdown-pill o2">O₂ ${best_fo2}%</span>` +
+      `<span class="breakdown-pill he">He ${fhe}%</span>` +
+      `<span class="breakdown-pill n2">N₂ ${fn2}%</span>`;
+
+    let po2Color = po2_at_depth <= 1.4 ? 'green' : po2_at_depth <= 1.6 ? 'amber' : 'red';
+    document.getElementById('best-grid').innerHTML =
+      `<div class="result-item">
+        <div class="result-item-label">Actual END</div>
+        <div class="result-item-value green">${actual_end_display}<span style="font-size:14px;font-weight:500"> ${depthLabel()}</span></div>
+        <div class="result-item-sub">At planned depth</div>
+      </div>
+      <div class="result-item">
+        <div class="result-item-label">PO₂ at Depth</div>
+        <div class="result-item-value ${po2Color}">${fmt(po2_at_depth, 2)}<span style="font-size:14px;font-weight:500"> bar</span></div>
+        <div class="result-item-sub">${po2_at_depth <= 1.4 ? 'Within limit' : po2_at_depth <= 1.6 ? 'Near limit' : 'Exceeds limit!'}</div>
+      </div>
+      <div class="result-item">
+        <div class="result-item-label">MOD (PO₂ 1.4)</div>
+        <div class="result-item-value">${mod14_display}<span style="font-size:14px;font-weight:500"> ${depthLabel()}</span></div>
+        <div class="result-item-sub">Max operating depth</div>
+      </div>
+      <div class="result-item">
+        <div class="result-item-label">MOD (PO₂ 1.6)</div>
+        <div class="result-item-value">${mod16_display}<span style="font-size:14px;font-weight:500"> ${depthLabel()}</span></div>
+        <div class="result-item-sub">Absolute ceiling</div>
+      </div>
+      <div class="result-item">
+        <div class="result-item-label">FO₂</div>
+        <div class="result-item-value green">${best_fo2}<span style="font-size:14px;font-weight:500">%</span></div>
+        <div class="result-item-sub">${best_fo2 < 21 ? 'Hypoxic — needs travel gas' : 'Normoxic'}</div>
+      </div>
+      <div class="result-item">
+        <div class="result-item-label">FHe</div>
+        <div class="result-item-value" style="color:var(--purple)">${fhe}<span style="font-size:14px;font-weight:500">%</span></div>
+        <div class="result-item-sub">Helium fraction</div>
+      </div>`;
+
+    document.getElementById('best-result').classList.add('show');
+  }
+
+  // ── Copy Result ───────────────────────────────────────
+  function copyResult(mode) {
+    let text = '';
+    if (mode === 'end' && lastEndResult) {
+      const r = lastEndResult;
+      text = [
+        `CalcNova Trimix Calculator — END from Mix`,
+        `Mix: ${r.mixLabel}`,
+        `FO₂: ${r.fo2}%  |  FHe: ${r.fhe}%  |  FN₂: ${r.fn2}%`,
+        `Planned Depth: ${r.depthInput}${depthLabel()}`,
+        `END: ${r.end_display}${depthLabel()}`,
+        `PO₂ at depth: ${fmt(r.po2, 2)} bar`,
+        `MOD (PO₂ 1.4): ${r.mod14_display}${depthLabel()}`,
+        `MOD (PO₂ 1.6): ${r.mod16_display}${depthLabel()}`,
+        ``,
+        `calcnova.co/trimix-calculator.html`,
+        `PLANNING AID ONLY — not a substitute for professional training.`
+      ].join('\n');
+    } else if (mode === 'best' && lastBestResult) {
+      const r = lastBestResult;
+      text = [
+        `CalcNova Trimix Calculator — Best Mix`,
+        `Recommended Mix: ${r.mixLabel}`,
+        `FO₂: ${r.best_fo2}%  |  FHe: ${r.fhe}%  |  FN₂: ${r.fn2}%`,
+        `Planned Depth: ${r.depthInput}${depthLabel()}`,
+        `Actual END: ${r.actual_end_display}${depthLabel()}`,
+        `PO₂ at depth: ${fmt(r.po2_at_depth, 2)} bar`,
+        `MOD (PO₂ 1.4): ${r.mod14_display}${depthLabel()}`,
+        `MOD (PO₂ 1.6): ${r.mod16_display}${depthLabel()}`,
+        ``,
+        `calcnova.co/trimix-calculator.html`,
+        `PLANNING AID ONLY — not a substitute for professional training.`
+      ].join('\n');
+    }
+
+    if (!text) return;
+    navigator.clipboard.writeText(text).then(() => {
+      const btn = document.getElementById(`${mode}-copy-btn`);
+      const orig = btn.innerHTML;
+      btn.innerHTML = '<span>✓</span> Copied!';
+      btn.classList.add('copied');
+      setTimeout(() => { btn.innerHTML = orig; btn.classList.remove('copied'); }, 2000);
+    }).catch(() => {
+      // Fallback
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+    });
+  }
+
+  // ── Reference Table ───────────────────────────────────
+  const REF_MIXES = [
+    { label: 'Air 21/0',   fo2: 21, fhe: 0 },
+    { label: 'TMx 21/35',  fo2: 21, fhe: 35 },
+    { label: 'TMx 18/45',  fo2: 18, fhe: 45 },
+    { label: 'TMx 15/55',  fo2: 15, fhe: 55 },
+    { label: 'TMx 12/60',  fo2: 12, fhe: 60 },
+    { label: 'TMx 10/70',  fo2: 10, fhe: 70 },
+  ];
+
+  function buildRefTable() {
+    const tbody = document.getElementById('ref-table-body');
+    const refDepth_m = 60;
+    const ata60 = refDepth_m / 10 + 1; // 7
+
+    tbody.innerHTML = REF_MIXES.map(mix => {
+      const fn2 = 100 - mix.fo2 - mix.fhe;
+      const fo2_dec = mix.fo2 / 100;
+      const fn2_dec = fn2 / 100;
+      const fhe_dec = mix.fhe / 100;
+
+      const mod14_m = ((1.4 / fo2_dec) - 1) * 10;
+      const narcotic = fo2_dec + fn2_dec;
+      const end_at_60_m = (narcotic * ata60 - 1) * 10;
+
+      let mod14Str, endStr;
+      if (unit === 'metric') {
+        mod14Str = fmt(mod14_m) + 'm';
+        endStr = fmt(end_at_60_m) + 'm';
+      } else {
+        mod14Str = fmt(mToFt(mod14_m)) + 'ft';
+        endStr = fmt(mToFt(end_at_60_m)) + 'ft';
+      }
+
+      const refDepthStr = unit === 'metric' ? '60m' : '197ft';
+
+      return `<tr>
+        <td>${mix.label}</td>
+        <td>${mix.fo2}%</td>
+        <td>${mix.fhe}%</td>
+        <td>${fn2}%</td>
+        <td>${mod14Str}</td>
+        <td>${endStr} <span style="font-size:11px;color:var(--text-muted)">at ${refDepthStr}</span></td>
+      </tr>`;
+    }).join('');
+  }
+
+  // ── FAQ toggle ────────────────────────────────────────
+  function toggleFAQ(btn) {
+    const item = btn.closest('.faq-item');
+    const isOpen = item.classList.contains('open');
+    // Close all
+    document.querySelectorAll('.faq-item.open').forEach(el => el.classList.remove('open'));
+    if (!isOpen) item.classList.add('open');
+  }
+
+  // ── Keyboard submit ───────────────────────────────────
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') {
+      if (currentMode === 'end') calcEND();
+      else calcBest();
+    }
+  });
+
+  // ── Init ──────────────────────────────────────────────
+  buildRefTable();
+  calcEND(); // Run with defaults on load
+</script>
+
+<script>
+  window.CALCNOVA_PAGE = {
+    id: 'trimix-calculator',
+    disclaimer: 'This calculator is a planning aid only and is NOT a substitute for proper technical dive training. Trimix diving requires advanced training and certification. Never dive beyond your training level.'
+  };
+</script>
+<script src="shared/site-data.js"></script>
+<script src="shared/nav.js"></script>
+</body>
+</html>

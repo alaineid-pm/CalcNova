@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>BMI Explained: What It Actually Tells You (And What It Doesn't) | CalcNova</title>
+  <meta name="description" content="BMI is the world's most-used health metric—but it has real limits. Learn how BMI is calculated, what the categories mean, and when to look beyond the number.">
+  <link rel="canonical" href="https://calcnova.co/article-bmi.html">
+  <meta property="og:title" content="BMI Explained: What It Actually Tells You (And What It Doesn't) | CalcNova">
+  <meta property="og:description" content="BMI is the world's most-used health metric—but it has real limits. Learn how BMI is calculated, what the categories mean, and when to look beyond the number.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://calcnova.co/article-bmi.html">
+  <meta property="og:site_name" content="CalcNova">
+  <script type="application/ld+json">[{"@context":"https://schema.org","@type":"Article","headline":"BMI Explained: What It Actually Tells You (And What It Doesn't)","description":"BMI is the world's most-used health metric—but it has real limits. Learn how BMI is calculated, what the categories mean, and when to look beyond the number.","url":"https://calcnova.co/article-bmi.html","datePublished":"2026-03-14","dateModified":"2026-03-14","publisher":{"@type":"Organization","name":"CalcNova","url":"https://calcnova.co/"},"isPartOf":{"@type":"WebSite","name":"CalcNova","url":"https://calcnova.co/"}}]</script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="shared/nav.css">
+  <style>
+    .app{position:relative;z-index:1;max-width:960px;margin:0 auto;padding:0 16px 60px;}
+    .article-hero{padding:48px 0 36px;border-bottom:1px solid var(--border);margin-bottom:40px;max-width:720px;}
+    .article-badge{display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,rgba(16,185,129,.1),rgba(99,102,241,.1));border:1px solid rgba(16,185,129,.25);border-radius:100px;padding:5px 14px;font-size:11px;font-weight:700;color:var(--green);letter-spacing:.5px;text-transform:uppercase;margin-bottom:16px;}
+    .article-hero h1{font-size:38px;font-weight:800;letter-spacing:-.5px;line-height:1.15;margin-bottom:14px;}
+    .article-hero h1 span{background:linear-gradient(135deg,var(--green),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+    .article-hero .subtitle{font-size:16px;color:var(--text-secondary);line-height:1.6;max-width:600px;}
+    .article-meta{margin-top:16px;font-size:12px;color:var(--text-muted);font-weight:500;display:flex;align-items:center;gap:12px;}
+    .article-meta .dot{width:3px;height:3px;border-radius:50%;background:var(--text-muted);}
+    .article-body{max-width:720px;display:flex;flex-direction:column;gap:28px;}
+    .article-body h2{font-size:24px;font-weight:800;letter-spacing:-.3px;margin-bottom:12px;color:var(--text-primary);}
+    .article-body h3{font-size:18px;font-weight:700;letter-spacing:-.2px;margin-bottom:8px;color:var(--text-primary);}
+    .article-body p{font-size:16px;color:var(--text-secondary);line-height:1.75;margin-bottom:14px;}
+    .article-body p:last-child{margin-bottom:0;}
+    .article-body ul,.article-body ol{padding-left:0;list-style:none;display:flex;flex-direction:column;gap:8px;margin-bottom:14px;}
+    .article-body ul li,.article-body ol li{font-size:16px;color:var(--text-secondary);line-height:1.7;padding-left:22px;position:relative;}
+    .article-body ul li::before{content:'';position:absolute;left:0;top:10px;width:6px;height:6px;border-radius:50%;background:linear-gradient(135deg,var(--green),var(--purple));}
+    .article-body ol{counter-reset:ol-counter;}
+    .article-body ol li{counter-increment:ol-counter;}
+    .article-body ol li::before{content:counter(ol-counter);position:absolute;left:0;top:0;font-size:13px;font-weight:800;color:var(--green);font-family:var(--mono);}
+    .article-body a{color:var(--green);text-decoration:none;font-weight:600;}
+    .article-body a:hover{text-decoration:underline;}
+    .article-body strong{color:var(--text-primary);font-weight:700;}
+    .formula-box{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px 28px;text-align:center;}
+    .formula-box .formula{font-family:var(--mono);font-size:18px;font-weight:600;color:var(--text-primary);margin-bottom:16px;}
+    .formula-box .formula .hl{color:var(--green);}
+    .formula-box .legend{display:flex;flex-wrap:wrap;gap:8px 20px;justify-content:center;font-size:13px;color:var(--text-secondary);}
+    .formula-box .legend code{font-family:var(--mono);font-weight:600;font-size:12px;background:var(--bg);border:1px solid var(--border);border-radius:4px;padding:1px 5px;}
+    .card{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:24px 26px;}
+    .card-label{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--green);margin-bottom:12px;}
+    .example-box{background:linear-gradient(135deg,rgba(16,185,129,.05),rgba(99,102,241,.03));border:1px solid rgba(16,185,129,.18);border-radius:16px;padding:24px 26px;}
+    .example-box .example-title{font-size:14px;font-weight:800;color:var(--green);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;}
+    .example-box .result{font-family:var(--mono);font-size:15px;font-weight:600;color:var(--text-primary);background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 16px;margin-top:12px;}
+    .example-box .result .hl{color:var(--green);font-weight:700;}
+    .comparison-table{width:100%;border-collapse:collapse;font-size:14px;margin:12px 0;}
+    .comparison-table th{text-align:left;font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.5px;color:var(--text-muted);padding:10px 14px;border-bottom:2px solid var(--border);}
+    .comparison-table td{padding:10px 14px;color:var(--text-secondary);border-bottom:1px solid var(--border);}
+    .comparison-table tr:last-child td{border-bottom:none;}
+    .comparison-table .num{font-family:var(--mono);font-weight:600;}
+    .comparison-table .hl{color:var(--green);font-weight:700;}
+    .cta-section{background:linear-gradient(135deg,rgba(16,185,129,.08),rgba(99,102,241,.06));border:1px solid rgba(16,185,129,.2);border-radius:18px;padding:32px;text-align:center;margin-top:8px;}
+    .cta-section h2{font-size:22px;margin-bottom:10px;}
+    .cta-section p{max-width:500px;margin:0 auto 20px;}
+    .cta-btn{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,var(--green),#059669);color:#fff !important;border-radius:100px;padding:12px 28px;font-size:14px;font-weight:700;text-decoration:none !important;font-family:var(--font);transition:all .15s;box-shadow:0 4px 14px rgba(16,185,129,.3);}
+    .cta-btn:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(16,185,129,.4);}
+    @media print{.cn-nav,.cn-footer,.ad-slot,.cta-section{display:none !important;}.app{max-width:100%;padding:0;}}
+    @media(max-width:640px){.article-hero h1{font-size:28px;}.formula-box .formula{font-size:14px;}}
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="article-hero">
+      <div class="article-badge">⚖️ Health Guide</div>
+      <h1>BMI Explained: What It <span>Actually Tells You</span> (And What It Doesn't)</h1>
+      <p class="subtitle">Body Mass Index is used by doctors, insurers, and public health agencies worldwide. Here's an honest look at what this number means, where it breaks down, and what to measure instead.</p>
+      <div class="article-meta"><span>5 min read</span><span class="dot"></span><span>Updated March 2026</span></div>
+    </div>
+    <div class="article-body">
+
+      <section>
+        <h2>What Is BMI and How Is It Calculated?</h2>
+        <p>Body Mass Index is a simple ratio of weight to height squared. Belgian mathematician Adolphe Quetelet invented it in the 1830s to describe average body size in populations — not to diagnose individual health. Despite that origin, it became the dominant clinical screening tool for body weight in the 20th century, largely because it requires no equipment beyond a scale and a tape measure.</p>
+        <div class="formula-box">
+          <div class="formula"><span class="hl">BMI</span> = weight(kg) / height(m)²&nbsp;&nbsp;|&nbsp;&nbsp;<span class="hl">BMI</span> = 703 × weight(lbs) / height(in)²</div>
+          <div class="legend">
+            <span><code>weight(kg)</code> body weight in kilograms</span>
+            <span><code>height(m)</code> height in metres</span>
+            <span><code>703</code> unit conversion factor for imperial</span>
+          </div>
+        </div>
+        <div class="example-box" style="margin-top:16px;">
+          <div class="example-title">Example Calculation</div>
+          <p style="margin-bottom:0;font-size:15px;color:var(--text-secondary);">A person who weighs <strong>80 kg</strong> and stands <strong>1.75 m</strong> tall:</p>
+          <div class="result">BMI = 80 ÷ (1.75 × 1.75) = 80 ÷ 3.0625 = <span class="hl">26.1</span> → Overweight range</div>
+        </div>
+      </section>
+
+      <section>
+        <h2>BMI Categories at a Glance</h2>
+        <p>The World Health Organization defines four primary adult BMI categories. These cut-offs are used globally, though some health agencies apply modified thresholds for specific ethnic groups (more on that below).</p>
+        <div class="card">
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th>Category</th>
+                <th>BMI Range</th>
+                <th>General Implication</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Underweight</td>
+                <td class="num">&lt; 18.5</td>
+                <td>May indicate malnutrition, eating disorder, or illness</td>
+              </tr>
+              <tr>
+                <td class="hl">Normal weight</td>
+                <td class="num hl">18.5 – 24.9</td>
+                <td>Associated with lowest average health risk in large studies</td>
+              </tr>
+              <tr>
+                <td>Overweight</td>
+                <td class="num">25.0 – 29.9</td>
+                <td>Elevated risk for metabolic conditions at population level</td>
+              </tr>
+              <tr>
+                <td>Obese (Class I)</td>
+                <td class="num">30.0 – 34.9</td>
+                <td>Significant increased risk for cardiovascular disease, type 2 diabetes</td>
+              </tr>
+              <tr>
+                <td>Obese (Class II)</td>
+                <td class="num">35.0 – 39.9</td>
+                <td>High risk; weight-related conditions often already present</td>
+              </tr>
+              <tr>
+                <td>Obese (Class III)</td>
+                <td class="num">≥ 40.0</td>
+                <td>Very high risk; also called severe or morbid obesity</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section>
+        <h2>Why BMI Has Serious Limitations</h2>
+        <p>BMI measures weight relative to height — nothing more. It has no knowledge of what your weight is actually made of. This creates several well-documented blind spots.</p>
+
+        <h3>It Can't Tell Muscle from Fat</h3>
+        <p>Muscle is denser than fat. An elite athlete with 10% body fat can easily score in the "overweight" or even "obese" range on BMI simply because they carry more lean mass than the average person. Many NFL linemen, competitive powerlifters, and even endurance cyclists have BMIs above 30 while being metabolically healthy by every other measure. Conversely, a sedentary person can have a "normal" BMI while carrying a dangerous amount of visceral fat — a phenomenon researchers call "normal weight obesity" or "skinny fat."</p>
+
+        <h3>It Ignores Age and Sex</h3>
+        <p>Older adults naturally lose muscle and gain fat over time. A 70-year-old and a 30-year-old with the same BMI can have dramatically different body compositions. Similarly, women naturally carry more body fat than men at equivalent BMIs. The same BMI number does not represent the same health risk across different ages and sexes.</p>
+
+        <h3>Ethnic Populations Are Misrepresented</h3>
+        <p>Research consistently shows that people of South Asian, East Asian, and Southeast Asian descent develop metabolic complications — including type 2 diabetes and cardiovascular disease — at lower BMI thresholds than the standard WHO cut-offs suggest. The World Health Organization now recommends that Asian populations be considered at risk starting at a BMI of 23, and at high risk at 27.5. Using the standard cut-offs for these groups leads to systematic under-screening.</p>
+
+        <h3>It Says Nothing About Fat Distribution</h3>
+        <p>Where your body stores fat matters enormously. Visceral fat — the fat stored around organs inside the abdominal cavity — is far more metabolically dangerous than subcutaneous fat stored under the skin in the hips and thighs. Two people with the same BMI can have completely different fat distributions and therefore very different health risk profiles. BMI captures neither.</p>
+      </section>
+
+      <section>
+        <h2>When BMI IS Still Useful</h2>
+        <p>Despite its limitations, BMI is not worthless — it just needs to be used appropriately.</p>
+        <ul>
+          <li><strong>Population-level epidemiology:</strong> At the level of millions of people, BMI correlates reasonably well with health outcomes and disease burden. It's a valuable tool for public health tracking precisely because it's cheap and standardized.</li>
+          <li><strong>Rapid initial screening:</strong> In a busy clinical setting, BMI provides a quick flag. It's not a diagnosis, but a BMI of 35 is a reasonable prompt to investigate further.</li>
+          <li><strong>Tracking trends over time:</strong> For an individual, watching whether their own BMI is rising or falling over years can signal meaningful changes in body composition, especially when interpreted alongside other markers.</li>
+          <li><strong>Research standardization:</strong> BMI allows researchers to compare body size data across studies and populations using a single consistent metric, even if that metric is imperfect.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Better Alternatives (and What to Add to Your Assessment)</h2>
+        <p>No single number captures health completely. Using two or three complementary metrics gives a much more accurate picture.</p>
+
+        <h3>Waist-to-Hip Ratio (WHR)</h3>
+        <p>Divide your waist circumference by your hip circumference. This directly assesses fat distribution. The WHO defines elevated cardiovascular risk as WHR above 0.90 for men and 0.85 for women. It's simple, requires only a tape measure, and captures something BMI completely misses.</p>
+
+        <h3>Waist-to-Height Ratio</h3>
+        <p>An even simpler heuristic: your waist circumference should be less than half your height. A waist-to-height ratio above 0.5 is associated with increased cardiometabolic risk across multiple ethnic groups, making it more universally applicable than standard BMI cut-offs.</p>
+
+        <h3>Body Fat Percentage</h3>
+        <p>Directly measuring what proportion of your weight is fat — via DEXA scan, hydrostatic weighing, or air displacement plethysmography — gives you the number BMI was always trying to approximate. Healthy body fat ranges are approximately 10–20% for men and 18–28% for women. Consumer-grade bioelectrical impedance scales offer a rough estimate, though accuracy varies.</p>
+
+        <h3>DEXA Scan</h3>
+        <p>Dual-energy X-ray absorptiometry is the gold standard for body composition. It distinguishes lean mass, fat mass, and bone density by region of the body. It's available at many sports medicine clinics and some gyms for $50–$150 and gives you data that dwarfs what BMI can offer. If you're seriously tracking your health or body composition, one annual DEXA is well worth it.</p>
+      </section>
+
+      <section>
+        <h2>What to Actually Do With Your BMI Result</h2>
+        <p>Think of your BMI as a starting point for a conversation, not an endpoint. Here's a practical framework:</p>
+        <ol>
+          <li>Calculate your BMI and note which category it falls in.</li>
+          <li>Also measure your waist circumference and calculate your waist-to-height ratio.</li>
+          <li>If both BMI and waist-to-height ratio suggest elevated risk, that's a meaningful signal worth discussing with your doctor.</li>
+          <li>If your BMI is high but you're highly muscular, don't panic — use body fat percentage to get the real picture.</li>
+          <li>If you're of South or East Asian descent, apply the lower thresholds (23 for overweight, 27.5 for obese).</li>
+          <li>No matter your BMI, aerobic fitness, diet quality, sleep, and stress management are stronger predictors of long-term health than any single number.</li>
+        </ol>
+        <p>Also consider tracking <a href="body-fat-calculator.html">body fat percentage</a> and checking your <a href="ideal-weight-calculator.html">ideal weight range</a> for additional context beyond BMI alone.</p>
+      </section>
+
+      <div class="cta-section">
+        <h2>Calculate Your BMI Now</h2>
+        <p>Enter your height and weight to get your BMI, see your category, and understand what it means for your health.</p>
+        <a href="bmi-calculator.html" class="cta-btn">Open BMI Calculator →</a>
+      </div>
+
+    </div>
+  </div>
+  <script>window.CALCNOVA_PAGE = { id: 'article-bmi', disclaimer: 'This article is for educational purposes only. Consult a healthcare provider for medical advice.' };</script>
+  <script src="shared/site-data.js"></script>
+  <script src="shared/nav.js"></script>
+</body>
+</html>

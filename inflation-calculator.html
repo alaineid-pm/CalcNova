@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Inflation Calculator — Purchasing Power Over Time | CalcNova</title>
+  <meta name="description" content="Calculate how inflation affects the value of money over time. See what $100 from any year is worth today, or find the past equivalent of today's dollars. Free inflation calculator.">
+
+  <!-- Canonical -->
+  <link rel="canonical" href="https://calcnova.co/inflation-calculator.html">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Inflation Calculator — Purchasing Power Over Time | CalcNova">
+  <meta property="og:description" content="Calculate how inflation erodes purchasing power. Find out what $100 from any year is worth today — or what today's dollars were worth in the past. Free, instant, no sign-up.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://calcnova.co/inflation-calculator.html">
+  <meta property="og:site_name" content="CalcNova">
+
+  <!-- JSON-LD -->
+  <script type="application/ld+json">
+  [
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": "Inflation Calculator — Purchasing Power Over Time",
+      "url": "https://calcnova.co/inflation-calculator.html",
+      "description": "Calculate how inflation affects purchasing power over time. Free inflation calculator — no sign-up required.",
+      "isPartOf": {
+        "@type": "WebSite",
+        "name": "CalcNova",
+        "url": "https://calcnova.co/"
+      },
+      "breadcrumb": {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://calcnova.co/" },
+          { "@type": "ListItem", "position": 2, "name": "Inflation Calculator", "item": "https://calcnova.co/inflation-calculator.html" }
+        ]
+      }
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How does inflation affect purchasing power?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Inflation reduces purchasing power over time. If the inflation rate is 3% per year, $100 today will only buy what $97 buys next year. Over many years this compounds significantly — $100 in 2000 at 3% annual inflation would need to be about $181 by 2026 to have the same buying power."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the formula for inflation adjustment?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "To adjust for inflation from past to present: Adjusted Amount = Original × (1 + rate/100)^years. For example, $100 in 2000 with 3% annual inflation becomes $100 × (1.03)^26 ≈ $181.94 in 2026."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is a typical inflation rate?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "In the United States, the Federal Reserve targets roughly 2% annual inflation. The historical long-run average is approximately 3–3.5%. Periods of high inflation (like the 1970s or post-2021) can see rates above 8%, while deflationary periods may see negative rates."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I calculate deflation (negative inflation)?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Enter a negative inflation rate (e.g., -1.5%) to model deflation — a sustained fall in the general price level. In deflationary periods, money gains purchasing power over time."
+          }
+        }
+      ]
+    }
+  ]
+  </script>
+
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="shared/nav.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #f0f2f7;
+      --surface: #ffffff;
+      --border: #e2e6ef;
+      --text-primary: #0f1623;
+      --text-secondary: #5a6478;
+      --text-muted: #9ba3b5;
+      --green: #10b981;
+      --purple: #6366f1;
+      --amber: #f59e0b;
+      --red: #ef4444;
+      --font: 'Plus Jakarta Sans', sans-serif;
+      --mono: 'JetBrains Mono', monospace;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text-primary);
+      font-family: var(--font);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .app { position: relative; z-index: 1; max-width: 960px; margin: 0 auto; padding: 0 16px 60px; }
+
+    /* Hero */
+    .hero { background: var(--surface); border: 1px solid var(--border); border-radius: 18px; padding: 38px 32px 32px; margin-bottom: 28px; }
+    .hero-title { font-size: 26px; font-weight: 800; letter-spacing: -.5px; margin: 0; padding: 0; }
+    .hero-title span { background: linear-gradient(135deg, var(--green), var(--purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .hero-desc { font-size: 14px; color: var(--text-secondary); margin-top: 6px; line-height: 1.5; }
+
+    /* Card */
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 18px; padding: 22px; margin-bottom: 28px; }
+    .card-title { font-family: var(--mono); font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 18px; display: flex; align-items: center; gap: 8px; }
+    .card-title-dot { width: 6px; height: 6px; border-radius: 50%; }
+
+    /* Form */
+    .form-group { margin-bottom: 14px; }
+    .form-label { font-size: 12px; font-weight: 600; color: var(--text-secondary); margin-bottom: 6px; display: block; }
+    input[type="number"] { width: 100%; background: var(--bg); border: 1px solid var(--border); border-radius: 10px; color: var(--text-primary); font-family: var(--font); font-size: 14px; font-weight: 600; padding: 9px 12px; outline: none; transition: border-color .2s, box-shadow .2s; -moz-appearance: textfield; }
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+    input[type="number"]:focus { border-color: var(--green); box-shadow: 0 0 0 3px rgba(16,185,129,.12); }
+    input[type="number"].input-error { border-color: var(--red); box-shadow: 0 0 0 3px rgba(239,68,68,.12); }
+    .input-row { display: flex; gap: 12px; }
+    .input-row .form-group { flex: 1; }
+
+    /* Input prefix wrapper */
+    .input-prefix-wrap { position: relative; }
+    .input-prefix-wrap .prefix { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-size: 14px; font-weight: 700; color: var(--text-muted); pointer-events: none; }
+    .input-prefix-wrap input { padding-left: 24px; }
+    .input-suffix-wrap { position: relative; }
+    .input-suffix-wrap .suffix { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); font-size: 14px; font-weight: 700; color: var(--text-muted); pointer-events: none; }
+    .input-suffix-wrap input { padding-right: 28px; }
+
+    /* Segmented control */
+    .seg-control { display: flex; background: var(--bg); border: 1px solid var(--border); border-radius: 12px; padding: 3px; gap: 3px; margin-bottom: 14px; }
+    .seg-btn { flex: 1; padding: 9px 10px; border: none; background: transparent; border-radius: 9px; font-family: var(--font); font-size: 13px; font-weight: 600; color: var(--text-secondary); cursor: pointer; transition: all .18s; text-align: center; white-space: nowrap; }
+    .seg-btn.active { background: var(--surface); color: var(--text-primary); box-shadow: 0 1px 4px rgba(0,0,0,.1); }
+
+    /* Error message */
+    .error-msg { font-size: 12px; font-weight: 600; color: var(--red); margin-top: 4px; display: none; }
+    .error-msg.visible { display: block; }
+
+    /* Direction hint */
+    .direction-hint { font-size: 12px; color: var(--text-secondary); background: rgba(99,102,241,.06); border: 1px solid rgba(99,102,241,.15); border-radius: 9px; padding: 9px 12px; margin-bottom: 14px; line-height: 1.5; }
+
+    /* Result card */
+    .result-card { background: linear-gradient(135deg, rgba(16,185,129,.08), rgba(99,102,241,.08)); border: 1.5px solid rgba(16,185,129,.3); border-radius: 20px; padding: 32px 28px 28px; margin-bottom: 28px; text-align: center; }
+    .result-card.hidden { display: none; }
+    .result-label { font-family: var(--mono); font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 8px; }
+    .result-value { font-family: var(--mono); font-size: 48px; font-weight: 800; background: linear-gradient(135deg, var(--green), var(--purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; line-height: 1.1; margin-bottom: 10px; }
+    .result-summary { font-size: 14px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 0; }
+    .result-summary strong { color: var(--text-primary); font-weight: 700; }
+
+    /* Zero inflation notice */
+    .zero-notice { font-family: var(--mono); font-size: 13px; font-weight: 600; color: var(--amber); background: rgba(245,158,11,.08); border: 1px solid rgba(245,158,11,.25); border-radius: 10px; padding: 10px 14px; margin-top: 10px; display: none; }
+    .zero-notice.visible { display: block; }
+
+    /* Stats grid */
+    .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-bottom: 20px; }
+    .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 16px; text-align: center; }
+    .stat-card-label { font-family: var(--mono); font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 6px; }
+    .stat-card-value { font-family: var(--mono); font-size: 22px; font-weight: 800; color: var(--text-primary); }
+    .stat-card-value.green { color: var(--green); }
+    .stat-card-value.red { color: var(--red); }
+
+    /* Action row */
+    .action-row { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+    .action-btn { display: flex; align-items: center; gap: 7px; padding: 10px 18px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; font-family: var(--font); font-size: 13px; font-weight: 600; color: var(--text-secondary); cursor: pointer; transition: all .15s; }
+    .action-btn:hover { border-color: var(--green); color: var(--green); }
+    .action-btn svg { flex-shrink: 0; }
+
+    /* Chart */
+    .chart-wrap { width: 100%; overflow-x: auto; margin-bottom: 16px; }
+    .chart-svg { display: block; min-width: 300px; }
+    .chart-grid-line { stroke: var(--border); stroke-width: 1; }
+    .chart-axis-label { font-family: 'JetBrains Mono', monospace; font-size: 10px; fill: var(--text-muted); }
+    .chart-line { fill: none; stroke: var(--green); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+    .chart-area { fill: url(#chartGrad); opacity: 0.5; }
+    .chart-dot { fill: var(--surface); stroke: var(--green); stroke-width: 2; }
+    .chart-dot-first, .chart-dot-last { fill: var(--green); stroke: none; }
+
+    /* Table */
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-family: var(--mono); font-size: 13px; }
+    thead tr { border-bottom: 2px solid var(--border); }
+    th { font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--text-muted); padding: 0 10px 10px; text-align: right; }
+    th:first-child { text-align: left; }
+    td { padding: 9px 10px; text-align: right; color: var(--text-primary); border-bottom: 1px solid var(--border); }
+    td:first-child { text-align: left; font-weight: 700; color: var(--text-secondary); }
+    tbody tr:last-child td { border-bottom: none; }
+    tbody tr:hover td { background: rgba(16,185,129,.04); }
+    .td-change-pos { color: var(--green); }
+    .td-change-neg { color: var(--red); }
+    .td-change-zero { color: var(--text-muted); }
+    .table-hidden-row { display: none; }
+
+    /* Show-all button */
+    .show-all-btn { display: flex; align-items: center; justify-content: center; gap: 6px; width: 100%; padding: 10px; background: var(--bg); border: 1px solid var(--border); border-radius: 10px; font-family: var(--font); font-size: 13px; font-weight: 600; color: var(--text-secondary); cursor: pointer; transition: all .15s; margin-top: 8px; }
+    .show-all-btn:hover { border-color: var(--green); color: var(--green); }
+    .show-all-btn.hidden { display: none; }
+
+    /* Collapsible section */
+    .collapsible-header { display: flex; align-items: center; justify-content: space-between; cursor: pointer; user-select: none; }
+    .collapsible-toggle { font-family: var(--mono); font-size: 11px; font-weight: 700; letter-spacing: .5px; color: var(--text-muted); background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 5px 10px; transition: all .15s; }
+    .collapsible-toggle:hover { border-color: var(--green); color: var(--green); }
+    .collapsible-body { overflow: hidden; transition: max-height .35s ease; }
+    .collapsible-body.collapsed { max-height: 0 !important; }
+
+    /* Toast */
+    #toast { position: fixed; bottom: 28px; right: 24px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 12px 18px; font-size: 13px; font-weight: 600; color: var(--text-primary); box-shadow: 0 8px 28px rgba(0,0,0,.12); opacity: 0; transition: opacity .25s; pointer-events: none; z-index: 9999; display: flex; align-items: center; gap: 8px; }
+    #toast.show { opacity: 1; }
+
+    @media print {
+      #cn-header, .action-row, #toast, .show-all-btn, .collapsible-toggle, .seg-control, .card:first-of-type { /* inputs */ }
+      #cn-header, .action-row, #toast { display: none !important; }
+      .collapsible-body.collapsed { max-height: none !important; }
+      .table-hidden-row { display: table-row !important; }
+    }
+
+    @media (max-width: 640px) {
+      .hero { padding: 24px 18px; }
+      .card { padding: 16px; }
+      .input-row { flex-direction: column; }
+      .result-value { font-size: 36px; }
+      .stat-card-value { font-size: 18px; }
+    }
+
+    /* ── SEO content ── */
+    .seo-section { background: var(--surface); border: 1px solid var(--border); border-radius: 18px; padding: 28px; margin-top: 40px; }
+    .seo-section h2 { font-size: 18px; font-weight: 800; margin: 0 0 12px; letter-spacing: -.3px; }
+    .seo-section h3 { font-size: 15px; font-weight: 700; margin: 20px 0 8px; color: var(--text-primary); }
+    .seo-section p { font-size: 14px; color: var(--text-secondary); line-height: 1.75; margin: 0 0 10px; }
+    .seo-section ul { padding-left: 18px; margin: 0 0 10px; }
+    .seo-section ul li { font-size: 14px; color: var(--text-secondary); line-height: 1.65; margin-bottom: 5px; }
+    .related-links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
+    .related-links a { display: inline-flex; align-items: center; gap: 6px; background: var(--surface); border: 1px solid var(--border); border-radius: 100px; padding: 6px 14px; font-size: 13px; font-weight: 600; color: var(--text-primary); text-decoration: none; transition: border-color .15s; }
+    .related-links a:hover { border-color: var(--green); color: var(--green); }
+    @media print { .seo-section { display: none !important; } }
+  </style>
+</head>
+<body>
+<div class="app">
+
+  <!-- Hero -->
+  <div class="hero">
+    <h1 class="hero-title">Inflation <span>Calculator</span></h1>
+    <div class="hero-desc">See how inflation erodes — or compounds — purchasing power over time. Adjust the rate, pick any year range, and explore the real value of your money.</div>
+  </div>
+
+  <!-- Inputs -->
+  <div class="card">
+    <div class="card-title">
+      <span class="card-title-dot" style="background:var(--green);"></span>
+      Parameters
+    </div>
+
+    <!-- Direction toggle -->
+    <div class="form-group">
+      <div class="form-label">Direction</div>
+      <div class="seg-control" id="directionSeg">
+        <button class="seg-btn active" data-dir="forward">Past &rarr; Present</button>
+        <button class="seg-btn" data-dir="reverse">Present &rarr; Past</button>
+      </div>
+    </div>
+
+    <!-- Direction hint -->
+    <div class="direction-hint" id="directionHint">
+      "What would $X from <strong id="hintStartYear">2000</strong> be worth in <strong id="hintEndYear">2026</strong>?"
+    </div>
+
+    <!-- Amount -->
+    <div class="form-group">
+      <label class="form-label" for="inputAmount">Amount</label>
+      <div class="input-prefix-wrap">
+        <span class="prefix">$</span>
+        <input type="number" id="inputAmount" min="0.01" step="any" value="100" placeholder="100">
+      </div>
+      <div class="error-msg" id="errAmount">Please enter a positive amount.</div>
+    </div>
+
+    <div class="input-row">
+      <!-- Start year -->
+      <div class="form-group">
+        <label class="form-label" for="inputStartYear">Start Year</label>
+        <input type="number" id="inputStartYear" min="1900" max="2026" step="1" value="2000" placeholder="2000">
+        <div class="error-msg" id="errStartYear">Must be 1900–2026.</div>
+      </div>
+      <!-- End year -->
+      <div class="form-group">
+        <label class="form-label" for="inputEndYear">End Year</label>
+        <input type="number" id="inputEndYear" min="1900" max="2026" step="1" value="2026" placeholder="2026">
+        <div class="error-msg" id="errEndYear">Must be 1900–2026 and after start year.</div>
+      </div>
+    </div>
+
+    <!-- Inflation rate -->
+    <div class="form-group">
+      <label class="form-label" for="inputRate">Annual Inflation Rate</label>
+      <div class="input-suffix-wrap">
+        <span class="suffix">%</span>
+        <input type="number" id="inputRate" step="0.01" value="3.0" placeholder="3.0">
+      </div>
+      <div class="error-msg" id="errRate">Rate cannot exceed ±100% per year.</div>
+    </div>
+  </div>
+
+  <!-- Result card -->
+  <div class="result-card hidden" id="resultCard">
+    <div class="result-label" id="resultLabel">Inflation-Adjusted Value</div>
+    <div class="result-value" id="resultValue">—</div>
+    <div class="result-summary" id="resultSummary"></div>
+    <div class="zero-notice" id="zeroNotice">No change — inflation rate is 0%</div>
+  </div>
+
+  <!-- Stats grid -->
+  <div class="card hidden" id="statsCard">
+    <div class="card-title">
+      <span class="card-title-dot" style="background:var(--purple);"></span>
+      Breakdown
+    </div>
+    <div class="stat-grid">
+      <div class="stat-card">
+        <div class="stat-card-label">Original Amount</div>
+        <div class="stat-card-value" id="statOriginal">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-label">Adjusted Amount</div>
+        <div class="stat-card-value" id="statAdjusted">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-label">Total Inflation</div>
+        <div class="stat-card-value" id="statInflation">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-label">Time Span</div>
+        <div class="stat-card-value" id="statYears">—</div>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="action-row">
+      <button class="action-btn" id="btnCopy">
+        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        Copy Result
+      </button>
+      <button class="action-btn" id="btnPrint">
+        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+        Print
+      </button>
+    </div>
+  </div>
+
+  <!-- Chart card -->
+  <div class="card hidden" id="chartCard">
+    <div class="card-title">
+      <span class="card-title-dot" style="background:var(--green);"></span>
+      Value Over Time
+    </div>
+    <div class="chart-wrap">
+      <svg class="chart-svg" id="chartSvg" xmlns="http://www.w3.org/2000/svg"></svg>
+    </div>
+  </div>
+
+  <!-- Table card (collapsible) -->
+  <div class="card hidden" id="tableCard">
+    <div class="collapsible-header" id="tableToggleHeader">
+      <div class="card-title" style="margin-bottom:0;">
+        <span class="card-title-dot" style="background:var(--amber);"></span>
+        Year-by-Year Table
+      </div>
+      <button class="collapsible-toggle" id="tableToggleBtn">Hide</button>
+    </div>
+    <div class="collapsible-body" id="tableBody" style="max-height:9999px;">
+      <div style="height:16px;"></div>
+      <div class="table-wrap">
+        <table id="dataTable">
+          <thead>
+            <tr>
+              <th>Year</th>
+              <th>Value</th>
+              <th>Cumulative Change</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody2"></tbody>
+        </table>
+      </div>
+      <button class="show-all-btn hidden" id="showAllBtn">
+        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+        <span id="showAllLabel">Show all years</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- SEO content -->
+  <div class="seo-section">
+    <h2>About the Inflation Calculator</h2>
+    <p>This calculator uses historical CPI (Consumer Price Index) data to show how the purchasing power of money changes over time. Enter an amount and two years to see its equivalent value adjusted for inflation.</p>
+
+    <h3>What is Inflation?</h3>
+    <p>Inflation is the rate at which the general price level of goods and services rises, eroding purchasing power. A 3% annual inflation rate means $100 today buys only $97 worth of goods next year. Over 25 years at 3%, that $100 has the purchasing power of just $48.</p>
+
+    <h3>Historical US Inflation Context</h3>
+    <ul>
+      <li>Average US CPI inflation: ~3.2% per year over the last century</li>
+      <li>The Fed's 2% target has been the benchmark since the 1990s</li>
+      <li>2021–2023 saw the highest inflation since the early 1980s, peaking at 9.1% (June 2022)</li>
+      <li>The 1970s experienced "stagflation" with rates exceeding 13%</li>
+    </ul>
+
+    <h3>Why This Matters for Investing</h3>
+    <p>Investment returns must beat inflation to grow real wealth. A savings account paying 1% while inflation runs at 3% loses purchasing power at 2% annually. This is why stock market investments targeting 7%+ nominal returns are recommended for long-term wealth building.</p>
+
+    <h3>Related Calculators</h3>
+    <div class="related-links">
+      <a href="compound-interest-calculator.html">📈 Compound Interest</a>
+      <a href="investment-return-calculator.html">💹 Investment Return</a>
+      <a href="fire-calculator.html">🔥 FIRE Calculator</a>
+      <a href="coast-fire-calculator.html">🏖 Coast FIRE</a>
+      <a href="percentage-calculator.html">% Percentage</a>
+    </div>
+  </div>
+
+</div><!-- /.app -->
+
+<div id="toast"><span style="color:var(--green);font-size:15px;">✓</span> <span id="toast-msg">Copied!</span></div>
+
+<script>window.CALCNOVA_PAGE = { id: 'inflation-calculator' };</script>
+<script src="shared/site-data.js"></script>
+<script src="shared/nav.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  /* ── DOM refs ── */
+  var elAmount      = document.getElementById('inputAmount');
+  var elStartYear   = document.getElementById('inputStartYear');
+  var elEndYear     = document.getElementById('inputEndYear');
+  var elRate        = document.getElementById('inputRate');
+  var elResultCard  = document.getElementById('resultCard');
+  var elResultLabel = document.getElementById('resultLabel');
+  var elResultValue = document.getElementById('resultValue');
+  var elResultSum   = document.getElementById('resultSummary');
+  var elZeroNotice  = document.getElementById('zeroNotice');
+  var elStatsCard   = document.getElementById('statsCard');
+  var elChartCard   = document.getElementById('chartCard');
+  var elTableCard   = document.getElementById('tableCard');
+  var elStatOrig    = document.getElementById('statOriginal');
+  var elStatAdj     = document.getElementById('statAdjusted');
+  var elStatInfl    = document.getElementById('statInflation');
+  var elStatYears   = document.getElementById('statYears');
+  var elTableBody   = document.getElementById('tableBody2');
+  var elShowAllBtn  = document.getElementById('showAllBtn');
+  var elShowAllLbl  = document.getElementById('showAllLabel');
+  var elChartSvg    = document.getElementById('chartSvg');
+  var elDirSeg      = document.getElementById('directionSeg');
+  var elHintStart   = document.getElementById('hintStartYear');
+  var elHintEnd     = document.getElementById('hintEndYear');
+  var elDirHint     = document.getElementById('directionHint');
+  var elBtnCopy     = document.getElementById('btnCopy');
+  var elBtnPrint    = document.getElementById('btnPrint');
+  var elTableCollBody = document.getElementById('tableBody');
+  var elTableToggleBtn = document.getElementById('tableToggleBtn');
+  var elTableToggleHeader = document.getElementById('tableToggleHeader');
+
+  var errAmount    = document.getElementById('errAmount');
+  var errStartYear = document.getElementById('errStartYear');
+  var errEndYear   = document.getElementById('errEndYear');
+  var errRate      = document.getElementById('errRate');
+
+  var direction = 'forward'; // 'forward' | 'reverse'
+  var TABLE_PREVIEW = 20;
+  var tableShowAll = false;
+  var tableCollapsed = false;
+  var lastResult = null;
+  var toastTimer = null;
+
+  /* ── Helpers ── */
+  function fmt(v, decimals) {
+    var d = decimals !== undefined ? decimals : 2;
+    return v.toLocaleString('en-US', { minimumFractionDigits: d, maximumFractionDigits: d });
+  }
+  function fmtUSD(v) {
+    return '$' + fmt(v, 2);
+  }
+  function fmtPct(v) {
+    return (v >= 0 ? '+' : '') + fmt(v, 2) + '%';
+  }
+
+  /* ── Direction toggle ── */
+  elDirSeg.addEventListener('click', function (e) {
+    var btn = e.target.closest('.seg-btn');
+    if (!btn) return;
+    direction = btn.dataset.dir;
+    Array.from(elDirSeg.querySelectorAll('.seg-btn')).forEach(function (b) {
+      b.classList.toggle('active', b === btn);
+    });
+    updateHint();
+    calculate();
+  });
+
+  function updateHint() {
+    var sy = parseInt(elStartYear.value, 10) || 2000;
+    var ey = parseInt(elEndYear.value, 10) || 2026;
+    elHintStart.textContent = sy;
+    elHintEnd.textContent = ey;
+    if (direction === 'forward') {
+      elDirHint.innerHTML = '"What would $X from <strong>' + sy + '</strong> be worth in <strong>' + ey + '</strong>?"';
+    } else {
+      elDirHint.innerHTML = '"What was the equivalent of $X in <strong>' + ey + '</strong> back in <strong>' + sy + '</strong>?"';
+    }
+  }
+
+  /* ── Validate ── */
+  function validate() {
+    var ok = true;
+
+    var amount = parseFloat(elAmount.value);
+    if (isNaN(amount) || amount <= 0) {
+      elAmount.classList.add('input-error');
+      errAmount.classList.add('visible');
+      ok = false;
+    } else {
+      elAmount.classList.remove('input-error');
+      errAmount.classList.remove('visible');
+    }
+
+    var sy = parseInt(elStartYear.value, 10);
+    if (isNaN(sy) || sy < 1900 || sy > 2026) {
+      elStartYear.classList.add('input-error');
+      errStartYear.classList.add('visible');
+      ok = false;
+    } else {
+      elStartYear.classList.remove('input-error');
+      errStartYear.classList.remove('visible');
+    }
+
+    var ey = parseInt(elEndYear.value, 10);
+    if (isNaN(ey) || ey < 1900 || ey > 2026 || ey <= sy) {
+      elEndYear.classList.add('input-error');
+      errEndYear.classList.add('visible');
+      ok = false;
+    } else {
+      elEndYear.classList.remove('input-error');
+      errEndYear.classList.remove('visible');
+    }
+
+    var rate = parseFloat(elRate.value);
+    if (isNaN(rate) || rate <= -100 || rate >= 100) {
+      elRate.classList.add('input-error');
+      errRate.classList.add('visible');
+      ok = false;
+    } else {
+      elRate.classList.remove('input-error');
+      errRate.classList.remove('visible');
+    }
+
+    return ok;
+  }
+
+  /* ── Core calculation ── */
+  function calculate() {
+    updateHint();
+    if (!validate()) {
+      hideResults();
+      return;
+    }
+
+    var amount    = parseFloat(elAmount.value);
+    var startYear = parseInt(elStartYear.value, 10);
+    var endYear   = parseInt(elEndYear.value, 10);
+    var rate      = parseFloat(elRate.value);
+    var years     = endYear - startYear;
+    var factor    = Math.pow(1 + rate / 100, years);
+    var adjusted, totalPct;
+
+    if (direction === 'forward') {
+      adjusted = amount * factor;
+      totalPct = (adjusted / amount - 1) * 100;
+    } else {
+      // reverse: what was equivalent in the past
+      adjusted = amount / factor;
+      // from past perspective, this is still a cumulative change
+      totalPct = (adjusted / amount - 1) * 100;
+    }
+
+    /* Build year-by-year data */
+    var rows = [];
+    for (var y = startYear; y <= endYear; y++) {
+      var yr = y - startYear;
+      var val;
+      if (direction === 'forward') {
+        val = amount * Math.pow(1 + rate / 100, yr);
+      } else {
+        val = amount / Math.pow(1 + rate / 100, yr);
+      }
+      var cumPct = (val / amount - 1) * 100;
+      rows.push({ year: y, value: val, cumPct: cumPct });
+    }
+
+    lastResult = {
+      amount: amount,
+      adjusted: adjusted,
+      startYear: startYear,
+      endYear: endYear,
+      rate: rate,
+      years: years,
+      totalPct: totalPct,
+      rows: rows,
+      direction: direction
+    };
+
+    renderResult(lastResult);
+  }
+
+  function hideResults() {
+    elResultCard.classList.add('hidden');
+    elStatsCard.classList.add('hidden');
+    elChartCard.classList.add('hidden');
+    elTableCard.classList.add('hidden');
+    lastResult = null;
+  }
+
+  function renderResult(r) {
+    /* Result card */
+    elResultCard.classList.remove('hidden');
+
+    var isZero = r.rate === 0;
+    elZeroNotice.classList.toggle('visible', isZero);
+
+    if (r.direction === 'forward') {
+      elResultLabel.textContent = 'Inflation-Adjusted Value in ' + r.endYear;
+    } else {
+      elResultLabel.textContent = 'Past Equivalent in ' + r.startYear;
+    }
+
+    elResultValue.textContent = fmtUSD(r.adjusted);
+
+    if (isZero) {
+      elResultSum.innerHTML = '<strong>' + fmtUSD(r.amount) + '</strong> has the same purchasing power in both <strong>' + r.startYear + '</strong> and <strong>' + r.endYear + '</strong>.';
+    } else if (r.direction === 'forward') {
+      elResultSum.innerHTML = '<strong>' + fmtUSD(r.amount) + '</strong> in <strong>' + r.startYear + '</strong> has the same buying power as <strong>' + fmtUSD(r.adjusted) + '</strong> in <strong>' + r.endYear + '</strong>.';
+    } else {
+      elResultSum.innerHTML = 'What costs <strong>' + fmtUSD(r.amount) + '</strong> in <strong>' + r.endYear + '</strong> would have cost <strong>' + fmtUSD(r.adjusted) + '</strong> in <strong>' + r.startYear + '</strong>.';
+    }
+
+    /* Stats */
+    elStatsCard.classList.remove('hidden');
+    elStatOrig.textContent = fmtUSD(r.amount);
+    elStatAdj.textContent = fmtUSD(r.adjusted);
+
+    var inflEl = elStatInfl;
+    if (isZero) {
+      inflEl.textContent = '0.00%';
+      inflEl.className = 'stat-card-value';
+    } else if (r.totalPct > 0) {
+      inflEl.textContent = '+' + fmt(r.totalPct, 2) + '%';
+      inflEl.className = 'stat-card-value green';
+    } else {
+      inflEl.textContent = fmt(r.totalPct, 2) + '%';
+      inflEl.className = 'stat-card-value red';
+    }
+    elStatYears.textContent = r.years + (r.years === 1 ? ' yr' : ' yrs');
+
+    /* Chart */
+    elChartCard.classList.remove('hidden');
+    renderChart(r.rows);
+
+    /* Table */
+    elTableCard.classList.remove('hidden');
+    renderTable(r.rows);
+  }
+
+  /* ── Chart ── */
+  function renderChart(rows) {
+    var W = 860, H = 240;
+    var padL = 72, padR = 20, padT = 16, padB = 36;
+    var innerW = W - padL - padR;
+    var innerH = H - padT - padB;
+
+    var values = rows.map(function (r) { return r.value; });
+    var years  = rows.map(function (r) { return r.year; });
+    var minV = Math.min.apply(null, values);
+    var maxV = Math.max.apply(null, values);
+    if (minV === maxV) { minV -= 1; maxV += 1; }
+
+    // Nice Y ticks
+    var yRange = maxV - minV;
+    var rawStep = yRange / 5;
+    var mag = Math.pow(10, Math.floor(Math.log10(rawStep)));
+    var niceSteps = [1, 2, 2.5, 5, 10];
+    var niceStep = mag;
+    for (var i = 0; i < niceSteps.length; i++) {
+      if (rawStep / mag <= niceSteps[i]) { niceStep = niceSteps[i] * mag; break; }
+    }
+    var yMin = Math.floor(minV / niceStep) * niceStep;
+    var yMax = Math.ceil(maxV / niceStep) * niceStep;
+    var yTicks = [];
+    for (var t = yMin; t <= yMax + niceStep * 0.01; t += niceStep) {
+      yTicks.push(parseFloat(t.toPrecision(10)));
+    }
+
+    function xPos(year) {
+      var span = years[years.length - 1] - years[0] || 1;
+      return padL + ((year - years[0]) / span) * innerW;
+    }
+    function yPos(v) {
+      return padT + innerH - ((v - yMin) / (yMax - yMin)) * innerH;
+    }
+
+    // Build path
+    var pathD = '';
+    var areaD = '';
+    rows.forEach(function (r, idx) {
+      var x = xPos(r.year);
+      var y = yPos(r.value);
+      if (idx === 0) {
+        pathD += 'M ' + x + ' ' + y;
+        areaD += 'M ' + x + ' ' + yPos(yMin) + ' L ' + x + ' ' + y;
+      } else {
+        pathD += ' L ' + x + ' ' + y;
+        areaD += ' L ' + x + ' ' + y;
+      }
+    });
+    // Close area
+    areaD += ' L ' + xPos(rows[rows.length - 1].year) + ' ' + yPos(yMin) + ' Z';
+
+    // X ticks: pick ~6 evenly spaced
+    var xTickCount = Math.min(6, rows.length);
+    var xTickIdxs = [];
+    if (rows.length <= 6) {
+      for (var k = 0; k < rows.length; k++) xTickIdxs.push(k);
+    } else {
+      for (var k = 0; k < xTickCount; k++) {
+        xTickIdxs.push(Math.round(k * (rows.length - 1) / (xTickCount - 1)));
+      }
+    }
+
+    var svgParts = [];
+    svgParts.push('<defs>');
+    svgParts.push('<linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1">');
+    svgParts.push('<stop offset="0%" stop-color="#10b981" stop-opacity="0.3"/>');
+    svgParts.push('<stop offset="100%" stop-color="#10b981" stop-opacity="0"/>');
+    svgParts.push('</linearGradient>');
+    svgParts.push('</defs>');
+
+    // Grid lines
+    yTicks.forEach(function (tick) {
+      var y = yPos(tick);
+      if (y < padT || y > padT + innerH + 1) return;
+      svgParts.push('<line class="chart-grid-line" x1="' + padL + '" y1="' + y + '" x2="' + (W - padR) + '" y2="' + y + '"/>');
+      var label = tick >= 1000 ? ('$' + (tick / 1000).toFixed(tick % 1000 === 0 ? 0 : 1) + 'k') : ('$' + tick.toFixed(0));
+      svgParts.push('<text class="chart-axis-label" x="' + (padL - 6) + '" y="' + (y + 4) + '" text-anchor="end">' + label + '</text>');
+    });
+
+    // X axis labels
+    xTickIdxs.forEach(function (idx) {
+      var r = rows[idx];
+      var x = xPos(r.year);
+      svgParts.push('<text class="chart-axis-label" x="' + x + '" y="' + (H - 6) + '" text-anchor="middle">' + r.year + '</text>');
+    });
+
+    // Area + line
+    svgParts.push('<path class="chart-area" d="' + areaD + '"/>');
+    svgParts.push('<path class="chart-line" d="' + pathD + '"/>');
+
+    // Endpoint dots
+    var r0 = rows[0];
+    var rN = rows[rows.length - 1];
+    svgParts.push('<circle class="chart-dot-first" cx="' + xPos(r0.year) + '" cy="' + yPos(r0.value) + '" r="5"/>');
+    svgParts.push('<circle class="chart-dot-last" cx="' + xPos(rN.year) + '" cy="' + yPos(rN.value) + '" r="5"/>');
+
+    elChartSvg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+    elChartSvg.setAttribute('width', '100%');
+    elChartSvg.setAttribute('height', H);
+    elChartSvg.innerHTML = svgParts.join('');
+  }
+
+  /* ── Table ── */
+  function renderTable(rows) {
+    tableShowAll = false;
+    var html = '';
+    rows.forEach(function (r, idx) {
+      var hidden = !tableShowAll && idx >= TABLE_PREVIEW && idx < rows.length;
+      var pctClass = r.cumPct > 0 ? 'td-change-pos' : (r.cumPct < 0 ? 'td-change-neg' : 'td-change-zero');
+      var pctStr = r.cumPct === 0 ? '0.00%' : fmtPct(r.cumPct);
+      html += '<tr class="' + (hidden ? 'table-hidden-row' : '') + '">';
+      html += '<td>' + r.year + '</td>';
+      html += '<td>' + fmtUSD(r.value) + '</td>';
+      html += '<td class="' + pctClass + '">' + pctStr + '</td>';
+      html += '</tr>';
+    });
+    elTableBody.innerHTML = html;
+
+    if (rows.length > TABLE_PREVIEW) {
+      elShowAllBtn.classList.remove('hidden');
+      elShowAllLbl.textContent = 'Show all ' + rows.length + ' years';
+    } else {
+      elShowAllBtn.classList.add('hidden');
+    }
+  }
+
+  elShowAllBtn.addEventListener('click', function () {
+    if (!lastResult) return;
+    tableShowAll = true;
+    elShowAllBtn.classList.add('hidden');
+    var hiddenRows = elTableBody.querySelectorAll('.table-hidden-row');
+    hiddenRows.forEach(function (row) { row.classList.remove('table-hidden-row'); });
+  });
+
+  /* ── Collapsible table ── */
+  elTableToggleHeader.addEventListener('click', function (e) {
+    if (e.target.tagName === 'BUTTON' || e.target.closest('button')) {
+      tableCollapsed = !tableCollapsed;
+      elTableCollBody.classList.toggle('collapsed', tableCollapsed);
+      elTableToggleBtn.textContent = tableCollapsed ? 'Show' : 'Hide';
+    }
+  });
+
+  /* ── Copy ── */
+  elBtnCopy.addEventListener('click', function () {
+    if (!lastResult) return;
+    var r = lastResult;
+    var text;
+    if (r.direction === 'forward') {
+      text = fmtUSD(r.amount) + ' in ' + r.startYear + ' = ' + fmtUSD(r.adjusted) + ' in ' + r.endYear +
+             ' (' + r.rate + '% annual inflation, ' + r.years + ' years, ' + fmtPct(r.totalPct) + ' total)';
+    } else {
+      text = fmtUSD(r.amount) + ' in ' + r.endYear + ' = ' + fmtUSD(r.adjusted) + ' in ' + r.startYear +
+             ' (' + r.rate + '% annual inflation, ' + r.years + ' years)';
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(function () { showToast('Copied!'); });
+    } else {
+      var ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      showToast('Copied!');
+    }
+  });
+
+  /* ── Print ── */
+  elBtnPrint.addEventListener('click', function () { window.print(); });
+
+  /* ── Toast ── */
+  function showToast(msg) {
+    var el = document.getElementById('toast');
+    document.getElementById('toast-msg').textContent = msg;
+    el.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { el.classList.remove('show'); }, 2500);
+  }
+
+  /* ── Wire inputs ── */
+  [elAmount, elStartYear, elEndYear, elRate].forEach(function (el) {
+    el.addEventListener('input', calculate);
+  });
+
+  /* ── Initial render ── */
+  calculate();
+
+})();
+</script>
+</body>
+</html>
