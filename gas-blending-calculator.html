@@ -407,7 +407,6 @@
     <div class="error-box" id="error-box"></div>
     <div class="warning-box" id="warning-box"></div>
 
-    <button class="calc-btn" onclick="calculate()">Calculate Gas Blend</button>
   </div>
 
   <!-- Results -->
@@ -649,8 +648,7 @@
 
   /* ── Auto-calculate on input change ── */
   function autoCalc() {
-    var resultsDiv = document.getElementById('results');
-    if (resultsDiv.style.display === 'block') calculate();
+    calculate();
   }
 
   /* ── Main calculation ── */
@@ -828,7 +826,6 @@
     document.getElementById('mod-note').innerHTML = '<strong>Maximum Operating Depth</strong> at PO₂ 1.4 ATA: ' + modMsg;
 
     document.getElementById('results').style.display = 'block';
-    document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
   function buildStep(type, num, gas, pressure, detail) {
@@ -902,6 +899,7 @@
   /* ── Init: hide trimix presets since we start in nitrox mode ── */
   document.getElementById('preset-trimix-group').style.display = 'none';
   document.getElementById('preset-trimix-deco-group').style.display = 'none';
+  calculate();
 </script>
 </body>
 </html>

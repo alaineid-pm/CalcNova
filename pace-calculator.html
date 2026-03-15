@@ -161,8 +161,8 @@
         <div class="form-group">
           <label class="form-label">Distance</label>
           <div style="display:grid;grid-template-columns:2fr 1fr;gap:8px;">
-            <input type="number" id="p-dist" class="form-input" placeholder="10" min="0" step="any" />
-            <select id="p-unit" class="form-input form-select">
+            <input type="number" id="p-dist" class="form-input" placeholder="10" min="0" step="any" oninput="calcPace()" />
+            <select id="p-unit" class="form-input form-select" onchange="calcPace()">
               <option value="km">km</option>
               <option value="mi">mi</option>
               <option value="5k">5K</option>
@@ -176,21 +176,20 @@
           <label class="form-label">Finish Time</label>
           <div class="time-row">
             <div>
-              <input type="number" id="p-h" class="form-input" placeholder="0" min="0" max="99" />
+              <input type="number" id="p-h" class="form-input" placeholder="0" min="0" max="99" oninput="calcPace()" />
               <div class="time-sub-label">h</div>
             </div>
             <div>
-              <input type="number" id="p-m" class="form-input" placeholder="50" min="0" max="59" />
+              <input type="number" id="p-m" class="form-input" placeholder="50" min="0" max="59" oninput="calcPace()" />
               <div class="time-sub-label">min</div>
             </div>
             <div>
-              <input type="number" id="p-s" class="form-input" placeholder="0" min="0" max="59" />
+              <input type="number" id="p-s" class="form-input" placeholder="0" min="0" max="59" oninput="calcPace()" />
               <div class="time-sub-label">sec</div>
             </div>
           </div>
         </div>
       </div>
-      <button class="calc-btn" onclick="calcPace()">Calculate Pace</button>
     </div>
     <div id="pace-results" class="hidden">
       <div class="card">
@@ -243,8 +242,8 @@
         <div class="form-group">
           <label class="form-label">Distance</label>
           <div style="display:grid;grid-template-columns:2fr 1fr;gap:8px;">
-            <input type="number" id="t-dist" class="form-input" placeholder="42.195" min="0" step="any" />
-            <select id="t-unit" class="form-input form-select">
+            <input type="number" id="t-dist" class="form-input" placeholder="42.195" min="0" step="any" oninput="calcTime()" />
+            <select id="t-unit" class="form-input form-select" onchange="calcTime()">
               <option value="km">km</option>
               <option value="mi">mi</option>
               <option value="5k">5K</option>
@@ -258,15 +257,15 @@
           <label class="form-label">Pace</label>
           <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;align-items:end;">
             <div>
-              <input type="number" id="t-pace-m" class="form-input" placeholder="5" min="0" max="59" />
+              <input type="number" id="t-pace-m" class="form-input" placeholder="5" min="0" max="59" oninput="calcTime()" />
               <div class="time-sub-label">min</div>
             </div>
             <div>
-              <input type="number" id="t-pace-s" class="form-input" placeholder="30" min="0" max="59" />
+              <input type="number" id="t-pace-s" class="form-input" placeholder="30" min="0" max="59" oninput="calcTime()" />
               <div class="time-sub-label">sec</div>
             </div>
             <div>
-              <select id="t-pace-unit" class="form-input form-select">
+              <select id="t-pace-unit" class="form-input form-select" onchange="calcTime()">
                 <option value="km">/ km</option>
                 <option value="mi">/ mi</option>
               </select>
@@ -274,7 +273,6 @@
           </div>
         </div>
       </div>
-      <button class="calc-btn" onclick="calcTime()">Calculate Time</button>
     </div>
     <div id="time-results" class="hidden">
       <div class="card">
@@ -317,15 +315,15 @@
           <label class="form-label">Time</label>
           <div class="time-row">
             <div>
-              <input type="number" id="d-h" class="form-input" placeholder="1" min="0" max="99" />
+              <input type="number" id="d-h" class="form-input" placeholder="1" min="0" max="99" oninput="calcDistance()" />
               <div class="time-sub-label">h</div>
             </div>
             <div>
-              <input type="number" id="d-m" class="form-input" placeholder="0" min="0" max="59" />
+              <input type="number" id="d-m" class="form-input" placeholder="0" min="0" max="59" oninput="calcDistance()" />
               <div class="time-sub-label">min</div>
             </div>
             <div>
-              <input type="number" id="d-s" class="form-input" placeholder="0" min="0" max="59" />
+              <input type="number" id="d-s" class="form-input" placeholder="0" min="0" max="59" oninput="calcDistance()" />
               <div class="time-sub-label">sec</div>
             </div>
           </div>
@@ -334,15 +332,15 @@
           <label class="form-label">Pace</label>
           <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;align-items:end;">
             <div>
-              <input type="number" id="d-pace-m" class="form-input" placeholder="5" min="0" max="59" />
+              <input type="number" id="d-pace-m" class="form-input" placeholder="5" min="0" max="59" oninput="calcDistance()" />
               <div class="time-sub-label">min</div>
             </div>
             <div>
-              <input type="number" id="d-pace-s" class="form-input" placeholder="0" min="0" max="59" />
+              <input type="number" id="d-pace-s" class="form-input" placeholder="0" min="0" max="59" oninput="calcDistance()" />
               <div class="time-sub-label">sec</div>
             </div>
             <div>
-              <select id="d-pace-unit" class="form-input form-select">
+              <select id="d-pace-unit" class="form-input form-select" onchange="calcDistance()">
                 <option value="km">/ km</option>
                 <option value="mi">/ mi</option>
               </select>
@@ -350,7 +348,6 @@
           </div>
         </div>
       </div>
-      <button class="calc-btn" onclick="calcDistance()">Calculate Distance</button>
     </div>
     <div id="dist-results" class="hidden">
       <div class="card">
@@ -546,7 +543,7 @@ function calcPace() {
   const m = parseInt(document.getElementById('p-m').value) || 0;
   const s = parseInt(document.getElementById('p-s').value) || 0;
 
-  if (!dist || dist <= 0 || (h + m + s) === 0) { alert('Please enter a valid distance and time.'); return; }
+  if (!dist || dist <= 0 || (h + m + s) === 0) return;
 
   const km = distKm(dist, unit);
   const totalSec = h * 3600 + m * 60 + s;
@@ -572,7 +569,7 @@ function calcTime() {
   const ps = parseInt(document.getElementById('t-pace-s').value) || 0;
   const pUnit = document.getElementById('t-pace-unit').value;
 
-  if (!dist || dist <= 0 || (pm + ps) === 0) { alert('Please enter a valid distance and pace.'); return; }
+  if (!dist || dist <= 0 || (pm + ps) === 0) return;
 
   const km = distKm(dist, unit);
   let secPerKm = pm * 60 + ps;
@@ -598,7 +595,7 @@ function calcDistance() {
   const ps = parseInt(document.getElementById('d-pace-s').value) || 0;
   const pUnit = document.getElementById('d-pace-unit').value;
 
-  if ((h + m + s) === 0 || (pm + ps) === 0) { alert('Please enter a valid time and pace.'); return; }
+  if ((h + m + s) === 0 || (pm + ps) === 0) return;
 
   const totalSec = h * 3600 + m * 60 + s;
   let secPerKm = pm * 60 + ps;

@@ -146,27 +146,27 @@
         <label class="form-label">Initial Investment</label>
         <div class="input-wrap">
           <span class="input-prefix">$</span>
-          <input type="number" id="initial" class="form-input has-prefix" placeholder="10000" min="0" step="any" value="10000" />
+          <input type="number" id="initial" class="form-input has-prefix" placeholder="10000" min="0" step="any" value="10000" oninput="calculate()" />
         </div>
       </div>
       <div class="form-group">
         <label class="form-label">Monthly Contribution</label>
         <div class="input-wrap">
           <span class="input-prefix">$</span>
-          <input type="number" id="monthly" class="form-input has-prefix" placeholder="500" min="0" step="any" value="500" />
+          <input type="number" id="monthly" class="form-input has-prefix" placeholder="500" min="0" step="any" value="500" oninput="calculate()" />
         </div>
       </div>
       <div class="form-group">
         <label class="form-label">Annual Return Rate</label>
         <div class="input-wrap">
-          <input type="number" id="rate" class="form-input has-suffix" placeholder="7" min="0" max="100" step="any" value="7" />
+          <input type="number" id="rate" class="form-input has-suffix" placeholder="7" min="0" max="100" step="any" value="7" oninput="calculate()" />
           <span class="input-suffix">%</span>
         </div>
       </div>
       <div class="form-group">
         <label class="form-label">Investment Period</label>
         <div class="input-wrap">
-          <input type="number" id="years" class="form-input has-suffix" placeholder="30" min="1" max="100" step="1" value="30" />
+          <input type="number" id="years" class="form-input has-suffix" placeholder="30" min="1" max="100" step="1" value="30" oninput="calculate()" />
           <span class="input-suffix">yrs</span>
         </div>
       </div>
@@ -177,20 +177,16 @@
       <div class="form-group">
         <label class="form-label">Inflation Rate <span class="form-label-opt">(optional)</span></label>
         <div class="input-wrap">
-          <input type="number" id="inflation" class="form-input has-suffix" placeholder="2.5" min="0" max="50" step="any" />
+          <input type="number" id="inflation" class="form-input has-suffix" placeholder="2.5" min="0" max="50" step="any" oninput="calculate()" />
           <span class="input-suffix">%</span>
         </div>
       </div>
       <div class="form-group">
         <label class="form-label">Management Fees <span class="form-label-opt">(optional)</span></label>
         <div class="input-wrap">
-          <input type="number" id="fees" class="form-input has-suffix" placeholder="0.5" min="0" max="10" step="any" />
+          <input type="number" id="fees" class="form-input has-suffix" placeholder="0.5" min="0" max="10" step="any" oninput="calculate()" />
           <span class="input-suffix">%</span>
         </div>
-      </div>
-      <div class="form-group">
-        <label class="form-label" style="visibility:hidden;">Calculate</label>
-        <button class="calc-btn" style="margin-top:0;" onclick="calculate()">Calculate Returns</button>
       </div>
     </div>
   </div>
@@ -533,7 +529,6 @@ function calculate() {
   }
 
   document.getElementById('results-section').style.display = 'block';
-  document.getElementById('results-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 // Auto-calculate on load with defaults

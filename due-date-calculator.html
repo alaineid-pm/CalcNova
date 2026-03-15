@@ -191,15 +191,14 @@
     <div class="form-row">
       <div class="form-group">
         <label id="dateLabel">Date of Last Menstrual Period</label>
-        <input type="date" id="mainDate" />
+        <input type="date" id="mainDate" onchange="calculate()" />
       </div>
       <div class="form-group" id="cycleGroup">
         <label>Cycle Length (days)</label>
-        <input type="number" id="cycleLength" value="28" min="20" max="45" />
+        <input type="number" id="cycleLength" value="28" min="20" max="45" oninput="calculate()" />
       </div>
     </div>
 
-    <button class="calc-btn" onclick="calculate()">Calculate Due Date</button>
   </div>
 
   <div id="results">
@@ -383,7 +382,7 @@ function getStarSign(date) {
 
 function calculate() {
   const dateVal = document.getElementById('mainDate').value;
-  if (!dateVal) { alert('Please enter a date.'); return; }
+  if (!dateVal) return;
 
   const inputDate = new Date(dateVal + 'T00:00:00');
   const method = document.querySelector('input[name="method"]:checked').value;
@@ -464,7 +463,6 @@ function calculate() {
   });
 
   document.getElementById('results').style.display = 'block';
-  document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 function toggleFaq(el) {
