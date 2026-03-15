@@ -150,50 +150,20 @@
         + '</div>';
     }
 
-    /* Guides / Articles dropdown */
+    /* Guides / Articles dropdown — show 6 most recent as a flat list */
     var sortedArticles = ARTICLES.slice().sort(function (a, b) {
       return (b.datePublished || '').localeCompare(a.datePublished || '');
     });
+    var recentArticles = sortedArticles.slice(0, 6);
 
     var isGuidesActive = !!currentArticle;
-    var useMultiCol   = sortedArticles.length > 8;
-    var useSubcats    = sortedArticles.length > 8;
-    var guideItems    = '';
 
-    var guidePanelContent = '';
-
-    if (useSubcats) {
-      /* Build subcategory groups: each group is a self-contained div so the
-         CSS grid places whole groups into columns, not individual items. */
-      var subcats = {};
-      var subcatOrder = [];
-      sortedArticles.forEach(function (a) {
-        var sc = a.subcategory || a.category || 'Other';
-        if (!subcats[sc]) { subcats[sc] = []; subcatOrder.push(sc); }
-        subcats[sc].push(a);
-      });
-      var groupsHtml = '';
-      subcatOrder.forEach(function (sc) {
-        var links = subcats[sc].map(function (a) {
-          return '<a href="' + esc(a.url) + '" class="cn-dd-item' + (a.id === currentId ? ' current' : '') + '">'
-            + '<span class="cn-dd-icon">' + a.emoji + '</span>'
-            + '<span class="cn-dd-label">' + esc(a.name) + '</span>'
-            + '</a>';
-        }).join('');
-        groupsHtml += '<div class="cn-dd-subcat-group">'
-          + '<div class="cn-dd-subcat-header">' + esc(sc) + '</div>'
-          + links
-          + '</div>';
-      });
-      guidePanelContent = '<div class="cn-dd-subcatgroups' + (useMultiCol ? ' two-col' : '') + '">' + groupsHtml + '</div>';
-    } else {
-      guidePanelContent = '<ul>' + sortedArticles.map(function (a) {
-        return '<li><a href="' + esc(a.url) + '" class="cn-dd-item' + (a.id === currentId ? ' current' : '') + '">'
-          + '<span class="cn-dd-icon">' + a.emoji + '</span>'
-          + '<span class="cn-dd-label">' + esc(a.name) + '</span>'
-          + '</a></li>';
-      }).join('') + '</ul>';
-    }
+    var guidePanelContent = '<ul>' + recentArticles.map(function (a) {
+      return '<li><a href="' + esc(a.url) + '" class="cn-dd-item' + (a.id === currentId ? ' current' : '') + '">'
+        + '<span class="cn-dd-icon">' + a.emoji + '</span>'
+        + '<span class="cn-dd-label">' + esc(a.name) + '</span>'
+        + '</a></li>';
+    }).join('') + '</ul>';
 
     dropdowns += '<div class="cn-dropdown-wrap align-right" data-cat="guides">'
       + '<button class="cn-dropdown-btn' + (isGuidesActive ? ' cat-active' : '') + '" type="button" aria-haspopup="true" aria-expanded="false">'
