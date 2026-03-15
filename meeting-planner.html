@@ -267,27 +267,27 @@
     <h2 style="margin-top:40px;">Frequently Asked Questions</h2>
 
     <div class="faq-item">
-      <div class="faq-q" onclick="toggleFaq(this)">Does this tool account for daylight saving time? <span class="arrow">▼</span></div>
+      <div class="faq-q" role="button" tabindex="0" onclick="toggleFaq(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleFaq(this)}">Does this tool account for daylight saving time? <span class="arrow">▼</span></div>
       <div class="faq-a">Yes. The tool uses the JavaScript Intl.DateTimeFormat API with IANA time zone identifiers (e.g., "America/New_York"), which automatically applies the correct UTC offset for today's date, including any daylight saving time adjustments. If you run the planner on a day when clocks have recently changed, the results will reflect the current offsets, not the standard-time offsets.</div>
     </div>
 
     <div class="faq-item">
-      <div class="faq-q" onclick="toggleFaq(this)">The heatmap shows no green slots — what does that mean? <span class="arrow">▼</span></div>
+      <div class="faq-q" role="button" tabindex="0" onclick="toggleFaq(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleFaq(this)}">The heatmap shows no green slots — what does that mean? <span class="arrow">▼</span></div>
       <div class="faq-a">This means there are no 30-minute windows in the day when all participants fall within their stated working hours simultaneously. This is common when teams span more than about 10–12 hours of timezone difference. Consider: reducing the number of required participants, adjusting one or more participant's working hours, scheduling the meeting outside normal hours for one person (and compensating them), or switching to an async format where no real-time meeting is needed.</div>
     </div>
 
     <div class="faq-item">
-      <div class="faq-q" onclick="toggleFaq(this)">What does "working hours" mean in this context? <span class="arrow">▼</span></div>
+      <div class="faq-q" role="button" tabindex="0" onclick="toggleFaq(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleFaq(this)}">What does "working hours" mean in this context? <span class="arrow">▼</span></div>
       <div class="faq-a">Working hours here means the window during which a participant is available to attend a meeting, in their local time. The default is 9:00–17:00. You can adjust this per participant — for example, if someone works 7:00–15:00 or has a standing commitment from 12:00–13:00 that you want to exclude, you can narrow their window. The tool considers a slot available if the entire meeting duration fits within the participant's working hours window.</div>
     </div>
 
     <div class="faq-item">
-      <div class="faq-q" onclick="toggleFaq(this)">What is the difference between UTC and GMT? <span class="arrow">▼</span></div>
+      <div class="faq-q" role="button" tabindex="0" onclick="toggleFaq(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleFaq(this)}">What is the difference between UTC and GMT? <span class="arrow">▼</span></div>
       <div class="faq-a">For practical purposes, UTC and GMT (Greenwich Mean Time) are the same. Both refer to time at zero degrees longitude with no DST offset. The technical difference is that GMT is a time zone (used in the UK in winter), while UTC is a time standard. When people say "GMT" informally, they usually mean UTC. UTC is the preferred designation in computing and international standards.</div>
     </div>
 
     <div class="faq-item">
-      <div class="faq-q" onclick="toggleFaq(this)">Why are some time zones listed with city names instead of abbreviations? <span class="arrow">▼</span></div>
+      <div class="faq-q" role="button" tabindex="0" onclick="toggleFaq(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleFaq(this)}">Why are some time zones listed with city names instead of abbreviations? <span class="arrow">▼</span></div>
       <div class="faq-a">Time zone abbreviations like "EST" or "IST" are ambiguous — "IST" could mean India Standard Time, Irish Standard Time, or Israel Standard Time. IANA time zone identifiers (like "Asia/Kolkata" or "Europe/Dublin") are unambiguous and map to exact historical offset rules including all DST transitions. This planner uses IANA identifiers to ensure accurate conversions regardless of the time of year.</div>
     </div>
 

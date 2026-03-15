@@ -223,9 +223,9 @@
       /* Ko-fi */
       + '<a href="' + esc(SITE_CFG.kofiUrl || 'https://ko-fi.com/calcnova') + '" target="_blank" rel="noopener" class="cn-kofi-btn" title="Support CalcNova on Ko-fi" aria-label="Support CalcNova on Ko-fi">' + SVG_KOFI + '</a>'
       /* Dark mode */
-      + '<button class="icon-btn cn-dark-btn" id="darkBtn" type="button" title="Toggle dark mode">🌙</button>'
+      + '<button class="icon-btn cn-dark-btn" id="darkBtn" type="button" title="Toggle dark mode" aria-label="Switch to dark mode">🌙</button>'
       /* Hamburger */
-      + '<button class="cn-hamburger" id="cn-hamburger" type="button" aria-label="Open menu" aria-expanded="false">'
+      + '<button class="cn-hamburger" id="cn-hamburger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="cn-mobile-panel">'
       +   '<span></span><span></span><span></span>'
       + '</button>'
       + '</div>';
@@ -310,7 +310,7 @@
       + '<div class="cn-mp-nav">' + accordions + '</div>'
       + '<div class="cn-mp-footer">'
       +   '<span class="cn-mp-footer-label">Dark mode</span>'
-      +   '<button class="icon-btn cn-dark-btn" id="darkBtn-mobile" type="button" title="Toggle dark mode">🌙</button>'
+      +   '<button class="icon-btn cn-dark-btn" id="darkBtn-mobile" type="button" title="Toggle dark mode" aria-label="Switch to dark mode">🌙</button>'
       + '</div>'
       + '</div>'
       + '<div class="cn-overlay" id="cn-overlay"></div>';
@@ -792,6 +792,7 @@
   function updateDarkBtns(isDark) {
     document.querySelectorAll('.cn-dark-btn').forEach(function (btn) {
       btn.textContent = isDark ? '☀️' : '🌙';
+      btn.setAttribute('aria-label', isDark ? 'Switch to light mode' : 'Switch to dark mode');
     });
   }
 

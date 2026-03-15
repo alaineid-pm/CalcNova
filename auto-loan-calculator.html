@@ -563,23 +563,23 @@
 
     <h2>Frequently Asked Questions</h2>
     <div class="faq-item">
-      <div class="faq-q" onclick="toggleFaq(this)">How is my monthly car payment calculated?</div>
+      <div class="faq-q" role="button" tabindex="0" onclick="toggleFaq(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleFaq(this)}">How is my monthly car payment calculated?</div>
       <div class="faq-a">Your monthly payment uses the standard amortization formula: M = L × [r(1+r)^n] / [(1+r)^n − 1], where L is the loan amount, r is the monthly rate (APR ÷ 12 ÷ 100), and n is the term in months. This ensures your loan is fully paid off with the final payment, with each installment covering both interest and principal.</div>
     </div>
     <div class="faq-item">
-      <div class="faq-q" onclick="toggleFaq(this)">Should I roll sales tax into my auto loan?</div>
+      <div class="faq-q" role="button" tabindex="0" onclick="toggleFaq(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleFaq(this)}">Should I roll sales tax into my auto loan?</div>
       <div class="faq-a">Rolling sales tax into the loan is convenient but means you'll pay interest on that amount for the entire loan term. On $2,500 of tax at 7% for 60 months, you'd pay about $463 extra in interest. If you can afford to pay tax upfront at signing, it saves money. If cash is tight, financing the tax is a reasonable choice.</div>
     </div>
     <div class="faq-item">
-      <div class="faq-q" onclick="toggleFaq(this)">What is a good APR for a car loan?</div>
+      <div class="faq-q" role="button" tabindex="0" onclick="toggleFaq(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleFaq(this)}">What is a good APR for a car loan?</div>
       <div class="faq-a">For borrowers with excellent credit (750+ FICO), good new-car rates are typically below 6% and used-car rates below 9%. Average rates in 2025 are 7–10% for new cars and 10–14% for used. Credit unions usually offer lower rates than banks or dealer financing. Always shop at least 3 lenders before accepting any loan offer.</div>
     </div>
     <div class="faq-item">
-      <div class="faq-q" onclick="toggleFaq(this)">How much does a longer loan term actually cost?</div>
+      <div class="faq-q" role="button" tabindex="0" onclick="toggleFaq(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleFaq(this)}">How much does a longer loan term actually cost?</div>
       <div class="faq-a">On a $25,000 loan at 7% APR: a 48-month term costs $3,705 in total interest; a 60-month term costs $4,752; a 72-month term costs $5,724; and an 84-month term costs $6,704. The 84-month loan is nearly $3,000 more expensive than the 48-month loan — purely in interest on the same car purchase.</div>
     </div>
     <div class="faq-item">
-      <div class="faq-q" onclick="toggleFaq(this)">Is it better to make a larger down payment?</div>
+      <div class="faq-q" role="button" tabindex="0" onclick="toggleFaq(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleFaq(this)}">Is it better to make a larger down payment?</div>
       <div class="faq-a">Yes, in almost every case. A larger down payment reduces your loan principal, which lowers both monthly payments and total interest. It also reduces the risk of being "underwater" (owing more than the car's value due to depreciation). A common guideline is 20% down for new cars and 10% for used. Even an extra $1,000 upfront can save several hundred dollars in interest over the life of the loan.</div>
     </div>
   </div>
@@ -810,6 +810,9 @@ function copyResults() {
 
 // Auto-calculate on load
 calculate();
+
+// Redraw chart when dark mode is toggled
+document.addEventListener('calcnova:darkchanged', function() { if (pieChart) calculate(); });
 </script>
 </body>
 </html>

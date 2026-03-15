@@ -533,6 +533,9 @@ function calculate() {
 
 // Auto-calculate on load with defaults
 document.addEventListener('DOMContentLoaded', () => setTimeout(calculate, 100));
+
+// Redraw chart when dark mode is toggled
+document.addEventListener('calcnova:darkchanged', function() { if (growthChart) calculate(); });
 </script>
 </body>
 </html>

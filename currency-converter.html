@@ -326,32 +326,32 @@
     <h2 style="margin-top:40px;">Frequently Asked Questions</h2>
 
     <div class="faq-item">
-      <div class="faq-q" onclick="toggleFaq(this)">How current are the exchange rates? <span class="arrow">▼</span></div>
+      <div class="faq-q" role="button" tabindex="0" onclick="toggleFaq(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleFaq(this)}">How current are the exchange rates? <span class="arrow">▼</span></div>
       <div class="faq-a">Rates are sourced from the European Central Bank via the Frankfurter API. The ECB publishes rates once per business day at approximately 16:00 CET. Rates are cached in your browser for your session to avoid unnecessary API calls. The "Rates as of [date]" note tells you exactly when the current rates were published. On weekends and holidays, the most recent business day's rates are shown.</div>
     </div>
 
     <div class="faq-item">
-      <div class="faq-q" onclick="toggleFaq(this)">Why might the rate I get at my bank be different? <span class="arrow">▼</span></div>
+      <div class="faq-q" role="button" tabindex="0" onclick="toggleFaq(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleFaq(this)}">Why might the rate I get at my bank be different? <span class="arrow">▼</span></div>
       <div class="faq-a">The rate shown here is the mid-market (interbank) rate — the theoretical midpoint between buy and sell prices. Banks and exchange services add a margin (spread) and sometimes flat fees on top of this rate to make a profit. Depending on your provider and the currency pair, you might receive a rate that is 0.5% to 5% (or more, for airport kiosks) worse than the mid-market rate. This calculator is best used as a reference point to understand the "true" value of a conversion before you shop around for the best deal.</div>
     </div>
 
     <div class="faq-item">
-      <div class="faq-q" onclick="toggleFaq(this)">What happens if the API is unavailable? <span class="arrow">▼</span></div>
+      <div class="faq-q" role="button" tabindex="0" onclick="toggleFaq(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleFaq(this)}">What happens if the API is unavailable? <span class="arrow">▼</span></div>
       <div class="faq-a">If the Frankfurter API cannot be reached — for example, due to a network error or service outage — the converter will display an error message. We do not show stale or cached rates from previous sessions as a fallback, because outdated exchange rates could lead to incorrect financial decisions. In this case, try refreshing the page after a few minutes.</div>
     </div>
 
     <div class="faq-item">
-      <div class="faq-q" onclick="toggleFaq(this)">What is the Frankfurter API? <span class="arrow">▼</span></div>
+      <div class="faq-q" role="button" tabindex="0" onclick="toggleFaq(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleFaq(this)}">What is the Frankfurter API? <span class="arrow">▼</span></div>
       <div class="faq-a">Frankfurter is an open-source API for currency exchange rate data published by the European Central Bank. It is available at api.frankfurter.app and provides historical and current rates for approximately 32 currencies. It is free to use, does not require an API key for basic usage, and sources its data directly from the ECB's published reference rates. The ECB has published these rates since 1999.</div>
     </div>
 
     <div class="faq-item">
-      <div class="faq-q" onclick="toggleFaq(this)">Why is my currency not listed? <span class="arrow">▼</span></div>
+      <div class="faq-q" role="button" tabindex="0" onclick="toggleFaq(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleFaq(this)}">Why is my currency not listed? <span class="arrow">▼</span></div>
       <div class="faq-a">This converter includes the 30 most widely traded and commonly used currencies from the Frankfurter/ECB dataset. Some currencies with limited trading volume or less international use are not included. If you need a currency not listed here, a service like Open Exchange Rates or XE.com covers a broader range of currencies including many emerging market and exotic currencies.</div>
     </div>
 
     <div class="faq-item">
-      <div class="faq-q" onclick="toggleFaq(this)">How are cross-rates calculated? <span class="arrow">▼</span></div>
+      <div class="faq-q" role="button" tabindex="0" onclick="toggleFaq(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleFaq(this)}">How are cross-rates calculated? <span class="arrow">▼</span></div>
       <div class="faq-a">When you convert between two currencies neither of which is the base currency (EUR), the calculator performs a cross-rate calculation using EUR as an intermediary. For example, to find USD/JPY, it divides the JPY/EUR rate by the USD/EUR rate. This is the standard method and produces rates equivalent to the direct market rate for major pairs. For exotic pairs, small rounding differences may be slightly amplified, but the result is accurate to 4–5 significant figures for practical purposes.</div>
     </div>
 
