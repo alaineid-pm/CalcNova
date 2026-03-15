@@ -909,7 +909,7 @@
   /* ── Init ── */
   (function() {
     // Show correct result sections for initial mode
-    ['mod','po2','bestmix','ead'].forEach(function(id) {
+    ['mod','po2'].forEach(function(id) {
       document.getElementById('result-' + id).style.display = id === mode ? '' : 'none';
     });
     calculate();

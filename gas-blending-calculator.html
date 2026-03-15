@@ -302,10 +302,6 @@
       <button class="toggle-btn active" id="btn-metric" onclick="setUnit('metric')">Metric (bar)</button>
       <button class="toggle-btn" id="btn-imperial" onclick="setUnit('imperial')">Imperial (psi)</button>
     </div>
-    <div class="toggle-group" role="group" aria-label="Gas type">
-      <button class="toggle-btn active" id="btn-nitrox" onclick="setGas('nitrox')">Nitrox</button>
-      <button class="toggle-btn" id="btn-trimix" onclick="setGas('trimix')">Trimix</button>
-    </div>
     <div class="toggle-group" role="group" aria-label="Fill method" id="fill-method-group">
       <button class="toggle-btn active" id="btn-empty" onclick="setFill('empty')">Fill from Empty</button>
       <button class="toggle-btn" id="btn-topup" onclick="setFill('topup')">Top-up</button>
@@ -357,11 +353,11 @@
         </div>
       </div>
 
-      <!-- Target He (visible when custom + trimix) -->
+      <!-- Target He (visible when custom) -->
       <div class="form-group" id="group-custom-he" style="display:none;">
         <label class="form-label" for="target-he">He <span class="label-hint">(%)</span></label>
         <div class="input-with-unit">
-          <input type="number" id="target-he" value="35" min="0" max="99" step="1" oninput="autoCalc()">
+          <input type="number" id="target-he" value="35" min="0" max="99" step="1" oninput="onCustomHeChange()">
           <span class="input-suffix">%</span>
         </div>
       </div>
@@ -553,46 +549,6 @@
 
   function setGas(g) {
     gas = g;
-    document.getElementById('btn-nitrox').classList.toggle('active', g === 'nitrox');
-    document.getElementById('btn-trimix').classList.toggle('active', g === 'trimix');
-    // Show/hide trimix preset groups
-    var nitroxGroup = document.getElementById('preset-nitrox-group');
-    var trimixGroup = document.getElementById('preset-trimix-group');
-    var trimixDecoGroup = document.getElementById('preset-trimix-deco-group');
-    if (g === 'nitrox') {
-      nitroxGroup.style.display = '';
-      trimixGroup.style.display = 'none';
-      trimixDecoGroup.style.display = 'none';
-      // If current selection is a trimix preset or custom-trimix, switch to EAN32
-      var sel = document.getElementById('mix-preset');
-      var curVal = sel.value;
-      if (curVal !== 'custom') {
-        var parts = curVal.split('|');
-        if (parseFloat(parts[1]) > 0) {
-          sel.value = '32|0'; // default nitrox
-          onPresetChange();
-          return;
-        }
-      }
-    } else {
-      nitroxGroup.style.display = '';
-      trimixGroup.style.display = '';
-      trimixDecoGroup.style.display = '';
-      // If current selection is nitrox preset, switch to TX 21/35
-      var sel = document.getElementById('mix-preset');
-      var curVal = sel.value;
-      if (curVal !== 'custom') {
-        var parts = curVal.split('|');
-        if (parseFloat(parts[1]) === 0 && parseFloat(parts[0]) < 100) {
-          sel.value = '21|35'; // default trimix
-          onPresetChange();
-          return;
-        }
-      }
-    }
-    // Show/hide custom He field
-    var isCustom = document.getElementById('mix-preset').value === 'custom';
-    document.getElementById('group-custom-he').style.display = (isCustom && g === 'trimix') ? '' : 'none';
     // Show/hide current He field for trimix top-up
     updateTopupFields();
     autoCalc();
@@ -603,7 +559,7 @@
     document.getElementById('btn-empty').classList.toggle('active', f === 'empty');
     document.getElementById('btn-topup').classList.toggle('active', f === 'topup');
     var topupEls = document.querySelectorAll('.section-topup');
-    topupEls.forEach(function(el) { el.style.display = f === 'topup' ? '' : 'none'; });
+    topupEls.forEach(function(el) { el.style.display = f === 'topup' ? 'flex' : 'none'; });
     updateTopupFields();
     document.getElementById('card-title-text').textContent = f === 'topup' ? 'Current Tank + Target Mix' : 'Target Mix';
     autoCalc();
@@ -612,7 +568,7 @@
   function updateTopupFields() {
     var showHeTopup = gas === 'trimix' && fill === 'topup';
     var heFields = document.querySelectorAll('.section-topup-he');
-    heFields.forEach(function(el) { el.style.display = showHeTopup ? '' : 'none'; });
+    heFields.forEach(function(el) { el.style.display = showHeTopup ? 'flex' : 'none'; });
   }
 
   /* ── Preset change handler ── */
@@ -624,25 +580,24 @@
 
     if (val === 'custom') {
       customO2.style.display = '';
-      customHe.style.display = gas === 'trimix' ? '' : 'none';
+      customHe.style.display = '';
     } else {
       customO2.style.display = 'none';
       customHe.style.display = 'none';
-      // Parse preset and populate hidden inputs (for calculate to read)
       var parts = val.split('|');
       document.getElementById('target-o2').value = parts[0];
       document.getElementById('target-he').value = parts[1];
-      // Auto-switch to trimix mode if He > 0
       var he = parseFloat(parts[1]);
-      if (he > 0 && gas !== 'trimix') {
-        setGas('trimix');
-        return; // setGas will call autoCalc
-      }
-      if (he === 0 && gas !== 'nitrox') {
-        setGas('nitrox');
-        return;
-      }
+      gas = he > 0 ? 'trimix' : 'nitrox';
+      updateTopupFields();
     }
+    autoCalc();
+  }
+
+  function onCustomHeChange() {
+    var he = parseFloat(document.getElementById('target-he').value) || 0;
+    gas = he > 0 ? 'trimix' : 'nitrox';
+    updateTopupFields();
     autoCalc();
   }
 
@@ -896,9 +851,7 @@
     setTimeout(function() { toast.classList.remove('show'); }, 2000);
   }
 
-  /* ── Init: hide trimix presets since we start in nitrox mode ── */
-  document.getElementById('preset-trimix-group').style.display = 'none';
-  document.getElementById('preset-trimix-deco-group').style.display = 'none';
+  /* ── Init ── */
   calculate();
 </script>
 </body>
