@@ -845,28 +845,27 @@
         <div class="form-group">
           <label class="form-label" for="end-fo2">FO₂ — Oxygen <span class="label-hint">(fraction)</span></label>
           <div class="input-wrap">
-            <input type="number" id="end-fo2" min="1" max="99" step="1" value="18" class="has-unit" placeholder="18">
+            <input type="number" id="end-fo2" min="1" max="99" step="1" value="18" class="has-unit" placeholder="18" oninput="calcEND()">
             <span class="input-unit">%</span>
           </div>
         </div>
         <div class="form-group">
           <label class="form-label" for="end-fhe">FHe — Helium</label>
           <div class="input-wrap">
-            <input type="number" id="end-fhe" min="0" max="99" step="1" value="45" class="has-unit" placeholder="45">
+            <input type="number" id="end-fhe" min="0" max="99" step="1" value="45" class="has-unit" placeholder="45" oninput="calcEND()">
             <span class="input-unit">%</span>
           </div>
         </div>
         <div class="form-group">
           <label class="form-label" for="end-depth">Planned Depth</label>
           <div class="input-wrap">
-            <input type="number" id="end-depth" min="1" max="330" step="1" value="60" class="has-unit" placeholder="60">
+            <input type="number" id="end-depth" min="1" max="330" step="1" value="60" class="has-unit" placeholder="60" oninput="calcEND()">
             <span class="input-unit" id="end-depth-unit">m</span>
           </div>
         </div>
       </div>
 
       <div class="error-box" id="end-error"></div>
-      <button class="calc-btn" onclick="calcEND()">Calculate Equivalent Narcotic Depth</button>
     </div>
 
     <!-- Result -->
@@ -901,21 +900,21 @@
         <div class="form-group">
           <label class="form-label" for="best-depth">Planned Depth</label>
           <div class="input-wrap">
-            <input type="number" id="best-depth" min="1" max="330" step="1" value="60" class="has-unit" placeholder="60">
+            <input type="number" id="best-depth" min="1" max="330" step="1" value="60" class="has-unit" placeholder="60" oninput="calcBest()">
             <span class="input-unit" id="best-depth-unit">m</span>
           </div>
         </div>
         <div class="form-group">
           <label class="form-label" for="best-end">Target END <span class="label-hint">(narcosis limit)</span></label>
           <div class="input-wrap">
-            <input type="number" id="best-end" min="1" max="100" step="1" value="30" class="has-unit" placeholder="30">
+            <input type="number" id="best-end" min="1" max="100" step="1" value="30" class="has-unit" placeholder="30" oninput="calcBest()">
             <span class="input-unit" id="best-end-unit">m</span>
           </div>
         </div>
         <div class="form-group">
           <label class="form-label" for="best-po2">PO₂ Limit</label>
           <div class="input-wrap">
-            <input type="number" id="best-po2" min="0.1" max="2.0" step="0.05" value="1.4" class="has-unit" placeholder="1.4">
+            <input type="number" id="best-po2" min="0.1" max="2.0" step="0.05" value="1.4" class="has-unit" placeholder="1.4" oninput="calcBest()">
             <span class="input-unit">bar</span>
           </div>
         </div>
@@ -923,7 +922,6 @@
 
       <div class="error-box" id="best-error"></div>
       <div class="warning-box" id="best-warning"></div>
-      <button class="calc-btn" style="background:linear-gradient(135deg,var(--purple),#4f46e5);" onclick="calcBest()">Find Best Trimix</button>
     </div>
 
     <!-- Result -->
