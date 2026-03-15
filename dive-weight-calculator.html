@@ -4,14 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Dive Weight / Buoyancy Calculator — How Much Lead Do I Need? | CalcNova</title>
-  <meta name="description" content="Free scuba dive weight calculator: estimate your ideal lead weight based on body weight, wetsuit type, tank material, and water type. Based on PADI weighting guidelines.">
+  <meta name="description" content="Free scuba dive weight calculator: estimate your ideal lead weight based on body weight, wetsuit type, tank material, and water type. Physics-based buoyancy calculation using two-compartment body model.">
 
   <!-- Canonical -->
   <link rel="canonical" href="https://calcnova.co/dive-weight-calculator.html">
 
   <!-- Open Graph -->
   <meta property="og:title" content="Dive Weight / Buoyancy Calculator — How Much Lead Do I Need? | CalcNova">
-  <meta property="og:description" content="Free scuba dive weight calculator: estimate your ideal lead weight based on body weight, wetsuit type, tank material, and water type. Based on PADI weighting guidelines.">
+  <meta property="og:description" content="Free scuba dive weight calculator: estimate your ideal lead weight based on body weight, wetsuit type, tank material, and water type. Physics-based buoyancy calculation using two-compartment body model.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://calcnova.co/dive-weight-calculator.html">
   <meta property="og:site_name" content="CalcNova">
@@ -25,7 +25,7 @@
         "@type": "WebApplication",
         "name": "Dive Weight / Buoyancy Calculator",
         "url": "https://calcnova.co/dive-weight-calculator.html",
-        "description": "Estimate your ideal scuba diving lead weight based on body weight, wetsuit type, tank material, and water type. Based on PADI weighting guidelines.",
+        "description": "Estimate your ideal scuba diving lead weight based on body weight, wetsuit type, tank material, and water type. Physics-based buoyancy calculation using two-compartment body model.",
         "applicationCategory": "SportsApplication",
         "provider": { "@type": "Organization", "name": "CalcNova", "url": "https://calcnova.co" },
         "offers": { "@type": "Offer", "price": "0" }
@@ -539,13 +539,13 @@
       <div class="form-group">
         <label class="form-label" for="suit-type">Exposure Suit</label>
         <select id="suit-type" onchange="onSuitChange()">
-          <option value="0.3">Swimsuit / Rashguard</option>
+          <option value="0">Swimsuit / Rashguard</option>
           <option value="1.5">3mm Shorty</option>
           <option value="2.5" selected>3mm Full Wetsuit</option>
           <option value="3.5">5mm Full Wetsuit</option>
           <option value="5.0">7mm Full Wetsuit</option>
-          <option value="5.5">Drysuit — Shell</option>
-          <option value="8.0">Drysuit — Neoprene</option>
+          <option value="3.6" data-drysuit="true">Drysuit — Shell (membrane)</option>
+          <option value="8.0" data-drysuit="true">Drysuit — Neoprene</option>
         </select>
       </div>
 
@@ -592,25 +592,27 @@
         </div>
         <div id="single-tank-section">
           <select id="tank-type" onchange="calculate()">
-            <option value="0">Aluminum 80 — AL80 (baseline)</option>
-            <option value="0.5">Aluminum 63 — AL63 (+0.5 kg)</option>
-            <option value="-2.0">Steel HP80 (−2.0 kg)</option>
-            <option value="-3.0">Steel HP100 (−3.0 kg)</option>
-            <option value="-4.0">Steel HP120 (−4.0 kg)</option>
+            <option value="3.5">Aluminum 80 — AL80 (+3.5 kg buoyant at end of dive)</option>
+            <option value="2.0">Aluminum 63 — AL63 (+2.0 kg)</option>
+            <option value="-1.0">Steel HP80 (−1.0 kg)</option>
+            <option value="-0.8">Steel HP100 (−0.8 kg)</option>
+            <option value="-2.5">Steel HP120 (−2.5 kg)</option>
+            <option value="2.3">Steel LP95 — Low Pressure 95 cu ft (+2.3 kg)</option>
           </select>
         </div>
         <div id="twin-tank-section" style="display:none">
           <select id="twin-type" onchange="calculate()">
-            <option value="2.0">Twin AL80 — 2× 11.1 L / 207 bar aluminum (+2.0 kg vs single AL80)</option>
-            <option value="-2.0">Twin HP80 — 2× 11.1 L / 237 bar steel (−2.0 kg)</option>
-            <option value="-3.0">Twin LP85 — 2× 13.6 L / 232 bar steel (−3.0 kg)</option>
-            <option value="-4.0">Twin 12 L / 232 bar steel — Euro tech standard (−4.0 kg)</option>
-            <option value="-4.0">Twin HP100 — 2× 13.2 L / 237 bar steel (−4.0 kg)</option>
-            <option value="-6.0">Twin HP120 — 2× 15.8 L / 237 bar steel (−6.0 kg)</option>
-            <option value="-6.5">Twin 7 L / 232 bar steel — compact Euro pair (−6.5 kg)</option>
-            <option value="-7.0">Twin 15 L / 232 bar steel — large Euro twinset (−7.0 kg)</option>
+            <option value="6.2">Twin AL80 — 2× 11.1 L / 207 bar aluminum (+6.2 kg buoyant)</option>
+            <option value="-2.8">Twin HP80 — 2× 11.1 L / 237 bar steel (−2.8 kg)</option>
+            <option value="3.0">Twin LP85 — 2× LP85 cu ft steel (+3.0 kg)</option>
+            <option value="3.8">Twin LP95 — 2× 95 cu ft / 165 bar steel (+3.8 kg)</option>
+            <option value="0.6">Twin 12 L / 232 bar steel — Euro tech standard (+0.6 kg)</option>
+            <option value="-2.4">Twin HP100 — 2× 13.2 L / 237 bar steel (−2.4 kg)</option>
+            <option value="-5.8">Twin HP120 — 2× 15.8 L / 237 bar steel (−5.8 kg)</option>
+            <option value="-2.1">Twin 7 L / 232 bar steel — compact Euro pair (−2.1 kg)</option>
+            <option value="2.5">Twin 15 L / 232 bar steel — large Euro twinset (+2.5 kg)</option>
           </select>
-          <div class="twin-note">All twinset values include manifold + 2nd first-stage regulator weight. Values are relative to single AL80 baseline.</div>
+          <div class="twin-note">All values are absolute end-of-dive buoyancy in saltwater (50 bar reserve), including manifold + 2nd first-stage regulator. Positive = floats, negative = sinks.</div>
         </div>
       </div>
 
@@ -991,9 +993,10 @@
   function onSuitChange() { updateUndergarmentVisibility(); calculate(); }
   function onWaterTempChange() { updateUndergarmentVisibility(); calculate(); }
   function updateUndergarmentVisibility() {
-    var suit = parseFloat(document.getElementById('suit-type').value);
+    var suitEl = document.getElementById('suit-type');
+    var selectedOpt = suitEl.options[suitEl.selectedIndex];
+    var isDrysuit = selectedOpt.getAttribute('data-drysuit') === 'true';
     var temp = document.getElementById('water-temp').value;
-    var isDrysuit = (suit >= 5.5);
     var isCold = (temp === 'temperate' || temp === 'cold' || temp === 'arctic');
     document.getElementById('undergarment-group').style.display = (isDrysuit && isCold) ? '' : 'none';
   }
@@ -1033,15 +1036,13 @@
     var totalBodyVolL = fatVolL + leanVolL + lungVolL;
     var bodyNetBuoyancy = totalBodyVolL * waterDensity - bodyKg;
 
-    /* ── AL80 reference buoyancy at end of dive (scaled for water density) ── */
-    // AL80 outer volume ≈ 17.5 L, mass at 50 bar ≈ 15.0 kg → net +2.94 kg in saltwater
-    var al80Buoyancy = 3.0 * (waterDensity / 1.025);
-
-    var base = bodyNetBuoyancy + al80Buoyancy;
+    var base = bodyNetBuoyancy;
 
     /* ── Other adjustments ── */
     var suitAdj = parseFloat(document.getElementById('suit-type').value);
-    var tankAdj = getTankAdj();
+    /* Tank value is absolute end-of-dive buoyancy in saltwater; scale for actual water density */
+    var tankAdjSW = getTankAdj();
+    var tankAdj = tankAdjSW * (waterDensity / 1.025);
     var expAdj  = parseFloat(document.getElementById('experience').value);
     var gearCamera = document.getElementById('gear-camera').checked ? 1.5 : 0;
     var gearLight  = document.getElementById('gear-light').checked ? 0.5 : 0;
@@ -1059,7 +1060,7 @@
 
     lastResult = {
       total: total, base: base, bodyNetBuoyancy: bodyNetBuoyancy,
-      al80Buoyancy: al80Buoyancy, suitAdj: suitAdj, tankAdj: tankAdj,
+      suitAdj: suitAdj, tankAdj: tankAdj,
       expAdj: expAdj, gearAdj: gearAdj, undergarmentAdj: undergarmentAdj,
       bodyKg: bodyKg, fatPct: fatPct, gender: gender, waterDensity: waterDensity
     };
@@ -1111,9 +1112,10 @@
     var gearLabel = gearParts.length ? gearParts.join(', ') : 'None';
 
     /* Body buoyancy row detail */
+    var bodySign = r.bodyNetBuoyancy >= 0 ? '+' : '';
     var bodyDetail = fmt1(r.bodyKg) + ' kg body · ' + fmt1(r.fatPct) + '% fat · '
       + r.gender + ' · ' + waterLabel
-      + ' (body +' + fmt1(r.bodyNetBuoyancy) + ' kg, AL80 +' + fmt1(r.al80Buoyancy) + ' kg)';
+      + ' (net body buoyancy: ' + bodySign + fmt1(r.bodyNetBuoyancy) + ' kg)';
 
     document.getElementById('row-base-detail').textContent = bodyDetail;
     document.getElementById('row-base-val').innerHTML = fmtAdj(r.base);
