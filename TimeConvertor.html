@@ -73,7 +73,7 @@
       text-decoration: none; transition: all .15s;
     }
     .related-links a:hover { border-color: var(--green); color: var(--green); }
-    @media print { .seo-section { display: none !important; } }
+    @media print { .seo-section, .meeting-popover, .search-panel, .tc-tooltip, #toast { display: none !important; } }
     .section-title span {
       background: linear-gradient(135deg, var(--green), var(--purple));
       -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
@@ -533,7 +533,7 @@
 </div>
 
 <!-- Meeting Popover -->
-<div class="meeting-popover" id="meetingPopover">
+<div class="meeting-popover" id="meetingPopover" role="dialog" aria-modal="true" aria-labelledby="meetingTitle">
   <button class="meeting-close" id="meetingClose" aria-label="Close">&times;</button>
   <div class="meeting-title" id="meetingTitle"></div>
   <div class="meeting-divider"></div>
@@ -1312,7 +1312,7 @@ function renderHorizontal(now) {
     var allWork = true;
     for (var ci = 0; ci < state.cities.length; ci++) {
       var offDiff = getTimezoneOffsetMinutes(state.cities[ci].id) - getTimezoneOffsetMinutes(state.homeCity);
-      var localH = ((oh + Math.round(offDiff / 60)) % 24 + 24) % 24;
+      var localH = ((oh + Math.floor(offDiff / 60)) % 24 + 24) % 24;
       if (localH < 8 || localH >= 20) { allWork = false; break; }
     }
     if (allWork) {
@@ -1360,7 +1360,7 @@ function renderHorizontal(now) {
 
     var offMinRemainder = Math.abs(offDiff) % 60;
     for (var h = 0; h < 24; h++) {
-      var localH = ((h + Math.round(offDiff / 60)) % 24 + 24) % 24;
+      var localH = ((h + Math.floor(offDiff / 60)) % 24 + 24) % 24;
       var block = document.createElement('div');
       block.className = 'hz-hour-block';
       block.style.background = phaseColor(localH);
@@ -1383,12 +1383,13 @@ function renderHorizontal(now) {
       row.appendChild(block);
     }
 
-    // Day boundary
-    var midnightHomeH = ((24 - Math.round(offDiff / 60)) % 24 + 24) % 24;
-    if (midnightHomeH > 0 && midnightHomeH < 24) {
+    // Day boundary — account for minute offsets (e.g. UTC+5:30)
+    var midnightHomeMinutes = ((1440 - offDiff) % 1440 + 1440) % 1440;
+    var midnightHomeFrac = midnightHomeMinutes / 60;
+    if (midnightHomeFrac > 0 && midnightHomeFrac < 24) {
       var bdry = document.createElement('div');
       bdry.className = 'hz-day-boundary';
-      bdry.style.left = ((midnightHomeH / 24) * 100) + '%';
+      bdry.style.left = ((midnightHomeFrac / 24) * 100) + '%';
       var dayLabel = document.createElement('div');
       dayLabel.className = 'hz-day-label';
       try {
@@ -1776,9 +1777,12 @@ function initDelegatedListeners() {
     }
     var block = e.target.closest('.timeline-block');
     if (block) {
-      var h = parseInt(block.getAttribute('data-hour'), 10);
+      var cityH = parseInt(block.getAttribute('data-hour'), 10);
       var tz = block.getAttribute('data-tz');
-      showMeetingPopover(h, tz, e);
+      // Convert city's local hour to home-city hour
+      var offDiff = getTimezoneOffsetMinutes(tz) - getTimezoneOffsetMinutes(state.homeCity);
+      var homeH = ((cityH - Math.floor(offDiff / 60)) % 24 + 24) % 24;
+      showMeetingPopover(homeH, state.homeCity, e);
     }
   });
   vertContainer.addEventListener('mouseover', function(e) {
@@ -1810,7 +1814,14 @@ function initDelegatedListeners() {
     var offDiff = getTimezoneOffsetMinutes(tz) - getTimezoneOffsetMinutes(state.homeCity);
     var offMinRemainder = Math.abs(offDiff) % 60;
     var tooltipTime = formatHourLabel(localHour, state.clockFormat);
-    if (offMinRemainder > 0) tooltipTime = tooltipTime.replace(':00', ':' + (offMinRemainder < 10 ? '0' : '') + offMinRemainder);
+    if (offMinRemainder > 0) {
+      var minStr = ':' + (offMinRemainder < 10 ? '0' : '') + offMinRemainder;
+      if (state.clockFormat === '24h') {
+        tooltipTime = tooltipTime.replace(':00', minStr);
+      } else {
+        tooltipTime = tooltipTime.replace(/ /, minStr + ' ');
+      }
+    }
     showTooltip(cityLabel + ': ' + tooltipTime, e);
   });
   hzTimelineArea.addEventListener('mouseleave', function() {
