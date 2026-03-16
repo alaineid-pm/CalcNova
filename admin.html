@@ -157,6 +157,31 @@ input,select,textarea{font-family:var(--font);font-size:14px}
 /* Tooltip on copy */
 .copied-toast{position:fixed;bottom:24px;right:24px;background:var(--surface2);border:1px solid rgba(16,185,129,.3);border-radius:8px;padding:10px 18px;font-size:13px;color:var(--green);font-weight:600;z-index:9999;opacity:0;transform:translateY(8px);transition:all .2s;pointer-events:none}
 .copied-toast.show{opacity:1;transform:translateY(0)}
+/* Homepage split preview */
+.hp-split{display:flex;height:100%;min-height:0;overflow:hidden}
+.hp-forms{flex:1;overflow-y:auto;padding:20px 24px;min-width:0}
+.hp-preview-pane{width:440px;flex-shrink:0;border-left:1px solid var(--border);display:none;flex-direction:column;background:var(--surface)}
+.hp-preview-pane.open{display:flex}
+.hp-preview-header{padding:10px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.hp-preview-header .preview-title{font-size:12px;font-weight:700;color:var(--text-secondary);letter-spacing:.3px;text-transform:uppercase}
+.hp-preview-header .preview-hint{font-size:10px;color:var(--text-muted)}
+.hp-preview-iframe{flex:1;border:none;width:100%;background:#0a0a0f}
+/* Keyboard shortcuts modal */
+.kbd-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:9000;display:none;align-items:center;justify-content:center}
+.kbd-overlay.open{display:flex}
+.kbd-modal{background:var(--surface);border:1px solid var(--border2);border-radius:16px;padding:24px;width:460px;max-width:90vw;box-shadow:0 24px 60px rgba(0,0,0,.6)}
+.kbd-modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+.kbd-modal-header h3{font-size:15px;font-weight:700}
+.kbd-close{background:none;border:none;cursor:pointer;color:var(--text-muted);font-size:20px;line-height:1;padding:0}
+.kbd-close:hover{color:var(--text-primary)}
+.kbd-section{margin-bottom:16px}
+.kbd-section-title{font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px}
+.kbd-row{display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border)}
+.kbd-row:last-child{border-bottom:none}
+.kbd-row-label{font-size:13px;color:var(--text-secondary)}
+.kbd-keys{display:flex;align-items:center;gap:4px}
+.kbd{background:var(--surface3);border:1px solid var(--border2);border-radius:5px;padding:2px 7px;font-family:var(--mono);font-size:11px;color:var(--text-primary);line-height:1.6}
+.kbd-hint{font-size:11px;color:var(--text-muted);margin-top:12px;text-align:center}
   </style>
 </head>
 <body>
@@ -182,7 +207,7 @@ input,select,textarea{font-family:var(--font);font-size:14px}
       </button>
     </nav>
     <div class="sidebar-footer">
-      <div style="font-size:11px;color:var(--text-muted);text-align:center">CalcNova Admin v1.0</div>
+      <button class="btn btn-secondary" style="width:100%;font-size:11px;justify-content:center;gap:6px" onclick="openKbdModal()">⌨️ Shortcuts <span style="color:var(--text-muted)">[?]</span></button>
     </div>
   </aside>
 
@@ -491,8 +516,16 @@ input,select,textarea{font-family:var(--font);font-size:14px}
     <div class="panel" id="panel-homepage">
       <div class="main-header">
         <h2>🏠 Homepage Generators</h2>
+        <div class="header-actions">
+          <label class="btn btn-secondary btn-sm" style="cursor:pointer" title="Upload your index.html to auto-fill all fields">
+            ⬆️ Sync from index.html
+            <input type="file" accept=".html" style="display:none" onchange="handleIndexSync(this)">
+          </label>
+          <button class="btn btn-secondary btn-sm" id="hp-preview-btn" onclick="toggleHpPreview()">👁 Show Preview</button>
+        </div>
       </div>
-      <div class="panel-inner" style="overflow-y:auto">
+      <div class="hp-split">
+      <div class="hp-forms" id="hp-forms">
 
         <!-- Hero -->
         <div class="gen-section">
@@ -569,7 +602,16 @@ input,select,textarea{font-family:var(--font);font-size:14px}
           </div>
         </div>
 
+      </div><!-- /.hp-forms -->
+      <!-- Live Preview Pane -->
+      <div class="hp-preview-pane" id="hp-preview-pane">
+        <div class="hp-preview-header">
+          <span class="preview-title">Live Preview</span>
+          <span class="preview-hint">approximate rendering</span>
+        </div>
+        <iframe class="hp-preview-iframe" id="hp-preview-iframe" sandbox="allow-same-origin"></iframe>
       </div>
+      </div><!-- /.hp-split -->
     </div>
 
     <!-- SITE CONFIG PANEL -->
@@ -622,6 +664,33 @@ input,select,textarea{font-family:var(--font);font-size:14px}
 
 <!-- Toast -->
 <div class="copied-toast" id="copied-toast">Copied to clipboard!</div>
+
+<!-- Keyboard Shortcuts Modal -->
+<div class="kbd-overlay" id="kbd-overlay" onclick="closeKbdModal(event)">
+  <div class="kbd-modal">
+    <div class="kbd-modal-header">
+      <h3>⌨️ Keyboard Shortcuts</h3>
+      <button class="kbd-close" onclick="closeKbdModal()">×</button>
+    </div>
+    <div class="kbd-section">
+      <div class="kbd-section-title">Global</div>
+      <div class="kbd-row"><span class="kbd-row-label">Save / Download current data</span><div class="kbd-keys"><span class="kbd">Ctrl</span><span style="color:var(--text-muted);font-size:11px">+</span><span class="kbd">S</span></div></div>
+      <div class="kbd-row"><span class="kbd-row-label">Show this shortcuts help</span><div class="kbd-keys"><span class="kbd">?</span></div></div>
+      <div class="kbd-row"><span class="kbd-row-label">Close modal / overlay</span><div class="kbd-keys"><span class="kbd">Esc</span></div></div>
+    </div>
+    <div class="kbd-section">
+      <div class="kbd-section-title">Articles &amp; Tools</div>
+      <div class="kbd-row"><span class="kbd-row-label">New article / new tool</span><div class="kbd-keys"><span class="kbd">Ctrl</span><span style="color:var(--text-muted);font-size:11px">+</span><span class="kbd">N</span></div></div>
+      <div class="kbd-row"><span class="kbd-row-label">Focus search bar</span><div class="kbd-keys"><span class="kbd">Ctrl</span><span style="color:var(--text-muted);font-size:11px">+</span><span class="kbd">F</span></div></div>
+    </div>
+    <div class="kbd-section">
+      <div class="kbd-section-title">Homepage tab</div>
+      <div class="kbd-row"><span class="kbd-row-label">Toggle live preview pane</span><div class="kbd-keys"><span class="kbd">Ctrl</span><span style="color:var(--text-muted);font-size:11px">+</span><span class="kbd">P</span></div></div>
+      <div class="kbd-row"><span class="kbd-row-label">Generate all sections</span><div class="kbd-keys"><span class="kbd">Ctrl</span><span style="color:var(--text-muted);font-size:11px">+</span><span class="kbd">G</span></div></div>
+    </div>
+    <p class="kbd-hint">Press <strong>?</strong> anywhere (outside a text field) to reopen this panel.</p>
+  </div>
+</div>
 
   <script src="https://cdn.quilljs.com/1.3.7/quill.min.js"></script>
   <script>
@@ -1940,6 +2009,258 @@ function downloadFile(content, filename) {
     if (target) target.classList.add('active');
   };
 })();
+
+
+/* ═══════════════════════════════════════════════════════════
+   LIVE PREVIEW
+   ═══════════════════════════════════════════════════════════ */
+
+function toggleHpPreview() {
+  var pane = document.getElementById('hp-preview-pane');
+  var btn  = document.getElementById('hp-preview-btn');
+  if (!pane) return;
+  var isOpen = pane.classList.toggle('open');
+  btn.textContent = isOpen ? '👁 Hide Preview' : '👁 Show Preview';
+  if (isOpen) refreshHpPreview();
+}
+
+function refreshHpPreview() {
+  var pane = document.getElementById('hp-preview-pane');
+  var iframe = document.getElementById('hp-preview-iframe');
+  if (!pane || !pane.classList.contains('open') || !iframe) return;
+
+  var heroHtml  = document.getElementById('hp-hero-pre')  ? document.getElementById('hp-hero-pre').textContent  : '';
+  var ctaHtml   = document.getElementById('hp-cta-pre')   ? document.getElementById('hp-cta-pre').textContent   : '';
+  var featHtml  = document.getElementById('hp-feat-pre')  ? document.getElementById('hp-feat-pre').textContent  : '';
+
+  // Generate all if not yet generated
+  if (!heroHtml) { genHeroHtml(); heroHtml = document.getElementById('hp-hero-pre').textContent; }
+  if (!ctaHtml)  { genCtaHtml();  ctaHtml  = document.getElementById('hp-cta-pre').textContent; }
+
+  var previewCss = [
+    '*{box-sizing:border-box;margin:0;padding:0}',
+    'body{font-family:"Plus Jakarta Sans",system-ui,sans-serif;background:#0a0a0f;color:#f0f0f5;padding:24px 20px;line-height:1.5;font-size:14px}',
+    ':root{--green:#10b981;--purple:#6366f1}',
+    /* hero */
+    '.hero{text-align:center;padding:32px 16px}',
+    '.hero-badge{display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,rgba(16,185,129,.1),rgba(99,102,241,.1));border:1px solid rgba(16,185,129,.25);border-radius:100px;padding:6px 16px;font-size:11px;font-weight:700;color:#10b981;letter-spacing:.5px;text-transform:uppercase;margin-bottom:18px}',
+    '.hero-title{font-size:32px;font-weight:800;line-height:1.15;margin-bottom:14px;letter-spacing:-.5px}',
+    '.gradient-text{background:linear-gradient(135deg,#10b981,#6366f1);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}',
+    '.hero-desc{color:#a0a0b8;font-size:14px;max-width:480px;margin:0 auto 22px}',
+    '.hero-actions{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap}',
+    '.btn-hero-primary{background:linear-gradient(135deg,#10b981,#059669);color:#fff;padding:11px 22px;border-radius:10px;font-weight:700;font-size:13px;text-decoration:none;display:inline-block}',
+    '.btn-hero-secondary{background:rgba(255,255,255,.06);color:#f0f0f5;padding:11px 22px;border-radius:10px;font-weight:600;font-size:13px;text-decoration:none;border:1px solid rgba(255,255,255,.1);display:inline-block}',
+    /* cta */
+    '.cta-banner{background:linear-gradient(135deg,rgba(16,185,129,.08),rgba(99,102,241,.08));border:1px solid rgba(16,185,129,.15);border-radius:16px;padding:28px 24px;text-align:center;margin-top:28px}',
+    '.cta-banner h2{font-size:20px;font-weight:800;margin-bottom:8px}',
+    '.cta-banner p{color:#a0a0b8;font-size:13px;margin-bottom:18px}',
+    '.btn-cta{background:linear-gradient(135deg,#10b981,#059669);color:#fff;padding:10px 22px;border-radius:10px;font-weight:700;font-size:13px;text-decoration:none;display:inline-block}',
+    /* articles grid */
+    '.articles-grid{display:grid;grid-template-columns:1fr;gap:12px;margin-top:28px}',
+    '.article-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:18px;text-decoration:none;display:block;transition:border-color .15s}',
+    '.article-card:hover{border-color:rgba(16,185,129,.3)}',
+    '.card-emoji{font-size:26px;margin-bottom:10px}',
+    '.card-meta{font-size:11px;color:#606078;text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px}',
+    '.article-card h3{font-size:14px;font-weight:700;color:#f0f0f5;margin-bottom:6px}',
+    '.article-card p{font-size:12px;color:#a0a0b8;line-height:1.5}'
+  ].join('\n');
+
+  var body = (heroHtml || '') +
+             (ctaHtml  ? '\n' + ctaHtml  : '') +
+             (featHtml ? '\n' + featHtml : '');
+
+  iframe.srcdoc = '<!DOCTYPE html><html><head><meta charset="UTF-8">' +
+    '<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">' +
+    '<style>' + previewCss + '</style></head><body>' + body + '</body></html>';
+}
+
+// Auto-refresh preview when any hp- field changes
+(function() {
+  function attachHpListeners() {
+    document.querySelectorAll('[id^="hp-"]').forEach(function(el) {
+      if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+        el.addEventListener('input', function() {
+          var pane = document.getElementById('hp-preview-pane');
+          if (pane && pane.classList.contains('open')) {
+            genHeroHtml(); genCtaHtml(); refreshHpPreview();
+          }
+        });
+      }
+    });
+  }
+  window.addEventListener('DOMContentLoaded', function() {
+    setTimeout(attachHpListeners, 500);
+  });
+})();
+
+/* ═══════════════════════════════════════════════════════════
+   SYNC FROM INDEX.HTML
+   ═══════════════════════════════════════════════════════════ */
+
+function handleIndexSync(input) {
+  var file = input.files[0];
+  if (!file) return;
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    var parser = new DOMParser();
+    var doc = parser.parseFromString(e.target.result, 'text/html');
+    var filled = 0;
+
+    function setIfFound(selector, id, attr) {
+      var el = doc.querySelector(selector);
+      if (!el) return;
+      var v = attr ? (el.getAttribute(attr) || '') : el.textContent.trim();
+      if (v) { setVal(id, v); filled++; }
+    }
+
+    // Badge
+    setIfFound('.home-hero-badge', 'hp-badge');
+
+    // H1: separate plain text from gradient span
+    var h1 = doc.querySelector('.home-hero h1');
+    if (h1) {
+      var gradSpan = h1.querySelector('span');
+      if (gradSpan) {
+        setVal('hp-h1gradient', gradSpan.textContent.trim()); filled++;
+        gradSpan.remove();
+      }
+      var plainText = h1.textContent.replace(/\s+/g, ' ').trim();
+      if (plainText) { setVal('hp-h1plain', plainText); filled++; }
+    }
+
+    // Description
+    setIfFound('.home-hero-desc', 'hp-desc');
+
+    // Hero buttons
+    var actions = doc.querySelector('.home-hero-actions');
+    if (actions) {
+      var btnP = actions.querySelector('.btn-primary');
+      if (btnP) { setVal('hp-btn1', btnP.textContent.trim()); filled++; }
+      var btnS = actions.querySelector('.btn-secondary');
+      if (btnS) {
+        setVal('hp-btn2', btnS.textContent.trim()); filled++;
+        var href = btnS.getAttribute('href') || '';
+        if (href) { setVal('hp-btn2url', href); filled++; }
+      }
+    }
+
+    // CTA banner
+    setIfFound('.cta-banner h2', 'hp-cta-heading');
+    setIfFound('.cta-banner p',  'hp-cta-sub');
+    var ctaBtn = doc.querySelector('.cta-banner .btn-primary') || doc.querySelector('.cta-banner .btn-cta');
+    if (ctaBtn) { setVal('hp-cta-btn', ctaBtn.textContent.trim()); filled++; }
+
+    if (filled > 0) {
+      showToast('Synced ' + filled + ' fields from index.html!');
+    } else {
+      showToast('Nothing found — check the file is index.html');
+    }
+  };
+  reader.readAsText(file);
+  input.value = '';
+}
+
+/* ═══════════════════════════════════════════════════════════
+   KEYBOARD SHORTCUTS
+   ═══════════════════════════════════════════════════════════ */
+
+function activeTabId() {
+  var t = document.querySelector('.nav-tab.active');
+  return t ? t.id : '';
+}
+
+function openKbdModal() {
+  var el = document.getElementById('kbd-overlay');
+  if (el) el.classList.add('open');
+}
+
+function closeKbdModal(e) {
+  if (e && e.target !== document.getElementById('kbd-overlay')) return;
+  var el = document.getElementById('kbd-overlay');
+  if (el) el.classList.remove('open');
+}
+
+document.addEventListener('keydown', function(e) {
+  var tag = document.activeElement ? document.activeElement.tagName : '';
+  var inField = tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' ||
+                (document.activeElement && document.activeElement.isContentEditable);
+
+  // ? — shortcuts help (only outside fields)
+  if (e.key === '?' && !inField) {
+    e.preventDefault();
+    openKbdModal();
+    return;
+  }
+
+  // Esc — close modals
+  if (e.key === 'Escape') {
+    var overlay = document.getElementById('kbd-overlay');
+    if (overlay && overlay.classList.contains('open')) {
+      overlay.classList.remove('open');
+      return;
+    }
+  }
+
+  var ctrl = e.ctrlKey || e.metaKey;
+  if (!ctrl) return;
+
+  // Ctrl+S — save
+  if (e.key === 's' || e.key === 'S') {
+    e.preventDefault();
+    var tab = activeTabId();
+    var btnMap = {
+      'tab-articles': 'save-btn-articles',
+      'tab-tools':    'save-btn-tools',
+      'tab-config':   'save-btn-config'
+    };
+    var btnId = btnMap[tab];
+    if (btnId) {
+      var btn = document.getElementById(btnId);
+      if (btn && btn.style.display !== 'none') { btn.click(); return; }
+    }
+    showToast('Nothing to save on this tab.');
+    return;
+  }
+
+  // Ctrl+N — new item
+  if (e.key === 'n' || e.key === 'N') {
+    e.preventDefault();
+    var tab = activeTabId();
+    if (tab === 'tab-articles') {
+      if (typeof openNewArticle === 'function') openNewArticle();
+    } else if (tab === 'tab-tools') {
+      if (typeof openNewTool === 'function') openNewTool();
+    }
+    return;
+  }
+
+  // Ctrl+F — focus search
+  if (e.key === 'f' || e.key === 'F') {
+    var searchMap = { 'tab-articles': 'article-search', 'tab-tools': 'tool-search' };
+    var el = document.getElementById(searchMap[activeTabId()]);
+    if (el) { e.preventDefault(); el.focus(); el.select(); }
+    return;
+  }
+
+  // Ctrl+P — toggle homepage preview
+  if (e.key === 'p' || e.key === 'P') {
+    if (activeTabId() === 'tab-homepage') {
+      e.preventDefault();
+      toggleHpPreview();
+    }
+    return;
+  }
+
+  // Ctrl+G — generate all homepage sections
+  if (e.key === 'g' || e.key === 'G') {
+    if (activeTabId() === 'tab-homepage') {
+      e.preventDefault();
+      genHeroHtml(); genCtaHtml(); genFeatArticlesHtml();
+      showToast('All sections generated!');
+    }
+    return;
+  }
+});
 
   </script>
 </body>
