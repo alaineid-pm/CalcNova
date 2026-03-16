@@ -56,10 +56,14 @@ input,select,textarea{font-family:var(--font);font-size:14px}
 .btn-sm{padding:5px 10px;font-size:12px}
 @keyframes pulse-amber{0%,100%{box-shadow:0 0 0 0 rgba(245,158,11,.4)}50%{box-shadow:0 0 0 6px rgba(245,158,11,0)}}
 /* Search bar */
-.search-bar{padding:14px 24px;border-bottom:1px solid var(--border);background:var(--surface)}
-.search-input{width:100%;max-width:380px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:8px 14px;color:var(--text-primary);font-size:13px;outline:none;transition:border-color .15s}
+.search-bar{padding:14px 24px;border-bottom:1px solid var(--border);background:var(--surface);display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.search-input{flex:1;min-width:180px;max-width:340px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:8px 14px;color:var(--text-primary);font-size:13px;outline:none;transition:border-color .15s}
 .search-input:focus{border-color:var(--green)}
 .search-input::placeholder{color:var(--text-muted)}
+.search-filter{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:8px 12px;color:var(--text-primary);font-size:12px;outline:none;cursor:pointer;transition:border-color .15s}
+.search-filter:focus{border-color:var(--green)}
+.search-count{font-size:11px;font-weight:600;color:var(--text-muted);white-space:nowrap;margin-left:auto}
+.zip-badge{background:rgba(99,102,241,.15);border:1px solid rgba(99,102,241,.3);border-radius:100px;padding:1px 7px;font-size:10px;font-weight:700;color:#818cf8;margin-left:4px;vertical-align:middle}
 /* List */
 .list-container{display:flex;flex-direction:column;gap:6px;margin-top:12px}
 .list-row{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:border-color .15s}
@@ -223,11 +227,16 @@ input,select,textarea{font-family:var(--font);font-size:14px}
           <div class="header-actions">
             <span class="dirty-pill" id="dirty-articles">● Unsaved Changes</span>
             <button class="btn btn-save btn-sm" id="save-btn-articles" onclick="downloadSiteData()" style="display:none">💾 Save site-data.js</button>
+            <button class="btn btn-secondary btn-sm" id="zip-btn-articles" onclick="exportZip()" style="display:none">📦 Export ZIP <span class="zip-badge" id="zip-count-articles">0</span></button>
             <button class="btn btn-primary btn-sm" onclick="openNewArticle()">+ New Article</button>
           </div>
         </div>
         <div class="search-bar">
-          <input class="search-input" type="text" placeholder="🔍 Search articles…" id="article-search" oninput="renderArticleList()">
+          <input class="search-input" type="text" placeholder="🔍 Search name, category, description…" id="article-search" oninput="renderArticleList()">
+          <select class="search-filter" id="article-cat-filter" onchange="renderArticleList()">
+            <option value="">All categories</option>
+          </select>
+          <span class="search-count" id="article-count"></span>
         </div>
         <div class="panel-inner" style="overflow-y:auto">
           <div class="list-container" id="article-list"></div>
@@ -443,10 +452,15 @@ input,select,textarea{font-family:var(--font);font-size:14px}
           <div class="header-actions">
             <span class="dirty-pill" id="dirty-tools">● Unsaved Changes</span>
             <button class="btn btn-save btn-sm" id="save-btn-tools" onclick="downloadSiteData()" style="display:none">💾 Save site-data.js</button>
+            <button class="btn btn-secondary btn-sm" id="zip-btn-tools" onclick="exportZip()" style="display:none">📦 Export ZIP <span class="zip-badge" id="zip-count-tools">0</span></button>
           </div>
         </div>
         <div class="search-bar">
-          <input class="search-input" type="text" placeholder="🔍 Search tools…" id="tool-search" oninput="renderToolList()">
+          <input class="search-input" type="text" placeholder="🔍 Search name, category, description…" id="tool-search" oninput="renderToolList()">
+          <select class="search-filter" id="tool-cat-filter" onchange="renderToolList()">
+            <option value="">All categories</option>
+          </select>
+          <span class="search-count" id="tool-count"></span>
         </div>
         <div class="panel-inner" style="overflow-y:auto">
           <div class="list-container" id="tool-list"></div>
@@ -693,6 +707,7 @@ input,select,textarea{font-family:var(--font);font-size:14px}
 </div>
 
   <script src="https://cdn.quilljs.com/1.3.7/quill.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
   <script>
 /* ============================================================
    CalcNova Admin — Main Script
@@ -856,13 +871,39 @@ function renderAll() {
    ═══════════════════════════════════════════════════════════ */
 
 function renderArticleList() {
-  var q = (val('article-search') || '').toLowerCase();
+  var q   = (val('article-search')     || '').toLowerCase();
+  var cat = (val('article-cat-filter') || '').toLowerCase();
   var container = document.getElementById('article-list');
   if (!container) return;
 
+  // Populate category filter once
+  var filterEl = document.getElementById('article-cat-filter');
+  if (filterEl && filterEl.options.length <= 1) {
+    var cats = {};
+    S.articles.forEach(function(a) { if (a.category) cats[a.category] = true; });
+    Object.keys(cats).sort().forEach(function(c) {
+      var o = document.createElement('option');
+      o.value = c; o.textContent = c;
+      filterEl.appendChild(o);
+    });
+  }
+
   var filtered = S.articles.filter(function(a) {
-    return !q || a.name.toLowerCase().indexOf(q) !== -1;
+    var matchQ = !q ||
+      (a.name        || '').toLowerCase().indexOf(q) !== -1 ||
+      (a.description || '').toLowerCase().indexOf(q) !== -1 ||
+      (a.category    || '').toLowerCase().indexOf(q) !== -1 ||
+      (a.url         || '').toLowerCase().indexOf(q) !== -1;
+    var matchCat = !cat || (a.category || '').toLowerCase() === cat;
+    return matchQ && matchCat;
   });
+
+  var countEl = document.getElementById('article-count');
+  if (countEl) {
+    countEl.textContent = filtered.length === S.articles.length
+      ? S.articles.length + ' articles'
+      : filtered.length + ' of ' + S.articles.length;
+  }
 
   if (!filtered.length) {
     container.innerHTML = '<div class="empty-state"><div style="font-size:32px">📭</div><p>No articles found.</p></div>';
@@ -1358,13 +1399,38 @@ function clearNewArticleForm() {
    ═══════════════════════════════════════════════════════════ */
 
 function renderToolList() {
-  var q = (val('tool-search') || '').toLowerCase();
+  var q   = (val('tool-search')     || '').toLowerCase();
+  var cat = (val('tool-cat-filter') || '');
   var container = document.getElementById('tool-list');
   if (!container) return;
 
+  // Populate category filter from S.categories
+  var filterEl = document.getElementById('tool-cat-filter');
+  if (filterEl && S.categories.length && filterEl.options.length <= 1) {
+    S.categories.forEach(function(c) {
+      var o = document.createElement('option');
+      o.value = c.id; o.textContent = c.emoji + ' ' + c.name;
+      filterEl.appendChild(o);
+    });
+  }
+
   var filtered = S.tools.filter(function(t) {
-    return !q || t.name.toLowerCase().indexOf(q) !== -1;
+    var matchQ = !q ||
+      (t.name        || '').toLowerCase().indexOf(q) !== -1 ||
+      (t.description || '').toLowerCase().indexOf(q) !== -1 ||
+      (t.category    || '').toLowerCase().indexOf(q) !== -1 ||
+      (t.url         || '').toLowerCase().indexOf(q) !== -1 ||
+      (t.badge       || '').toLowerCase().indexOf(q) !== -1;
+    var matchCat = !cat || t.category === cat;
+    return matchQ && matchCat;
   });
+
+  var countEl = document.getElementById('tool-count');
+  if (countEl) {
+    countEl.textContent = filtered.length === S.tools.length
+      ? S.tools.length + ' tools'
+      : filtered.length + ' of ' + S.tools.length;
+  }
 
   if (!filtered.length) {
     container.innerHTML = '<div class="empty-state"><div style="font-size:32px">📭</div><p>No tools found.</p></div>';
@@ -2010,6 +2076,120 @@ function downloadFile(content, filename) {
   };
 })();
 
+
+/* ═══════════════════════════════════════════════════════════
+   SESSION FILE TRACKING + ZIP EXPORT
+   ═══════════════════════════════════════════════════════════ */
+
+// Tracks every file generated this session: { 'filename': 'content' }
+var sessionFiles = {};
+
+// Wrap downloadFile so every generated HTML file is also cached for ZIP
+var _origDownloadFile = downloadFile;
+downloadFile = function(content, filename) {
+  _origDownloadFile(content, filename);
+  // Don't cache site-data.js — exportZip() rebuilds it fresh from state
+  if (filename !== 'site-data.js') {
+    sessionFiles[filename] = content;
+    updateZipButtons();
+  }
+};
+
+function updateZipButtons() {
+  var count = Object.keys(sessionFiles).length + 1; // +1 for site-data.js
+  ['articles', 'tools'].forEach(function(panel) {
+    var btn = document.getElementById('zip-btn-' + panel);
+    var badge = document.getElementById('zip-count-' + panel);
+    if (btn)   btn.style.display = 'inline-flex';
+    if (badge) badge.textContent = count;
+  });
+}
+
+function exportZip() {
+  if (typeof JSZip === 'undefined') {
+    showToast('JSZip not loaded — check your connection.');
+    return;
+  }
+  var zip = new JSZip();
+
+  // Always include current site-data.js
+  var siteDataContent = buildSiteDataContent();
+  zip.file('shared/site-data.js', siteDataContent);
+
+  // Add all session-generated files
+  Object.keys(sessionFiles).forEach(function(filename) {
+    zip.file(filename, sessionFiles[filename]);
+  });
+
+  var total = Object.keys(sessionFiles).length + 1;
+  zip.generateAsync({ type: 'blob' }).then(function(blob) {
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'calcnova-export-' + new Date().toISOString().slice(0,10) + '.zip';
+    a.style.display = 'none';
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(function() { URL.revokeObjectURL(a.href); document.body.removeChild(a); }, 200);
+    showToast('Exported ' + total + ' file' + (total !== 1 ? 's' : '') + ' as ZIP!');
+  });
+}
+
+// Build site-data.js string from current state (reuse downloadSiteData logic)
+function buildSiteDataContent() {
+  var lines = [];
+  lines.push('/* CalcNova Site Data */');
+  lines.push('');
+  lines.push('var CALCNOVA_CONFIG = {');
+  lines.push('  siteUrl:   \'' + jsStr(S.config.siteUrl   || '') + '\',');
+  lines.push('  githubUrl: \'' + jsStr(S.config.githubUrl || '') + '\',');
+  lines.push('  kofiUrl:   \'' + jsStr(S.config.kofiUrl   || '') + '\'');
+  lines.push('};');
+  lines.push('');
+  lines.push('var CALCNOVA_CATEGORIES = [');
+  S.categories.forEach(function(c, i) {
+    var comma = i < S.categories.length - 1 ? ',' : '';
+    var obj = '  { id: \'' + jsStr(c.id) + '\', name: \'' + jsStr(c.name) + '\', emoji: \'' + jsStr(c.emoji) + '\', cssClass: \'' + jsStr(c.cssClass) + '\'';
+    if (c.specialty) obj += ', specialty: true, landingUrl: \'' + jsStr(c.landingUrl || '') + '\'';
+    lines.push(obj + ' }' + comma);
+  });
+  lines.push('];');
+  lines.push('');
+  lines.push('var CALCNOVA_TOOLS = [');
+  S.tools.forEach(function(t, i) {
+    var comma = i < S.tools.length - 1 ? ',' : '';
+    var related = (t.related || []).map(function(r){ return '\'' + jsStr(r) + '\''; }).join(', ');
+    lines.push('  {');
+    lines.push('    id:          \'' + jsStr(t.id || '') + '\',');
+    lines.push('    name:        \'' + jsStr(t.name) + '\',');
+    lines.push('    emoji:       \'' + jsStr(t.emoji || '') + '\',');
+    lines.push('    url:         \'' + jsStr(t.url || '') + '\',');
+    lines.push('    category:    \'' + jsStr(t.category || '') + '\',');
+    lines.push('    description: \'' + jsStr(t.description || '') + '\',');
+    if (t.badge) lines.push('    badge:       \'' + jsStr(t.badge) + '\',');
+    lines.push('    related:     [' + related + ']');
+    lines.push('  }' + comma);
+  });
+  lines.push('];');
+  lines.push('');
+  lines.push('var CALCNOVA_ARTICLES = [');
+  S.articles.forEach(function(a, i) {
+    var comma = i < S.articles.length - 1 ? ',' : '';
+    lines.push('  {');
+    lines.push('    id:            \'' + jsStr(a.id || '') + '\',');
+    lines.push('    name:          \'' + jsStr(a.name) + '\',');
+    lines.push('    emoji:         \'' + jsStr(a.emoji || '📝') + '\',');
+    lines.push('    url:           \'' + jsStr(a.url || '') + '\',');
+    lines.push('    description:   \'' + jsStr(a.description || '') + '\',');
+    lines.push('    readTime:      \'' + jsStr(a.readTime || '5 min') + '\',');
+    lines.push('    category:      \'' + jsStr(a.category || '') + '\',');
+    lines.push('    subcategory:   \'' + jsStr(a.subcategory || '') + '\',');
+    lines.push('    relatedTool:   \'' + jsStr(a.relatedTool || '') + '\',');
+    lines.push('    datePublished: \'' + jsStr(a.datePublished || '') + '\'');
+    lines.push('  }' + comma);
+  });
+  lines.push('];');
+  return lines.join('\n');
+}
 
 /* ═══════════════════════════════════════════════════════════
    LIVE PREVIEW
