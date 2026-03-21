@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>How Mortgage Interest Works: A Complete Guide to Home Loans | CalcNova</title>
+  <meta name="description" content="Understand how mortgage amortization works, why you pay mostly interest at first, how to compare fixed vs. ARM loans, and smart strategies to pay off your home faster.">
+  <link rel="canonical" href="https://calcnova.co/article-mortgage.html">
+  <meta property="og:title" content="How Mortgage Interest Works: A Complete Guide to Home Loans | CalcNova">
+  <meta property="og:description" content="Understand how mortgage amortization works, why you pay mostly interest at first, how to compare fixed vs. ARM loans, and smart strategies to pay off your home faster.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://calcnova.co/article-mortgage.html">
+  <meta property="og:site_name" content="CalcNova">
+  <script type="application/ld+json">
+  [{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "How Mortgage Interest Works: A Complete Guide to Home Loans",
+    "description": "Understand how mortgage amortization works, why you pay mostly interest at first, how to compare fixed vs. ARM loans, and smart strategies to pay off your home faster.",
+    "url": "https://calcnova.co/article-mortgage.html",
+    "datePublished": "2026-03-21",
+    "dateModified": "2026-03-21",
+    "publisher": { "@type": "Organization", "name": "CalcNova", "url": "https://calcnova.co/" },
+    "isPartOf": { "@type": "WebSite", "name": "CalcNova", "url": "https://calcnova.co/" }
+  }]
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="shared/nav.css">
+  <style>
+    .app { position: relative; z-index: 1; max-width: 960px; margin: 0 auto; padding: 0 16px 60px; }
+    .article-hero { padding: 48px 0 36px; border-bottom: 1px solid var(--border); margin-bottom: 40px; max-width: 720px; }
+    .article-badge { display: inline-flex; align-items: center; gap: 6px; background: linear-gradient(135deg, rgba(16,185,129,.1), rgba(99,102,241,.1)); border: 1px solid rgba(16,185,129,.25); border-radius: 100px; padding: 5px 14px; font-size: 11px; font-weight: 700; color: var(--green); letter-spacing: .5px; text-transform: uppercase; margin-bottom: 16px; }
+    .article-hero h1 { font-size: 38px; font-weight: 800; letter-spacing: -.5px; line-height: 1.15; margin-bottom: 14px; }
+    .article-hero h1 span { background: linear-gradient(135deg, var(--green), var(--purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .article-hero .subtitle { font-size: 16px; color: var(--text-secondary); line-height: 1.6; max-width: 600px; }
+    .article-meta { margin-top: 16px; font-size: 12px; color: var(--text-muted); font-weight: 500; display: flex; align-items: center; gap: 12px; }
+    .article-meta .dot { width: 3px; height: 3px; border-radius: 50%; background: var(--text-muted); }
+    .article-body { max-width: 720px; display: flex; flex-direction: column; gap: 28px; }
+    .article-body h2 { font-size: 24px; font-weight: 800; letter-spacing: -.3px; margin-bottom: 12px; color: var(--text-primary); }
+    .article-body h3 { font-size: 18px; font-weight: 700; letter-spacing: -.2px; margin-bottom: 8px; color: var(--text-primary); }
+    .article-body p { font-size: 16px; color: var(--text-secondary); line-height: 1.75; margin-bottom: 14px; }
+    .article-body p:last-child { margin-bottom: 0; }
+    .article-body ul, .article-body ol { padding-left: 0; list-style: none; display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; }
+    .article-body ul li, .article-body ol li { font-size: 16px; color: var(--text-secondary); line-height: 1.7; padding-left: 22px; position: relative; }
+    .article-body ul li::before { content: ''; position: absolute; left: 0; top: 10px; width: 6px; height: 6px; border-radius: 50%; background: linear-gradient(135deg, var(--green), var(--purple)); }
+    .article-body ol { counter-reset: ol-counter; }
+    .article-body ol li { counter-increment: ol-counter; }
+    .article-body ol li::before { content: counter(ol-counter); position: absolute; left: 0; top: 0; font-size: 13px; font-weight: 800; color: var(--green); font-family: var(--mono); }
+    .article-body a { color: var(--green); text-decoration: none; font-weight: 600; }
+    .article-body a:hover { text-decoration: underline; }
+    .article-body strong { color: var(--text-primary); font-weight: 700; }
+    .formula-box { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 24px 28px; text-align: center; }
+    .formula-box .formula { font-family: var(--mono); font-size: 18px; font-weight: 600; color: var(--text-primary); margin-bottom: 16px; letter-spacing: .5px; line-height: 1.6; }
+    .formula-box .formula .hl { color: var(--green); }
+    .formula-box .legend { display: flex; flex-wrap: wrap; gap: 8px 20px; justify-content: center; font-size: 13px; color: var(--text-secondary); }
+    .formula-box .legend code { font-family: var(--mono); font-weight: 600; font-size: 12px; background: var(--bg); border: 1px solid var(--border); border-radius: 4px; padding: 1px 5px; }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 18px; padding: 24px 26px; }
+    .card-label { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .5px; color: var(--green); margin-bottom: 12px; }
+    .card h3 { margin-top: 0; }
+    .card p:last-child { margin-bottom: 0; }
+    .example-box { background: linear-gradient(135deg, rgba(16,185,129,.05), rgba(99,102,241,.03)); border: 1px solid rgba(16,185,129,.18); border-radius: 16px; padding: 24px 26px; }
+    .example-box .example-title { font-size: 14px; font-weight: 800; color: var(--green); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 10px; }
+    .example-box p { margin-bottom: 10px; }
+    .example-box .result { font-family: var(--mono); font-size: 15px; font-weight: 600; color: var(--text-primary); background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 12px 16px; margin-top: 12px; }
+    .example-box .result .hl { color: var(--green); font-weight: 700; }
+    .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .comparison-table { width: 100%; border-collapse: collapse; font-size: 14px; margin: 12px 0; }
+    .comparison-table th { text-align: left; font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: .5px; color: var(--text-muted); padding: 10px 14px; border-bottom: 2px solid var(--border); }
+    .comparison-table td { padding: 10px 14px; color: var(--text-secondary); border-bottom: 1px solid var(--border); }
+    .comparison-table tr:last-child td { border-bottom: none; }
+    .comparison-table .num { font-family: var(--mono); font-weight: 600; }
+    .comparison-table .hl { color: var(--green); font-weight: 700; }
+    .comparison-table .red { color: #ef4444; font-weight: 700; }
+    .cta-section { background: linear-gradient(135deg, rgba(16,185,129,.08), rgba(99,102,241,.06)); border: 1px solid rgba(16,185,129,.2); border-radius: 18px; padding: 32px; text-align: center; margin-top: 8px; }
+    .cta-section h2 { font-size: 22px; margin-bottom: 10px; }
+    .cta-section p { max-width: 500px; margin: 0 auto 20px; }
+    .cta-btn { display: inline-flex; align-items: center; gap: 8px; background: linear-gradient(135deg, var(--green), #059669); color: #fff !important; border-radius: 100px; padding: 12px 28px; font-size: 14px; font-weight: 700; text-decoration: none !important; font-family: var(--font); transition: all .15s; box-shadow: 0 4px 14px rgba(16,185,129,.3); }
+    .cta-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(16,185,129,.4); }
+    @media print { body::before, header, .cn-nav, .cn-footer, .ad-slot, .cta-section { display: none !important; } .app { max-width: 100%; padding: 0; } }
+    @media (max-width: 640px) { .article-hero h1 { font-size: 28px; } .formula-box .formula { font-size: 14px; } .comparison-table { font-size: 12px; } .comparison-table th, .comparison-table td { padding: 8px 10px; } }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="article-hero">
+      <div class="article-badge">🏠 Finance Guide</div>
+      <h1>How Mortgage Interest Works: <span>A Complete Guide to Home Loans</span></h1>
+      <p class="subtitle">Most homebuyers focus on the purchase price and monthly payment — but the real cost of a home is determined by how interest compounds over 15 to 30 years. Understanding amortization can save you tens of thousands of dollars.</p>
+      <div class="article-meta"><span>7 min read</span><span class="dot"></span><span>Updated March 2026</span></div>
+    </div>
+    <div class="article-body">
+
+      <section>
+        <h2>What Is a Mortgage?</h2>
+        <p>A mortgage is a secured loan used to purchase real estate, where the property itself serves as collateral. The lender provides the funds upfront, and you repay the loan — plus interest — over an agreed term, typically 15 or 30 years. If you stop making payments, the lender can foreclose and take ownership of the property.</p>
+        <p>Unlike a car loan or personal loan, a mortgage involves an enormous sum of money over a very long period. That combination means interest has a profound effect on your total cost. On a 30-year mortgage, the total interest paid can easily exceed the original loan amount — sometimes dramatically so.</p>
+      </section>
+
+      <section>
+        <h2>How Amortization Works</h2>
+        <p><strong>Amortization</strong> is the process of paying off a loan through regular scheduled payments. Each payment covers both interest and principal, but the split between the two changes over time. Early in the loan, almost all of your payment goes toward interest. Later, as the outstanding balance falls, more of each payment chips away at the principal.</p>
+        <p>This front-loading of interest is not a trick or a penalty — it is simply how interest on a declining balance works mathematically. The bank charges interest on what you owe, and you owe the most at the very beginning.</p>
+
+        <div class="example-box">
+          <div class="example-title">Example — Early vs. Late Payments on a $400,000 Mortgage</div>
+          <p>Loan: <strong>$400,000</strong> at <strong>7% interest</strong> over <strong>30 years</strong>. Monthly payment: $2,661.</p>
+          <div class="result">
+            Payment #1: Interest <span class="hl">$2,333</span> / Principal $328<br>
+            Payment #60 (Year 5): Interest <span class="hl">$2,185</span> / Principal $476<br>
+            Payment #180 (Year 15): Interest <span class="hl">$1,779</span> / Principal $882<br>
+            Payment #360 (Year 30): Interest <span style="color:#ef4444;font-weight:700;">$15</span> / Principal $2,646
+          </div>
+          <p style="margin-top:10px;">Over the full 30 years you will pay <strong>$558,036 in total interest</strong> — 40% more than the original loan amount — on top of repaying the $400,000 principal.</p>
+        </div>
+      </section>
+
+      <section>
+        <h2>The Monthly Payment Formula</h2>
+        <p>The standard fixed-rate mortgage payment is calculated using the present value of an annuity formula. It looks intimidating but a mortgage calculator handles it instantly.</p>
+        <div class="formula-box">
+          <div class="formula">
+            <span class="hl">M</span> = <span class="hl">P</span> × [ <span class="hl">r</span>(1+<span class="hl">r</span>)<sup><span class="hl">n</span></sup> ] ÷ [ (1+<span class="hl">r</span>)<sup><span class="hl">n</span></sup> − 1 ]
+          </div>
+          <div class="legend">
+            <span><code>M</code> = monthly payment</span>
+            <span><code>P</code> = principal (loan amount)</span>
+            <span><code>r</code> = monthly interest rate (annual rate ÷ 12)</span>
+            <span><code>n</code> = total number of payments (years × 12)</span>
+          </div>
+        </div>
+        <p>For the example above: P = $400,000, r = 7% ÷ 12 = 0.5833%, n = 360. Plugging those in gives M = $2,661 per month.</p>
+      </section>
+
+      <section>
+        <h2>Fixed-Rate vs. Adjustable-Rate Mortgages</h2>
+        <p>The two main mortgage types differ in how the interest rate behaves over time, and each suits a different borrower situation.</p>
+
+        <h3>Fixed-Rate Mortgage (FRM)</h3>
+        <p>Your interest rate is locked in for the entire loan term. Your principal and interest payment never changes, making budgeting simple and predictable. Fixed-rate mortgages are the default choice for most homebuyers who plan to stay in the home long-term, especially when rates are historically low or moderate.</p>
+
+        <h3>Adjustable-Rate Mortgage (ARM)</h3>
+        <p>An ARM starts with a fixed introductory rate for a set period (commonly 5, 7, or 10 years), then adjusts periodically based on a market index such as SOFR. A <strong>7/1 ARM</strong> means the rate is fixed for 7 years, then adjusts annually. ARMs typically start lower than comparable fixed rates, which can be advantageous if you plan to sell or refinance before the adjustable period begins — but they carry rate risk if you stay longer than expected.</p>
+
+        <div class="table-wrap"><table class="comparison-table">
+          <thead>
+            <tr>
+              <th>Feature</th>
+              <th>30-Year Fixed</th>
+              <th>15-Year Fixed</th>
+              <th>7/1 ARM</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Rate stability</td>
+              <td>Permanent</td>
+              <td>Permanent</td>
+              <td>Fixed 7 yrs, then variable</td>
+            </tr>
+            <tr>
+              <td>Monthly payment (on $400K)</td>
+              <td class="num">$2,661</td>
+              <td class="num hl">$3,593</td>
+              <td class="num hl">~$2,395</td>
+            </tr>
+            <tr>
+              <td>Total interest paid</td>
+              <td class="num red">$558,036</td>
+              <td class="num hl">$246,740</td>
+              <td class="num">Varies</td>
+            </tr>
+            <tr>
+              <td>Best for</td>
+              <td>Long-term owners</td>
+              <td>Faster payoff</td>
+              <td>Short-term plans</td>
+            </tr>
+          </tbody>
+        </table></div>
+        <p>Rates shown at 7.0% (30-yr fixed), 6.4% (15-yr fixed), and 6.3% initial (7/1 ARM) for illustration. Actual rates vary by lender, credit score, and market conditions.</p>
+      </section>
+
+      <section>
+        <h2>The True Cost of a Higher Interest Rate</h2>
+        <p>Even small differences in interest rate have an enormous impact over 30 years. A half-point difference on a $400,000 loan may look trivial on your monthly statement but adds up to a significant sum over the life of the loan.</p>
+
+        <div class="table-wrap"><table class="comparison-table">
+          <thead>
+            <tr>
+              <th>Rate</th>
+              <th>Monthly Payment</th>
+              <th>Total Interest (30 yr)</th>
+              <th>vs. 6.0% Rate</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>6.0%</td>
+              <td class="num hl">$2,398</td>
+              <td class="num hl">$463,353</td>
+              <td class="num">—</td>
+            </tr>
+            <tr>
+              <td>6.5%</td>
+              <td class="num">$2,528</td>
+              <td class="num">$510,177</td>
+              <td class="num red">+$46,824</td>
+            </tr>
+            <tr>
+              <td>7.0%</td>
+              <td class="num">$2,661</td>
+              <td class="num">$558,036</td>
+              <td class="num red">+$94,683</td>
+            </tr>
+            <tr>
+              <td>7.5%</td>
+              <td class="num">$2,797</td>
+              <td class="num">$607,092</td>
+              <td class="num red">+$143,739</td>
+            </tr>
+            <tr>
+              <td>8.0%</td>
+              <td class="num">$2,935</td>
+              <td class="num">$656,807</td>
+              <td class="num red">+$193,454</td>
+            </tr>
+          </tbody>
+        </table></div>
+        <p>All figures based on a $400,000 30-year fixed mortgage. The difference between a 6% and an 8% rate is nearly $200,000 in total interest — more than the down payment on many homes. This is why shopping rates aggressively and improving your credit score before applying can have an outsized financial impact.</p>
+      </section>
+
+      <section>
+        <h2>How to Pay Off Your Mortgage Faster</h2>
+        <p>Because interest is charged on the outstanding balance, every extra dollar you pay toward principal today saves you a disproportionate amount in interest tomorrow. There are several practical strategies:</p>
+
+        <h3>Make Extra Principal Payments</h3>
+        <p>Even small additional monthly payments compound into large savings. Adding $200 extra per month to the example $400K / 7% mortgage cuts the payoff from 30 years to about 24 years and saves over $130,000 in interest. One extra payment per year achieves similar results over time.</p>
+
+        <h3>Biweekly Payment Schedule</h3>
+        <p>Instead of 12 monthly payments, you make 26 half-payments per year — which equals 13 full payments. That thirteenth payment goes entirely to principal each year. On most 30-year mortgages, this alone cuts the payoff time by 4–5 years and saves tens of thousands in interest with no dramatic change to your budget.</p>
+
+        <h3>Refinancing to a Shorter Term</h3>
+        <p>Refinancing from a 30-year to a 15-year loan dramatically reduces total interest, usually at a lower rate. The tradeoff is a higher monthly payment. This works best when you have adequate cash flow and the rate environment is favorable. Factor in closing costs (typically 2–3% of the loan amount) to ensure the savings justify the refinance.</p>
+
+        <div class="card">
+          <div class="card-label">💡 Key Principle</div>
+          <h3>Pay off high-interest debt first</h3>
+          <p>Mortgage debt, especially at today's rates, is among the cheaper forms of borrowing available — but it is not zero-cost. Before making extra mortgage payments, ensure you have:</p>
+          <ol>
+            <li><strong>Fully funded your emergency fund</strong> (3–6 months of expenses)</li>
+            <li><strong>Captured any 401(k) employer match</strong> — that is an instant 50–100% return</li>
+            <li><strong>Paid off all higher-interest debt</strong> (credit cards, personal loans)</li>
+            <li><strong>Maxed tax-advantaged accounts</strong> (IRA, HSA) if possible</li>
+          </ol>
+          <p style="margin-top:12px;">Only after those steps does accelerating your mortgage payoff typically become the best use of surplus cash.</p>
+        </div>
+      </section>
+
+      <section>
+        <h2>Down Payment and PMI</h2>
+        <p>Your down payment has a direct effect on both your loan amount and your ongoing costs. Putting down less than <strong>20%</strong> on a conventional loan typically requires <strong>Private Mortgage Insurance (PMI)</strong>, which costs roughly 0.5–1.5% of the loan amount per year. On a $400,000 loan, that is $2,000–$6,000 per year — $167–$500 per month added to your payment.</p>
+        <p>PMI protects the lender, not you. Once your equity reaches 20% of the home's original value (LTV ratio of 80%), you can typically request PMI cancellation. This is automatic by law at 22% equity under the Homeowners Protection Act. Reaching 20% equity quickly — through appreciation, extra payments, or a larger down payment — is one of the most effective ways to reduce your effective housing cost.</p>
+      </section>
+
+      <section>
+        <h2>Understanding Closing Costs</h2>
+        <p>The sticker price of a home is not the only upfront cost. Closing costs typically add 2–5% to the purchase price and include:</p>
+        <ul>
+          <li><strong>Origination fees</strong> — lender charges for processing the loan (0.5–1% of loan)</li>
+          <li><strong>Appraisal fee</strong> — required by the lender to confirm property value ($400–$700)</li>
+          <li><strong>Title insurance</strong> — protects against ownership disputes ($500–$1,500)</li>
+          <li><strong>Prepaid items</strong> — homeowners insurance, property tax escrow, prepaid interest</li>
+          <li><strong>Recording and transfer taxes</strong> — vary widely by state and county</li>
+        </ul>
+        <p>On a $400,000 purchase, closing costs might run $8,000–$20,000. These are largely non-recoverable expenses that increase your effective cost basis. When comparing homes or loan offers, always factor in total out-of-pocket costs at closing, not just the purchase price and rate.</p>
+      </section>
+
+      <div class="cta-section">
+        <h2>Run Your Own Numbers</h2>
+        <p>See exactly how much you will pay in interest, how your payments break down month by month, and how extra payments affect your payoff timeline.</p>
+        <a href="mortgage-calculator.html" class="cta-btn">Open Mortgage Calculator →</a>
+      </div>
+
+    </div>
+  </div>
+  <script>window.CALCNOVA_PAGE = { id: 'article-mortgage', disclaimer: 'This article is for educational purposes only and does not constitute financial advice. Mortgage rates and terms vary by lender, location, and borrower profile.' };</script>
+  <script src="shared/site-data.js"></script>
+  <script src="shared/nav.js"></script>
+</body>
+</html>
