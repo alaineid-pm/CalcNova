@@ -810,5 +810,29 @@ var CALCNOVA_ARTICLES = [
     subcategory:   'Scuba Diving',
     relatedTool:   'trimix-calculator',
     datePublished: '2026-03-14'
+  },
+  {
+    id:            'article-mortgage',
+    name:          'How Mortgage Interest Works',
+    emoji:         '🏠',
+    url:           'article-mortgage.html',
+    description:   'Understand amortization, why you pay mostly interest at first, fixed vs. ARM loans, and how to pay off your home faster.',
+    readTime:      '7 min',
+    category:      'Finance',
+    subcategory:   'Finance',
+    relatedTool:   'mortgage',
+    datePublished: '2026-03-21'
+  },
+  {
+    id:            'article-sleep',
+    name:          'How Much Sleep Do You Actually Need?',
+    emoji:         '😴',
+    url:           'article-sleep.html',
+    description:   'A science-backed guide to sleep cycles, how much sleep you need by age, sleep debt, and the best habits for deeper rest.',
+    readTime:      '6 min',
+    category:      'Health',
+    subcategory:   'Health & Fitness',
+    relatedTool:   'sleep-calculator',
+    datePublished: '2026-03-21'
   }
 ];
