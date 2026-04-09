@@ -18,16 +18,64 @@
 
   <!-- Structured Data -->
   <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "WebApplication",
-    "name": "Water Intake Calculator",
-    "url": "https://calcnova.co/water-intake-calculator.html",
-    "description": "Calculate your recommended daily water intake based on weight, activity level, and climate.",
-    "applicationCategory": "HealthApplication",
-    "provider": { "@type": "Organization", "name": "CalcNova", "url": "https://calcnova.co" },
-    "offers": { "@type": "Offer", "price": "0" }
-  }
+  [
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": "Water Intake Calculator",
+      "url": "https://calcnova.co/water-intake-calculator.html",
+      "description": "Calculate your recommended daily water intake based on weight, activity level, and climate.",
+      "applicationCategory": "HealthApplication",
+      "provider": { "@type": "Organization", "name": "CalcNova", "url": "https://calcnova.co" },
+      "offers": { "@type": "Offer", "price": "0" }
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How much water should I drink per day?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "General guidelines vary. The popular '8x8 rule' suggests drinking eight 8-ounce glasses (about 2 liters) per day. The US National Academies of Sciences recommends approximately 3.7 liters (125 oz) per day for men and 2.7 liters (91 oz) per day for women from all beverages and food combined. A common weight-based approach is to drink about 0.5–1 oz of water per pound of body weight. Individual needs vary based on activity level, climate, and health status."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does coffee or tea count toward my daily water intake?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, coffee and tea do contribute to your daily fluid intake. While caffeine has a mild diuretic effect, studies show that caffeinated beverages still provide a net positive contribution to hydration. The European Food Safety Authority states that moderate coffee consumption counts toward fluid intake. However, plain water remains the ideal hydrating beverage, and very high caffeine intake can increase fluid loss."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What are the signs of dehydration?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Common signs of mild to moderate dehydration include dark yellow urine, dry mouth and lips, decreased urine output, fatigue, dizziness, and headaches. More severe dehydration can cause rapid heartbeat, rapid breathing, sunken eyes, confusion, and fainting. A simple way to check hydration is to monitor urine color — pale yellow indicates good hydration, while dark yellow or amber suggests you need more water."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How does exercise affect how much water I need?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Exercise significantly increases your water needs because you lose fluid through sweat and increased respiration. The American Council on Exercise recommends drinking 17–20 oz of water 2 hours before exercise, 8 oz about 20–30 minutes before, 7–10 oz every 10–20 minutes during exercise, and 16–24 oz for every pound of body weight lost after exercise. Intense or prolonged workouts in hot conditions can require 1–2 additional liters per hour."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does drinking more water help with weight loss?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Drinking more water can support weight loss in several ways. Water is calorie-free and can replace higher-calorie beverages like sodas and juices. Drinking water before meals can increase feelings of fullness and reduce calorie intake. Research has shown that drinking 500 ml of water can temporarily boost metabolism by 24–30% for about an hour. Staying well-hydrated also helps maintain energy levels during exercise. However, water alone is not a weight loss solution — it works best as part of a balanced diet and active lifestyle."
+          }
+        }
+      ]
+    }
+  ]
   </script>
 
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -91,7 +139,7 @@
       padding: 32px 28px 26px;
       margin-bottom: 28px;
     }
-    .hero-title { font-size: 26px; font-weight: 800; letter-spacing: -.5px; }
+    .hero-title { font-size: 26px; font-weight: 800; letter-spacing: -.5px; margin: 0; padding: 0; }
     .hero-title span {
       background: linear-gradient(135deg, var(--green), var(--purple));
       -webkit-background-clip: text;
@@ -628,7 +676,7 @@
   <!-- Hero -->
   <div class="hero">
     <div class="pill-badge">Instant · Private · No login</div>
-    <div class="hero-title">Water Intake <span>Calculator</span></div>
+    <h1 class="hero-title">Water Intake <span>Calculator</span></h1>
     <div class="hero-desc">Find your personalized daily hydration goal based on your weight, activity level, and climate. All calculations run locally in your browser — nothing is sent to any server.</div>
     <div class="hero-formula">
       Base = <span class="hl">weight_kg × 33 mL</span> &nbsp;·&nbsp;
@@ -701,7 +749,6 @@
       <div class="error-box" id="error-box" role="alert"></div>
       <div class="warning-box" id="warning-box" role="alert"></div>
 
-      <button class="calc-btn" id="calc-btn" type="button">Calculate Water Intake</button>
     </div>
 
     <!-- Reference card -->
@@ -1243,10 +1290,8 @@
   ───────────────────────────────────────── */
   var btnLbs  = document.getElementById('btn-lbs');
   var btnKg   = document.getElementById('btn-kg');
-  var calcBtn = document.getElementById('calc-btn');
   if (btnLbs)  btnLbs.addEventListener('click',  function () { setUnit('lbs'); });
   if (btnKg)   btnKg.addEventListener('click',   function () { setUnit('kg'); });
-  if (calcBtn) calcBtn.addEventListener('click',  calculate);
 
   /* ─────────────────────────────────────────
      Wire all inputs

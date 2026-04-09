@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Free Invoice Generator — Create & Download Professional Invoices | CalcNova</title>
-  <meta name="description" content="Free online invoice generator. Create professional invoices with line items, taxes, and discounts. Download as PDF or print. No sign-up required — all data stays in your browser." />
+  <title>Free Invoice Generator — Professional Invoices | CalcNova</title>
+  <meta name="description" content="Free online invoice generator. Create professional invoices with line items, taxes, and discounts. Download as PDF or print. No sign-up required — all data…" />
   <link rel="canonical" href="https://calcnova.co/invoice-generator.html" />
-  <meta property="og:title" content="Free Invoice Generator | CalcNova" />
+  <meta property="og:title" content="Free Invoice Generator — Professional Invoices | CalcNova" />
   <meta property="og:description" content="Create professional invoices online. Add line items, taxes, and discounts. Download as PDF or print. 100% free, no account needed." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://calcnova.co/invoice-generator.html" />
@@ -14,7 +14,7 @@
   <script type="application/ld+json">
   [{
     "@context": "https://schema.org",
-    "@type": "WebApplication",
+    "@type": "WebPage",
     "name": "Invoice Generator",
     "url": "https://calcnova.co/invoice-generator.html",
     "description": "Free online invoice generator — create professional invoices with line items, taxes, and discounts. Download as PDF or print. No account needed.",
@@ -68,7 +68,8 @@
     .line-item-total { font-family: var(--mono); font-size: 13px; font-weight: 600; color: var(--text-secondary); padding: 7px 0; }
     .remove-btn { background: none; border: 1px solid var(--border); border-radius: 8px; color: var(--text-muted); cursor: pointer; padding: 6px 8px; font-size: 14px; transition: all .15s; }
     .remove-btn:hover { border-color: var(--red); color: var(--red); }
-    @media (max-width: 600px) { .line-items-header, .line-item-row { grid-template-columns: 1fr 1fr; } .line-items-header span:nth-child(n+3), .line-item-row > *:nth-child(n+3) { display: none; } }
+    .line-items-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    @media (max-width: 600px) { .line-items-header, .line-item-row { min-width: 480px; } }
 
     .add-item-btn { display: flex; align-items: center; gap: 6px; background: none; border: 1px dashed var(--border); border-radius: 10px; color: var(--green); font-family: var(--font); font-size: 13px; font-weight: 600; padding: 9px 16px; cursor: pointer; width: 100%; justify-content: center; margin-top: 4px; transition: all .15s; }
     .add-item-btn:hover { border-color: var(--green); background: rgba(16,185,129,.04); }
@@ -118,6 +119,7 @@
     .inv-bill-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; color: #10b981; margin-bottom: 6px; }
     .inv-bill-name { font-size: 14px; font-weight: 700; color: #1a1a1a; margin-bottom: 2px; }
     .inv-bill-info { font-size: 12px; color: #5a6478; line-height: 1.5; white-space: pre-line; }
+    .inv-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
     .inv-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
     .inv-table th { background: #f0f2f7; text-align: left; padding: 10px 12px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; color: #5a6478; }
     .inv-table td { padding: 10px 12px; font-size: 13px; border-bottom: 1px solid #e2e6ef; color: #1a1a1a; }
@@ -167,6 +169,18 @@
     .edu-section a:hover { text-decoration: underline; }
     .edu-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin-bottom: 16px; }
     .edu-card .edu-card-label { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .5px; color: var(--green); margin-bottom: 10px; }
+
+    /* ── SEO content ── */
+    .seo-section { background: var(--surface); border: 1px solid var(--border); border-radius: 18px; padding: 28px; margin-top: 40px; }
+    .seo-section h2 { font-size: 18px; font-weight: 800; margin: 0 0 12px; letter-spacing: -.3px; }
+    .seo-section h3 { font-size: 15px; font-weight: 700; margin: 20px 0 8px; color: var(--text-primary); }
+    .seo-section p { font-size: 14px; color: var(--text-secondary); line-height: 1.75; margin: 0 0 10px; }
+    .seo-section ul { padding-left: 18px; margin: 0 0 10px; }
+    .seo-section ul li { font-size: 14px; color: var(--text-secondary); line-height: 1.65; margin-bottom: 5px; }
+    .related-links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
+    .related-links a { display: inline-flex; align-items: center; gap: 6px; background: var(--surface); border: 1px solid var(--border); border-radius: 100px; padding: 6px 14px; font-size: 13px; font-weight: 600; color: var(--text-primary); text-decoration: none; transition: border-color .15s; }
+    .related-links a:hover { border-color: var(--green); color: var(--green); }
+    @media print { .seo-section { display: none !important; } }
   </style>
 </head>
 <body>
@@ -202,11 +216,11 @@
       <!-- Your Business -->
       <div class="card">
         <div class="card-title"><span style="width:8px;height:8px;border-radius:50%;background:var(--green);display:inline-block;"></span> Your Business</div>
-        <div class="form-group"><label class="form-label">Business Name</label><input type="text" id="biz-name" placeholder="Acme Studio" oninput="updatePreview();saveBiz()"></div>
-        <div class="form-group"><label class="form-label">Address</label><textarea id="biz-address" placeholder="123 Main St&#10;New York, NY 10001" rows="2" oninput="updatePreview();saveBiz()"></textarea></div>
+        <div class="form-group"><label class="form-label" for="biz-name">Business Name</label><input type="text" id="biz-name" placeholder="Acme Studio" oninput="updatePreview();saveBiz()"></div>
+        <div class="form-group"><label class="form-label" for="biz-address">Address</label><textarea id="biz-address" placeholder="123 Main St&#10;New York, NY 10001" rows="2" oninput="updatePreview();saveBiz()"></textarea></div>
         <div class="two-col">
-          <div class="form-group"><label class="form-label">Email</label><input type="email" id="biz-email" placeholder="you@example.com" oninput="updatePreview();saveBiz()"></div>
-          <div class="form-group"><label class="form-label">Phone</label><input type="text" id="biz-phone" placeholder="+1 555 0000" oninput="updatePreview();saveBiz()"></div>
+          <div class="form-group"><label class="form-label" for="biz-email">Email</label><input type="email" id="biz-email" placeholder="you@example.com" oninput="updatePreview();saveBiz()"></div>
+          <div class="form-group"><label class="form-label" for="biz-phone">Phone</label><input type="text" id="biz-phone" placeholder="+1 555 0000" oninput="updatePreview();saveBiz()"></div>
         </div>
         <div class="form-group">
           <label class="form-label">Logo (optional)</label>
@@ -217,17 +231,17 @@
       <!-- Client Details -->
       <div class="card">
         <div class="card-title"><span style="width:8px;height:8px;border-radius:50%;background:var(--purple);display:inline-block;"></span> Client Details</div>
-        <div class="form-group"><label class="form-label">Client Name / Company</label><input type="text" id="client-name" placeholder="Client Corp" oninput="updatePreview()"></div>
-        <div class="form-group"><label class="form-label">Client Address</label><textarea id="client-address" placeholder="456 Client Ave&#10;London, UK" rows="2" oninput="updatePreview()"></textarea></div>
-        <div class="form-group"><label class="form-label">Client Email</label><input type="email" id="client-email" placeholder="client@example.com" oninput="updatePreview()"></div>
+        <div class="form-group"><label class="form-label" for="client-name">Client Name / Company</label><input type="text" id="client-name" placeholder="Client Corp" oninput="updatePreview()"></div>
+        <div class="form-group"><label class="form-label" for="client-address">Client Address</label><textarea id="client-address" placeholder="456 Client Ave&#10;London, UK" rows="2" oninput="updatePreview()"></textarea></div>
+        <div class="form-group"><label class="form-label" for="client-email">Client Email</label><input type="email" id="client-email" placeholder="client@example.com" oninput="updatePreview()"></div>
       </div>
 
       <!-- Invoice Details -->
       <div class="card">
         <div class="card-title"><span style="width:8px;height:8px;border-radius:50%;background:var(--amber);display:inline-block;"></span> Invoice Details</div>
         <div class="two-col">
-          <div class="form-group"><label class="form-label">Invoice #</label><input type="text" id="inv-number" value="INV-001" oninput="updatePreview()"></div>
-          <div class="form-group"><label class="form-label">Currency</label>
+          <div class="form-group"><label class="form-label" for="inv-number">Invoice #</label><input type="text" id="inv-number" value="INV-001" oninput="updatePreview()"></div>
+          <div class="form-group"><label class="form-label" for="inv-currency">Currency</label>
             <select id="inv-currency" onchange="updatePreview()">
               <option value="$">$ USD</option><option value="€">€ EUR</option><option value="£">£ GBP</option>
               <option value="¥">¥ JPY</option><option value="₹">₹ INR</option><option value="A$">A$ AUD</option>
@@ -236,24 +250,26 @@
           </div>
         </div>
         <div class="two-col">
-          <div class="form-group"><label class="form-label">Invoice Date</label><input type="date" id="inv-date" oninput="updatePreview()"></div>
-          <div class="form-group"><label class="form-label">Due Date</label><input type="date" id="due-date" oninput="updatePreview()"></div>
+          <div class="form-group"><label class="form-label" for="inv-date">Invoice Date</label><input type="date" id="inv-date" oninput="updatePreview()"></div>
+          <div class="form-group"><label class="form-label" for="due-date">Due Date</label><input type="date" id="due-date" oninput="updatePreview()"></div>
         </div>
       </div>
 
       <!-- Line Items -->
       <div class="card">
         <div class="card-title"><span style="width:8px;height:8px;border-radius:50%;background:var(--green);display:inline-block;"></span> Line Items</div>
+        <div class="line-items-scroll">
         <div class="line-items-header">
           <span>Description</span><span>Qty</span><span>Unit Price</span><span>Tax %</span><span></span>
         </div>
         <div id="line-items"></div>
+        </div>
         <button class="add-item-btn" onclick="addLineItem()">+ Add Line Item</button>
 
         <div class="totals-section">
           <!-- Discount -->
           <div class="form-group" style="margin-bottom:10px;">
-            <label class="form-label">Discount</label>
+            <label class="form-label" for="disc-amount">Discount</label>
             <div class="discount-row">
               <input type="number" id="discount-val" placeholder="0" min="0" oninput="updatePreview()" style="max-width:120px;">
               <div class="toggle-type">
@@ -308,7 +324,7 @@
             <div id="prev-client-info" class="inv-bill-info"></div>
           </div>
         </div>
-        <table class="inv-table" id="prev-items-table">
+        <div class="inv-table-wrap"><table class="inv-table" id="prev-items-table">
           <thead><tr><th style="width:45%">Description</th><th class="num">Qty</th><th class="num">Unit Price</th><th class="num">Tax</th><th class="num">Total</th></tr></thead>
           <tbody id="prev-items-body"></tbody>
         </table>
@@ -389,6 +405,41 @@
       <p>Check out the <a href="salary-calculator.html">Salary Converter</a> to compare hourly vs. annual rates, or the <a href="percentage-calculator.html">Percentage Calculator</a> for quick markup calculations.</p>
     </div>
   </div>
+
+  <!-- SEO content -->
+  <div class="seo-section">
+    <h2>About the Free Invoice Generator</h2>
+    <p>Create professional invoices in seconds — no account, no subscription, no watermarks. Fill in your business details, client information, line items, and tax rate, then download a clean PDF ready to send. All data stays in your browser and is never uploaded to a server.</p>
+
+    <h3>What to Include on an Invoice</h3>
+    <ul>
+      <li><strong>Invoice number:</strong> A unique sequential identifier for your records (e.g., INV-2024-001)</li>
+      <li><strong>Issue date and due date:</strong> Standard payment terms are Net 15, Net 30, or Net 60</li>
+      <li><strong>Your business details:</strong> Name/company, address, phone, email, and tax ID if applicable</li>
+      <li><strong>Client details:</strong> Company name, billing address, and contact person</li>
+      <li><strong>Line items:</strong> Description, quantity, unit price, and subtotal for each service or product</li>
+      <li><strong>Tax and totals:</strong> Subtotal, tax rate, tax amount, and grand total</li>
+    </ul>
+
+    <h3>Invoice Payment Terms</h3>
+    <ul>
+      <li><strong>Net 30:</strong> Payment due 30 days after the invoice date — the most common B2B standard</li>
+      <li><strong>Net 15:</strong> Common for smaller invoices or established relationships</li>
+      <li><strong>Due on receipt:</strong> Immediate payment, often for new clients or deposits</li>
+      <li><strong>2/10 Net 30:</strong> 2% discount if paid within 10 days, otherwise full amount in 30</li>
+    </ul>
+
+    <h3>Related Tools</h3>
+    <div class="related-links">
+      <a href="percentage-calculator.html">% Percentage</a>
+      <a href="salary-calculator.html">💼 Salary Calculator</a>
+      <a href="tip-calculator.html">💰 Tip Calculator</a>
+      <a href="discount-calculator.html">🏷 Discount</a>
+      <a href="currency-converter.html">💱 Currency</a>
+    </div>
+  </div>
+
+  <!-- nav.js injects footer here -->
 
 </div><!-- /app -->
 

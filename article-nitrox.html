@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Nitrox Diving Explained: What It Is & Why Use It | CalcNova</title>
+  <meta name="description" content="Learn what nitrox is, how it differs from air, the benefits of enriched air diving (EANx), how Maximum Operating Depth works, and common myths about nitrox.">
+  <link rel="canonical" href="https://calcnova.co/article-nitrox.html">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Nitrox Diving Explained: What It Is & Why Use It | CalcNova">
+  <meta property="og:description" content="Learn what nitrox is, how it differs from air, the benefits of enriched air diving (EANx), how Maximum Operating Depth works, and common myths about nitrox.">
+  <meta property="og:url" content="https://calcnova.co/article-nitrox.html">
+  <meta property="og:site_name" content="CalcNova">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Nitrox Diving Explained: What It Is, How It Works &amp; Why Use It | CalcNova">
+  <meta name="twitter:description" content="Learn what nitrox is, how it differs from air, the benefits of enriched air diving (EANx), how Maximum Operating Depth works, and common myths about nitrox.">
+
+  <!-- JSON-LD Article Schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Nitrox Diving Explained: What It Is, How It Works & Why Use It",
+    "description": "Learn what nitrox is, how it differs from air, the benefits of enriched air diving (EANx), how Maximum Operating Depth works, and common myths about nitrox.",
+    "url": "https://calcnova.co/article-nitrox.html",
+    "datePublished": "2026-03-14",
+    "dateModified": "2026-03-14",
+    "publisher": {
+      "@type": "Organization",
+      "name": "CalcNova",
+      "url": "https://calcnova.co"
+    }
+  }
+  </script>
+
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="shared/nav.css">
+  <style>
+    /* ── Layout ── */
+    .app {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 0 16px 60px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ── Article Hero ── */
+    .article-hero {
+      padding: 48px 0 36px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 40px;
+      max-width: 720px;
+    }
+    .article-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: linear-gradient(135deg, rgba(16,185,129,.1), rgba(99,102,241,.1));
+      border: 1px solid rgba(16,185,129,.25);
+      border-radius: 100px;
+      padding: 5px 14px;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--green);
+      letter-spacing: .5px;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+    .article-hero h1 {
+      font-size: 38px;
+      font-weight: 800;
+      letter-spacing: -.5px;
+      line-height: 1.15;
+      margin-bottom: 14px;
+      color: var(--text-primary);
+    }
+    .article-hero h1 span {
+      background: linear-gradient(135deg, var(--green), var(--purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .article-hero .subtitle {
+      font-size: 16px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      max-width: 620px;
+      margin-bottom: 0;
+    }
+    .article-meta {
+      margin-top: 16px;
+      font-size: 12px;
+      color: var(--text-muted);
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .article-meta .dot {
+      width: 3px;
+      height: 3px;
+      border-radius: 50%;
+      background: var(--text-muted);
+    }
+
+    /* ── Article Body ── */
+    .article-body {
+      max-width: 720px;
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+    }
+    .article-body h2 {
+      font-size: 24px;
+      font-weight: 800;
+      letter-spacing: -.3px;
+      margin-bottom: 12px;
+      color: var(--text-primary);
+    }
+    .article-body h3 {
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: -.2px;
+      margin-bottom: 8px;
+      color: var(--text-primary);
+    }
+    .article-body p {
+      font-size: 16px;
+      color: var(--text-secondary);
+      line-height: 1.75;
+      margin-bottom: 14px;
+    }
+    .article-body p:last-child { margin-bottom: 0; }
+    .article-body ul, .article-body ol {
+      padding-left: 0;
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+    .article-body ul li, .article-body ol li {
+      font-size: 16px;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      padding-left: 22px;
+      position: relative;
+    }
+    .article-body ul li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 10px;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--green), var(--purple));
+    }
+    .article-body ol {
+      counter-reset: ol-counter;
+    }
+    .article-body ol li {
+      counter-increment: ol-counter;
+    }
+    .article-body ol li::before {
+      content: counter(ol-counter);
+      position: absolute;
+      left: 0;
+      top: 0;
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--green);
+      font-family: var(--mono);
+    }
+    .article-body a { color: var(--green); text-decoration: none; font-weight: 600; }
+    .article-body a:hover { text-decoration: underline; }
+    .article-body strong { color: var(--text-primary); font-weight: 700; }
+
+    /* ── Formula Box ── */
+    .formula-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px 28px;
+    }
+    .formula-box .formula-title {
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      color: var(--text-muted);
+      margin-bottom: 14px;
+    }
+    .formula-box .formula {
+      font-family: var(--mono);
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--text-primary);
+      letter-spacing: .3px;
+      line-height: 1.9;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    .formula-box .formula .hl { color: var(--green); }
+    .formula-box .formula .hlp { color: var(--purple); }
+    .formula-box .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 20px;
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+    }
+    .formula-box .legend code {
+      font-family: var(--mono);
+      font-weight: 600;
+      font-size: 12px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 1px 5px;
+    }
+
+    /* ── Info / Callout Card ── */
+    .info-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px 22px;
+    }
+    .info-card--green  { border-left: 4px solid var(--green); }
+    .info-card--purple { border-left: 4px solid var(--purple); }
+    .info-card--red    { border-left: 4px solid var(--red); }
+    .info-card--amber  { border-left: 4px solid #f59e0b; }
+
+    .info-card .card-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      margin-bottom: 10px;
+    }
+    .info-card--green  .card-label { color: var(--green); }
+    .info-card--purple .card-label { color: var(--purple); }
+    .info-card--red    .card-label { color: var(--red); }
+    .info-card--amber  .card-label { color: #f59e0b; }
+
+    .info-card h3 {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 6px;
+      color: var(--text-primary);
+    }
+    .info-card p {
+      font-size: 15px;
+      color: var(--text-secondary);
+      line-height: 1.65;
+      margin-bottom: 0;
+    }
+    .info-card p + p { margin-top: 8px; }
+
+    /* ── Comparison Table ── */
+    .comparison-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+      margin: 8px 0 14px;
+    }
+    .comparison-table th {
+      text-align: left;
+      font-weight: 700;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      color: var(--text-muted);
+      padding: 10px 14px;
+      border-bottom: 2px solid var(--border);
+    }
+    .comparison-table td {
+      padding: 10px 14px;
+      color: var(--text-secondary);
+      border-bottom: 1px solid var(--border);
+    }
+    .comparison-table tr:last-child td { border-bottom: none; }
+    .comparison-table .num { font-family: var(--mono); font-weight: 600; }
+    .comparison-table .hl  { color: var(--green); font-weight: 700; }
+
+    /* ── CTA Section ── */
+    .cta-section {
+      background: linear-gradient(135deg, rgba(16,185,129,.08), rgba(99,102,241,.06));
+      border: 1px solid rgba(16,185,129,.2);
+      border-radius: 18px;
+      padding: 32px;
+      text-align: center;
+    }
+    .cta-section h2 {
+      font-size: 22px;
+      margin-bottom: 10px;
+      color: var(--text-primary);
+    }
+    .cta-section p {
+      max-width: 500px;
+      margin: 0 auto 20px;
+      color: var(--text-secondary);
+      font-size: 15px;
+    }
+    .cta-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: linear-gradient(135deg, var(--green), #059669);
+      color: #fff !important;
+      border-radius: 100px;
+      padding: 12px 28px;
+      font-size: 14px;
+      font-weight: 700;
+      text-decoration: none !important;
+      font-family: var(--font);
+      transition: all .15s;
+      box-shadow: 0 4px 14px rgba(16,185,129,.3);
+    }
+    .cta-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(16,185,129,.4);
+    }
+
+    /* ── Related Tools ── */
+    .related-tools {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px 26px;
+    }
+    .related-tools h3 {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--text-primary);
+      margin-bottom: 14px;
+    }
+    .related-links {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .related-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 14px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      text-decoration: none !important;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-primary) !important;
+      transition: all .15s;
+    }
+    .related-link:hover {
+      border-color: var(--green);
+      color: var(--green) !important;
+      transform: translateX(2px);
+    }
+    .related-link .rl-icon {
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+    .related-link .rl-desc {
+      font-size: 12px;
+      font-weight: 400;
+      color: var(--text-muted);
+      display: block;
+      margin-top: 1px;
+    }
+
+    /* ── FAQ ── */
+    .faq-item {
+      border-bottom: 1px solid var(--border);
+      padding: 18px 0;
+    }
+    .faq-item:first-child { padding-top: 0; }
+    .faq-item:last-child { border-bottom: none; padding-bottom: 0; }
+    .faq-q {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+    }
+    .faq-a {
+      font-size: 15px;
+      color: var(--text-secondary);
+      line-height: 1.65;
+    }
+
+    /* ── Divider ── */
+    .article-divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 4px 0;
+    }
+
+    /* ── Print ── */
+    @media print {
+      body::before, header, .menu-overlay, .site-footer, .cta-section, .ad-slot { display: none !important; }
+      .app { max-width: 100%; padding: 0; }
+      .article-hero { padding-top: 0; }
+      .article-body p, .article-body li { color: #222; }
+      .info-card, .formula-box, .related-tools { break-inside: avoid; border: 1px solid #ccc; }
+    }
+
+    /* ── Mobile ── */
+    @media (max-width: 640px) {
+      .article-hero h1 { font-size: 27px; }
+      .article-hero { padding: 28px 0 24px; }
+      .formula-box .formula { font-size: 14px; }
+      .comparison-table { font-size: 12px; }
+      .comparison-table th, .comparison-table td { padding: 8px 10px; }
+      .cta-section { padding: 24px 18px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+
+    <!-- Hero -->
+    <div class="article-hero">
+      <div class="article-badge">🫧 Scuba Diving Guide</div>
+      <h1>Nitrox Diving <span>Explained</span></h1>
+      <p class="subtitle">What enriched air is, how it changes your dive, and why every certified diver should understand it.</p>
+      <div class="article-meta">
+        <span>7 min read</span>
+        <span class="dot"></span>
+        <span>Scuba Diving</span>
+        <span class="dot"></span>
+        <span>Gas Theory</span>
+      </div>
+    </div>
+
+    <!-- Article Body -->
+    <div class="article-body">
+
+      <!-- 1. What Is Nitrox? -->
+      <section>
+        <h2>What Is Nitrox?</h2>
+        <p>Nitrox — also called Enriched Air Nitrox or EANx — is any breathing gas mixture containing more oxygen than the standard 21% found in regular atmospheric air. In plain terms: less nitrogen, more oxygen.</p>
+        <p>The two most common recreational mixes are <strong>EAN32</strong> (32% O₂, also marketed as "Nitrox 32") and <strong>EAN36</strong> (36% O₂). Both are widely available at dive centres around the world and form the foundation of the PADI Enriched Air specialty course.</p>
+        <p>The core principle is straightforward: because nitrox contains less nitrogen than air, divers absorb less nitrogen during a dive at any given depth. Less nitrogen absorption means it takes longer to reach the no-decompression limit — and that translates directly into <strong>longer bottom times</strong>.</p>
+      </section>
+
+      <!-- 2. How Nitrox Differs from Air -->
+      <section>
+        <h2>How Does Nitrox Differ from Air?</h2>
+        <p>The table below shows the gas composition of standard air versus the two most popular nitrox blends.</p>
+
+        <div class="table-wrap"><table class="comparison-table">
+          <thead>
+            <tr>
+              <th>Mix</th>
+              <th>O₂ %</th>
+              <th>N₂ %</th>
+              <th>Key Effect</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Air</strong></td>
+              <td class="num">21%</td>
+              <td class="num">79%</td>
+              <td>Baseline reference</td>
+            </tr>
+            <tr>
+              <td><strong>EAN32</strong></td>
+              <td class="num hl">32%</td>
+              <td class="num">68%</td>
+              <td>Longer NDLs, shallower MOD</td>
+            </tr>
+            <tr>
+              <td><strong>EAN36</strong></td>
+              <td class="num hl">36%</td>
+              <td class="num">64%</td>
+              <td>Longest NDLs, shallowest MOD</td>
+            </tr>
+          </tbody>
+        </table>
+          </div>
+        <p>The key trade-off is inescapable: <strong>less nitrogen gives you longer no-decompression limits</strong>, but <strong>more oxygen lowers your maximum operating depth</strong>. Both variables move together — you cannot have one benefit without the other constraint. Understanding this balance is what nitrox training is all about.</p>
+      </section>
+
+      <!-- 3. Extended NDLs -->
+      <section>
+        <h2>The Main Benefit: Extended No-Decompression Limits</h2>
+        <p>No-decompression limits (NDLs) define the maximum time you can spend at a given depth before your body has absorbed enough nitrogen to require mandatory decompression stops on ascent. With air, NDLs are fixed. With nitrox, they stretch — sometimes dramatically.</p>
+
+        <div class="table-wrap"><table class="comparison-table">
+          <thead>
+            <tr>
+              <th>Depth</th>
+              <th>Air NDL</th>
+              <th>EAN32 NDL</th>
+              <th>EAN36 NDL</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>12 m / 40 ft</strong></td>
+              <td class="num">147 min</td>
+              <td class="num hl">unlimited*</td>
+              <td class="num hl">unlimited*</td>
+            </tr>
+            <tr>
+              <td><strong>18 m / 60 ft</strong></td>
+              <td class="num">56 min</td>
+              <td class="num hl">95 min</td>
+              <td class="num hl">~120 min</td>
+            </tr>
+            <tr>
+              <td><strong>25 m / 82 ft</strong></td>
+              <td class="num">30 min</td>
+              <td class="num hl">47 min</td>
+              <td class="num hl">64 min</td>
+            </tr>
+            <tr>
+              <td><strong>30 m / 98 ft</strong></td>
+              <td class="num">20 min</td>
+              <td class="num hl">30 min</td>
+              <td class="num">— (below MOD)</td>
+            </tr>
+          </tbody>
+        </table>
+          </div>
+        <p style="font-size:12px; color: var(--text-muted); margin-top: -6px;">*within gas supply limits. NDL figures are approximate and vary by dive table / algorithm used.</p>
+
+        <p>At 18 m on air, you have roughly <strong>56 minutes</strong> before hitting your NDL. On EAN32 at that same depth, that extends to approximately <strong>95 minutes</strong> — nearly double. For reef dives, wreck explorations, and multi-level dives in the 15–25 m range, this is a substantial and very tangible benefit.</p>
+        <p>Extended NDLs also give you a larger safety margin if you drift slightly deeper than planned, and they reduce residual nitrogen between dives — which can improve surface intervals and repetitive dive planning.</p>
+      </section>
+
+      <!-- 4. MOD -->
+      <section>
+        <h2>Maximum Operating Depth (MOD): The Trade-Off</h2>
+        <p>More oxygen in your mix sounds like a good thing — but at depth, high oxygen partial pressures become toxic. Too much oxygen causes <strong>Central Nervous System (CNS) oxygen toxicity</strong>, which can trigger convulsions with little to no warning. Underwater, a convulsion is almost certainly fatal.</p>
+        <p>The safe ceiling for partial pressure of oxygen (PO₂) in recreational diving is <strong>1.4 ATA</strong> for the planned maximum depth, with 1.6 ATA used as an absolute contingency limit only. This places a hard ceiling — the Maximum Operating Depth (MOD) — on how deep you can take a given nitrox mix.</p>
+
+        <div class="formula-box">
+          <div class="formula-title">MOD Formula</div>
+          <div class="formula"><span class="hl">MOD</span> (m) = ((<span class="hlp">PO₂ limit</span> ÷ <span class="hlp">FO₂</span>) − 1) × 10</div>
+          <div class="legend">
+            <span><code>MOD</code> = Maximum Operating Depth in metres</span>
+            <span><code>PO₂ limit</code> = max oxygen partial pressure (1.4 ATA recreational)</span>
+            <span><code>FO₂</code> = fraction of oxygen as a decimal (e.g. 0.32 for EAN32)</span>
+          </div>
+        </div>
+
+        <div class="formula-box" style="margin-top: 12px;">
+          <div class="formula-title">Worked Example — EAN32 at PO₂ 1.4</div>
+          <div class="formula">MOD = ((1.4 ÷ <span class="hlp">0.32</span>) − 1) × 10
+     = (4.375 − 1) × 10
+     = 3.375 × 10
+     = <span class="hl">33.75 m ≈ 33 m</span></div>
+        </div>
+
+        <div class="formula-box" style="margin-top: 12px;">
+          <div class="formula-title">Worked Example — EAN36 at PO₂ 1.4</div>
+          <div class="formula">MOD = ((1.4 ÷ <span class="hlp">0.36</span>) − 1) × 10
+     = (3.889 − 1) × 10
+     = 2.889 × 10
+     = <span class="hl">28.89 m ≈ 28 m</span></div>
+        </div>
+
+        <p>For context: air has an effective MOD of 57 m at PO₂ 1.4. EAN32 limits you to 33 m. EAN36 to just 28 m. <strong>Nitrox dives shallower, but stays longer.</strong> Always calculate and mark your MOD before the dive, and never exceed it.</p>
+
+        <div class="info-card info-card--red" style="margin-top: 4px;">
+          <div class="card-label">⚠️ Safety Critical</div>
+          <h3>Always know your MOD before entering the water.</h3>
+          <p>Calculate it, write it on your slate, and set your dive computer to the correct oxygen fraction before the dive — not after. CNS oxygen toxicity strikes without warning and does not give you time to ascend.</p>
+        </div>
+      </section>
+
+      <!-- 5. Common Myths -->
+      <section>
+        <h2>Common Myths About Nitrox</h2>
+        <p>Nitrox attracts more misconceptions than almost any topic in recreational diving. Here are the four most common myths — and the facts behind them.</p>
+
+        <div class="info-card info-card--red">
+          <div class="card-label">Myth 1</div>
+          <h3>"Nitrox lets you dive deeper."</h3>
+          <p><strong>False.</strong> The opposite is true. Nitrox has a <em>shallower</em> MOD than air because its higher oxygen fraction reaches toxic partial pressures at lower depths. Nitrox is for diving <strong>longer at the same depth</strong>, not deeper. If deep diving is the goal, trimix and technical gas blending are the tools — not nitrox.</p>
+        </div>
+
+        <div class="info-card info-card--amber">
+          <div class="card-label">Myth 2</div>
+          <h3>"Nitrox gives you more energy after a dive."</h3>
+          <p>There is no scientific evidence for this claim. Any perceived improvement in post-dive energy is most likely due to the placebo effect, improved hydration habits that accompany nitrox training, or simply diving within more conservative limits. Oxygen in a breathing mix does not have a stimulant effect at recreational pressures.</p>
+        </div>
+
+        <div class="info-card info-card--amber">
+          <div class="card-label">Myth 3</div>
+          <h3>"Nitrox is only for advanced or technical divers."</h3>
+          <p><strong>False.</strong> The PADI Enriched Air Diver course is one of the most popular specialty certifications in the world, and it is open to all certified divers. The course typically takes a single day and involves no additional open-water dives — just knowledge development and gas analysis. Any open-water certified diver can qualify.</p>
+        </div>
+
+        <div class="info-card info-card--green">
+          <div class="card-label">Myth 4</div>
+          <h3>"Nitrox is dangerous."</h3>
+          <p>Nitrox used correctly — within its MOD and with a properly configured dive computer — is very safe. The hazard only materialises when divers exceed the MOD or configure their equipment incorrectly. With proper training and planning, nitrox is no more dangerous than air for recreational depths.</p>
+        </div>
+      </section>
+
+      <!-- 6. How to Use Nitrox Safely -->
+      <section>
+        <h2>How to Use Nitrox Safely</h2>
+        <p>Following a consistent pre-dive routine eliminates most of the risk associated with enriched air diving.</p>
+        <ol>
+          <li><strong>Analyse your cylinder before every dive.</strong> Never assume the mix matches the label. Use a calibrated oxygen analyser and record the result.</li>
+          <li><strong>Check tank markings.</strong> Nitrox cylinders should display a yellow/green EANx sticker and the actual oxygen percentage. If the labelling is absent or unclear, do not dive on that gas.</li>
+          <li><strong>Set your dive computer to the correct mix.</strong> Before entering the water, update your computer's oxygen fraction to match your analysed result. A computer set to air while breathing EAN32 will give you incorrect NDL and PO₂ readings.</li>
+          <li><strong>Calculate and know your MOD.</strong> Write it on your wrist slate. Treat it as a hard ceiling, not a guideline.</li>
+          <li><strong>Plan your dive using nitrox tables or EAD.</strong> Use tables or algorithms appropriate for your actual mix, not air tables, unless you are using the Equivalent Air Depth method (see below).</li>
+        </ol>
+      </section>
+
+      <!-- 7. EAD -->
+      <section>
+        <h2>Equivalent Air Depth (EAD)</h2>
+        <p>Equivalent Air Depth (EAD) is a useful concept that lets you use standard air dive tables with a nitrox mix. It works by finding the shallower air depth that produces the same nitrogen loading as your actual depth on nitrox.</p>
+
+        <div class="formula-box">
+          <div class="formula-title">EAD Formula</div>
+          <div class="formula"><span class="hl">EAD</span> (m) = ((<span class="hlp">FN₂</span> × (<span class="hlp">depth</span> + 10)) ÷ 0.79) − 10</div>
+          <div class="legend">
+            <span><code>EAD</code> = Equivalent Air Depth in metres</span>
+            <span><code>FN₂</code> = fraction of nitrogen as a decimal (e.g. 0.68 for EAN32)</span>
+            <span><code>depth</code> = actual dive depth in metres</span>
+            <span><code>0.79</code> = nitrogen fraction in air</span>
+          </div>
+        </div>
+
+        <div class="formula-box" style="margin-top: 12px;">
+          <div class="formula-title">Worked Example — EAN32 at 25 m</div>
+          <div class="formula">EAD = ((0.68 × (25 + 10)) ÷ 0.79) − 10
+     = ((0.68 × 35) ÷ 0.79) − 10
+     = (23.8 ÷ 0.79) − 10
+     = 30.13 − 10
+     = <span class="hl">20.13 m ≈ 20 m</span></div>
+        </div>
+
+        <p>This means that a dive to <strong>25 m on EAN32</strong> creates the same nitrogen loading as a dive to roughly <strong>20 m on air</strong>. You can therefore look up the NDL for 20 m on an air table and use it as your planning limit at 25 m on EAN32 — giving you significantly more bottom time than the air table for 25 m would suggest.</p>
+
+        <div class="info-card info-card--purple">
+          <div class="card-label">💡 Practical Tip</div>
+          <p>Most modern dive computers handle EAD calculations automatically when you set the correct oxygen fraction. The EAD formula is most useful when planning dives without a computer or when cross-checking your tables before the dive.</p>
+        </div>
+      </section>
+
+      <!-- 8. CTA -->
+      <hr class="article-divider">
+
+      <div class="cta-section">
+        <h2>Calculate Your MOD, PO₂, and EAD</h2>
+        <p>Use our free Nitrox / MOD Calculator to instantly calculate your Maximum Operating Depth, oxygen partial pressure, best mix for a target depth, and Equivalent Air Depth.</p>
+        <a href="nitrox-calculator.html" class="cta-btn">Open Nitrox &amp; MOD Calculator →</a>
+      </div>
+
+      <!-- 9. FAQ -->
+      <section>
+        <h2>Frequently Asked Questions</h2>
+        <div class="faq-item">
+          <div class="faq-q">Do I need a special certification to use nitrox?</div>
+          <div class="faq-a">Yes. Most dive operators require divers to hold an Enriched Air Diver certification (PADI, SSI, BSAC, or equivalent) before filling nitrox cylinders. The course covers gas analysis, MOD planning, oxygen toxicity, and dive computer configuration. It typically takes one day and requires no additional open-water dives.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q">Can I use nitrox on all my dives?</div>
+          <div class="faq-a">Nitrox is most beneficial at depths between about 15 m and 30 m — the sweet spot where NDL gains are significant and you stay well above the MOD. For dives shallower than 12 m the NDL benefit is minimal. For dives deeper than 30 m, standard EAN32 or EAN36 may not be usable without exceeding the MOD, and technical gas blends would be considered instead.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q">What happens if I go below the MOD?</div>
+          <div class="faq-a">Descending below your MOD causes your oxygen partial pressure to exceed the 1.4 ATA limit, increasing the risk of CNS oxygen toxicity. Early symptoms can include visual disturbances, twitching, nausea, and dizziness — but the first sign is often convulsions with no prior warning. A convulsion underwater almost always results in drowning. Treat the MOD as a non-negotiable hard limit.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q">Does nitrox change how I manage my air supply?</div>
+          <div class="faq-a">No — your gas consumption rate (SAC/RMV) remains the same on nitrox as it would on air at the same depth. Nitrox changes your nitrogen absorption and NDL, but not the volume of gas your lungs consume. Always plan your dive with adequate gas reserves regardless of your nitrogen status.</div>
+        </div>
+      </section>
+
+      <!-- Related Tools -->
+      <section>
+        <div class="related-tools">
+          <h3>Related Scuba Tools &amp; Guides</h3>
+          <div class="related-links">
+            <a href="nitrox-calculator.html" class="related-link">
+              <span class="rl-icon">🫧</span>
+              <span>
+                Nitrox &amp; MOD Calculator
+                <span class="rl-desc">Calculate MOD, PO₂, best mix, and EAD for any depth</span>
+              </span>
+            </a>
+            <a href="gas-blending-calculator.html" class="related-link">
+              <span class="rl-icon">⚗️</span>
+              <span>
+                Gas Blending Calculator
+                <span class="rl-desc">Plan partial-pressure and continuous-flow blending to hit your target mix</span>
+              </span>
+            </a>
+            <a href="article-sac-rmv.html" class="related-link">
+              <span class="rl-icon">📖</span>
+              <span>
+                SAC &amp; RMV Guide
+                <span class="rl-desc">Understand and calculate your surface air consumption rate</span>
+              </span>
+            </a>
+          </div>
+        </div>
+      </section>
+
+    </div><!-- /article-body -->
+  </div><!-- /app -->
+
+  <script>
+    window.CALCNOVA_PAGE = { id: 'article-nitrox' };
+  </script>
+  <script src="shared/site-data.js"></script>
+  <script src="shared/nav.js"></script>
+</body>
+</html>

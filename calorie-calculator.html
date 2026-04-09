@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Calorie Calculator — TDEE &amp; Daily Calorie Needs | CalcNova</title>
-  <meta name="description" content="Calculate your BMR and TDEE to find your daily calorie needs for weight loss, maintenance, or muscle gain. Free TDEE calculator with Mifflin-St Jeor, Harris-Benedict, and Katch-McArdle formulas.">
+  <title>Calorie Calculator — TDEE & Daily Calorie Needs | CalcNova</title>
+  <meta name="description" content="Calculate your BMR and TDEE to find your daily calorie needs for weight loss, maintenance, or muscle gain. Free TDEE calculator with Mifflin-St Jeor,…">
 
   <!-- Canonical -->
   <link rel="canonical" href="https://calcnova.co/calorie-calculator.html">
 
   <!-- Open Graph -->
-  <meta property="og:title" content="Calorie Calculator — TDEE &amp; Daily Calorie Needs | CalcNova">
+  <meta property="og:title" content="Calorie Calculator — TDEE & Daily Calorie Needs | CalcNova">
   <meta property="og:description" content="Calculate your BMR and TDEE to find your daily calorie needs for weight loss, maintenance, or muscle gain. Free TDEE calculator.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://calcnova.co/calorie-calculator.html">
@@ -98,7 +98,7 @@
 
     /* ── HERO ── */
     .hero { background: var(--surface); border: 1px solid var(--border); border-radius: 18px; padding: 38px 32px 32px; margin-bottom: 28px; }
-    .hero-title { font-size: 26px; font-weight: 800; letter-spacing: -.5px; }
+    .hero-title { font-size: 26px; font-weight: 800; letter-spacing: -.5px; margin: 0; padding: 0; }
     .hero-title span { background: linear-gradient(135deg, var(--green), var(--purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
     .hero-desc { font-size: 14px; color: var(--text-secondary); margin-top: 6px; line-height: 1.5; }
 
@@ -223,6 +223,18 @@
     /* ── SECTION SPACING ── */
     .section-title { font-size: 14px; font-weight: 700; color: var(--text-primary); margin-bottom: 14px; }
 
+    /* ── SEO content ── */
+    .seo-section { background: var(--surface); border: 1px solid var(--border); border-radius: 18px; padding: 28px; margin-top: 40px; }
+    .seo-section h2 { font-size: 18px; font-weight: 800; margin: 0 0 12px; letter-spacing: -.3px; }
+    .seo-section h3 { font-size: 15px; font-weight: 700; margin: 20px 0 8px; color: var(--text-primary); }
+    .seo-section p { font-size: 14px; color: var(--text-secondary); line-height: 1.75; margin: 0 0 10px; }
+    .seo-section ul { padding-left: 18px; margin: 0 0 10px; }
+    .seo-section ul li { font-size: 14px; color: var(--text-secondary); line-height: 1.65; margin-bottom: 5px; }
+    .related-links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
+    .related-links a { display: inline-flex; align-items: center; gap: 6px; background: var(--surface); border: 1px solid var(--border); border-radius: 100px; padding: 6px 14px; font-size: 13px; font-weight: 600; color: var(--text-primary); text-decoration: none; transition: border-color .15s; }
+    .related-links a:hover { border-color: var(--green); color: var(--green); }
+    @media print { .seo-section { display: none !important; } }
+
     /* ── PRINT ── */
     @media print {
       #cn-header, .action-row, #toast, .unit-toggle, .seg-control, .calc-btn, .card { box-shadow: none !important; }
@@ -248,7 +260,7 @@
 
   <!-- HERO -->
   <div class="hero">
-    <div class="hero-title">Calorie &amp; <span>TDEE Calculator</span></div>
+    <h1 class="hero-title">Calorie &amp; <span>TDEE Calculator</span></h1>
     <div class="hero-desc">Calculate your Basal Metabolic Rate (BMR) and Total Daily Energy Expenditure (TDEE) to find your ideal daily calorie intake for your goal.</div>
   </div>
 
@@ -277,7 +289,7 @@
     <!-- Age -->
     <div class="form-group">
       <label class="form-label" for="input-age">Age <span style="font-size:11px;color:var(--text-muted);">(15–100)</span></label>
-      <input type="number" id="input-age" min="15" max="100" placeholder="30" inputmode="numeric">
+      <input type="number" id="input-age" min="15" max="100" placeholder="30" inputmode="numeric" oninput="calculate()">
     </div>
 
     <!-- Height -->
@@ -285,16 +297,16 @@
       <label class="form-label" id="label-height">Height</label>
       <div class="input-row" id="height-imperial">
         <div class="form-group" style="margin-bottom:0;">
-          <input type="number" id="input-ft" min="3" max="8" placeholder="5" inputmode="numeric">
+          <input type="number" id="input-ft" min="3" max="8" placeholder="5" inputmode="numeric" oninput="calculate()">
           <span style="font-size:11px;color:var(--text-muted);margin-top:4px;display:block;font-weight:600;">ft</span>
         </div>
         <div class="form-group" style="margin-bottom:0;">
-          <input type="number" id="input-in" min="0" max="11" placeholder="10" inputmode="numeric">
+          <input type="number" id="input-in" min="0" max="11" placeholder="10" inputmode="numeric" oninput="calculate()">
           <span style="font-size:11px;color:var(--text-muted);margin-top:4px;display:block;font-weight:600;">in</span>
         </div>
       </div>
       <div id="height-metric" style="display:none;">
-        <input type="number" id="input-cm" min="100" max="250" placeholder="178" inputmode="numeric">
+        <input type="number" id="input-cm" min="100" max="250" placeholder="178" inputmode="numeric" oninput="calculate()">
         <span style="font-size:11px;color:var(--text-muted);margin-top:4px;display:block;font-weight:600;">cm</span>
       </div>
     </div>
@@ -303,7 +315,7 @@
     <div class="form-group">
       <label class="form-label" id="label-weight">Weight</label>
       <div style="position:relative;">
-        <input type="number" id="input-weight" min="1" max="700" placeholder="" inputmode="decimal" step="0.1">
+        <input type="number" id="input-weight" min="1" max="700" placeholder="" inputmode="decimal" step="0.1" oninput="calculate()">
         <span id="weight-unit-label" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);font-family:var(--mono);font-size:12px;font-weight:700;color:var(--text-muted);pointer-events:none;">lbs</span>
       </div>
     </div>
@@ -311,7 +323,7 @@
     <!-- Activity Level -->
     <div class="form-group">
       <label class="form-label" for="input-activity">Activity Level</label>
-      <select id="input-activity">
+      <select id="input-activity" onchange="calculate()">
         <option value="1.2">Sedentary — Little or no exercise</option>
         <option value="1.375">Lightly active — Light exercise 1–3 days/week</option>
         <option value="1.55" selected>Moderately active — Moderate exercise 3–5 days/week</option>
@@ -334,7 +346,7 @@
     <div class="form-group">
       <label class="form-label" for="input-bf">Body Fat %<span class="form-label-optional">(optional — enables Katch-McArdle)</span></label>
       <div style="position:relative;">
-        <input type="number" id="input-bf" min="3" max="70" placeholder="e.g. 20" inputmode="decimal" step="0.1">
+        <input type="number" id="input-bf" min="3" max="70" placeholder="e.g. 20" inputmode="decimal" step="0.1" oninput="calculate()">
         <span style="position:absolute;right:12px;top:50%;transform:translateY(-50%);font-family:var(--mono);font-size:12px;font-weight:700;color:var(--text-muted);pointer-events:none;">%</span>
       </div>
     </div>
@@ -345,7 +357,6 @@
       <span id="error-text">Please fill in all required fields.</span>
     </div>
 
-    <button class="calc-btn" onclick="calculate()">Calculate My Calorie Needs</button>
   </div>
 
   <!-- RESULTS SECTION -->
@@ -421,6 +432,35 @@
 
   </div><!-- /results-section -->
 
+  <!-- SEO content -->
+  <div class="seo-section">
+    <h2>How to Use the Calorie & TDEE Calculator</h2>
+    <p>Enter your age, sex, height, weight, and activity level to calculate your Total Daily Energy Expenditure (TDEE) — the number of calories your body burns each day. Use this number as your maintenance baseline, then adjust for your goal: eat at a deficit to lose weight or a surplus to gain muscle.</p>
+
+    <h3>What is BMR and TDEE?</h3>
+    <p>Your Basal Metabolic Rate (BMR) is the calories your body needs at complete rest — just to keep organs functioning. TDEE multiplies your BMR by an activity factor: sedentary (×1.2), lightly active (×1.375), moderately active (×1.55), very active (×1.725), or extra active (×1.9).</p>
+
+    <h3>Calorie Targets by Goal</h3>
+    <ul>
+      <li><strong>Weight loss:</strong> Eat 500 cal/day below TDEE for ~0.5 kg (1 lb) per week loss</li>
+      <li><strong>Aggressive weight loss:</strong> 750–1000 cal deficit; don't go below 1200 cal/day (women) or 1500 cal/day (men)</li>
+      <li><strong>Muscle gain (lean bulk):</strong> Eat 200–300 cal above TDEE with high protein (1.6–2.2g/kg body weight)</li>
+      <li><strong>Maintenance:</strong> Eat at TDEE; adjust if weight trends up or down over 2–3 weeks</li>
+    </ul>
+
+    <h3>BMR Formulas</h3>
+    <p>This calculator uses the Mifflin-St Jeor equation, currently the most accurate for the general population. The older Harris-Benedict equation tends to overestimate by 5%. Both are estimates — individual metabolism varies by up to ±10%.</p>
+
+    <h3>Related Calculators</h3>
+    <div class="related-links">
+      <a href="macro-calculator.html">🥩 Macro Calculator</a>
+      <a href="bmi-calculator.html">⚖️ BMI Calculator</a>
+      <a href="body-fat-calculator.html">📏 Body Fat Calculator</a>
+      <a href="ideal-weight-calculator.html">🎯 Ideal Weight</a>
+      <a href="water-intake-calculator.html">💧 Water Intake</a>
+    </div>
+  </div>
+
 </div><!-- /app -->
 
 <div id="toast"><span style="color:var(--green);font-size:15px;">✓</span> <span id="toast-msg">Copied!</span></div>
@@ -488,6 +528,7 @@
     var btns = document.querySelectorAll('#seg-sex .seg-btn');
     btns.forEach(function (b) { b.classList.remove('active'); });
     btn.classList.add('active');
+    calculate();
   };
 
   /* ── GOAL ── */
@@ -496,6 +537,7 @@
     var btns = document.querySelectorAll('#seg-goal .seg-btn');
     btns.forEach(function (b) { b.classList.remove('active'); });
     btn.classList.add('active');
+    calculate();
   };
 
   /* ── HELPERS ── */
@@ -740,11 +782,6 @@
     document.getElementById('results-section').classList.add('visible');
     document.getElementById('result-card').classList.remove('hidden');
 
-    // Scroll to results
-    setTimeout(function () {
-      document.getElementById('results-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }, 80);
-
     // Store for copy
     window._lastResults = {
       tdee: round(tdee),
@@ -833,6 +870,9 @@
   document.addEventListener('keydown', function (e) {
     if (e.key === 'Enter') calculate();
   });
+
+  /* ── INIT ── */
+  calculate();
 
 })();
 </script>

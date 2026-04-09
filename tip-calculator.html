@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Tip Calculator — Split Bills &amp; Calculate Tips | CalcNova</title>
-  <meta name="description" content="Calculate tip amount and split the bill among multiple people. Fast, free, no signup required.">
+  <meta name="description" content="Calculate the tip amount, total bill, and per-person share in seconds. Supports any tip percentage and bill splitting among multiple people. Free, no signup.">
 
   <!-- Canonical -->
   <link rel="canonical" href="https://calcnova.co/tip-calculator.html">
@@ -18,16 +18,64 @@
 
   <!-- Structured Data -->
   <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "WebApplication",
-    "name": "Tip Calculator",
-    "url": "https://calcnova.co/tip-calculator.html",
-    "description": "Calculate tips and split the bill evenly between any number of people.",
-    "applicationCategory": "UtilitiesApplication",
-    "provider": { "@type": "Organization", "name": "CalcNova", "url": "https://calcnova.co" },
-    "offers": { "@type": "Offer", "price": "0" }
-  }
+  [
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": "Tip Calculator",
+      "url": "https://calcnova.co/tip-calculator.html",
+      "description": "Calculate tips and split the bill evenly between any number of people.",
+      "applicationCategory": "UtilitiesApplication",
+      "provider": { "@type": "Organization", "name": "CalcNova", "url": "https://calcnova.co" },
+      "offers": { "@type": "Offer", "price": "0" }
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What percentage should you tip at a restaurant?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "In the United States, the standard tip at a sit-down restaurant is 15–20% of the pre-tax bill. A 15% tip is considered the minimum for adequate service, 18% is common for good service, and 20% or more is customary for excellent service. For buffet-style dining or counter service, 10% or a small dollar amount is typical."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How can you calculate a tip quickly in your head?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "An easy mental math trick: to find 10% of the bill, simply move the decimal point one place to the left. For a 20% tip, double that number. For a 15% tip, take the 10% figure and add half of it. For example, on a $48 bill, 10% is $4.80, so a 20% tip is $9.60 and a 15% tip is $4.80 + $2.40 = $7.20."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Should you tip on the pre-tax or post-tax amount?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Tipping etiquette in the US generally considers tipping on the pre-tax subtotal to be correct, since the service is based on the food and drink ordered rather than the tax added by the government. However, tipping on the post-tax total is also widely practiced and results in a slightly larger tip. The difference is usually small, so either approach is acceptable."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How much should you tip at a bar?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "At a bar, the standard practice in the US is to tip $1–2 per drink for simple orders like a beer or a well drink, or 15–20% of the total tab for more complex cocktails or table service. Running a tab and tipping at the end as a percentage is common when ordering multiple rounds. Tipping per drink is more typical when ordering individually at the bar."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do you split a bill evenly between multiple people?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "To split a bill evenly, first add the tip to the total bill to get the grand total, then divide that amount by the number of people. For example, if the bill is $120 and you add an 18% tip ($21.60), the grand total is $141.60. Split between 4 people, each person owes $141.60 ÷ 4 = $35.40. A tip calculator like this one handles the math instantly."
+          }
+        }
+      ]
+    }
+  ]
   </script>
 
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -43,7 +91,7 @@
       padding: 38px 32px 32px;
       margin-bottom: 28px;
     }
-    .hero-title { font-size: 26px; font-weight: 800; letter-spacing: -.5px; }
+    .hero-title { font-size: 26px; font-weight: 800; letter-spacing: -.5px; margin: 0; padding: 0; }
     .hero-title span {
       background: linear-gradient(135deg, var(--green), var(--purple));
       -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
@@ -422,7 +470,7 @@
 <div class="app">
 
   <div class="hero">
-    <div class="hero-title">Tip <span>Calculator</span></div>
+    <h1 class="hero-title">Tip <span>Calculator</span></h1>
     <div class="hero-desc">Calculate the tip, total bill, and per-person split in seconds. Adjust tip percentage, number of people, and optionally round up — all updated live.</div>
   </div>
 

@@ -3,15 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Flashcard Maker — Free Online Flashcard Creator &amp; Study Tool | CalcNova</title>
+  <title>Flashcard Maker — Free Online Flashcard Creator | CalcNova</title>
   <meta name="description" content="Free flashcard maker with deck management, flip animations, know-it tracking, and import/export. Study smarter with active recall and spaced repetition." />
   <link rel="canonical" href="https://calcnova.co/flashcard-maker.html" />
-  <meta property="og:title" content="Flashcard Maker — Free Online Flashcard Creator &amp; Study Tool | CalcNova" />
+  <meta property="og:title" content="Flashcard Maker — Free Online Flashcard Creator | CalcNova" />
   <meta property="og:description" content="Create, manage, and study flashcard decks in your browser. Flip cards, track what you know, import CSV or tab-separated text, and export to clipboard or print." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://calcnova.co/flashcard-maker.html" />
   <meta property="og:site_name" content="CalcNova" />
-  <script type="application/ld+json">[{"@context":"https://schema.org","@type":"WebApplication","name":"Flashcard Maker","url":"https://calcnova.co/flashcard-maker.html","description":"Free flashcard maker with deck management, flip animations, active recall tracking, and import/export.","applicationCategory":"UtilityApplication","operatingSystem":"Any","isPartOf":{"@type":"WebSite","name":"CalcNova","url":"https://calcnova.co/"}}]</script>
+  <script type="application/ld+json">[{"@context":"https://schema.org","@type":"WebPage","name":"Flashcard Maker","url":"https://calcnova.co/flashcard-maker.html","description":"Free flashcard maker with deck management, flip animations, active recall tracking, and import/export.","applicationCategory":"UtilityApplication","operatingSystem":"Any","isPartOf":{"@type":"WebSite","name":"CalcNova","url":"https://calcnova.co/"}},{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How many cards should be in a deck?","acceptedAnswer":{"@type":"Answer","text":"20–50 cards per deck is a practical working range for most topics. Under 20 cards and a review session ends too quickly to feel worthwhile; over 100 cards and a single pass takes so long that spaced repetition scheduling becomes difficult to maintain manually. For large subjects, break the material into multiple themed decks and rotate which one you study each day."}},{"@type":"Question","name":"When should I make flashcards vs. use other study methods?","acceptedAnswer":{"@type":"Answer","text":"Flashcards are ideal for factual knowledge with clear right/wrong answers: vocabulary, definitions, formulas, dates, anatomical structures, chemical symbols, coding syntax, and language learning. They are less suited for conceptual understanding that requires connected reasoning, writing skills, or problem-solving processes."}},{"@type":"Question","name":"Are digital flashcards as effective as physical cards?","acceptedAnswer":{"@type":"Answer","text":"Research comparing physical and digital flashcards finds similar learning outcomes when usage patterns are matched. The main advantage of physical cards is the kinesthetic act of writing, which some studies suggest aids encoding for new information. The main advantages of digital are searchability, portability, easier shuffling, progress tracking, and the ability to import large card sets quickly."}},{"@type":"Question","name":"How long should a flashcard study session be?","acceptedAnswer":{"@type":"Answer","text":"15–30 minutes is a productive session length for most learners. Unlike reading, flashcard review is cognitively demanding because every card requires an active retrieval attempt. Sessions beyond 45 minutes often see diminishing quality. Short, frequent sessions (three 20-minute sessions spread over a day) typically outperform one long session."}},{"@type":"Question","name":"My data disappeared — where are my decks?","acceptedAnswer":{"@type":"Answer","text":"All decks are saved in your browser's localStorage under the key \"cn_flashcards.\" This means data is tied to the specific browser and device you used. Clearing browser data, using private/incognito mode, or switching browsers will remove it. To protect important decks, use the Copy All export button to paste your cards into a text file or spreadsheet for backup."}}]}]</script>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="shared/nav.css" />
   <style>
@@ -79,7 +79,7 @@
     }
     .deck-item-name { flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
     .deck-count { font-size:.7rem; color:var(--text-muted); font-weight:400; }
-    .deck-del { opacity:0; font-size:.9rem; color:var(--text-muted); transition:opacity .15s; }
+    .deck-del { opacity:0; font-size:.9rem; color:var(--text-muted); transition:opacity .15s; background:none; border:none; cursor:pointer; padding:0; }
     .deck-item:hover .deck-del { opacity:1; }
 
     .import-area textarea {
@@ -190,7 +190,7 @@
     .study-complete {
       text-align:center; padding:40px 20px;
     }
-    .study-complete h3 { font-size:1.4rem; font-weight:800; margin-bottom:8px; }
+    .study-complete-title { font-size:1.4rem; font-weight:800; margin-bottom:8px; }
     .study-complete p { color:var(--text-secondary); margin-bottom:20px; }
     .stat-pills { display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-bottom:20px; }
     .stat-pill {
@@ -248,7 +248,7 @@
         <div class="card-title">Your Decks</div>
         <div class="deck-name-row">
           <input class="input-base" id="deckNameInput" placeholder="New deck name…" maxlength="50" style="flex:1;" />
-          <button class="btn btn-purple" onclick="createDeck()">+</button>
+          <button class="btn btn-purple" onclick="createDeck()" aria-label="Create deck">+</button>
         </div>
         <div class="deck-list" id="deckList">
           <div style="color:var(--text-muted);font-size:.8rem;padding:8px 0;">No decks yet. Create one above.</div>
@@ -331,7 +331,7 @@
               <div class="progress-bar-fill" id="studyBar" style="width:0%"></div>
             </div>
 
-            <div class="flip-scene" onclick="flipCard()">
+            <div class="flip-scene" role="button" tabindex="0" aria-label="Flip card" onclick="flipCard()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();flipCard()}">
               <div class="flip-card" id="flipCard">
                 <div class="flip-face front">
                   <div class="face-label">Front</div>
@@ -352,7 +352,7 @@
 
           <div id="studyComplete" style="display:none;">
             <div class="study-complete">
-              <h3>Round Complete!</h3>
+              <p class="study-complete-title">Round Complete!</p>
               <p>Here's how you did on this deck:</p>
               <div class="stat-pills">
                 <div class="stat-pill green" id="statKnow">0 Know It</div>
@@ -578,7 +578,7 @@
         + escHtml(c.front) + '</td><td style="border:1px dashed #aaa;padding:14px 16px;width:50%;font-family:sans-serif;font-size:13px;vertical-align:top;">'
         + escHtml(c.back)  + '</td></tr>';
     }).join('');
-    var html = '<!DOCTYPE html><html><head><title>' + escHtml(deck.name) + '</title>'
+    var html = '<!DOCTYPE html><html><head><title>Flashcard Maker — Free Online Flashcard Creator | CalcNova</title>'
       + '<style>body{font-family:sans-serif;padding:20px;}table{width:100%;border-collapse:collapse;}'
       + 'th{background:#f0f0f0;padding:8px 16px;border:1px solid #aaa;text-align:left;}'
       + 'h2{margin-bottom:16px;}</style></head><body>'
@@ -675,7 +675,7 @@
       return '<div class="deck-item' + active + '" onclick="selectDeck(\'' + d.id + '\')">'
         + '<span class="deck-item-name">' + escHtml(d.name) + '</span>'
         + '<span class="deck-count">' + d.cards.length + '</span>'
-        + '<span class="deck-del" onclick="deleteDeck(\'' + d.id + '\', event)" title="Delete">✕</span>'
+        + '<button class="deck-del" onclick="deleteDeck(\'' + d.id + '\', event)" aria-label="Delete deck">✕</button>'
         + '</div>';
     }).join('');
   }

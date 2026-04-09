@@ -3,15 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Investment Return Calculator — Compound Growth & Portfolio Projections | CalcNova</title>
+  <title>Investment Return Calculator — Compound Growth | CalcNova</title>
   <meta name="description" content="Calculate investment returns with compound interest, monthly contributions, inflation adjustment, and management fees. Includes year-by-year table and growth chart." />
   <link rel="canonical" href="https://calcnova.co/investment-return-calculator.html" />
-  <meta property="og:title" content="Investment Return Calculator — Compound Growth & Portfolio Projections | CalcNova" />
+  <meta property="og:title" content="Investment Return Calculator — Compound Growth | CalcNova" />
   <meta property="og:description" content="Project investment returns with compound interest, monthly contributions, inflation, and fees. Visual chart and year-by-year breakdown." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://calcnova.co/investment-return-calculator.html" />
   <meta property="og:site_name" content="CalcNova" />
-  <script type="application/ld+json">[{"@context":"https://schema.org","@type":"WebApplication","name":"Investment Return Calculator","url":"https://calcnova.co/investment-return-calculator.html","description":"Calculate investment returns with compound interest, monthly contributions, inflation adjustment, and management fees.","applicationCategory":"FinanceApplication","operatingSystem":"Any","isPartOf":{"@type":"WebSite","name":"CalcNova","url":"https://calcnova.co/"}}]</script>
+  <script type="application/ld+json">[{"@context":"https://schema.org","@type":"WebPage","name":"Investment Return Calculator","url":"https://calcnova.co/investment-return-calculator.html","description":"Calculate investment returns with compound interest, monthly contributions, inflation adjustment, and management fees.","applicationCategory":"FinanceApplication","operatingSystem":"Any","isPartOf":{"@type":"WebSite","name":"CalcNova","url":"https://calcnova.co/"}},{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What annual return rate should I use?","acceptedAnswer":{"@type":"Answer","text":"For a diversified global stock portfolio, 7% nominal (or about 4–5% real) is a commonly used conservative estimate based on long-run historical averages. For a conservative mixed portfolio, 5–6% is more appropriate. Always model multiple scenarios — try 5%, 7%, and 9% to understand the range of outcomes."}},{"@type":"Question","name":"How does monthly contribution compounding work?","acceptedAnswer":{"@type":"Answer","text":"This calculator assumes annual compounding with monthly contributions summed yearly (PMT = monthly × 12). This is a standard approximation. The difference between monthly and annual compounding at 7% over 30 years is typically less than 3%, so this simplification doesn't materially affect projections."}},{"@type":"Question","name":"Should I factor in taxes?","acceptedAnswer":{"@type":"Answer","text":"For tax-advantaged accounts (401k, IRA, Roth IRA, ISA), this calculator's output is a good approximation of pre-tax or tax-free growth. For taxable brokerage accounts, annual dividend and capital gains taxes will reduce effective returns — the impact depends on your tax bracket and how actively you trade."}},{"@type":"Question","name":"What management fee rate should I use?","acceptedAnswer":{"@type":"Answer","text":"Broad market index funds and ETFs typically charge 0.03%–0.20% annually. Target-date retirement funds average 0.1%–0.5%. Actively managed mutual funds average 0.5%–1.5%. Financial advisors using a percentage-of-assets fee model typically charge 0.5%–1.5% on top of fund expenses."}},{"@type":"Question","name":"Is this calculator accurate for retirement planning?","acceptedAnswer":{"@type":"Answer","text":"This calculator provides a useful baseline projection but does not account for sequence-of-returns risk, variable contribution amounts, taxation, Social Security, or spending in retirement. For comprehensive retirement planning, consult a fee-only financial planner or use dedicated retirement planning software."}}]}]</script>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="shared/nav.css" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -146,27 +146,27 @@
         <label class="form-label">Initial Investment</label>
         <div class="input-wrap">
           <span class="input-prefix">$</span>
-          <input type="number" id="initial" class="form-input has-prefix" placeholder="10000" min="0" step="any" value="10000" />
+          <input type="number" id="initial" class="form-input has-prefix" placeholder="10000" min="0" step="any" value="10000" oninput="calculate()" />
         </div>
       </div>
       <div class="form-group">
         <label class="form-label">Monthly Contribution</label>
         <div class="input-wrap">
           <span class="input-prefix">$</span>
-          <input type="number" id="monthly" class="form-input has-prefix" placeholder="500" min="0" step="any" value="500" />
+          <input type="number" id="monthly" class="form-input has-prefix" placeholder="500" min="0" step="any" value="500" oninput="calculate()" />
         </div>
       </div>
       <div class="form-group">
         <label class="form-label">Annual Return Rate</label>
         <div class="input-wrap">
-          <input type="number" id="rate" class="form-input has-suffix" placeholder="7" min="0" max="100" step="any" value="7" />
+          <input type="number" id="rate" class="form-input has-suffix" placeholder="7" min="0" max="100" step="any" value="7" oninput="calculate()" />
           <span class="input-suffix">%</span>
         </div>
       </div>
       <div class="form-group">
         <label class="form-label">Investment Period</label>
         <div class="input-wrap">
-          <input type="number" id="years" class="form-input has-suffix" placeholder="30" min="1" max="100" step="1" value="30" />
+          <input type="number" id="years" class="form-input has-suffix" placeholder="30" min="1" max="100" step="1" value="30" oninput="calculate()" />
           <span class="input-suffix">yrs</span>
         </div>
       </div>
@@ -177,20 +177,16 @@
       <div class="form-group">
         <label class="form-label">Inflation Rate <span class="form-label-opt">(optional)</span></label>
         <div class="input-wrap">
-          <input type="number" id="inflation" class="form-input has-suffix" placeholder="2.5" min="0" max="50" step="any" />
+          <input type="number" id="inflation" class="form-input has-suffix" placeholder="2.5" min="0" max="50" step="any" oninput="calculate()" />
           <span class="input-suffix">%</span>
         </div>
       </div>
       <div class="form-group">
         <label class="form-label">Management Fees <span class="form-label-opt">(optional)</span></label>
         <div class="input-wrap">
-          <input type="number" id="fees" class="form-input has-suffix" placeholder="0.5" min="0" max="10" step="any" />
+          <input type="number" id="fees" class="form-input has-suffix" placeholder="0.5" min="0" max="10" step="any" oninput="calculate()" />
           <span class="input-suffix">%</span>
         </div>
-      </div>
-      <div class="form-group">
-        <label class="form-label" style="visibility:hidden;">Calculate</label>
-        <button class="calc-btn" style="margin-top:0;" onclick="calculate()">Calculate Returns</button>
       </div>
     </div>
   </div>
@@ -533,11 +529,13 @@ function calculate() {
   }
 
   document.getElementById('results-section').style.display = 'block';
-  document.getElementById('results-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 // Auto-calculate on load with defaults
 document.addEventListener('DOMContentLoaded', () => setTimeout(calculate, 100));
+
+// Redraw chart when dark mode is toggled
+document.addEventListener('calcnova:darkchanged', function() { if (growthChart) calculate(); });
 </script>
 </body>
 </html>

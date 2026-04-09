@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Body Fat Calculator — US Navy Method | CalcNova</title>
-  <meta name="description" content="Estimate your body fat percentage using the U.S. Navy circumference method. No special equipment needed — just a tape measure.">
+  <meta name="description" content="Estimate your body fat using the Navy circumference method. Just a tape measure — no equipment needed. Compare results to healthy body fat ranges by age and sex.">
   <link rel="canonical" href="https://calcnova.co/body-fat-calculator.html">
   <meta property="og:title" content="Body Fat Calculator — US Navy Method | CalcNova">
   <meta property="og:description" content="Estimate your body fat percentage using the U.S. Navy circumference method. No special equipment needed — just a tape measure.">
@@ -12,14 +12,62 @@
   <meta property="og:url" content="https://calcnova.co/body-fat-calculator.html">
   <meta property="og:site_name" content="CalcNova">
   <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "WebPage",
-    "name": "Body Fat Calculator — US Navy Method",
-    "url": "https://calcnova.co/body-fat-calculator.html",
-    "description": "Estimate your body fat percentage using the U.S. Navy circumference method.",
-    "isPartOf": { "@type": "WebSite", "name": "CalcNova", "url": "https://calcnova.co/" }
-  }
+  [
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": "Body Fat Calculator — US Navy Method",
+      "url": "https://calcnova.co/body-fat-calculator.html",
+      "description": "Estimate your body fat percentage using the U.S. Navy circumference method.",
+      "isPartOf": { "@type": "WebSite", "name": "CalcNova", "url": "https://calcnova.co/" }
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How does the US Navy body fat method work?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The US Navy circumference method estimates body fat percentage using simple body measurements. For men, it uses neck circumference and waist circumference at the navel. For women, it uses neck, waist, and hip circumferences. These measurements are entered into a logarithmic formula developed by the US Navy to produce an estimated body fat percentage without the need for specialized equipment."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What are healthy body fat ranges for men and women?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Healthy body fat ranges differ by gender. For women, essential fat is around 10–13%, athlete range is 14–20%, fitness range is 21–24%, and acceptable range is 25–31%. For men, essential fat is 2–5%, athlete range is 6–13%, fitness range is 14–17%, and acceptable range is 18–24%. Values above these ranges are generally considered overweight or obese in terms of body composition."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the difference between essential fat and storage fat?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Essential fat is the minimum amount of fat required for normal physiological function, including organ protection, hormone regulation, and insulation. It is approximately 2–5% for men and 10–13% for women. Storage fat, on the other hand, is accumulated energy reserves stored in adipose tissue. While some storage fat is normal and healthy, excess storage fat is associated with increased risk of cardiovascular disease, diabetes, and other conditions."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How accurate is the Navy method compared to a DEXA scan?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The US Navy method is a reasonable estimate for most people but is less accurate than a DEXA (dual-energy X-ray absorptiometry) scan. DEXA scans directly measure bone, muscle, and fat tissue and are considered among the most accurate methods available. The Navy method can have an error margin of roughly 3–4 percentage points compared to DEXA. It is best used as a convenient tracking tool rather than a precise diagnostic measurement."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How can I reduce my body fat percentage?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Reducing body fat percentage requires a combination of a caloric deficit through diet and regular exercise. Strength training helps preserve or build muscle mass while losing fat, which improves body composition. Cardiovascular exercise increases calorie expenditure. Prioritizing protein intake helps maintain muscle. Sustainable, gradual fat loss of 0.5–1% of body weight per week is generally recommended to minimize muscle loss."
+          }
+        }
+      ]
+    }
+  ]
   </script>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="shared/nav.css">
@@ -29,7 +77,7 @@
 
     /* ── Hero ── */
     .hero { background:var(--surface); border:1px solid var(--border); border-radius:18px; padding:38px 32px 32px; margin-bottom:28px; }
-    .hero-title { font-size:26px; font-weight:800; letter-spacing:-.5px; }
+    .hero-title { font-size:26px; font-weight:800; letter-spacing:-.5px; margin: 0; padding: 0; }
     .hero-title span { background:linear-gradient(135deg,var(--green),var(--purple)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
     .hero-desc { font-size:14px; color:var(--text-secondary); margin-top:6px; line-height:1.5; }
 
@@ -122,6 +170,17 @@
     @media print {
       #cn-header, .action-row, #toast, .calc-btn, .sex-toggle, .unit-toggle { display:none !important; }
     }
+    /* ── SEO content ── */
+    .seo-section { background: var(--surface); border: 1px solid var(--border); border-radius: 18px; padding: 28px; margin-top: 40px; }
+    .seo-section h2 { font-size: 18px; font-weight: 800; margin: 0 0 12px; letter-spacing: -.3px; }
+    .seo-section h3 { font-size: 15px; font-weight: 700; margin: 20px 0 8px; color: var(--text-primary); }
+    .seo-section p { font-size: 14px; color: var(--text-secondary); line-height: 1.75; margin: 0 0 10px; }
+    .seo-section ul { padding-left: 18px; margin: 0 0 10px; }
+    .seo-section ul li { font-size: 14px; color: var(--text-secondary); line-height: 1.65; margin-bottom: 5px; }
+    .related-links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
+    .related-links a { display: inline-flex; align-items: center; gap: 6px; background: var(--surface); border: 1px solid var(--border); border-radius: 100px; padding: 6px 14px; font-size: 13px; font-weight: 600; color: var(--text-primary); text-decoration: none; transition: border-color .15s; }
+    .related-links a:hover { border-color: var(--green); color: var(--green); }
+    @media print { .seo-section { display: none !important; } }
   </style>
 </head>
 <body>
@@ -129,7 +188,7 @@
 
   <!-- Hero -->
   <div class="hero">
-    <div class="hero-title">Body Fat <span>Calculator</span></div>
+    <h1 class="hero-title">Body Fat <span>Calculator</span></h1>
     <div class="hero-desc">Estimate your body fat percentage using the U.S. Navy circumference method — no special equipment needed, just a tape measure.</div>
   </div>
 
@@ -158,32 +217,32 @@
     <div class="input-row">
       <div class="form-group">
         <label class="form-label" for="inp-height">Height (<span class="unit-lbl-len">in</span>)</label>
-        <input type="number" id="inp-height" min="1" step="0.1" placeholder="e.g. 70">
+        <input type="number" id="inp-height" min="1" step="0.1" placeholder="e.g. 70" oninput="calculate()">
       </div>
       <div class="form-group">
         <label class="form-label" for="inp-weight">Weight (<span class="unit-lbl-wt">lbs</span>)</label>
-        <input type="number" id="inp-weight" min="1" step="0.1" placeholder="e.g. 180">
+        <input type="number" id="inp-weight" min="1" step="0.1" placeholder="e.g. 180" oninput="calculate()">
       </div>
     </div>
 
     <!-- Neck -->
     <div class="form-group">
       <label class="form-label" for="inp-neck">Neck circumference (<span class="unit-lbl-len">in</span>)</label>
-      <input type="number" id="inp-neck" min="1" step="0.1" placeholder="e.g. 15">
+      <input type="number" id="inp-neck" min="1" step="0.1" placeholder="e.g. 15" oninput="calculate()">
       <div class="form-hint">Measure just below the larynx (Adam's apple)</div>
     </div>
 
     <!-- Waist -->
     <div class="form-group">
       <label class="form-label" for="inp-waist">Waist circumference (<span class="unit-lbl-len">in</span>)</label>
-      <input type="number" id="inp-waist" min="1" step="0.1" placeholder="e.g. 34">
+      <input type="number" id="inp-waist" min="1" step="0.1" placeholder="e.g. 34" oninput="calculate()">
       <div class="form-hint" id="waist-hint">Measure at navel level</div>
     </div>
 
     <!-- Hip (women only) -->
     <div class="form-group" id="hip-group" style="display:none;">
       <label class="form-label" for="inp-hip">Hip circumference (<span class="unit-lbl-len">in</span>)</label>
-      <input type="number" id="inp-hip" min="1" step="0.1" placeholder="e.g. 40">
+      <input type="number" id="inp-hip" min="1" step="0.1" placeholder="e.g. 40" oninput="calculate()">
       <div class="form-hint">Measure at widest point of buttocks</div>
     </div>
 
@@ -195,7 +254,6 @@
       <span>⚠</span> <span id="warn-text"></span>
     </div>
 
-    <button class="calc-btn" onclick="calculate()">Calculate Body Fat</button>
   </div>
 
   <!-- Result card (hidden until calculated) -->
@@ -309,6 +367,38 @@
     </div>
   </div>
 
+  <!-- SEO content -->
+  <div class="seo-section">
+    <h2>About the US Navy Body Fat Method</h2>
+    <p>The US Navy circumference method estimates body fat percentage from simple measurements: neck circumference, waist circumference (at the navel), and hip circumference (women only). It was developed by the US Navy for fitness assessments and provides a reasonable estimate without specialized equipment.</p>
+
+    <h3>How to Take Measurements</h3>
+    <ul>
+      <li><strong>Neck:</strong> Measure below the larynx, perpendicular to the neck's long axis</li>
+      <li><strong>Waist (men):</strong> At the narrowest point, usually at the navel level</li>
+      <li><strong>Waist (women):</strong> At the narrowest point between ribs and hips</li>
+      <li><strong>Hip (women):</strong> Around the widest part of the buttocks</li>
+    </ul>
+
+    <h3>Healthy Body Fat Ranges</h3>
+    <ul>
+      <li><strong>Men:</strong> Essential fat 2–5% | Athletes 6–13% | Fitness 14–17% | Acceptable 18–24% | Obese 25%+</li>
+      <li><strong>Women:</strong> Essential fat 10–13% | Athletes 14–20% | Fitness 21–24% | Acceptable 25–31% | Obese 32%+</li>
+    </ul>
+
+    <h3>Accuracy</h3>
+    <p>The Navy method has an accuracy of roughly ±3–4% compared to DEXA scanning. It's more accurate than BMI for distinguishing lean vs. fat mass, but less accurate than hydrostatic weighing or DEXA. Use it as a tracking tool to monitor trends over time rather than as a definitive measurement.</p>
+
+    <h3>Related Calculators</h3>
+    <div class="related-links">
+      <a href="bmi-calculator.html">⚖️ BMI Calculator</a>
+      <a href="ideal-weight-calculator.html">🎯 Ideal Weight</a>
+      <a href="calorie-calculator.html">🔥 Calorie / TDEE</a>
+      <a href="macro-calculator.html">🥩 Macros</a>
+      <a href="water-intake-calculator.html">💧 Water Intake</a>
+    </div>
+  </div>
+
 </div><!-- .app -->
 
 <div id="toast"><span style="color:var(--green);font-size:15px;">✓</span> <span id="toast-msg">Copied!</span></div>
@@ -336,6 +426,7 @@
       ? 'Measure at navel level'
       : 'Measure at narrowest point';
     clearMessages();
+    calculate();
   };
 
   /* ── Unit toggle ── */
@@ -362,6 +453,7 @@
       document.getElementById('inp-hip').placeholder    = 'e.g. 102';
     }
     clearMessages();
+    calculate();
   };
 
   /* ── Helpers ── */
@@ -508,7 +600,6 @@
 
     /* Show result section */
     document.getElementById('result-section').classList.remove('hidden');
-    document.getElementById('result-section').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 
     /* Store for copy */
     lastResult = {
@@ -566,6 +657,7 @@
   /* ── Init (runs after all functions are defined) ── */
   setUnit(unit);
   setSex(sex);
+  calculate();
 
 })();
 </script>

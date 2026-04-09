@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>How Much Sleep Do You Actually Need? | CalcNova</title>
-  <meta name="description" content="Sleep recommendations by age, the science of sleep cycles, what happens when you're chronically under-slept, and practical tips to improve sleep quality.">
+  <title>How Much Sleep Do You Actually Need? A Science-Backed Guide | CalcNova</title>
+  <meta name="description" content="Discover how much sleep you really need by age, what happens during each sleep cycle, how to identify sleep debt, and science-backed strategies for better rest.">
   <link rel="canonical" href="https://calcnova.co/article-sleep.html">
-  <meta property="og:title" content="How Much Sleep Do You Actually Need? | CalcNova">
-  <meta property="og:description" content="Sleep recommendations by age, the science of sleep cycles, what happens when you're chronically under-slept, and practical tips to improve sleep quality.">
+  <meta property="og:title" content="How Much Sleep Do You Actually Need? A Science-Backed Guide | CalcNova">
+  <meta property="og:description" content="Discover how much sleep you really need by age, what happens during each sleep cycle, how to identify sleep debt, and science-backed strategies for better rest.">
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://calcnova.co/article-sleep.html">
   <meta property="og:site_name" content="CalcNova">
@@ -15,11 +15,11 @@
   [{
     "@context": "https://schema.org",
     "@type": "Article",
-    "headline": "How Much Sleep Do You Actually Need?",
-    "description": "Sleep recommendations by age, the science of sleep cycles, what happens when you're chronically under-slept, and practical tips to improve sleep quality.",
+    "headline": "How Much Sleep Do You Actually Need? A Science-Backed Guide",
+    "description": "Discover how much sleep you really need by age, what happens during each sleep cycle, how to identify sleep debt, and science-backed strategies for better rest.",
     "url": "https://calcnova.co/article-sleep.html",
-    "datePublished": "2026-04-07",
-    "dateModified": "2026-04-07",
+    "datePublished": "2026-03-21",
+    "dateModified": "2026-03-21",
     "publisher": { "@type": "Organization", "name": "CalcNova", "url": "https://calcnova.co/" },
     "isPartOf": { "@type": "WebSite", "name": "CalcNova", "url": "https://calcnova.co/" }
   }]
@@ -49,11 +49,6 @@
     .article-body a { color: var(--green); text-decoration: none; font-weight: 600; }
     .article-body a:hover { text-decoration: underline; }
     .article-body strong { color: var(--text-primary); font-weight: 700; }
-    .formula-box { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 24px 28px; text-align: center; }
-    .formula-box .formula { font-family: var(--mono); font-size: 20px; font-weight: 600; color: var(--text-primary); margin-bottom: 16px; letter-spacing: .5px; }
-    .formula-box .formula .hl { color: var(--green); }
-    .formula-box .legend { display: flex; flex-wrap: wrap; gap: 8px 20px; justify-content: center; font-size: 13px; color: var(--text-secondary); }
-    .formula-box .legend code { font-family: var(--mono); font-weight: 600; font-size: 12px; background: var(--bg); border: 1px solid var(--border); border-radius: 4px; padding: 1px 5px; }
     .card { background: var(--surface); border: 1px solid var(--border); border-radius: 18px; padding: 24px 26px; }
     .card-label { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .5px; color: var(--green); margin-bottom: 12px; }
     .card h3 { margin-top: 0; }
@@ -63,6 +58,7 @@
     .example-box p { margin-bottom: 10px; }
     .example-box .result { font-family: var(--mono); font-size: 15px; font-weight: 600; color: var(--text-primary); background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 12px 16px; margin-top: 12px; }
     .example-box .result .hl { color: var(--green); font-weight: 700; }
+    .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
     .comparison-table { width: 100%; border-collapse: collapse; font-size: 14px; margin: 12px 0; }
     .comparison-table th { text-align: left; font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: .5px; color: var(--text-muted); padding: 10px 14px; border-bottom: 2px solid var(--border); }
     .comparison-table td { padding: 10px 14px; color: var(--text-secondary); border-bottom: 1px solid var(--border); }
@@ -70,13 +66,18 @@
     .comparison-table .num { font-family: var(--mono); font-weight: 600; }
     .comparison-table .hl { color: var(--green); font-weight: 700; }
     .comparison-table .red { color: #ef4444; font-weight: 700; }
+    .cycle-diagram { display: flex; flex-direction: column; gap: 10px; }
+    .cycle-stage { display: flex; align-items: center; gap: 14px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 18px; }
+    .cycle-stage .stage-label { font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: .5px; color: var(--green); min-width: 80px; font-family: var(--mono); }
+    .cycle-stage .stage-name { font-size: 15px; font-weight: 700; color: var(--text-primary); margin-bottom: 2px; }
+    .cycle-stage .stage-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.5; }
     .cta-section { background: linear-gradient(135deg, rgba(16,185,129,.08), rgba(99,102,241,.06)); border: 1px solid rgba(16,185,129,.2); border-radius: 18px; padding: 32px; text-align: center; margin-top: 8px; }
     .cta-section h2 { font-size: 22px; margin-bottom: 10px; }
     .cta-section p { max-width: 500px; margin: 0 auto 20px; }
     .cta-btn { display: inline-flex; align-items: center; gap: 8px; background: linear-gradient(135deg, var(--green), #059669); color: #fff !important; border-radius: 100px; padding: 12px 28px; font-size: 14px; font-weight: 700; text-decoration: none !important; font-family: var(--font); transition: all .15s; box-shadow: 0 4px 14px rgba(16,185,129,.3); }
     .cta-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(16,185,129,.4); }
     @media print { body::before, header, .cn-nav, .cn-footer, .ad-slot, .cta-section { display: none !important; } .app { max-width: 100%; padding: 0; } }
-    @media (max-width: 640px) { .article-hero h1 { font-size: 28px; } .formula-box .formula { font-size: 15px; } .comparison-table { font-size: 12px; } .comparison-table th, .comparison-table td { padding: 8px 10px; } }
+    @media (max-width: 640px) { .article-hero h1 { font-size: 28px; } .cycle-stage { flex-direction: column; align-items: flex-start; gap: 6px; } .comparison-table { font-size: 12px; } .comparison-table th, .comparison-table td { padding: 8px 10px; } }
   </style>
 </head>
 <body>
@@ -84,171 +85,183 @@
     <div class="article-hero">
       <div class="article-badge">😴 Health Guide</div>
       <h1>How Much Sleep Do You <span>Actually Need?</span></h1>
-      <p class="subtitle">Most people know they should sleep 8 hours — but science tells a more nuanced story. Sleep needs vary by age, genetics, and lifestyle. Here's how to figure out what your body actually requires.</p>
-      <div class="article-meta"><span>6 min read</span><span class="dot"></span><span>Updated April 2026</span></div>
+      <p class="subtitle">Most people know sleep matters — but few understand why, or how to tell if they are genuinely getting enough. The answer is more nuanced than "eight hours," and the science behind it can reshape how you approach rest.</p>
+      <div class="article-meta"><span>6 min read</span><span class="dot"></span><span>Updated March 2026</span></div>
     </div>
     <div class="article-body">
 
-      <div>
-        <h2>Sleep Recommendations by Age Group</h2>
-        <p>The National Sleep Foundation (NSF) and the American Academy of Sleep Medicine (AASM) publish evidence-based sleep duration guidelines by age. These are the most widely cited references in sleep research, and while they represent healthy ranges rather than hard prescriptions, they provide a reliable baseline for most people.</p>
-        <p>Sleep needs are highest in infancy and early childhood, when the brain is developing most rapidly, and gradually decrease as we age — though they never drop as low as many adults assume. An adult who consistently gets by on 5–6 hours is almost certainly not operating at full capacity, even if they've adapted to feeling "normal" on that amount.</p>
+      <section>
+        <h2>Why Sleep Is Non-Negotiable</h2>
+        <p>Sleep is not passive downtime. It is when the body performs its most critical maintenance: consolidating memories, flushing metabolic waste from the brain, repairing muscle tissue, regulating hormones, and resetting the immune system. Chronic sleep deprivation is linked to increased risk of cardiovascular disease, type 2 diabetes, obesity, depression, and cognitive decline.</p>
+        <p>The impact is not subtle. Research consistently shows that sleeping fewer than 6 hours per night for two weeks produces cognitive impairment equivalent to being awake for 24 hours straight — yet sleep-deprived individuals typically underestimate how impaired they actually are. The danger is that you adapt to feeling tired and stop recognizing it as a deficit.</p>
+      </section>
 
-        <table class="comparison-table">
+      <section>
+        <h2>The Architecture of a Sleep Cycle</h2>
+        <p>Sleep is not a uniform state. Your brain cycles through distinct stages roughly every 90 minutes throughout the night. A full night of sleep contains 4–6 complete cycles, and what happens in each stage matters.</p>
+
+        <div class="cycle-diagram">
+          <div class="cycle-stage">
+            <div class="stage-label">Stage N1</div>
+            <div>
+              <div class="stage-name">Light Sleep (Transition)</div>
+              <div class="stage-desc">1–5 minutes. The bridge between wakefulness and sleep. Easy to wake from. Muscle twitches (hypnic jerks) are common here.</div>
+            </div>
+          </div>
+          <div class="cycle-stage">
+            <div class="stage-label">Stage N2</div>
+            <div>
+              <div class="stage-name">Core Sleep</div>
+              <div class="stage-desc">~25 minutes per cycle. Heart rate slows, body temperature drops. Sleep spindles help consolidate memories and block external stimuli. You spend more total time here than any other stage.</div>
+            </div>
+          </div>
+          <div class="cycle-stage">
+            <div class="stage-label">Stage N3</div>
+            <div>
+              <div class="stage-name">Deep Sleep (Slow-Wave)</div>
+              <div class="stage-desc">~20–40 minutes, mostly in early cycles. Physical restoration peaks here: tissue repair, immune function, growth hormone release. Hardest to wake from. Most refreshing sleep stage.</div>
+            </div>
+          </div>
+          <div class="cycle-stage">
+            <div class="stage-label">REM</div>
+            <div>
+              <div class="stage-name">REM Sleep (Dreaming)</div>
+              <div class="stage-desc">Increases with each cycle — early REM is short (~10 min), final cycle REM can last 60+ minutes. Critical for emotional regulation, creativity, and procedural memory. Brain activity resembles wakefulness.</div>
+            </div>
+          </div>
+        </div>
+
+        <p style="margin-top:14px;">Early cycles are dominated by deep (N3) sleep. Later cycles are dominated by REM. This is why cutting sleep short even by 90 minutes disproportionately robs you of REM sleep — you lose the tail end of the night where REM is most abundant.</p>
+      </section>
+
+      <section>
+        <h2>How Much Sleep Do You Need by Age?</h2>
+        <p>Sleep needs are not fixed for life. They shift significantly with age, reflecting changing neurological and physiological demands. The National Sleep Foundation provides the following evidence-based guidelines:</p>
+
+        <div class="table-wrap"><table class="comparison-table">
           <thead>
             <tr>
               <th>Age Group</th>
-              <th>Age Range</th>
-              <th>Recommended Hours</th>
+              <th>Recommended</th>
               <th>May Be Appropriate</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td>Newborn</td>
-              <td>0–3 months</td>
+              <td>Newborns (0–3 months)</td>
               <td class="num hl">14–17 hrs</td>
               <td class="num">11–19 hrs</td>
             </tr>
             <tr>
-              <td>Infant</td>
-              <td>4–11 months</td>
+              <td>Infants (4–11 months)</td>
               <td class="num hl">12–15 hrs</td>
               <td class="num">10–18 hrs</td>
             </tr>
             <tr>
-              <td>Toddler</td>
-              <td>1–2 years</td>
+              <td>Toddlers (1–2 years)</td>
               <td class="num hl">11–14 hrs</td>
               <td class="num">9–16 hrs</td>
             </tr>
             <tr>
-              <td>Preschool</td>
-              <td>3–5 years</td>
+              <td>Preschoolers (3–5 years)</td>
               <td class="num hl">10–13 hrs</td>
               <td class="num">8–14 hrs</td>
             </tr>
             <tr>
-              <td>School Age</td>
-              <td>6–13 years</td>
+              <td>School-age (6–13 years)</td>
               <td class="num hl">9–11 hrs</td>
               <td class="num">7–12 hrs</td>
             </tr>
             <tr>
-              <td>Teen</td>
-              <td>14–17 years</td>
+              <td>Teenagers (14–17 years)</td>
               <td class="num hl">8–10 hrs</td>
               <td class="num">7–11 hrs</td>
             </tr>
             <tr>
-              <td>Young Adult</td>
-              <td>18–25 years</td>
+              <td>Young adults (18–25 years)</td>
               <td class="num hl">7–9 hrs</td>
               <td class="num">6–11 hrs</td>
             </tr>
             <tr>
-              <td>Adult</td>
-              <td>26–64 years</td>
+              <td>Adults (26–64 years)</td>
               <td class="num hl">7–9 hrs</td>
               <td class="num">6–10 hrs</td>
             </tr>
             <tr>
-              <td>Older Adult</td>
-              <td>65+ years</td>
+              <td>Older adults (65+)</td>
               <td class="num hl">7–8 hrs</td>
               <td class="num">5–9 hrs</td>
             </tr>
           </tbody>
-        </table>
+        </table></div>
+        <p>These are population-level guidelines, not precise prescriptions. Genetics plays a real role: a small percentage of people (<3%) carry a gene variant that allows them to function optimally on 6 hours. The vast majority of people who believe they "do fine" on 6 hours are mistaken — performance and mood assessments show deficits even when subjective tiredness has adapted away.</p>
+      </section>
 
-        <p>Note that these are total sleep hours per 24-hour period — for infants and toddlers, this includes naps. Genetics also play a role: a small percentage of people (roughly 1–3%) carry variants in genes like ADRB1 that allow them to thrive on 6 hours. This is genuinely rare, however — most people who believe they're "short sleepers" are simply adapted to chronic deprivation.</p>
-      </div>
-
-      <div>
-        <h2>The Architecture of a Sleep Cycle</h2>
-        <p>Sleep is not a single uniform state. Your brain cycles through distinct stages throughout the night, each serving different biological functions. Understanding this architecture helps explain why sleep timing — not just duration — matters.</p>
-        <p>A complete sleep cycle takes approximately <strong>90 minutes</strong> and consists of four stages: three stages of non-REM (NREM) sleep and one stage of REM (Rapid Eye Movement) sleep. Most adults complete 4–6 cycles per night.</p>
-        <ul>
-          <li><strong>NREM Stage 1 (N1):</strong> Light sleep; you can be easily awakened. Lasts 1–5 minutes. Acts as the transition between wakefulness and sleep.</li>
-          <li><strong>NREM Stage 2 (N2):</strong> Heart rate slows, body temperature drops. Memory consolidation begins. Makes up roughly 50% of total sleep time.</li>
-          <li><strong>NREM Stage 3 (N3 / Slow-Wave Sleep):</strong> Deep, restorative sleep. The body repairs tissue, builds bone and muscle, and strengthens the immune system. Hardest stage to wake from.</li>
-          <li><strong>REM Sleep:</strong> Brain activity spikes. Most dreaming occurs here. Critical for emotional regulation, creativity, and memory processing.</li>
-        </ul>
-        <p>Early in the night, sleep cycles are dominated by slow-wave (deep) sleep. As the night progresses, REM periods become longer. This is why cutting sleep short by even an hour or two disproportionately reduces REM — the stage most people are already getting too little of.</p>
+      <section>
+        <h2>Understanding Sleep Debt</h2>
+        <p><strong>Sleep debt</strong> is the cumulative deficit that builds when you consistently sleep less than your body requires. Unlike a financial debt that can be discharged all at once, sleep debt is more complicated — you can partially recover from short-term deficits, but chronic sleep debt accrues physiological consequences that are not simply erased by one long weekend.</p>
 
         <div class="example-box">
-          <div class="example-title">Sleep Cycle Math</div>
-          <p>If you need to wake at <strong>6:30 AM</strong> and want to complete full sleep cycles, count back in 90-minute increments from your wake time to find ideal bedtimes.</p>
-          <p>6 cycles (9 hrs): <strong>9:30 PM</strong> &nbsp;|&nbsp; 5 cycles (7.5 hrs): <strong>11:00 PM</strong> &nbsp;|&nbsp; 4 cycles (6 hrs): <strong>12:30 AM</strong></p>
-          <div class="result">Optimal bedtime for 5 full cycles: <span class="hl">11:00 PM</span> &nbsp;&rarr;&nbsp; Wake at 6:30 AM = <span class="hl">7.5 hours</span> of sleep</div>
-        </div>
-
-        <p>Waking mid-cycle — especially from deep sleep — produces sleep inertia: the grogginess and cognitive impairment that can last 30–60 minutes. Timing your alarm to the end of a cycle can make waking significantly easier, even with the same total sleep time.</p>
-      </div>
-
-      <div>
-        <h2>What Chronic Sleep Deprivation Actually Does</h2>
-        <p>The consequences of insufficient sleep are broad and well-documented. Short-term deprivation affects mood, reaction time, and decision-making almost immediately. Chronic deprivation — defined as consistently getting less than 7 hours per night over weeks or months — carries more serious long-term health risks.</p>
-        <p>Research links chronic short sleep to:</p>
-        <ul>
-          <li><strong>Cognitive impairment:</strong> Reduced attention, working memory, and problem-solving ability — equivalent in some studies to being legally drunk after 17–19 hours awake</li>
-          <li><strong>Metabolic disruption:</strong> Increased ghrelin (hunger hormone) and decreased leptin (satiety hormone), raising appetite and risk of weight gain</li>
-          <li><strong>Cardiovascular risk:</strong> Elevated blood pressure, inflammation markers, and higher long-term risk of heart disease and stroke</li>
-          <li><strong>Immune suppression:</strong> Studies show that people who sleep fewer than 6 hours are 4x more likely to catch a cold when exposed to a virus</li>
-          <li><strong>Mental health:</strong> Strong bidirectional relationship with anxiety and depression; poor sleep worsens mood disorders and vice versa</li>
-          <li><strong>Hormonal dysregulation:</strong> Reduced testosterone and growth hormone release (both primarily occur during deep sleep)</li>
-        </ul>
-        <p>Importantly, cognitive performance declines progressively with sleep debt, but subjective sleepiness plateaus — meaning sleep-deprived people often don't feel as tired as they actually are. This makes self-assessment unreliable and underscores the value of consistent sleep schedules.</p>
-      </div>
-
-      <div>
-        <h2>Understanding Sleep Debt</h2>
-        <p><strong>Sleep debt</strong> is the cumulative deficit between how much sleep you need and how much you actually get. Miss an hour each night for five nights and you've accumulated 5 hours of sleep debt. The bad news: sleep debt is real and has measurable cognitive costs. The good news: it is partly recoverable — though it takes longer than most people think.</p>
-        <p>A common misconception is that you can fully recover from a week of poor sleep with a single long weekend. Research shows that while recovery sleep helps, it doesn't restore performance to baseline as quickly or completely as that suggests. Neuroscientist Matthew Walker's research indicates that fine motor skills and deep cognitive functions can take multiple days of adequate sleep to fully recover.</p>
-        <p>The practical implication: prevention is far more effective than recovery. Prioritizing consistent 7–9 hours nightly is worth far more than banking sleep on weekends. The concept of "catching up on sleep" is largely a myth for serious cognitive performance.</p>
-
-        <div class="formula-box">
-          <div class="formula"><span class="hl">Sleep Debt</span> = &Sigma;(Sleep Needed &minus; Sleep Obtained) over N nights</div>
-          <div class="legend">
-            <span><code>Sleep Needed</code> = your personal optimal duration (e.g., 8 hrs)</span>
-            <span><code>Sleep Obtained</code> = actual hours slept each night</span>
-            <span><code>N</code> = number of nights tracked</span>
+          <div class="example-title">Example — The Weekly Sleep Debt Calculation</div>
+          <p>You need <strong>8 hours</strong> but consistently get <strong>6.5 hours</strong> on weekdays and <strong>8.5 hours</strong> on weekends.</p>
+          <div class="result">
+            Weekday deficit: 5 × (8 − 6.5) = <span class="hl">−7.5 hrs</span><br>
+            Weekend recovery: 2 × (8.5 − 8) = <span class="hl">+1.0 hr</span><br>
+            Net weekly deficit: <span style="color:#ef4444;font-weight:700;">−6.5 hrs per week</span>
           </div>
+          <p style="margin-top:10px;">After a month, that is over 26 hours of cumulative sleep debt — the equivalent of losing more than three full nights of sleep. The two weekend hours of "recovery sleep" barely dent the deficit.</p>
         </div>
 
-        <p style="margin-top: 14px;">If you need 8 hours but average 6.5 hours over a 5-day work week, you accumulate 7.5 hours of sleep debt weekly — nearly a full night — before the weekend even begins.</p>
-      </div>
+        <p>Research from the University of Pennsylvania found that cognitive performance in those sleeping 6 hours per night for two weeks degraded to a level equivalent to total sleep deprivation — and subjects did not perceive themselves as particularly impaired. This mismatch between perceived and actual performance is one of the most consequential aspects of chronic sleep restriction.</p>
+      </section>
 
-      <div>
-        <h2>Practical Tips to Optimize Sleep Quality</h2>
-        <p>Duration matters, but so does quality. A person who spends 9 hours in bed but experiences fragmented, shallow sleep may wake more fatigued than someone who sleeps 7 solid hours. Sleep hygiene — the habits and environment surrounding sleep — directly influences sleep architecture and efficiency.</p>
-        <p>The most evidence-backed improvements center on three areas: timing consistency, environment, and pre-sleep behavior. Small changes in each can produce meaningful differences in how you feel the next day.</p>
+      <section>
+        <h2>Signs You Are Not Getting Enough Sleep</h2>
+        <p>Beyond simply feeling tired, sleep deprivation manifests in recognizable patterns. Watch for:</p>
+        <ul>
+          <li><strong>You need an alarm to wake up</strong> — a fully rested person wakes naturally near their required time</li>
+          <li><strong>You fall asleep within 5 minutes of lying down</strong> — healthy sleep onset takes 10–20 minutes; faster suggests significant debt</li>
+          <li><strong>You rely on caffeine to function</strong> — caffeine masks sleepiness without resolving the underlying deficit</li>
+          <li><strong>You are irritable or emotionally reactive</strong> — the amygdala becomes 60% more reactive to negative stimuli after one night of poor sleep</li>
+          <li><strong>You can sleep much longer on weekends</strong> — sleeping 2+ extra hours on days off signals a recurring weekday deficit</li>
+          <li><strong>You have trouble concentrating or making decisions</strong> — the prefrontal cortex is among the first areas impaired by sleep loss</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Circadian Rhythm: Your Internal Clock</h2>
+        <p>Your body runs on a roughly 24-hour internal clock called the <strong>circadian rhythm</strong>, driven primarily by light exposure. This clock regulates when you feel alert, when melatonin is released, when core body temperature dips, and when you are biologically primed for sleep. Disrupting it — through shift work, late-night screen exposure, irregular schedules, or jet lag — degrades sleep quality even when total sleep time is adequate.</p>
+        <p>The most powerful signal for setting your circadian clock is <strong>morning light exposure</strong>. Getting bright light (ideally sunlight) within 30–60 minutes of waking helps anchor your internal clock, improves sleep onset later that night, and regulates cortisol and melatonin rhythms. This is why consistent wake times — even on weekends — are more important for sleep quality than consistent bedtimes.</p>
 
         <div class="card">
-          <div class="card-label">✅ Sleep Hygiene Checklist</div>
-          <h3>Evidence-Based Tips to Sleep Better</h3>
-          <ul>
-            <li><strong>Keep a consistent schedule:</strong> Go to bed and wake up at the same time every day — including weekends. Consistency anchors your circadian rhythm.</li>
-            <li><strong>Cool your bedroom:</strong> Core body temperature must drop about 1–2°F to initiate sleep. The ideal bedroom temperature is 65–68°F (18–20°C) for most adults.</li>
-            <li><strong>Eliminate light exposure at night:</strong> Darkness triggers melatonin release. Use blackout curtains and avoid bright screens for at least 60 minutes before bed.</li>
-            <li><strong>Limit caffeine after 2 PM:</strong> Caffeine's half-life is ~5–7 hours. A 3 PM coffee still has half its stimulant effect at 8–10 PM.</li>
-            <li><strong>Avoid alcohol before bed:</strong> Alcohol may help you fall asleep faster but severely disrupts REM sleep and causes early waking.</li>
-            <li><strong>Get morning sunlight:</strong> Bright light in the first hour after waking sets your circadian clock and can improve both sleep onset and morning alertness.</li>
-            <li><strong>Reserve your bed for sleep:</strong> Avoid working or watching screens in bed. Your brain should associate bed with sleep, not stimulation.</li>
-            <li><strong>Use the 20-minute rule:</strong> If you can't fall asleep after 20 minutes, get up and do a calming activity until sleepy. Lying awake builds anxiety around the bed.</li>
-          </ul>
+          <div class="card-label">🔬 Evidence-Based Strategies</div>
+          <h3>The highest-impact habits for better sleep</h3>
+          <ol>
+            <li><strong>Consistent wake time daily.</strong> Your circadian clock responds to when you wake, not when you sleep. Anchoring your wake time stabilizes the entire sleep-wake cycle.</li>
+            <li><strong>Morning light within an hour of waking.</strong> Even 10 minutes outside on a cloudy day provides far more light signal than indoor lighting.</li>
+            <li><strong>Keep the bedroom cool.</strong> Core body temperature needs to drop 1–3°F to initiate and maintain sleep. A room between 65–68°F (18–20°C) supports this.</li>
+            <li><strong>Eliminate light during sleep.</strong> Even dim light during sleep suppresses melatonin and fragments sleep architecture. Blackout curtains or a sleep mask make a measurable difference.</li>
+            <li><strong>Avoid caffeine after noon.</strong> Caffeine's half-life is 5–7 hours. An afternoon coffee still has 50% of its stimulant effect at bedtime.</li>
+            <li><strong>Wind down 30–60 minutes before bed.</strong> The nervous system needs a transition from alert to sleep mode. A consistent pre-sleep routine is one of the strongest behavioral interventions for insomnia.</li>
+          </ol>
         </div>
-      </div>
+      </section>
+
+      <section>
+        <h2>The Optimal Time to Wake Up</h2>
+        <p>Because sleep cycles run approximately 90 minutes, waking at the end of a cycle — rather than mid-cycle — dramatically affects how refreshed you feel. Waking mid-cycle, especially during deep N3 sleep, produces <strong>sleep inertia</strong>: that groggy, disoriented feeling that can last 30–60 minutes and impair performance.</p>
+        <p>If you need to wake at 7:00 am, count back in 90-minute increments from your target wake time to find bedtimes that align with natural cycle boundaries: 11:30 pm (5 cycles = 7.5 hrs), 10:00 pm (6 cycles = 9 hrs). Our <a href="sleep-calculator.html">sleep calculator</a> automates this calculation — enter your wake time and it tells you the ideal times to fall asleep for full cycle completions.</p>
+      </section>
 
       <div class="cta-section">
-        <h2>Find Your Ideal Sleep and Wake Times</h2>
-        <p>Use our free sleep calculator to plan your bedtime around full sleep cycles — so you wake up feeling refreshed, not groggy.</p>
-        <a href="sleep-calculator.html" class="cta-btn">😴 Open Sleep Calculator</a>
+        <h2>Find Your Ideal Bedtime</h2>
+        <p>Enter your wake-up time and see exactly when to go to sleep to complete full 90-minute cycles and wake up feeling refreshed.</p>
+        <a href="sleep-calculator.html" class="cta-btn">Open Sleep Calculator →</a>
       </div>
 
     </div>
   </div>
-  <script>window.CALCNOVA_PAGE = { id: 'article-sleep', disclaimer: 'This article is for informational purposes only and does not constitute financial, medical, or professional advice.' };</script>
+  <script>window.CALCNOVA_PAGE = { id: 'article-sleep', disclaimer: 'This article is for educational and informational purposes only. It is not a substitute for professional medical advice.' };</script>
   <script src="shared/site-data.js"></script>
   <script src="shared/nav.js"></script>
 </body>

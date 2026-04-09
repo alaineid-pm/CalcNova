@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sleep Calculator — Find Your Perfect Bedtime or Wake-Up Time | CalcNova</title>
-  <meta name="description" content="Free sleep calculator: find the best bedtime or wake-up time based on 90-minute sleep cycles. Wake up refreshed — not groggy — every morning." />
+  <title>Sleep Calculator — Best Bedtime or Wake-Up Time | CalcNova</title>
+  <meta name="description" content="Free sleep calculator: find ideal bedtime or wake-up time using 90-minute sleep cycles. Align your alarm with natural sleep stages to wake up feeling refreshed." />
   <link rel="canonical" href="https://calcnova.co/sleep-calculator.html" />
-  <meta property="og:title" content="Sleep Calculator — Find Your Perfect Bedtime or Wake-Up Time | CalcNova" />
+  <meta property="og:title" content="Sleep Calculator — Best Bedtime or Wake-Up Time | CalcNova" />
   <meta property="og:description" content="Calculate optimal sleep and wake times based on natural 90-minute sleep cycles. No sign-up needed." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://calcnova.co/sleep-calculator.html" />
@@ -292,6 +292,18 @@
     @media print {
       nav, footer, .ad-slot { display: none !important; }
     }
+
+    /* ── SEO content ── */
+    .seo-section { background: var(--surface); border: 1px solid var(--border); border-radius: 18px; padding: 28px; margin-top: 40px; }
+    .seo-section h2 { font-size: 18px; font-weight: 800; margin: 0 0 12px; letter-spacing: -.3px; }
+    .seo-section h3 { font-size: 15px; font-weight: 700; margin: 20px 0 8px; color: var(--text-primary); }
+    .seo-section p { font-size: 14px; color: var(--text-secondary); line-height: 1.75; margin: 0 0 10px; }
+    .seo-section ul { padding-left: 18px; margin: 0 0 10px; }
+    .seo-section ul li { font-size: 14px; color: var(--text-secondary); line-height: 1.65; margin-bottom: 5px; }
+    .related-links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
+    .related-links a { display: inline-flex; align-items: center; gap: 6px; background: var(--surface); border: 1px solid var(--border); border-radius: 100px; padding: 6px 14px; font-size: 13px; font-weight: 600; color: var(--text-primary); text-decoration: none; transition: border-color .15s; }
+    .related-links a:hover { border-color: var(--green); color: var(--green); }
+    @media print { .seo-section { display: none !important; } }
   </style>
 </head>
 <body>
@@ -340,7 +352,6 @@
       </div>
     </div>
 
-    <button class="calc-btn" onclick="calculate()">Calculate Sleep Times</button>
   </div>
 
   <!-- RESULTS -->
@@ -415,24 +426,58 @@
 
     <h2>Frequently Asked Questions</h2>
     <div class="faq-item">
-      <div class="faq-q" onclick="toggleFaq(this)">Why are sleep cycles 90 minutes?</div>
+      <div class="faq-q" role="button" tabindex="0" onclick="toggleFaq(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleFaq(this)}">Why are sleep cycles 90 minutes?</div>
       <div class="faq-a">The 90-minute cycle is driven by the brain's ultradian rhythm — a biological oscillation controlled by interactions between sleep-promoting and wake-promoting brain regions. This rhythm appears to be conserved across humans, with individual variation of about 80–110 minutes. Using 90 minutes as the standard gives reliable results for most people most of the time.</div>
     </div>
     <div class="faq-item">
-      <div class="faq-q" onclick="toggleFaq(this)">How many sleep cycles do I need?</div>
+      <div class="faq-q" role="button" tabindex="0" onclick="toggleFaq(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleFaq(this)}">How many sleep cycles do I need?</div>
       <div class="faq-a">Most adults function best with 5 to 6 complete cycles (7.5–9 hours). Four cycles (6 hours) is manageable short-term but accumulates sleep debt. Teenagers typically need 5–7 cycles. If you regularly wake before your alarm feeling refreshed, you may be a natural short sleeper; if you always need the alarm, you may need more cycles.</div>
     </div>
     <div class="faq-item">
-      <div class="faq-q" onclick="toggleFaq(this)">Why do I wake up groggy even after 8 hours?</div>
+      <div class="faq-q" role="button" tabindex="0" onclick="toggleFaq(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleFaq(this)}">Why do I wake up groggy even after 8 hours?</div>
       <div class="faq-a">Waking mid-cycle — particularly during deep sleep — causes sleep inertia, the grogginess that can last 30–60 minutes. Eight hours of sleep that ends mid-cycle can feel worse than 7.5 hours that ends naturally between cycles. This calculator times your wake-up to land at a cycle boundary, where waking is easiest.</div>
     </div>
     <div class="faq-item">
-      <div class="faq-q" onclick="toggleFaq(this)">What happens during each sleep stage?</div>
+      <div class="faq-q" role="button" tabindex="0" onclick="toggleFaq(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleFaq(this)}">What happens during each sleep stage?</div>
       <div class="faq-a">N1 is the brief transition to sleep (1–7 min). N2 is stable core sleep with memory consolidation (10–25 min). N3 is deep slow-wave sleep critical for physical repair, immune function, and long-term memory (20–40 min, mostly early in the night). REM features rapid eye movement, vivid dreaming, and emotional memory processing (10–60 min, mostly late in the night).</div>
     </div>
     <div class="faq-item">
-      <div class="faq-q" onclick="toggleFaq(this)">Does the fall-asleep time really matter?</div>
+      <div class="faq-q" role="button" tabindex="0" onclick="toggleFaq(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleFaq(this)}">Does the fall-asleep time really matter?</div>
       <div class="faq-a">Yes. The average person takes 10–20 minutes to fall asleep. If you go to bed at 11 PM but fall asleep at 11:15, your first cycle ends at 12:45 AM — not midnight. Accounting for sleep latency makes your suggested bedtimes and wake times accurate to your actual sleep, not just the clock on your nightstand. Adjust the latency field to match your real-world experience.</div>
+    </div>
+  </div>
+
+  <!-- SEO content -->
+  <div class="seo-section">
+    <h2>How the Sleep Calculator Works</h2>
+    <p>This calculator uses 90-minute sleep cycle intervals to suggest ideal bedtimes or wake-up times. A full night of sleep consists of 4–6 complete cycles. Waking mid-cycle leaves you feeling groggy (sleep inertia); waking at the end of a cycle feels more natural and refreshed.</p>
+
+    <h3>How Many Hours of Sleep Do I Need?</h3>
+    <ul>
+      <li><strong>Adults (18–64):</strong> 7–9 hours recommended (5–6 complete cycles)</li>
+      <li><strong>Older adults (65+):</strong> 7–8 hours</li>
+      <li><strong>Teenagers (14–17):</strong> 8–10 hours</li>
+      <li><strong>School-age children:</strong> 9–11 hours</li>
+    </ul>
+
+    <h3>Why Sleep Cycles Matter</h3>
+    <p>Each 90-minute cycle moves through light sleep (N1, N2), deep slow-wave sleep (N3), and REM sleep. Deep sleep is critical for physical recovery; REM sleep is essential for memory consolidation and emotional regulation. Cutting sleep short often reduces both deep sleep and REM disproportionately.</p>
+
+    <h3>Tips for Better Sleep Timing</h3>
+    <ul>
+      <li>Allow 15 minutes to fall asleep after lying down (the calculator adds this buffer automatically)</li>
+      <li>Consistent wake times are more important than consistent bedtimes for regulating your circadian rhythm</li>
+      <li>Exposure to bright light in the morning and dim light in the evening helps align your internal clock</li>
+      <li>Avoid caffeine within 6 hours of your target bedtime</li>
+    </ul>
+
+    <h3>Related Calculators</h3>
+    <div class="related-links">
+      <a href="pomodoro.html">⏱ Pomodoro Timer</a>
+      <a href="study-timer.html">📚 Study Timer</a>
+      <a href="date-duration.html">📅 Date Duration</a>
+      <a href="bmi-calculator.html">⚖️ BMI Calculator</a>
+      <a href="water-intake-calculator.html">💧 Water Intake</a>
     </div>
   </div>
 

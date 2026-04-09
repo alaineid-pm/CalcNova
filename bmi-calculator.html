@@ -18,16 +18,64 @@
 
   <!-- Structured Data -->
   <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "WebApplication",
-    "name": "BMI Calculator",
-    "url": "https://calcnova.co/bmi-calculator.html",
-    "description": "Calculate your Body Mass Index and see your WHO weight category with a visual gauge.",
-    "applicationCategory": "HealthApplication",
-    "provider": { "@type": "Organization", "name": "CalcNova", "url": "https://calcnova.co" },
-    "offers": { "@type": "Offer", "price": "0" }
-  }
+  [
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": "BMI Calculator",
+      "url": "https://calcnova.co/bmi-calculator.html",
+      "description": "Calculate your Body Mass Index and see your WHO weight category with a visual gauge.",
+      "applicationCategory": "HealthApplication",
+      "provider": { "@type": "Organization", "name": "CalcNova", "url": "https://calcnova.co" },
+      "offers": { "@type": "Offer", "price": "0" }
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What does BMI stand for and what does it measure?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "BMI stands for Body Mass Index. It is a numerical value calculated from a person's weight and height, used as a screening tool to categorize weight status. The formula is weight (kg) divided by height (m) squared. It provides a simple, inexpensive way to assess whether a person's weight may be putting them at risk for health problems."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What are the BMI categories for adults?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The standard adult BMI categories are: Underweight (BMI below 18.5), Normal weight (BMI 18.5–24.9), Overweight (BMI 25–29.9), and Obese (BMI 30 and above). These thresholds are defined by the World Health Organization and apply to adults aged 20 and older."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is a healthy BMI for adults?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "A healthy BMI for most adults is between 18.5 and 24.9. Maintaining a BMI within this range is associated with a lower risk of chronic diseases such as type 2 diabetes, heart disease, and hypertension. However, BMI is just one indicator of health and should be considered alongside other factors."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What are the limitations of BMI?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "BMI does not account for muscle mass, bone density, body composition, or fat distribution. Athletes and highly muscular individuals may be classified as overweight or obese despite having very low body fat. Similarly, older adults may have a normal BMI but high body fat percentage. BMI also does not distinguish between abdominal fat and fat elsewhere, which matters for health risk assessment."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the difference between BMI and body fat percentage?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "BMI is a simple ratio of weight to height squared and does not directly measure fat. Body fat percentage is the actual proportion of your body weight that is fat tissue. Two people with the same BMI can have very different body fat percentages — a muscular person and a sedentary person of the same height and weight will share a BMI but differ greatly in body composition. Body fat percentage is generally considered a more accurate measure of health risk."
+          }
+        }
+      ]
+    }
+  ]
   </script>
 
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -48,7 +96,7 @@
       background:var(--surface); border:1px solid var(--border);
       border-radius:18px; padding:32px 28px 26px; margin-bottom:28px;
     }
-    .hero-title { font-size:26px; font-weight:800; letter-spacing:-.5px; }
+    .hero-title { font-size:26px; font-weight:800; letter-spacing:-.5px; margin: 0; padding: 0; }
     .hero-title span {
       background:linear-gradient(135deg,var(--green),var(--purple));
       -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
@@ -354,6 +402,17 @@
       .gauge-zones { gap:4px; }
       .gauge-zone { font-size:10px; }
     }
+    /* ── SEO content ── */
+    .seo-section { background: var(--surface); border: 1px solid var(--border); border-radius: 18px; padding: 28px; margin-top: 40px; }
+    .seo-section h2 { font-size: 18px; font-weight: 800; margin: 0 0 12px; letter-spacing: -.3px; }
+    .seo-section h3 { font-size: 15px; font-weight: 700; margin: 20px 0 8px; color: var(--text-primary); }
+    .seo-section p { font-size: 14px; color: var(--text-secondary); line-height: 1.75; margin: 0 0 10px; }
+    .seo-section ul { padding-left: 18px; margin: 0 0 10px; }
+    .seo-section ul li { font-size: 14px; color: var(--text-secondary); line-height: 1.65; margin-bottom: 5px; }
+    .related-links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
+    .related-links a { display: inline-flex; align-items: center; gap: 6px; background: var(--surface); border: 1px solid var(--border); border-radius: 100px; padding: 6px 14px; font-size: 13px; font-weight: 600; color: var(--text-primary); text-decoration: none; transition: border-color .15s; }
+    .related-links a:hover { border-color: var(--green); color: var(--green); }
+    @media print { .seo-section { display: none !important; } }
   </style>
 </head>
 <body>
@@ -362,7 +421,7 @@
   <!-- Hero -->
   <div class="hero">
     <div class="pill-badge">Instant · Private · No login</div>
-    <div class="hero-title">BMI <span>Calculator</span></div>
+    <h1 class="hero-title">BMI <span>Calculator</span></h1>
     <div class="hero-desc">Calculate your Body Mass Index, see your WHO category, and find your healthy weight range — all computed locally in your browser.</div>
     <div class="hero-formula">
       Imperial: BMI = <span class="hl">(weight_lbs × 703)</span> / height_in² &nbsp;|&nbsp;
@@ -570,6 +629,35 @@
     <div class="info-note-icon">ℹ️</div>
     <div>
       <strong>BMI has limitations.</strong> It does not account for muscle mass, bone density, age, sex, or ethnicity. Athletes may have a high BMI without excess body fat. Use this as a general guideline and consult a healthcare professional for a complete assessment.
+    </div>
+  </div>
+
+  <!-- SEO content -->
+  <div class="seo-section">
+    <h2>Understanding Your BMI Results</h2>
+    <p>Body Mass Index (BMI) is a screening measure calculated from your height and weight. It provides a quick way to categorize whether you're in a healthy weight range, but it's a population-level screening tool, not a diagnostic measure of individual health.</p>
+
+    <h3>BMI Categories (WHO Standard)</h3>
+    <ul>
+      <li><strong>Underweight:</strong> Below 18.5 — may indicate nutritional deficiency or other health issues</li>
+      <li><strong>Normal weight:</strong> 18.5–24.9 — associated with lowest risk of weight-related disease</li>
+      <li><strong>Overweight:</strong> 25.0–29.9 — increased risk of metabolic conditions</li>
+      <li><strong>Obese Class I:</strong> 30.0–34.9 &nbsp;|&nbsp; Class II: 35.0–39.9 &nbsp;|&nbsp; Class III: 40+</li>
+    </ul>
+
+    <h3>Limitations of BMI</h3>
+    <p>BMI doesn't distinguish between muscle and fat. A muscular athlete may be classified "overweight" while actually having low body fat. BMI is also less accurate for elderly individuals (who may have lost muscle mass) and for certain ethnic groups where the same BMI corresponds to different metabolic risk. For a fuller picture, combine BMI with waist circumference and body fat percentage.</p>
+
+    <h3>Healthy BMI for Adults</h3>
+    <p>For most adults, a BMI of 18.5–24.9 is considered healthy. Some research suggests 22–23 is associated with the lowest mortality risk. Asian populations may have higher metabolic risk at lower BMI values — some guidelines use 23 as the overweight threshold for Asian adults.</p>
+
+    <h3>Related Calculators</h3>
+    <div class="related-links">
+      <a href="body-fat-calculator.html">📏 Body Fat %</a>
+      <a href="ideal-weight-calculator.html">🎯 Ideal Weight</a>
+      <a href="calorie-calculator.html">🔥 Calorie / TDEE</a>
+      <a href="macro-calculator.html">🥩 Macros</a>
+      <a href="water-intake-calculator.html">💧 Water Intake</a>
     </div>
   </div>
 

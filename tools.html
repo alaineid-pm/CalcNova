@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>All Tools — Free Online Calculators | CalcNova</title>
-  <meta name="description" content="Browse all CalcNova tools: finance calculators, health & fitness tools, math utilities, and productivity tools. Free, fast, no signup required.">
+  <meta name="description" content="Browse all CalcNova tools: finance calculators, health & fitness trackers, date & time tools, education, and more — all free, no signup required.">
 
   <!-- Canonical -->
   <link rel="canonical" href="https://calcnova.co/tools.html">
@@ -23,7 +23,7 @@
     "@type": "CollectionPage",
     "name": "CalcNova Tools Directory",
     "url": "https://calcnova.co/tools.html",
-    "description": "Browse all free online calculators and tools on CalcNova — finance, health, math, and productivity.",
+    "description": "Browse all free online calculators and tools on CalcNova — finance, health, education, and more.",
     "publisher": {
       "@type": "Organization",
       "name": "CalcNova",
@@ -144,6 +144,18 @@
       .page-hero h1 { font-size: 28px; }
       .tools-grid { grid-template-columns: 1fr; }
     }
+
+    /* ── SEO content ── */
+    .seo-section { background: var(--surface); border: 1px solid var(--border); border-radius: 18px; padding: 28px; margin-top: 40px; }
+    .seo-section h2 { font-size: 18px; font-weight: 800; margin: 0 0 12px; letter-spacing: -.3px; }
+    .seo-section h3 { font-size: 15px; font-weight: 700; margin: 20px 0 8px; color: var(--text-primary); }
+    .seo-section p { font-size: 14px; color: var(--text-secondary); line-height: 1.75; margin: 0 0 10px; }
+    .seo-section ul { padding-left: 18px; margin: 0 0 10px; }
+    .seo-section ul li { font-size: 14px; color: var(--text-secondary); line-height: 1.65; margin-bottom: 5px; }
+    .related-links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
+    .related-links a { display: inline-flex; align-items: center; gap: 6px; background: var(--surface); border: 1px solid var(--border); border-radius: 100px; padding: 6px 14px; font-size: 13px; font-weight: 600; color: var(--text-primary); text-decoration: none; transition: border-color .15s; }
+    .related-links a:hover { border-color: var(--green); color: var(--green); }
+    @media print { .seo-section { display: none !important; } }
   </style>
 </head>
 <body>
@@ -153,7 +165,7 @@
   <div class="page-hero">
     <div class="page-hero-badge">🔧 All Tools</div>
     <h1>Every <span>Calculator</span></h1>
-    <p class="page-hero-desc">Free, private calculators for finance, health, math, and productivity. No account needed.</p>
+    <p class="page-hero-desc">Free, private calculators for finance, health, education, and more. No account needed.</p>
   </div>
 
   <div class="filter-bar" id="filterBar">
@@ -162,6 +174,27 @@
 
   <div id="toolsContainer"></div>
   <div class="no-results" id="noResults">No tools found for this category.</div>
+
+  <!-- SEO content -->
+  <div class="seo-section">
+    <h2>Free Online Calculators — No Signup Required</h2>
+    <p>CalcNova provides free, privacy-friendly calculators and tools for personal finance, health & fitness, education, and more. Every tool runs entirely in your browser — nothing is ever sent to a server. No accounts, no ads, no tracking.</p>
+
+    <h3>Tool Categories</h3>
+    <ul>
+      <li><strong>Finance:</strong> Compound interest, investment return, inflation, FIRE, mortgage, auto loan, debt payoff, currency converter</li>
+      <li><strong>Health & Fitness:</strong> BMI, body fat, ideal weight, calorie/TDEE, macro, water intake, pace, sleep, due date</li>
+      <li><strong>Date & Time:</strong> World clock, time zone converter, meeting planner, date duration, age calculator</li>
+      <li><strong>Tools:</strong> Pomodoro timer, invoice generator, word counter, unit converter, tip & discount calculators, password & QR code generators</li>
+      <li><strong>Education:</strong> GPA calculator, grade calculator, study timer, flashcard maker</li>
+      <li><strong>Scuba Diving:</strong> Nitrox, trimix, gas blending, SAC rate, tank duration, dive weight calculators</li>
+    </ul>
+
+    <h3>About CalcNova</h3>
+    <p>CalcNova is built on a simple principle: useful tools should be free, fast, and private. Every calculation happens in your browser with no data stored or transmitted. Whether you're planning your retirement with the FIRE calculator or checking your running pace before a race, CalcNova keeps it simple and accurate.</p>
+  </div>
+
+  <!-- nav.js injects footer here -->
 
 </div>
 

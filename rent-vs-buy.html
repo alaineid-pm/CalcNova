@@ -3,27 +3,58 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CalcNova · Rent vs. Buy Calculator</title>
-  <meta name="description" content="Free rent vs. buy calculator — compare the total wealth outcome of buying a home vs. renting and investing the difference over your time horizon. International support with region-specific defaults." />
-
-  <!-- Open Graph -->
-  <meta property="og:title" content="Rent vs. Buy Calculator · CalcNova" />
+  <title>Rent vs. Buy Calculator — Renting vs Buying | CalcNova</title>
+  <meta name="description" content="Compare the total wealth outcome of buying a home vs. renting and investing the difference. See which option leaves you wealthier based on your timeline and…" />
+  <link rel="canonical" href="https://calcnova.co/rent-vs-buy.html" />
+  <meta property="og:title" content="Rent vs. Buy Calculator — Renting vs Buying | CalcNova" />
   <meta property="og:description" content="Compare buying a home vs. renting and investing the difference. See which option leaves you wealthier after N years." />
   <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://calcnova.co/rent-vs-buy.html" />
+  <meta property="og:site_name" content="CalcNova" />
 
   <!-- JSON-LD Structured Data -->
   <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "FinancialProduct",
-    "name": "Rent vs. Buy Calculator",
-    "description": "Compare the total wealth outcome of buying a home vs. renting and investing the difference over a user-defined time horizon.",
-    "provider": {
-      "@type": "Organization",
-      "name": "CalcNova"
+  [
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": "Rent vs. Buy Calculator — Compare Renting vs Buying a Home",
+      "description": "Compare the total wealth outcome of buying a home vs. renting and investing the difference over a user-defined time horizon.",
+      "url": "https://calcnova.co/rent-vs-buy.html",
+      "isPartOf": { "@type": "WebSite", "name": "CalcNova", "url": "https://calcnova.co/" }
     },
-    "feesAndCommissionsSpecification": "Free to use, no login required."
-  }
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Is it better to rent or buy a home?",
+          "acceptedAnswer": { "@type": "Answer", "text": "It depends on your time horizon, local price-to-rent ratio, and investment returns. Generally, buying wins over 7+ years in appreciating markets; renting wins short-term or in high price-to-rent cities when the difference is invested." }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the 5% rule for rent vs. buy?",
+          "acceptedAnswer": { "@type": "Answer", "text": "The 5% rule states that your unrecoverable costs of owning (property tax ~1%, maintenance ~1%, cost of capital ~3%) are roughly 5% of the home value per year. If annual rent is less than 5% of the purchase price, renting may be more economical." }
+        },
+        {
+          "@type": "Question",
+          "name": "How does this calculator compare rent vs. buy?",
+          "acceptedAnswer": { "@type": "Answer", "text": "The calculator projects the total net wealth under each scenario: the buy scenario tracks home equity after mortgage payments and appreciation; the rent scenario tracks the invested equivalent of the down payment plus monthly savings. The scenario with higher net wealth wins." }
+        },
+        {
+          "@type": "Question",
+          "name": "What home appreciation rate should I use?",
+          "acceptedAnswer": { "@type": "Answer", "text": "US historical real estate appreciation averages 3–4% per year nominally (roughly 1–2% above inflation). Conservative analyses use 3%; optimistic ones use 5%. Local markets vary widely — check recent data for your area." }
+        },
+        {
+          "@type": "Question",
+          "name": "What investment return should I use for the rent scenario?",
+          "acceptedAnswer": { "@type": "Answer", "text": "The US stock market has returned ~7% annually after inflation over the long term. For a balanced portfolio, 5–6% is a reasonable nominal assumption. Use a conservative rate (4–5%) if your investment horizon is under 10 years." }
+        }
+      ]
+    }
+  ]
   </script>
 
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
@@ -48,7 +79,7 @@
       margin-bottom: 20px;
       display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;
     }
-    .hero-title { font-size: 26px; font-weight: 800; letter-spacing: -.5px; }
+    .hero-title { font-size: 26px; font-weight: 800; letter-spacing: -.5px; margin: 0; padding: 0; }
     .hero-title span {
       background: linear-gradient(135deg, var(--green), var(--purple));
       -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
@@ -391,6 +422,18 @@
       .verdict-amount { font-size: 22px; }
       .horizon-value { font-size: 28px; }
     }
+
+    /* ── SEO content ── */
+    .seo-section { background: var(--surface); border: 1px solid var(--border); border-radius: 18px; padding: 28px; margin-top: 40px; }
+    .seo-section h2 { font-size: 18px; font-weight: 800; margin: 0 0 12px; letter-spacing: -.3px; }
+    .seo-section h3 { font-size: 15px; font-weight: 700; margin: 20px 0 8px; color: var(--text-primary); }
+    .seo-section p { font-size: 14px; color: var(--text-secondary); line-height: 1.75; margin: 0 0 10px; }
+    .seo-section ul { padding-left: 18px; margin: 0 0 10px; }
+    .seo-section ul li { font-size: 14px; color: var(--text-secondary); line-height: 1.65; margin-bottom: 5px; }
+    .related-links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
+    .related-links a { display: inline-flex; align-items: center; gap: 6px; background: var(--surface); border: 1px solid var(--border); border-radius: 100px; padding: 6px 14px; font-size: 13px; font-weight: 600; color: var(--text-primary); text-decoration: none; transition: border-color .15s; }
+    .related-links a:hover { border-color: var(--green); color: var(--green); }
+    @media print { .seo-section { display: none !important; } }
   </style>
 </head>
 <body>
@@ -399,7 +442,7 @@
   <!-- Hero -->
   <div class="hero">
     <div>
-      <div class="hero-title">Rent vs. <span>Buy</span> Calculator</div>
+      <h1 class="hero-title">Rent vs. <span>Buy</span> Calculator</h1>
       <div class="hero-desc">Compare the total wealth outcome of buying a home vs. renting and investing the difference over your time horizon.</div>
     </div>
     <div class="pill-badge">International · Instant · Private</div>
@@ -909,6 +952,33 @@
     </div>
 
   </div><!-- /results -->
+
+  <!-- SEO content -->
+  <div class="seo-section">
+    <h2>How the Rent vs. Buy Calculator Works</h2>
+    <p>This calculator projects the total net wealth under two scenarios over your chosen time horizon: (1) buying a home and building equity, and (2) renting and investing the money you would have spent on a down payment and monthly ownership costs. The scenario with higher net worth at the end of the period is financially superior.</p>
+
+    <h3>Key Inputs Explained</h3>
+    <ul>
+      <li><strong>Home appreciation:</strong> Historical US average is 3–4% per year. Adjust for your local market.</li>
+      <li><strong>Investment return:</strong> Expected annual return if you invest the difference. US stock market long-run average: ~7% nominal.</li>
+      <li><strong>Rent growth:</strong> Rents historically grow with inflation (~3% per year nationally, higher in some cities).</li>
+      <li><strong>Maintenance cost:</strong> Budget 1–2% of home value per year for repairs and upkeep.</li>
+      <li><strong>Time horizon:</strong> Buying becomes more favorable over longer periods due to equity building and fixed mortgage payments.</li>
+    </ul>
+
+    <h3>The 5% Rule of Thumb</h3>
+    <p>A quick heuristic: calculate 5% of the home's purchase price, then divide by 12. If monthly rent for a comparable home is less than this amount, renting may be more economical. The 5% covers roughly: 1% property tax + 1% maintenance + 3% opportunity cost of capital tied up in the down payment.</p>
+
+    <h3>Related Calculators</h3>
+    <div class="related-links">
+      <a href="mortgage-calculator.html">🏠 Mortgage Calculator</a>
+      <a href="investment-return-calculator.html">💹 Investment Return</a>
+      <a href="compound-interest-calculator.html">📈 Compound Interest</a>
+      <a href="fire-calculator.html">🔥 FIRE Calculator</a>
+      <a href="inflation-calculator.html">📈 Inflation</a>
+    </div>
+  </div>
 
 </div><!-- /app -->
 
@@ -2018,7 +2088,7 @@ document.addEventListener('keydown', function(e){
 });
 
 // Expose for onclick
-window.copyResults = copyResults;
+window.copySummary = copySummary;
 
 function printPage() { window.print(); }
 

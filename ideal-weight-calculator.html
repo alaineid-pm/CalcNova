@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Ideal Weight Calculator — 4 Formula Comparison | CalcNova</title>
-  <meta name="description" content="Calculate your ideal body weight range using Devine, Robinson, Miller, and Hamwi formulas. See a range rather than a single number — all computed locally in your browser.">
+  <meta name="description" content="Calculate your ideal body weight range using Devine, Robinson, Miller, and Hamwi formulas. See a range rather than a single number — all computed locally in…">
 
   <!-- Canonical -->
   <link rel="canonical" href="https://calcnova.co/ideal-weight-calculator.html">
@@ -20,7 +20,7 @@
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@type": "WebApplication",
+    "@type": "WebPage",
     "name": "Ideal Weight Calculator",
     "url": "https://calcnova.co/ideal-weight-calculator.html",
     "description": "Find your ideal weight range based on height, age, and body frame using multiple medical formulas.",
@@ -68,7 +68,7 @@
       background: var(--surface); border: 1px solid var(--border);
       border-radius: 18px; padding: 38px 32px 32px; margin-bottom: 28px;
     }
-    .hero-title { font-size: 26px; font-weight: 800; letter-spacing: -.5px; }
+    .hero-title { font-size: 26px; font-weight: 800; letter-spacing: -.5px; margin: 0; padding: 0; }
     .hero-title span {
       background: linear-gradient(135deg, var(--green), var(--purple));
       -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
@@ -387,6 +387,18 @@
     @media (max-width: 380px) {
       .result-range { font-size: 24px; }
     }
+
+    /* ── SEO content ── */
+    .seo-section { background: var(--surface); border: 1px solid var(--border); border-radius: 18px; padding: 28px; margin-top: 40px; }
+    .seo-section h2 { font-size: 18px; font-weight: 800; margin: 0 0 12px; letter-spacing: -.3px; }
+    .seo-section h3 { font-size: 15px; font-weight: 700; margin: 20px 0 8px; color: var(--text-primary); }
+    .seo-section p { font-size: 14px; color: var(--text-secondary); line-height: 1.75; margin: 0 0 10px; }
+    .seo-section ul { padding-left: 18px; margin: 0 0 10px; }
+    .seo-section ul li { font-size: 14px; color: var(--text-secondary); line-height: 1.65; margin-bottom: 5px; }
+    .related-links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
+    .related-links a { display: inline-flex; align-items: center; gap: 6px; background: var(--surface); border: 1px solid var(--border); border-radius: 100px; padding: 6px 14px; font-size: 13px; font-weight: 600; color: var(--text-primary); text-decoration: none; transition: border-color .15s; }
+    .related-links a:hover { border-color: var(--green); color: var(--green); }
+    @media print { .seo-section { display: none !important; } }
   </style>
 </head>
 <body>
@@ -395,7 +407,7 @@
   <!-- Hero -->
   <div class="hero">
     <div class="pill-badge">4 Formulas · Live · Private</div>
-    <div class="hero-title">Ideal Weight <span>Calculator</span></div>
+    <h1 class="hero-title">Ideal Weight <span>Calculator</span></h1>
     <div class="hero-desc">Compare four evidence-based formulas — Devine, Robinson, Miller, and Hamwi — plus the BMI healthy range. See a weight <em>range</em>, not just a single number.</div>
     <div class="hero-formulas">
       <span class="hero-formula-chip">Devine (1974): <span class="hl">50 + 2.3×(in−60)</span></span>
@@ -613,6 +625,32 @@
     <div class="info-note-icon">📊</div>
     <div>
       These formulas are based on population averages. Body composition, muscle mass, and frame size are <strong>not accounted for</strong>. Use these as general guidelines only, and consult a healthcare professional before making changes to your diet or exercise routine.
+    </div>
+  </div>
+
+  <!-- SEO content -->
+  <div class="seo-section">
+    <h2>About Ideal Weight Calculations</h2>
+    <p>The Ideal Weight Calculator compares four well-known formulas side-by-side: Devine (1974), Robinson (1983), Miller (1983), and Hamwi (1964). Each was developed for different medical purposes, so they produce slightly different results. No single formula is universally correct — they provide useful reference ranges rather than exact targets.</p>
+
+    <h3>The Four Formulas Explained</h3>
+    <ul>
+      <li><strong>Devine:</strong> Developed for medication dosing in clinical settings; most commonly used in medicine</li>
+      <li><strong>Robinson:</strong> A revision of the Devine formula based on actuarial data; tends to give slightly lower values</li>
+      <li><strong>Miller:</strong> Based on insurance data; tends to give the lowest ideal weight of the four formulas</li>
+      <li><strong>Hamwi:</strong> A simple rule-of-thumb formula widely taught in nursing; uses a base weight plus a per-inch increment</li>
+    </ul>
+
+    <h3>Limitations of Ideal Weight</h3>
+    <p>These formulas were derived from population studies and don't account for body composition. A person with a high muscle mass might be above the "ideal weight" range but have excellent health markers. BMI, body fat percentage, and waist-to-height ratio together give a more complete picture than any single number.</p>
+
+    <h3>Related Calculators</h3>
+    <div class="related-links">
+      <a href="bmi-calculator.html">⚖️ BMI Calculator</a>
+      <a href="body-fat-calculator.html">📏 Body Fat</a>
+      <a href="calorie-calculator.html">🔥 Calorie / TDEE</a>
+      <a href="macro-calculator.html">🥩 Macros</a>
+      <a href="water-intake-calculator.html">💧 Water Intake</a>
     </div>
   </div>
 

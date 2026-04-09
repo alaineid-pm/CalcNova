@@ -4,10 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Due Date Calculator | CalcNova</title>
-  <meta name="description" content="Calculate your pregnancy due date using LMP, conception date, or IVF transfer date. See your current week, trimester, and key milestone dates." />
+  <meta name="description" content="Calculate your pregnancy due date using LMP, conception date, or IVF transfer date. View trimester dates, key milestones, and your estimated delivery window." />
   <link rel="canonical" href="https://calcnova.co/due-date-calculator.html" />
   <meta property="og:title" content="Pregnancy Due Date Calculator | CalcNova" /><meta property="og:description" content="Calculate your estimated due date using LMP, conception date, or IVF transfer. See milestones, trimester progress, and countdown." /><meta property="og:type" content="website" /><meta property="og:url" content="https://calcnova.co/due-date-calculator.html" /><meta property="og:site_name" content="CalcNova" />
-  <script type="application/ld+json">[{"@context":"https://schema.org","@type":"WebApplication","name":"Pregnancy Due Date Calculator","url":"https://calcnova.co/due-date-calculator.html","description":"Calculate your estimated due date using LMP, conception date, or IVF transfer date. See trimester progress and key milestones.","applicationCategory":"UtilityApplication","operatingSystem":"Any","isPartOf":{"@type":"WebSite","name":"CalcNova","url":"https://calcnova.co/"}}]</script>
+  <script type="application/ld+json">[{"@context":"https://schema.org","@type":"WebPage","name":"Pregnancy Due Date Calculator","url":"https://calcnova.co/due-date-calculator.html","description":"Calculate your estimated due date using LMP, conception date, or IVF transfer date. See trimester progress and key milestones.","applicationCategory":"UtilityApplication","operatingSystem":"Any","isPartOf":{"@type":"WebSite","name":"CalcNova","url":"https://calcnova.co/"}},{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How accurate is this due date calculator?","acceptedAnswer":{"@type":"Answer","text":"This calculator uses the same Naegele's rule formula used in clinical practice. For women with a regular 28-day cycle, it is as accurate as any LMP-based calculation. However, LMP-based due dates carry an inherent uncertainty of about ±2 weeks because ovulation timing varies. A first-trimester ultrasound provides a more precise estimate. Consider the date produced here as a working estimate until confirmed by your healthcare provider."}},{"@type":"Question","name":"What if I don't know my last period date?","acceptedAnswer":{"@type":"Answer","text":"If you are unsure of your LMP, try the conception date method if you tracked ovulation, or use an estimated LMP based on when you think your last period started. If you have had an early ultrasound, your provider will have assigned a gestational age from which you can back-calculate the LMP equivalent. When in doubt, an ultrasound scan is the most reliable dating method."}},{"@type":"Question","name":"Does cycle length really affect the due date?","acceptedAnswer":{"@type":"Answer","text":"Yes. Naegele's rule assumes a 28-day cycle with ovulation on day 14. If your cycle is 35 days, ovulation likely occurs around day 21 — 7 days later than assumed. This means conception happened 7 days later, and the due date should be shifted forward by 7 days. This calculator automatically applies this adjustment. For very irregular cycles, ultrasound dating is more reliable than any formula."}},{"@type":"Question","name":"What is the difference between gestational age and fetal age?","acceptedAnswer":{"@type":"Answer","text":"Gestational age (or menstrual age) is counted from the first day of your last menstrual period — this is the standard used by healthcare providers. Fetal age (or conceptual age) is counted from fertilisation, which is approximately 2 weeks after the LMP. So at 10 weeks gestational age, the fetus is about 8 weeks old in terms of development. Healthcare providers always use gestational age."}},{"@type":"Question","name":"What does \"full term\" mean?","acceptedAnswer":{"@type":"Answer","text":"Full term now refers specifically to 39 weeks 0 days through 40 weeks 6 days. The terminology was updated by ACOG to reflect research showing better outcomes for babies born in this window. Births at 37–38 weeks 6 days are classified as \"early term,\" 39–40 weeks 6 days as \"full term,\" 41 weeks 0 days to 41 weeks 6 days as \"late term,\" and 42 weeks or beyond as \"post-term.\""}}]}]</script>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="shared/nav.css" />
   <style>
@@ -191,15 +191,14 @@
     <div class="form-row">
       <div class="form-group">
         <label id="dateLabel">Date of Last Menstrual Period</label>
-        <input type="date" id="mainDate" />
+        <input type="date" id="mainDate" onchange="calculate()" />
       </div>
       <div class="form-group" id="cycleGroup">
         <label>Cycle Length (days)</label>
-        <input type="number" id="cycleLength" value="28" min="20" max="45" />
+        <input type="number" id="cycleLength" value="28" min="20" max="45" oninput="calculate()" />
       </div>
     </div>
 
-    <button class="calc-btn" onclick="calculate()">Calculate Due Date</button>
   </div>
 
   <div id="results">
@@ -293,32 +292,32 @@
     <h2 style="margin-top:40px;">Frequently Asked Questions</h2>
 
     <div class="faq-item">
-      <div class="faq-q" onclick="toggleFaq(this)">How accurate is this due date calculator? <span class="arrow">▼</span></div>
+      <div class="faq-q" role="button" tabindex="0" onclick="toggleFaq(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleFaq(this)}">How accurate is this due date calculator? <span class="arrow">▼</span></div>
       <div class="faq-a">This calculator uses the same Naegele's rule formula used in clinical practice. For women with a regular 28-day cycle, it is as accurate as any LMP-based calculation. However, LMP-based due dates carry an inherent uncertainty of about ±2 weeks because ovulation timing varies. A first-trimester ultrasound provides a more precise estimate. Consider the date produced here as a working estimate until confirmed by your healthcare provider.</div>
     </div>
 
     <div class="faq-item">
-      <div class="faq-q" onclick="toggleFaq(this)">What if I don't know my last period date? <span class="arrow">▼</span></div>
+      <div class="faq-q" role="button" tabindex="0" onclick="toggleFaq(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleFaq(this)}">What if I don't know my last period date? <span class="arrow">▼</span></div>
       <div class="faq-a">If you are unsure of your LMP, try the conception date method if you tracked ovulation, or use an estimated LMP based on when you think your last period started. If you have had an early ultrasound, your provider will have assigned a gestational age from which you can back-calculate the LMP equivalent. When in doubt, an ultrasound scan is the most reliable dating method.</div>
     </div>
 
     <div class="faq-item">
-      <div class="faq-q" onclick="toggleFaq(this)">Does cycle length really affect the due date? <span class="arrow">▼</span></div>
+      <div class="faq-q" role="button" tabindex="0" onclick="toggleFaq(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleFaq(this)}">Does cycle length really affect the due date? <span class="arrow">▼</span></div>
       <div class="faq-a">Yes. Naegele's rule assumes a 28-day cycle with ovulation on day 14. If your cycle is 35 days, ovulation likely occurs around day 21 — 7 days later than assumed. This means conception happened 7 days later, and the due date should be shifted forward by 7 days. This calculator automatically applies this adjustment. For very irregular cycles, ultrasound dating is more reliable than any formula.</div>
     </div>
 
     <div class="faq-item">
-      <div class="faq-q" onclick="toggleFaq(this)">What is the difference between gestational age and fetal age? <span class="arrow">▼</span></div>
+      <div class="faq-q" role="button" tabindex="0" onclick="toggleFaq(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleFaq(this)}">What is the difference between gestational age and fetal age? <span class="arrow">▼</span></div>
       <div class="faq-a">Gestational age (or menstrual age) is counted from the first day of your last menstrual period — this is the standard used by healthcare providers. Fetal age (or conceptual age) is counted from fertilisation, which is approximately 2 weeks after the LMP. So at 10 weeks gestational age, the fetus is about 8 weeks old in terms of development. Healthcare providers always use gestational age, so when discussing weeks with your doctor, they mean gestational weeks.</div>
     </div>
 
     <div class="faq-item">
-      <div class="faq-q" onclick="toggleFaq(this)">What does "full term" mean? <span class="arrow">▼</span></div>
+      <div class="faq-q" role="button" tabindex="0" onclick="toggleFaq(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleFaq(this)}">What does "full term" mean? <span class="arrow">▼</span></div>
       <div class="faq-a">Full term now refers specifically to 39 weeks 0 days through 40 weeks 6 days. The terminology was updated by the American College of Obstetricians and Gynecologists (ACOG) to reflect research showing better outcomes for babies born in this window. Births at 37–38 weeks 6 days are now classified as "early term," 39–40 weeks 6 days as "full term," 41 weeks 0 days to 41 weeks 6 days as "late term," and 42 weeks or beyond as "post-term."</div>
     </div>
 
     <div class="faq-item">
-      <div class="faq-q" onclick="toggleFaq(this)">Can twins have a different due date calculation? <span class="arrow">▼</span></div>
+      <div class="faq-q" role="button" tabindex="0" onclick="toggleFaq(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleFaq(this)}">Can twins have a different due date calculation? <span class="arrow">▼</span></div>
       <div class="faq-a">The LMP-based due date calculation is the same regardless of whether you are carrying one baby or multiples. However, twin and higher-order pregnancies are typically delivered earlier than singleton pregnancies. Uncomplicated dichorionic-diamniotic (DCDA) twins are generally offered delivery at 37 weeks; monochorionic-diamniotic (MCDA) twins at 36 weeks; and monochorionic-monoamniotic (MCMA) twins even earlier. Your provider will set a personalised plan based on your specific situation.</div>
     </div>
 
@@ -383,7 +382,7 @@ function getStarSign(date) {
 
 function calculate() {
   const dateVal = document.getElementById('mainDate').value;
-  if (!dateVal) { alert('Please enter a date.'); return; }
+  if (!dateVal) return;
 
   const inputDate = new Date(dateVal + 'T00:00:00');
   const method = document.querySelector('input[name="method"]:checked').value;
@@ -464,7 +463,6 @@ function calculate() {
   });
 
   document.getElementById('results').style.display = 'block';
-  document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 function toggleFaq(el) {

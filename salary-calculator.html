@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Salary Calculator — Hourly to Annual Pay Converter | CalcNova</title>
-  <meta name="description" content="Convert between annual salary, monthly, biweekly, weekly, daily, and hourly pay. Free salary calculator with tax estimate. No sign-up required.">
+  <title>Salary Calculator — Hourly, Weekly & Annual Pay | CalcNova</title>
+  <meta name="description" content="Convert annual salary to hourly, monthly, weekly, and biweekly pay — or work backward from hourly rate. Handles part-time hours and custom work weeks.">
 
   <!-- Canonical -->
   <link rel="canonical" href="https://calcnova.co/salary-calculator.html">
 
   <!-- Open Graph -->
-  <meta property="og:title" content="Salary Calculator — Hourly to Annual Pay Converter | CalcNova">
+  <meta property="og:title" content="Salary Calculator — Hourly, Weekly & Annual Pay | CalcNova">
   <meta property="og:description" content="Convert between annual salary, monthly, biweekly, weekly, daily, and hourly pay. Free salary calculator with tax estimate.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://calcnova.co/salary-calculator.html">
@@ -110,7 +110,7 @@
       padding: 38px 32px 32px;
       margin-bottom: 28px;
     }
-    .hero-title { font-size: 26px; font-weight: 800; letter-spacing: -.5px; }
+    .hero-title { font-size: 26px; font-weight: 800; letter-spacing: -.5px; margin: 0; padding: 0; }
     .hero-title span {
       background: linear-gradient(135deg, var(--green), var(--purple));
       -webkit-background-clip: text;
@@ -465,6 +465,18 @@
       .card { box-shadow: none; border: 1px solid #ddd; }
     }
 
+    /* ── SEO content ── */
+    .seo-section { background: var(--surface); border: 1px solid var(--border); border-radius: 18px; padding: 28px; margin-top: 40px; }
+    .seo-section h2 { font-size: 18px; font-weight: 800; margin: 0 0 12px; letter-spacing: -.3px; }
+    .seo-section h3 { font-size: 15px; font-weight: 700; margin: 20px 0 8px; color: var(--text-primary); }
+    .seo-section p { font-size: 14px; color: var(--text-secondary); line-height: 1.75; margin: 0 0 10px; }
+    .seo-section ul { padding-left: 18px; margin: 0 0 10px; }
+    .seo-section ul li { font-size: 14px; color: var(--text-secondary); line-height: 1.65; margin-bottom: 5px; }
+    .related-links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
+    .related-links a { display: inline-flex; align-items: center; gap: 6px; background: var(--surface); border: 1px solid var(--border); border-radius: 100px; padding: 6px 14px; font-size: 13px; font-weight: 600; color: var(--text-primary); text-decoration: none; transition: border-color .15s; }
+    .related-links a:hover { border-color: var(--green); color: var(--green); }
+    @media print { .seo-section { display: none !important; } }
+
     /* ── RESPONSIVE ── */
     @media (max-width: 640px) {
       .hero { padding: 24px 18px; }
@@ -484,7 +496,7 @@
 
   <!-- HERO -->
   <div class="hero">
-    <div class="hero-title">Salary &amp; <span>Pay Converter</span></div>
+    <h1 class="hero-title">Salary &amp; <span>Pay Converter</span></h1>
     <div class="hero-desc">Convert between hourly, daily, weekly, biweekly, monthly, and annual pay — instantly. Add a tax rate to see your take-home pay at every period.</div>
   </div>
 
@@ -683,6 +695,38 @@
         By default, a full year is 52 weeks. If you take unpaid time off — for example, 2 weeks of unpaid leave — you would set weeks per year to 50. This affects the annual total for hourly workers who are only paid when they work. Salaried employees typically receive the same annual amount regardless of time off.
       </div>
     </details>
+  </div>
+
+  <!-- SEO content -->
+  <div class="seo-section">
+    <h2>How to Use the Salary Calculator</h2>
+    <p>Enter your pay amount, select your pay period (hourly, weekly, biweekly, monthly, or annual), and set your hours per week and weeks per year. The calculator instantly converts your pay to every period. Add a tax rate to see take-home estimates.</p>
+
+    <h3>Understanding Pay Periods</h3>
+    <ul>
+      <li><strong>Annual:</strong> Total gross compensation for the year — the number on your offer letter.</li>
+      <li><strong>Monthly:</strong> Annual ÷ 12. Most budgets are built around monthly cash flow.</li>
+      <li><strong>Biweekly:</strong> Annual ÷ 26. The most common US payroll schedule — 26 paychecks per year.</li>
+      <li><strong>Weekly:</strong> Annual ÷ 52. Common for hourly workers paid each Friday.</li>
+      <li><strong>Hourly:</strong> Annual ÷ weeks per year ÷ hours per week. The base unit for hourly employment.</li>
+    </ul>
+
+    <h3>Hourly to Salary Conversion Tips</h3>
+    <ul>
+      <li>A quick rule: multiply your hourly rate by 2,000 (40 hrs × 50 weeks) for an approximate annual salary</li>
+      <li>$15/hr ≈ $31,200/yr | $20/hr ≈ $41,600/yr | $25/hr ≈ $52,000/yr | $50/hr ≈ $104,000/yr</li>
+      <li>For salaried workers, divide annual by 2,080 (40 hrs × 52 weeks) to find the hourly equivalent</li>
+      <li>Adjust weeks per year if you take unpaid leave — e.g., 50 weeks if you take 2 weeks unpaid</li>
+    </ul>
+
+    <h3>Related Calculators</h3>
+    <div class="related-links">
+      <a href="tax-bracket-calculator.html">🧾 Tax Brackets</a>
+      <a href="budget-calculator.html">💰 Budget</a>
+      <a href="inflation-calculator.html">📈 Inflation</a>
+      <a href="percentage-calculator.html">% Percentage</a>
+      <a href="fire-calculator.html">🔥 FIRE Calculator</a>
+    </div>
   </div>
 
 </div><!-- /.app -->

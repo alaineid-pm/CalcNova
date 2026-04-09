@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Auto Loan Calculator — Monthly Payment & Total Cost | CalcNova</title>
-  <meta name="description" content="Free auto loan calculator: enter vehicle price, down payment, trade-in, and APR to see your monthly payment, total interest, and full amortization schedule instantly." />
+  <title>Auto Loan Calculator — Monthly Payment & Cost | CalcNova</title>
+  <meta name="description" content="Free auto loan calculator: enter vehicle price, down payment, trade-in, and APR to see your monthly payment, total interest, and full amortization schedule…" />
   <link rel="canonical" href="https://calcnova.co/auto-loan-calculator.html" />
-  <meta property="og:title" content="Auto Loan Calculator — Monthly Payment & Total Cost | CalcNova" />
+  <meta property="og:title" content="Auto Loan Calculator — Monthly Payment & Cost | CalcNova" />
   <meta property="og:description" content="Calculate your monthly car payment, total interest paid, and full amortization schedule. Includes trade-in value and sales tax. No sign-up needed." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://calcnova.co/auto-loan-calculator.html" />
@@ -15,7 +15,7 @@
   [
     {
       "@context": "https://schema.org",
-      "@type": "WebApplication",
+      "@type": "WebPage",
       "name": "Auto Loan Calculator",
       "url": "https://calcnova.co/auto-loan-calculator.html",
       "description": "Calculate monthly auto loan payments, total interest, and amortization schedule with trade-in and sales tax.",
@@ -321,6 +321,18 @@
     @media print {
       nav, footer, .ad-slot, .action-row { display: none !important; }
     }
+
+    /* ── SEO content ── */
+    .seo-section { background: var(--surface); border: 1px solid var(--border); border-radius: 18px; padding: 28px; margin-top: 40px; }
+    .seo-section h2 { font-size: 18px; font-weight: 800; margin: 0 0 12px; letter-spacing: -.3px; }
+    .seo-section h3 { font-size: 15px; font-weight: 700; margin: 20px 0 8px; color: var(--text-primary); }
+    .seo-section p { font-size: 14px; color: var(--text-secondary); line-height: 1.75; margin: 0 0 10px; }
+    .seo-section ul { padding-left: 18px; margin: 0 0 10px; }
+    .seo-section ul li { font-size: 14px; color: var(--text-secondary); line-height: 1.65; margin-bottom: 5px; }
+    .related-links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
+    .related-links a { display: inline-flex; align-items: center; gap: 6px; background: var(--surface); border: 1px solid var(--border); border-radius: 100px; padding: 6px 14px; font-size: 13px; font-weight: 600; color: var(--text-primary); text-decoration: none; transition: border-color .15s; }
+    .related-links a:hover { border-color: var(--green); color: var(--green); }
+    @media print { .seo-section { display: none !important; } }
   </style>
 </head>
 <body>
@@ -551,24 +563,55 @@
 
     <h2>Frequently Asked Questions</h2>
     <div class="faq-item">
-      <div class="faq-q" onclick="toggleFaq(this)">How is my monthly car payment calculated?</div>
+      <div class="faq-q" role="button" tabindex="0" onclick="toggleFaq(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleFaq(this)}">How is my monthly car payment calculated?</div>
       <div class="faq-a">Your monthly payment uses the standard amortization formula: M = L × [r(1+r)^n] / [(1+r)^n − 1], where L is the loan amount, r is the monthly rate (APR ÷ 12 ÷ 100), and n is the term in months. This ensures your loan is fully paid off with the final payment, with each installment covering both interest and principal.</div>
     </div>
     <div class="faq-item">
-      <div class="faq-q" onclick="toggleFaq(this)">Should I roll sales tax into my auto loan?</div>
+      <div class="faq-q" role="button" tabindex="0" onclick="toggleFaq(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleFaq(this)}">Should I roll sales tax into my auto loan?</div>
       <div class="faq-a">Rolling sales tax into the loan is convenient but means you'll pay interest on that amount for the entire loan term. On $2,500 of tax at 7% for 60 months, you'd pay about $463 extra in interest. If you can afford to pay tax upfront at signing, it saves money. If cash is tight, financing the tax is a reasonable choice.</div>
     </div>
     <div class="faq-item">
-      <div class="faq-q" onclick="toggleFaq(this)">What is a good APR for a car loan?</div>
+      <div class="faq-q" role="button" tabindex="0" onclick="toggleFaq(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleFaq(this)}">What is a good APR for a car loan?</div>
       <div class="faq-a">For borrowers with excellent credit (750+ FICO), good new-car rates are typically below 6% and used-car rates below 9%. Average rates in 2025 are 7–10% for new cars and 10–14% for used. Credit unions usually offer lower rates than banks or dealer financing. Always shop at least 3 lenders before accepting any loan offer.</div>
     </div>
     <div class="faq-item">
-      <div class="faq-q" onclick="toggleFaq(this)">How much does a longer loan term actually cost?</div>
+      <div class="faq-q" role="button" tabindex="0" onclick="toggleFaq(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleFaq(this)}">How much does a longer loan term actually cost?</div>
       <div class="faq-a">On a $25,000 loan at 7% APR: a 48-month term costs $3,705 in total interest; a 60-month term costs $4,752; a 72-month term costs $5,724; and an 84-month term costs $6,704. The 84-month loan is nearly $3,000 more expensive than the 48-month loan — purely in interest on the same car purchase.</div>
     </div>
     <div class="faq-item">
-      <div class="faq-q" onclick="toggleFaq(this)">Is it better to make a larger down payment?</div>
+      <div class="faq-q" role="button" tabindex="0" onclick="toggleFaq(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleFaq(this)}">Is it better to make a larger down payment?</div>
       <div class="faq-a">Yes, in almost every case. A larger down payment reduces your loan principal, which lowers both monthly payments and total interest. It also reduces the risk of being "underwater" (owing more than the car's value due to depreciation). A common guideline is 20% down for new cars and 10% for used. Even an extra $1,000 upfront can save several hundred dollars in interest over the life of the loan.</div>
+    </div>
+  </div>
+
+  <!-- SEO content -->
+  <div class="seo-section">
+    <h2>How to Use the Auto Loan Calculator</h2>
+    <p>Enter the vehicle price, down payment, trade-in value, sales tax rate, loan term, and APR to see your monthly payment, total cost, and total interest paid. The calculator automatically deducts your down payment and trade-in from the financed amount.</p>
+
+    <h3>Understanding Auto Loan Costs</h3>
+    <ul>
+      <li><strong>Monthly payment:</strong> Principal + interest divided over the loan term. A longer term lowers monthly payments but increases total interest.</li>
+      <li><strong>Total interest paid:</strong> The extra cost of borrowing. On a $30,000 loan at 7% APR over 60 months, you'll pay ~$5,600 in interest.</li>
+      <li><strong>APR vs. interest rate:</strong> APR includes fees; it's the true cost of the loan. Always compare APRs when shopping lenders.</li>
+    </ul>
+
+    <h3>Tips to Get the Best Auto Loan Rate</h3>
+    <ul>
+      <li>Check your credit score before applying — scores above 720 typically qualify for the best rates</li>
+      <li>Get pre-approved by your bank or credit union before visiting the dealership</li>
+      <li>A larger down payment (20%+) reduces the loan amount and may unlock better rates</li>
+      <li>Shorter loan terms (36–48 months) have lower interest rates than 72–84 month terms</li>
+      <li>Avoid financing add-ons (warranties, GAP insurance) into the loan — pay cash or skip them</li>
+    </ul>
+
+    <h3>Related Calculators</h3>
+    <div class="related-links">
+      <a href="mortgage-calculator.html">🏠 Mortgage Calculator</a>
+      <a href="percentage-calculator.html">% Percentage</a>
+      <a href="inflation-calculator.html">📈 Inflation</a>
+      <a href="investment-return-calculator.html">💹 Investment Return</a>
+      <a href="debt-payoff.html">💳 Debt Payoff</a>
     </div>
   </div>
 
@@ -767,6 +810,9 @@ function copyResults() {
 
 // Auto-calculate on load
 calculate();
+
+// Redraw chart when dark mode is toggled
+document.addEventListener('calcnova:darkchanged', function() { if (pieChart) calculate(); });
 </script>
 </body>
 </html>

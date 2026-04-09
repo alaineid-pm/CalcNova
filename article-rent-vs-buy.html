@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Rent vs. Buy: How to Decide If You Should Buy a Home | CalcNova</title>
+  <title>Rent vs. Buy: How to Decide If You Should Buy | CalcNova</title>
   <meta name="description" content="Should you rent or buy? Learn the 5% rule, unrecoverable costs, and the math of renting and investing the difference to make a smarter housing decision.">
   <link rel="canonical" href="https://calcnova.co/article-rent-vs-buy.html">
-  <meta property="og:title" content="Rent vs. Buy: How to Decide If You Should Buy a Home | CalcNova">
+  <meta property="og:title" content="Rent vs. Buy: How to Decide If You Should Buy | CalcNova">
   <meta property="og:description" content="Should you rent or buy? Learn the 5% rule, unrecoverable costs, and the math of renting and investing the difference to make a smarter housing decision.">
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://calcnova.co/article-rent-vs-buy.html">
@@ -63,6 +63,7 @@
     .example-box p { margin-bottom: 10px; }
     .example-box .result { font-family: var(--mono); font-size: 15px; font-weight: 600; color: var(--text-primary); background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 12px 16px; margin-top: 12px; }
     .example-box .result .hl { color: var(--green); font-weight: 700; }
+    .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
     .comparison-table { width: 100%; border-collapse: collapse; font-size: 14px; margin: 12px 0; }
     .comparison-table th { text-align: left; font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: .5px; color: var(--text-muted); padding: 10px 14px; border-bottom: 2px solid var(--border); }
     .comparison-table td { padding: 10px 14px; color: var(--text-secondary); border-bottom: 1px solid var(--border); }
@@ -144,7 +145,7 @@
 
       <section>
         <h2>Rent vs. Buy Cost Comparison</h2>
-        <table class="comparison-table">
+        <div class="table-wrap"><table class="comparison-table">
           <thead>
             <tr>
               <th>Cost Category</th>
@@ -190,6 +191,7 @@
             </tr>
           </tbody>
         </table>
+          </div>
         <p>Assumptions: $500,000 home, 20% down ($100,000), 6.5% mortgage rate, 30-year term, 1% property tax, 1% maintenance, 7% opportunity cost on invested capital. Rent based on a comparable unit in the same market.</p>
       </section>
 

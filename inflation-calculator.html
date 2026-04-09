@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Inflation Calculator — Purchasing Power Over Time | CalcNova</title>
-  <meta name="description" content="Calculate how inflation affects the value of money over time. See what $100 from any year is worth today, or find the past equivalent of today's dollars. Free inflation calculator.">
+  <meta name="description" content="Calculate how inflation affects the value of money over time. See what $100 from any year is worth today, or find the past equivalent of today's dollars.…">
 
   <!-- Canonical -->
   <link rel="canonical" href="https://calcnova.co/inflation-calculator.html">
@@ -111,7 +111,7 @@
 
     /* Hero */
     .hero { background: var(--surface); border: 1px solid var(--border); border-radius: 18px; padding: 38px 32px 32px; margin-bottom: 28px; }
-    .hero-title { font-size: 26px; font-weight: 800; letter-spacing: -.5px; }
+    .hero-title { font-size: 26px; font-weight: 800; letter-spacing: -.5px; margin: 0; padding: 0; }
     .hero-title span { background: linear-gradient(135deg, var(--green), var(--purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
     .hero-desc { font-size: 14px; color: var(--text-secondary); margin-top: 6px; line-height: 1.5; }
 
@@ -232,6 +232,18 @@
       .result-value { font-size: 36px; }
       .stat-card-value { font-size: 18px; }
     }
+
+    /* ── SEO content ── */
+    .seo-section { background: var(--surface); border: 1px solid var(--border); border-radius: 18px; padding: 28px; margin-top: 40px; }
+    .seo-section h2 { font-size: 18px; font-weight: 800; margin: 0 0 12px; letter-spacing: -.3px; }
+    .seo-section h3 { font-size: 15px; font-weight: 700; margin: 20px 0 8px; color: var(--text-primary); }
+    .seo-section p { font-size: 14px; color: var(--text-secondary); line-height: 1.75; margin: 0 0 10px; }
+    .seo-section ul { padding-left: 18px; margin: 0 0 10px; }
+    .seo-section ul li { font-size: 14px; color: var(--text-secondary); line-height: 1.65; margin-bottom: 5px; }
+    .related-links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
+    .related-links a { display: inline-flex; align-items: center; gap: 6px; background: var(--surface); border: 1px solid var(--border); border-radius: 100px; padding: 6px 14px; font-size: 13px; font-weight: 600; color: var(--text-primary); text-decoration: none; transition: border-color .15s; }
+    .related-links a:hover { border-color: var(--green); color: var(--green); }
+    @media print { .seo-section { display: none !important; } }
   </style>
 </head>
 <body>
@@ -239,7 +251,7 @@
 
   <!-- Hero -->
   <div class="hero">
-    <div class="hero-title">Inflation <span>Calculator</span></div>
+    <h1 class="hero-title">Inflation <span>Calculator</span></h1>
     <div class="hero-desc">See how inflation erodes — or compounds — purchasing power over time. Adjust the rate, pick any year range, and explore the real value of your money.</div>
   </div>
 
@@ -384,6 +396,35 @@
         <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
         <span id="showAllLabel">Show all years</span>
       </button>
+    </div>
+  </div>
+
+  <!-- SEO content -->
+  <div class="seo-section">
+    <h2>About the Inflation Calculator</h2>
+    <p>This calculator uses historical CPI (Consumer Price Index) data to show how the purchasing power of money changes over time. Enter an amount and two years to see its equivalent value adjusted for inflation.</p>
+
+    <h3>What is Inflation?</h3>
+    <p>Inflation is the rate at which the general price level of goods and services rises, eroding purchasing power. A 3% annual inflation rate means $100 today buys only $97 worth of goods next year. Over 25 years at 3%, that $100 has the purchasing power of just $48.</p>
+
+    <h3>Historical US Inflation Context</h3>
+    <ul>
+      <li>Average US CPI inflation: ~3.2% per year over the last century</li>
+      <li>The Fed's 2% target has been the benchmark since the 1990s</li>
+      <li>2021–2023 saw the highest inflation since the early 1980s, peaking at 9.1% (June 2022)</li>
+      <li>The 1970s experienced "stagflation" with rates exceeding 13%</li>
+    </ul>
+
+    <h3>Why This Matters for Investing</h3>
+    <p>Investment returns must beat inflation to grow real wealth. A savings account paying 1% while inflation runs at 3% loses purchasing power at 2% annually. This is why stock market investments targeting 7%+ nominal returns are recommended for long-term wealth building.</p>
+
+    <h3>Related Calculators</h3>
+    <div class="related-links">
+      <a href="compound-interest-calculator.html">📈 Compound Interest</a>
+      <a href="investment-return-calculator.html">💹 Investment Return</a>
+      <a href="fire-calculator.html">🔥 FIRE Calculator</a>
+      <a href="coast-fire-calculator.html">🏖 Coast FIRE</a>
+      <a href="percentage-calculator.html">% Percentage</a>
     </div>
   </div>
 
