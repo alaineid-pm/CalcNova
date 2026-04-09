@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>How Grades Are Calculated: Weighted Averages Explained | CalcNova</title>
+  <meta name="description" content="Why your quiz score matters less than your final exam, how GPA is computed, the math behind weighted vs. unweighted averages, and how to calculate the grade you need to finish the semester with your target GPA.">
+  <link rel="canonical" href="https://calcnova.co/article-grades.html">
+  <meta property="og:title" content="How Grades Are Calculated: Weighted Averages Explained | CalcNova">
+  <meta property="og:description" content="Why your quiz score matters less than your final exam, how GPA is computed, the math behind weighted vs. unweighted averages, and how to calculate the grade you need to finish the semester with your target GPA.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://calcnova.co/article-grades.html">
+  <meta property="og:site_name" content="CalcNova">
+  <script type="application/ld+json">
+  [{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "How Grades Are Calculated: Weighted Averages Explained",
+    "description": "Why your quiz score matters less than your final exam, how GPA is computed, the math behind weighted vs. unweighted averages, and how to calculate the grade you need to finish the semester with your target GPA.",
+    "url": "https://calcnova.co/article-grades.html",
+    "datePublished": "2026-04-07",
+    "dateModified": "2026-04-07",
+    "publisher": { "@type": "Organization", "name": "CalcNova", "url": "https://calcnova.co/" },
+    "isPartOf": { "@type": "WebSite", "name": "CalcNova", "url": "https://calcnova.co/" }
+  }]
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="shared/nav.css">
+  <style>
+    .app { position: relative; z-index: 1; max-width: 960px; margin: 0 auto; padding: 0 16px 60px; }
+    .article-hero { padding: 48px 0 36px; border-bottom: 1px solid var(--border); margin-bottom: 40px; max-width: 720px; }
+    .article-badge { display: inline-flex; align-items: center; gap: 6px; background: linear-gradient(135deg, rgba(16,185,129,.1), rgba(99,102,241,.1)); border: 1px solid rgba(16,185,129,.25); border-radius: 100px; padding: 5px 14px; font-size: 11px; font-weight: 700; color: var(--green); letter-spacing: .5px; text-transform: uppercase; margin-bottom: 16px; }
+    .article-hero h1 { font-size: 38px; font-weight: 800; letter-spacing: -.5px; line-height: 1.15; margin-bottom: 14px; }
+    .article-hero h1 span { background: linear-gradient(135deg, var(--green), var(--purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .article-hero .subtitle { font-size: 16px; color: var(--text-secondary); line-height: 1.6; max-width: 600px; }
+    .article-meta { margin-top: 16px; font-size: 12px; color: var(--text-muted); font-weight: 500; display: flex; align-items: center; gap: 12px; }
+    .article-meta .dot { width: 3px; height: 3px; border-radius: 50%; background: var(--text-muted); }
+    .article-body { max-width: 720px; display: flex; flex-direction: column; gap: 28px; }
+    .article-body h2 { font-size: 24px; font-weight: 800; letter-spacing: -.3px; margin-bottom: 12px; color: var(--text-primary); }
+    .article-body h3 { font-size: 18px; font-weight: 700; letter-spacing: -.2px; margin-bottom: 8px; color: var(--text-primary); }
+    .article-body p { font-size: 16px; color: var(--text-secondary); line-height: 1.75; margin-bottom: 14px; }
+    .article-body p:last-child { margin-bottom: 0; }
+    .article-body ul, .article-body ol { padding-left: 0; list-style: none; display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; }
+    .article-body ul li, .article-body ol li { font-size: 16px; color: var(--text-secondary); line-height: 1.7; padding-left: 22px; position: relative; }
+    .article-body ul li::before { content: ''; position: absolute; left: 0; top: 10px; width: 6px; height: 6px; border-radius: 50%; background: linear-gradient(135deg, var(--green), var(--purple)); }
+    .article-body ol { counter-reset: ol-counter; }
+    .article-body ol li { counter-increment: ol-counter; }
+    .article-body ol li::before { content: counter(ol-counter); position: absolute; left: 0; top: 0; font-size: 13px; font-weight: 800; color: var(--green); font-family: var(--mono); }
+    .article-body a { color: var(--green); text-decoration: none; font-weight: 600; }
+    .article-body a:hover { text-decoration: underline; }
+    .article-body strong { color: var(--text-primary); font-weight: 700; }
+    .formula-box { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 24px 28px; text-align: center; }
+    .formula-box .formula { font-family: var(--mono); font-size: 20px; font-weight: 600; color: var(--text-primary); margin-bottom: 16px; letter-spacing: .5px; }
+    .formula-box .formula .hl { color: var(--green); }
+    .formula-box .legend { display: flex; flex-wrap: wrap; gap: 8px 20px; justify-content: center; font-size: 13px; color: var(--text-secondary); }
+    .formula-box .legend code { font-family: var(--mono); font-weight: 600; font-size: 12px; background: var(--bg); border: 1px solid var(--border); border-radius: 4px; padding: 1px 5px; }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 18px; padding: 24px 26px; }
+    .card-label { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .5px; color: var(--green); margin-bottom: 12px; }
+    .card h3 { margin-top: 0; }
+    .card p:last-child { margin-bottom: 0; }
+    .example-box { background: linear-gradient(135deg, rgba(16,185,129,.05), rgba(99,102,241,.03)); border: 1px solid rgba(16,185,129,.18); border-radius: 16px; padding: 24px 26px; }
+    .example-box .example-title { font-size: 14px; font-weight: 800; color: var(--green); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 10px; }
+    .example-box p { margin-bottom: 10px; }
+    .example-box .result { font-family: var(--mono); font-size: 15px; font-weight: 600; color: var(--text-primary); background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 12px 16px; margin-top: 12px; }
+    .example-box .result .hl { color: var(--green); font-weight: 700; }
+    .comparison-table { width: 100%; border-collapse: collapse; font-size: 14px; margin: 12px 0; }
+    .comparison-table th { text-align: left; font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: .5px; color: var(--text-muted); padding: 10px 14px; border-bottom: 2px solid var(--border); }
+    .comparison-table td { padding: 10px 14px; color: var(--text-secondary); border-bottom: 1px solid var(--border); }
+    .comparison-table tr:last-child td { border-bottom: none; }
+    .comparison-table .num { font-family: var(--mono); font-weight: 600; }
+    .comparison-table .hl { color: var(--green); font-weight: 700; }
+    .comparison-table .red { color: #ef4444; font-weight: 700; }
+    .cta-section { background: linear-gradient(135deg, rgba(16,185,129,.08), rgba(99,102,241,.06)); border: 1px solid rgba(16,185,129,.2); border-radius: 18px; padding: 32px; text-align: center; margin-top: 8px; }
+    .cta-section h2 { font-size: 22px; margin-bottom: 10px; }
+    .cta-section p { max-width: 500px; margin: 0 auto 20px; }
+    .cta-btn { display: inline-flex; align-items: center; gap: 8px; background: linear-gradient(135deg, var(--green), #059669); color: #fff !important; border-radius: 100px; padding: 12px 28px; font-size: 14px; font-weight: 700; text-decoration: none !important; font-family: var(--font); transition: all .15s; box-shadow: 0 4px 14px rgba(16,185,129,.3); }
+    .cta-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(16,185,129,.4); }
+    @media print { body::before, header, .cn-nav, .cn-footer, .ad-slot, .cta-section { display: none !important; } .app { max-width: 100%; padding: 0; } }
+    @media (max-width: 640px) { .article-hero h1 { font-size: 28px; } .formula-box .formula { font-size: 15px; } .comparison-table { font-size: 12px; } .comparison-table th, .comparison-table td { padding: 8px 10px; } }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="article-hero">
+      <div class="article-badge">📚 Academics Guide</div>
+      <h1>How Grades Are Calculated: <span>Weighted Averages Explained</span></h1>
+      <p class="subtitle">Grades feel mysterious until you understand the math. Once you know how weighted averages work, you can calculate exactly what score you need on any assignment to hit your target — and stop guessing.</p>
+      <div class="article-meta"><span>5 min read</span><span class="dot"></span><span>Updated April 2026</span></div>
+    </div>
+    <div class="article-body">
+
+      <div>
+        <h2>Simple vs. Weighted Averages: What's the Difference?</h2>
+        <p>A <strong>simple average</strong> treats every score equally. If you scored 80%, 90%, and 70% on three assignments, your average is (80 + 90 + 70) ÷ 3 = 80%. Each score carries the same weight regardless of how many points were at stake or how important the instructor considers it.</p>
+        <p>A <strong>weighted average</strong> assigns different levels of importance to different scores. In most courses, a final exam worth 40% of your grade contributes far more to your final score than a quiz worth 5%. If you ignore these weights and simply average your raw scores, you will likely miscalculate your grade — sometimes significantly.</p>
+
+        <div class="formula-box">
+          <div class="formula">Weighted Avg = <span class="hl">Σ(score × weight)</span> ÷ Σ(weight)</div>
+          <div class="legend">
+            <span><code>score</code> = percentage earned on each component</span>
+            <span><code>weight</code> = relative importance (as % or decimal)</span>
+            <span><code>Σ</code> = sum over all components</span>
+          </div>
+        </div>
+
+        <p>In practice, most syllabi express weights as percentages that sum to 100%. To use the formula, multiply each score by its weight percentage, sum all those products, and divide by 100. The result is your current grade as a percentage of the total possible points weighted correctly.</p>
+      </div>
+
+      <div>
+        <h2>How GPA Is Calculated on a 4.0 Scale</h2>
+        <p>Grade Point Average (GPA) converts letter grades to a numeric scale, then averages them — typically weighted by the number of credit hours each course carries. The standard U.S. 4.0 scale assigns a grade point value to each letter grade range.</p>
+
+        <table class="comparison-table">
+          <thead>
+            <tr>
+              <th>Letter Grade</th>
+              <th>Percentage Range</th>
+              <th>GPA Points</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>A+</strong></td>
+              <td class="num">97–100%</td>
+              <td class="num hl">4.0</td>
+              <td>Exceptional</td>
+            </tr>
+            <tr>
+              <td><strong>A</strong></td>
+              <td class="num">93–96%</td>
+              <td class="num hl">4.0</td>
+              <td>Excellent</td>
+            </tr>
+            <tr>
+              <td><strong>A−</strong></td>
+              <td class="num">90–92%</td>
+              <td class="num">3.7</td>
+              <td>Excellent</td>
+            </tr>
+            <tr>
+              <td><strong>B+</strong></td>
+              <td class="num">87–89%</td>
+              <td class="num">3.3</td>
+              <td>Above average</td>
+            </tr>
+            <tr>
+              <td><strong>B</strong></td>
+              <td class="num">83–86%</td>
+              <td class="num">3.0</td>
+              <td>Good</td>
+            </tr>
+            <tr>
+              <td><strong>B−</strong></td>
+              <td class="num">80–82%</td>
+              <td class="num">2.7</td>
+              <td>Good</td>
+            </tr>
+            <tr>
+              <td><strong>C+</strong></td>
+              <td class="num">77–79%</td>
+              <td class="num">2.3</td>
+              <td>Average</td>
+            </tr>
+            <tr>
+              <td><strong>C</strong></td>
+              <td class="num">73–76%</td>
+              <td class="num">2.0</td>
+              <td>Satisfactory</td>
+            </tr>
+            <tr>
+              <td><strong>C−</strong></td>
+              <td class="num">70–72%</td>
+              <td class="num">1.7</td>
+              <td>Satisfactory</td>
+            </tr>
+            <tr>
+              <td><strong>D</strong></td>
+              <td class="num">60–69%</td>
+              <td class="num red">1.0</td>
+              <td>Passing (barely)</td>
+            </tr>
+            <tr>
+              <td><strong>F</strong></td>
+              <td class="num">Below 60%</td>
+              <td class="num red">0.0</td>
+              <td>Failing</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p>To calculate your cumulative GPA, multiply each course's grade points by its credit hours, sum all those products, and divide by total credit hours. A 3-credit A (4.0) and a 3-credit B (3.0) would yield a GPA of (4.0×3 + 3.0×3) ÷ (3+3) = 21 ÷ 6 = 3.5. Note that percentage-to-letter grade cutoffs vary by school; always check your institution's specific scale.</p>
+      </div>
+
+      <div>
+        <h2>Weighted vs. Unweighted GPA</h2>
+        <p>Many high schools offer <strong>unweighted GPA</strong>, which uses the standard 4.0 scale regardless of course difficulty. An A in standard English and an A in AP English both earn 4.0 points. This makes GPA straightforward to calculate but doesn't reward students for taking more challenging coursework.</p>
+        <p><strong>Weighted GPA</strong> adds bonus points for honors, AP, IB, or dual-enrollment courses. A common weighting scheme adds 0.5 points for honors courses and 1.0 point for AP/IB courses, so an A in AP Chemistry becomes 5.0 instead of 4.0. This raises the theoretical maximum above 4.0 — some students achieve GPAs of 4.5 or higher on weighted scales.</p>
+        <p>College admissions offices are well aware of this distinction. Most recalculate GPAs on their own unweighted scale to compare applicants fairly. A weighted 4.5 GPA means different things at different schools depending on the course rigor and grading policies. What matters more than the raw number is the combination of GPA and the difficulty of the courses taken.</p>
+
+        <div class="card">
+          <div class="card-label">💡 Key Insight</div>
+          <h3>Weighted GPA and Course Selection Strategy</h3>
+          <p>A B+ in an AP course (3.3 unweighted, 4.3 weighted) typically reflects better on a college application than an A in a standard course (4.0 unweighted). But a C in an AP course (2.0 unweighted) can drag down a cumulative GPA more than the weighted boost compensates for. The optimal strategy: take the most challenging courses where you can realistically earn a B or better.</p>
+        </div>
+      </div>
+
+      <div>
+        <h2>Calculating What You Need on Your Final Exam</h2>
+        <p>One of the most practical grade calculations is figuring out exactly what score you need on an upcoming final exam to achieve your target course grade. This requires knowing your current grade, the weight of the final, and your goal.</p>
+
+        <div class="example-box">
+          <div class="example-title">Example: What Do I Need on My Final?</div>
+          <p>You are in a course with the following grading structure:</p>
+          <ul>
+            <li>Homework: 20% weight — you've earned <strong>88%</strong></li>
+            <li>Midterm: 30% weight — you've earned <strong>74%</strong></li>
+            <li>Final Exam: 40% weight — not yet taken</li>
+            <li>Participation: 10% weight — you've earned <strong>95%</strong></li>
+          </ul>
+          <p>Your current weighted score (on 60% of the grade): (88×20 + 74×30 + 95×10) ÷ 100 = (1760 + 2220 + 950) ÷ 100 = <strong>49.3 points</strong></p>
+          <p>You want a final grade of <strong>80% (B)</strong>. Required points from final exam:</p>
+          <p>80 − 49.3 = 30.7 points needed from the final. The final is worth 40%, so: 30.7 ÷ 0.40 = <strong>76.75%</strong></p>
+          <div class="result">You need to score at least <span class="hl">77%</span> on the final exam to earn a B in the course.</div>
+        </div>
+
+        <p>The general formula: <strong>Required Final Score = (Target Grade − Current Weighted Points) ÷ Final Weight</strong>. If the result exceeds 100%, your target is no longer mathematically achievable — but you may be able to negotiate extra credit or adjust your target grade. If the result is negative, you've already locked in your target grade regardless of the final.</p>
+      </div>
+
+      <div>
+        <h2>Understanding Grade Curves</h2>
+        <p>A <strong>grade curve</strong> is an adjustment to scores or grade cutoffs that an instructor applies, typically when an exam was more difficult than intended or when the class average falls well below expectations. Curves come in several forms:</p>
+        <ul>
+          <li><strong>Flat addition:</strong> Every student receives the same number of points added to their raw score (e.g., +7 points to all scores).</li>
+          <li><strong>Scale to highest score:</strong> The highest score in the class becomes 100%, and all other scores are scaled proportionally. If the top score was 88, a student who earned 72 becomes 72 ÷ 88 × 100 = 81.8%.</li>
+          <li><strong>Square root curve:</strong> Each score is replaced by its square root multiplied by 10. A 64 becomes √64 × 10 = 80. This helps lower scores more than higher scores.</li>
+          <li><strong>Adjusted cutoffs:</strong> The instructor lowers the threshold for each letter grade without changing raw scores.</li>
+        </ul>
+        <p>Curves are not guaranteed, and not every instructor uses them. Never rely on a curve to save a grade — always calculate your situation based on the official syllabi weights and thresholds. If an instructor announces a curve, recalculate your target final exam score using the adjusted cutoffs.</p>
+      </div>
+
+      <div>
+        <h2>Using Grade Math to Prioritize Your Time</h2>
+        <p>Understanding weighted grades changes how you should allocate study time. A 10-point quiz worth 2% of your grade deserves far less attention than a 50-point midterm worth 25%. Yet many students study for every assignment with equal intensity, or panic over low-stakes scores while underestimating high-stakes ones.</p>
+        <p>A strategic approach:</p>
+        <ol>
+          <li>List every remaining graded component in your course and its weight.</li>
+          <li>Calculate your current weighted score based on completed work.</li>
+          <li>Compute what score you'd need on each remaining item to reach your target grade.</li>
+          <li>Identify which items have the highest weight — these deserve the most preparation time.</li>
+          <li>Recognize diminishing returns: if you've already locked in your target grade, additional effort is optional, not essential.</li>
+        </ol>
+        <p>This isn't about doing the minimum — it's about being strategic. A student who scores 95% on a 5% quiz and 75% on a 40% final has made a poor trade-off. Direct your energy where the math rewards it most.</p>
+      </div>
+
+      <div class="cta-section">
+        <h2>Calculate Your Grade Right Now</h2>
+        <p>Use our Grade Calculator to enter your scores, set category weights, and instantly find out what you need on your next exam to hit your target grade.</p>
+        <a href="grade-calculator.html" class="cta-btn">📚 Open Grade Calculator</a>
+      </div>
+
+    </div>
+  </div>
+  <script>window.CALCNOVA_PAGE = { id: 'article-grades', disclaimer: 'This article is for informational purposes only and does not constitute financial, medical, or professional advice.' };</script>
+  <script src="shared/site-data.js"></script>
+  <script src="shared/nav.js"></script>
+</body>
+</html>

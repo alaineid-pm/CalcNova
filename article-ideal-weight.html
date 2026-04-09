@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>What Is a Healthy Weight? The Science Beyond the Scale | CalcNova</title>
+  <meta name="description" content="BMI is a crude proxy. Explore how ideal weight formulas work (Devine, Robinson, Miller), why healthy weight ranges vary by height and frame size, and what metrics actually predict health outcomes.">
+  <link rel="canonical" href="https://calcnova.co/article-ideal-weight.html">
+  <meta property="og:title" content="What Is a Healthy Weight? The Science Beyond the Scale | CalcNova">
+  <meta property="og:description" content="BMI is a crude proxy. Explore how ideal weight formulas work (Devine, Robinson, Miller), why healthy weight ranges vary by height and frame size, and what metrics actually predict health outcomes.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://calcnova.co/article-ideal-weight.html">
+  <meta property="og:site_name" content="CalcNova">
+  <script type="application/ld+json">
+  [{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "What Is a Healthy Weight? The Science Beyond the Scale",
+    "description": "BMI is a crude proxy. Explore how ideal weight formulas work (Devine, Robinson, Miller), why healthy weight ranges vary by height and frame size, and what metrics actually predict health outcomes.",
+    "url": "https://calcnova.co/article-ideal-weight.html",
+    "datePublished": "2026-04-07",
+    "dateModified": "2026-04-07",
+    "publisher": { "@type": "Organization", "name": "CalcNova", "url": "https://calcnova.co/" },
+    "isPartOf": { "@type": "WebSite", "name": "CalcNova", "url": "https://calcnova.co/" }
+  }]
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="shared/nav.css">
+  <style>
+    .app { position: relative; z-index: 1; max-width: 960px; margin: 0 auto; padding: 0 16px 60px; }
+    .article-hero { padding: 48px 0 36px; border-bottom: 1px solid var(--border); margin-bottom: 40px; max-width: 720px; }
+    .article-badge { display: inline-flex; align-items: center; gap: 6px; background: linear-gradient(135deg, rgba(16,185,129,.1), rgba(99,102,241,.1)); border: 1px solid rgba(16,185,129,.25); border-radius: 100px; padding: 5px 14px; font-size: 11px; font-weight: 700; color: var(--green); letter-spacing: .5px; text-transform: uppercase; margin-bottom: 16px; }
+    .article-hero h1 { font-size: 38px; font-weight: 800; letter-spacing: -.5px; line-height: 1.15; margin-bottom: 14px; }
+    .article-hero h1 span { background: linear-gradient(135deg, var(--green), var(--purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .article-hero .subtitle { font-size: 16px; color: var(--text-secondary); line-height: 1.6; max-width: 600px; }
+    .article-meta { margin-top: 16px; font-size: 12px; color: var(--text-muted); font-weight: 500; display: flex; align-items: center; gap: 12px; }
+    .article-meta .dot { width: 3px; height: 3px; border-radius: 50%; background: var(--text-muted); }
+    .article-body { max-width: 720px; display: flex; flex-direction: column; gap: 28px; }
+    .article-body h2 { font-size: 24px; font-weight: 800; letter-spacing: -.3px; margin-bottom: 12px; color: var(--text-primary); }
+    .article-body h3 { font-size: 18px; font-weight: 700; letter-spacing: -.2px; margin-bottom: 8px; color: var(--text-primary); }
+    .article-body p { font-size: 16px; color: var(--text-secondary); line-height: 1.75; margin-bottom: 14px; }
+    .article-body p:last-child { margin-bottom: 0; }
+    .article-body ul, .article-body ol { padding-left: 0; list-style: none; display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; }
+    .article-body ul li, .article-body ol li { font-size: 16px; color: var(--text-secondary); line-height: 1.7; padding-left: 22px; position: relative; }
+    .article-body ul li::before { content: ''; position: absolute; left: 0; top: 10px; width: 6px; height: 6px; border-radius: 50%; background: linear-gradient(135deg, var(--green), var(--purple)); }
+    .article-body ol { counter-reset: ol-counter; }
+    .article-body ol li { counter-increment: ol-counter; }
+    .article-body ol li::before { content: counter(ol-counter); position: absolute; left: 0; top: 0; font-size: 13px; font-weight: 800; color: var(--green); font-family: var(--mono); }
+    .article-body a { color: var(--green); text-decoration: none; font-weight: 600; }
+    .article-body a:hover { text-decoration: underline; }
+    .article-body strong { color: var(--text-primary); font-weight: 700; }
+    .formula-box { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 24px 28px; text-align: center; }
+    .formula-box .formula { font-family: var(--mono); font-size: 20px; font-weight: 600; color: var(--text-primary); margin-bottom: 16px; letter-spacing: .5px; }
+    .formula-box .formula .hl { color: var(--green); }
+    .formula-box .legend { display: flex; flex-wrap: wrap; gap: 8px 20px; justify-content: center; font-size: 13px; color: var(--text-secondary); }
+    .formula-box .legend code { font-family: var(--mono); font-weight: 600; font-size: 12px; background: var(--bg); border: 1px solid var(--border); border-radius: 4px; padding: 1px 5px; }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 18px; padding: 24px 26px; }
+    .card-label { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .5px; color: var(--green); margin-bottom: 12px; }
+    .card h3 { margin-top: 0; }
+    .card p:last-child { margin-bottom: 0; }
+    .example-box { background: linear-gradient(135deg, rgba(16,185,129,.05), rgba(99,102,241,.03)); border: 1px solid rgba(16,185,129,.18); border-radius: 16px; padding: 24px 26px; }
+    .example-box .example-title { font-size: 14px; font-weight: 800; color: var(--green); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 10px; }
+    .example-box p { margin-bottom: 10px; }
+    .example-box .result { font-family: var(--mono); font-size: 15px; font-weight: 600; color: var(--text-primary); background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 12px 16px; margin-top: 12px; }
+    .example-box .result .hl { color: var(--green); font-weight: 700; }
+    .comparison-table { width: 100%; border-collapse: collapse; font-size: 14px; margin: 12px 0; }
+    .comparison-table th { text-align: left; font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: .5px; color: var(--text-muted); padding: 10px 14px; border-bottom: 2px solid var(--border); }
+    .comparison-table td { padding: 10px 14px; color: var(--text-secondary); border-bottom: 1px solid var(--border); }
+    .comparison-table tr:last-child td { border-bottom: none; }
+    .comparison-table .num { font-family: var(--mono); font-weight: 600; }
+    .comparison-table .hl { color: var(--green); font-weight: 700; }
+    .comparison-table .red { color: #ef4444; font-weight: 700; }
+    .cta-section { background: linear-gradient(135deg, rgba(16,185,129,.08), rgba(99,102,241,.06)); border: 1px solid rgba(16,185,129,.2); border-radius: 18px; padding: 32px; text-align: center; margin-top: 8px; }
+    .cta-section h2 { font-size: 22px; margin-bottom: 10px; }
+    .cta-section p { max-width: 500px; margin: 0 auto 20px; }
+    .cta-btn { display: inline-flex; align-items: center; gap: 8px; background: linear-gradient(135deg, var(--green), #059669); color: #fff !important; border-radius: 100px; padding: 12px 28px; font-size: 14px; font-weight: 700; text-decoration: none !important; font-family: var(--font); transition: all .15s; box-shadow: 0 4px 14px rgba(16,185,129,.3); }
+    .cta-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(16,185,129,.4); }
+    @media print { body::before, header, .cn-nav, .cn-footer, .ad-slot, .cta-section { display: none !important; } .app { max-width: 100%; padding: 0; } }
+    @media (max-width: 640px) { .article-hero h1 { font-size: 28px; } .formula-box .formula { font-size: 15px; } .comparison-table { font-size: 12px; } .comparison-table th, .comparison-table td { padding: 8px 10px; } }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="article-hero">
+      <div class="article-badge">⚖️ Body Composition Guide</div>
+      <h1>What Is a Healthy Weight? <span>The Science Beyond the Scale</span></h1>
+      <p class="subtitle">Weight is one number. Health is a much richer picture. Understanding what the research actually says about healthy weight — and the limitations of BMI — can help you set goals that actually matter.</p>
+      <div class="article-meta"><span>6 min read</span><span class="dot"></span><span>Updated April 2026</span></div>
+    </div>
+    <div class="article-body">
+
+      <div>
+        <h2>Why BMI Is a Blunt Instrument</h2>
+        <p>Body Mass Index (BMI) was invented by Belgian statistician Adolphe Quetelet in the 1830s — not as a clinical health tool, but as a way to study population-level body proportions. It wasn't designed to assess individual health, yet it became the dominant screening metric in clinical practice worldwide. Understanding its limitations is the first step toward interpreting your own weight more accurately.</p>
+        <p>BMI is calculated as weight in kilograms divided by height in meters squared. The formula is simple and requires no equipment beyond a scale and a tape measure, which explains its wide adoption. But that simplicity comes at a cost. BMI cannot distinguish between muscle and fat. A highly muscular athlete and a sedentary person with high body fat can have identical BMIs. The metric also doesn't account for where fat is stored — visceral fat around abdominal organs is far more metabolically dangerous than subcutaneous fat stored elsewhere.</p>
+        <p>Research published in the <em>International Journal of Obesity</em> found that approximately 30% of people classified as "normal" BMI had cardiometabolic risk factors, while many classified as "overweight" were metabolically healthy. BMI is a useful population-level screening tool, but for individuals, context matters enormously.</p>
+      </div>
+
+      <div>
+        <h2>Ideal Weight Formulas: Devine, Robinson, and Miller</h2>
+        <p>In clinical practice — particularly for drug dosing and ventilator settings — physicians needed a more precise estimate of "ideal body weight" (IBW). Several formulas emerged in the 1970s and 1980s that remain in use today. Unlike BMI, these formulas produce a single target weight based on height and sex, using data from actuarial life expectancy tables.</p>
+
+        <div class="formula-box">
+          <div class="formula">IBW (men) = <span class="hl">50</span> + 2.3 × (inches over 5 feet)<br>IBW (women) = <span class="hl">45.5</span> + 2.3 × (inches over 5 feet)</div>
+          <div class="legend">
+            <span><code>IBW</code> = Ideal Body Weight in kg</span>
+            <span><code>Devine Formula</code> (1974) — most widely used clinically</span>
+          </div>
+        </div>
+
+        <p>The Devine formula (1974) is the most commonly used in clinical settings. Robinson (1983) and Miller (1983) followed with slightly different coefficients, each derived from different reference datasets. None of these formulas accounts for frame size, age, or ethnicity — they are population averages, not individual prescriptions.</p>
+
+        <div class="card">
+          <div class="card-label">📊 Formula Comparison</div>
+          <h3>Ideal Weight for a 5'10" Male (178 cm)</h3>
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th>Formula</th>
+                <th>Year</th>
+                <th>Calculation</th>
+                <th>Result</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Devine</strong></td>
+                <td class="num">1974</td>
+                <td>50 + 2.3 × 10</td>
+                <td class="num hl">73 kg (161 lb)</td>
+              </tr>
+              <tr>
+                <td><strong>Robinson</strong></td>
+                <td class="num">1983</td>
+                <td>52 + 1.9 × 10</td>
+                <td class="num">71 kg (157 lb)</td>
+              </tr>
+              <tr>
+                <td><strong>Miller</strong></td>
+                <td class="num">1983</td>
+                <td>56.2 + 1.41 × 10</td>
+                <td class="num">70.3 kg (155 lb)</td>
+              </tr>
+              <tr>
+                <td><strong>Hamwi</strong></td>
+                <td class="num">1964</td>
+                <td>48 + 2.7 × 10</td>
+                <td class="num">75 kg (165 lb)</td>
+              </tr>
+              <tr>
+                <td><strong>BMI Midpoint (21.75)</strong></td>
+                <td class="num">—</td>
+                <td>21.75 × 1.78²</td>
+                <td class="num">68.9 kg (152 lb)</td>
+              </tr>
+            </tbody>
+          </table>
+          <p>The spread across formulas is about 10 pounds — a reminder that "ideal weight" is a range, not a precise target.</p>
+        </div>
+      </div>
+
+      <div>
+        <h2>Frame Size and Muscle Mass: The Missing Variables</h2>
+        <p>All of the major ideal weight formulas were derived from datasets that didn't adequately capture skeletal frame size or body composition. Two people of the same height and sex can have dramatically different bone structures — a "large frame" individual has wider shoulders, a broader ribcage, and denser bones, which can add 10–15 pounds over a "small frame" individual at the same health status.</p>
+        <p>A rough way to estimate frame size is the wrist circumference method: for a woman 5'5" tall, a wrist circumference under 5.5 inches suggests a small frame, 5.5–5.75 inches a medium frame, and over 5.75 inches a large frame. Similar benchmarks exist for men. Some clinicians use elbow breadth measured with calipers as a more precise method.</p>
+        <p>Muscle mass further complicates the picture. Skeletal muscle is denser and heavier than fat tissue. A person who resistance trains regularly may weigh more than the "ideal" formulas suggest while carrying a lower percentage of body fat and having superior metabolic health markers than someone who hits the formula's target but is largely sedentary. The key insight: <strong>weight on its own is not a measure of health.</strong></p>
+
+        <div class="example-box">
+          <div class="example-title">Example: Adjusting for Frame Size</div>
+          <p>The standard Devine formula gives 73 kg for a 5'10" male. Adjusting for frame size:</p>
+          <ul>
+            <li>Small frame: subtract 10% → ~65.7 kg (145 lb)</li>
+            <li>Medium frame: no adjustment → 73 kg (161 lb)</li>
+            <li>Large frame: add 10% → ~80.3 kg (177 lb)</li>
+          </ul>
+          <div class="result">Healthy range for a large-frame 5'10" male: approximately <span class="hl">170–185 lb</span> (77–84 kg)</div>
+        </div>
+      </div>
+
+      <div>
+        <h2>Waist-to-Height Ratio: A Better Predictor</h2>
+        <p>If you want a single number that more reliably predicts cardiometabolic risk than BMI or scale weight, research increasingly points to <strong>waist-to-height ratio (WHtR)</strong>. Unlike BMI, it captures central adiposity — the accumulation of visceral fat around abdominal organs — which is the form of fat most strongly linked to insulin resistance, type 2 diabetes, cardiovascular disease, and all-cause mortality.</p>
+        <p>The calculation is straightforward: divide your waist circumference by your height, both in the same units. A ratio under 0.5 is generally considered healthy for adults of all ethnicities. A widely cited mnemonic: <em>keep your waist less than half your height.</em></p>
+        <p>A 2012 meta-analysis in <em>Nutrition Research Reviews</em> covering over 300,000 participants found WHtR outperformed BMI at predicting diabetes, hypertension, and cardiovascular disease. The advantage is that it captures fat distribution rather than just total mass — two things that BMI, by design, cannot separate.</p>
+        <p>Waist circumference alone is also useful. The American Heart Association flags elevated risk at waist measurements over 40 inches (102 cm) in men and over 35 inches (88 cm) in women. These thresholds are lower for East Asian populations, where metabolic risk appears at smaller waist sizes.</p>
+      </div>
+
+      <div>
+        <h2>Setting a Realistic and Meaningful Weight Goal</h2>
+        <p>Given everything above, how should you think about a target weight? The most evidence-based approach is to aim for a range rather than a specific number, informed by multiple data points rather than a single formula.</p>
+        <p>A practical framework for setting a weight goal:</p>
+        <ol>
+          <li>Start with your height-based ideal weight range from the Devine or Robinson formula, adjusted ±10% for frame size.</li>
+          <li>Check your current waist-to-height ratio. If it's above 0.5, reducing waist circumference is a higher-priority goal than hitting a scale number.</li>
+          <li>Consider body fat percentage if you have access to measurement tools. Healthy ranges are roughly 10–20% for men and 18–28% for women, varying by age.</li>
+          <li>Factor in your metabolic health markers (blood glucose, blood pressure, cholesterol) — these often matter more than the scale.</li>
+          <li>Set a weight goal within a 10–15 lb range, not a single target. Celebrate when you enter the range.</li>
+        </ol>
+        <p>Research consistently shows that even modest weight loss — 5–10% of body weight — produces meaningful improvements in metabolic health markers in people who are overweight, even before reaching any "ideal" weight target.</p>
+      </div>
+
+      <div>
+        <h2>The Health Risks of Both Extremes</h2>
+        <p>The relationship between weight and health is not linear. Being significantly underweight carries its own serious risks, including bone density loss, hormonal disruption, immune suppression, and cardiovascular complications. Anorexia nervosa has the highest mortality rate of any mental health condition, largely due to cardiac complications from severe underweight.</p>
+        <p>On the other end, significant obesity — particularly class III (BMI ≥ 40) — is associated with substantially elevated risks of type 2 diabetes, hypertension, sleep apnea, certain cancers, osteoarthritis, and reduced life expectancy. The risks are not uniform: metabolically healthy obesity exists, but it is not a stable long-term state for most people.</p>
+        <p>The "obesity paradox" — where some studies find that slightly overweight individuals have better outcomes than normal-weight individuals for certain conditions — is real but often reflects confounding factors like smoking (which reduces weight and increases mortality) or reverse causation from pre-existing illness. For healthy, non-smoking adults, maintaining a weight within a healthy range remains one of the most modifiable predictors of long-term health.</p>
+
+        <div class="card">
+          <div class="card-label">⚠️ Key Takeaway</div>
+          <h3>What Actually Matters for Health</h3>
+          <p>Rather than optimizing for a single number, focus on the full picture: waist-to-height ratio below 0.5, regular physical activity, a diet high in whole foods, adequate sleep, and metabolic lab values in healthy ranges. A person who checks all those boxes at 15 pounds above their "ideal weight" is healthier by every meaningful measure than someone who hits the target number but is sedentary and metabolically compromised.</p>
+        </div>
+      </div>
+
+      <div class="cta-section">
+        <h2>Find Your Ideal Weight Range</h2>
+        <p>Use our Ideal Weight Calculator to see what the Devine, Robinson, Miller, and Hamwi formulas suggest for your height and sex — adjusted for frame size.</p>
+        <a href="ideal-weight-calculator.html" class="cta-btn">⚖️ Calculate My Ideal Weight</a>
+      </div>
+
+    </div>
+  </div>
+  <script>window.CALCNOVA_PAGE = { id: 'article-ideal-weight', disclaimer: 'This article is for informational purposes only and does not constitute financial, medical, or professional advice.' };</script>
+  <script src="shared/site-data.js"></script>
+  <script src="shared/nav.js"></script>
+</body>
+</html>

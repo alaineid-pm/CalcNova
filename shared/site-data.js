@@ -834,5 +834,101 @@ var CALCNOVA_ARTICLES = [
     subcategory:   'Health & Fitness',
     relatedTool:   'sleep-calculator',
     datePublished: '2026-03-21'
+  },
+  {
+    id:            'article-body-fat',
+    name:          'Body Fat Percentage: What the Numbers Mean',
+    emoji:         '💪',
+    url:           'article-body-fat.html',
+    description:   'What body fat percentage measures, healthy ranges for men and women, how different measurement methods compare, and what to do with the result.',
+    readTime:      '6 min',
+    category:      'guides',
+    subcategory:   'Body Composition',
+    relatedTool:   'body-fat-calculator',
+    datePublished: '2026-04-07'
+  },
+  {
+    id:            'article-fire-movement',
+    name:          'The FIRE Movement Explained: How to Retire Decades Early',
+    emoji:         '🔥',
+    url:           'article-fire-movement.html',
+    description:   'FIRE stands for Financial Independence, Retire Early. Learn the 4% rule, your FIRE number, FIRE variants, and whether it is realistic for you.',
+    readTime:      '7 min',
+    category:      'guides',
+    subcategory:   'Finance',
+    relatedTool:   'fire-calculator',
+    datePublished: '2026-04-07'
+  },
+  {
+    id:            'article-savings',
+    name:          "How to Build a Savings Goal You'll Actually Hit",
+    emoji:         '💰',
+    url:           'article-savings.html',
+    description:   'Setting vague savings goals leads to failure. Learn how to define a specific target, work backwards to a monthly number, and automate contributions.',
+    readTime:      '6 min',
+    category:      'guides',
+    subcategory:   'Finance',
+    relatedTool:   'savings-goal',
+    datePublished: '2026-04-07'
+  },
+  {
+    id:            'article-pace',
+    name:          'Running Pace Explained: How to Train Smarter',
+    emoji:         '🏃',
+    url:           'article-pace.html',
+    description:   'The difference between easy pace, tempo, intervals, and race pace — and why training at the right effort level is the key to running faster.',
+    readTime:      '6 min',
+    category:      'guides',
+    subcategory:   'Health & Fitness',
+    relatedTool:   'pace-calculator',
+    datePublished: '2026-04-07'
+  },
+  {
+    id:            'article-ideal-weight',
+    name:          'What Is a Healthy Weight? The Science Beyond the Scale',
+    emoji:         '⚖️',
+    url:           'article-ideal-weight.html',
+    description:   'BMI is a crude proxy. Explore ideal weight formulas, why healthy weight ranges vary, and what metrics actually predict health outcomes.',
+    readTime:      '6 min',
+    category:      'guides',
+    subcategory:   'Body Composition',
+    relatedTool:   'ideal-weight-calculator',
+    datePublished: '2026-04-07'
+  },
+  {
+    id:            'article-tipping',
+    name:          'Tipping Etiquette: When, Where, and How Much to Tip',
+    emoji:         '💳',
+    url:           'article-tipping.html',
+    description:   'Tipping norms by service type, how to calculate tips, international tipping customs, and when it is acceptable not to tip.',
+    readTime:      '5 min',
+    category:      'guides',
+    subcategory:   'Personal Finance',
+    relatedTool:   'tip-calculator',
+    datePublished: '2026-04-07'
+  },
+  {
+    id:            'article-grades',
+    name:          'How Grades Are Calculated: Weighted Averages Explained',
+    emoji:         '📚',
+    url:           'article-grades.html',
+    description:   'Why your quiz score matters less than your final exam, how GPA is computed, and how to calculate the grade you need to hit your target.',
+    readTime:      '5 min',
+    category:      'guides',
+    subcategory:   'Academics',
+    relatedTool:   'grade-calculator',
+    datePublished: '2026-04-07'
+  },
+  {
+    id:            'article-pregnancy',
+    name:          "Understanding Your Pregnancy Due Date: How It's Calculated",
+    emoji:         '🤰',
+    url:           'article-pregnancy.html',
+    description:   'How the 40-week pregnancy timeline works, why due dates are calculated from your last period, and what to expect trimester by trimester.',
+    readTime:      '6 min',
+    category:      'guides',
+    subcategory:   'Health & Fitness',
+    relatedTool:   'due-date-calculator',
+    datePublished: '2026-04-07'
   }
 ];
